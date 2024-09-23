@@ -84,7 +84,7 @@ const Magnifier = ({
         [tabs, tabWidths]
     );
 
-    const innerBlurStyle = () => {
+    const innerBlurStyle = useMemo(() => {
         if (IS_IOS) {
             return styles.magnifierBlur;
         }
@@ -97,7 +97,7 @@ const Magnifier = ({
             bottom: offset,
             transform: [{scale: 1 / zoomLevel}],
         } as StyleProp<ViewStyle>;
-    };
+    }, []);
 
     const indicatorPosX = useAnimatedStyle(() => {
         return {
