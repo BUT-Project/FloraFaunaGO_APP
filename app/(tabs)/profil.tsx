@@ -1,12 +1,7 @@
-import {ThemedView} from "@/components/ThemedView";
-import {ThemedText} from "@/components/ThemedText";
+import ProfilScreen from "@/screen/ProfilScreen";
 
-export default function Profil(){
+export default function Profil() {
     return (
-        <ThemedView style={{flex: 1}}>
-            <ThemedText>Profil</ThemedText>
-        </ThemedView>
-
+        <ProfilScreen/>
     )
-
 }
