@@ -1,4 +1,4 @@
-import ProfilScreen from "@/screen/ProfilScreen";
+import ProfilScreen from "@/screens/ProfilScreen";
 
 export default function Profil() {
     return (

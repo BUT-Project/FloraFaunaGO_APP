@@ -1,4 +1,4 @@
-import EncyclopediaScreen from "@/screen/EncyclopediaScreen";
+import EncyclopediaScreen from "@/screens/EncyclopediaScreen";
 
 export default function Encyclopedia() {
   return (
