@@ -1,74 +1,98 @@
-import {ThemedView} from "@/components/ui/themed/ThemedView";
-import {ThemedText} from "@/components/ui/themed/ThemedText";
-import {FlatList, Image, StyleSheet, Text, useColorScheme, View} from "react-native";
-import {SafeAreaView, useSafeAreaInsets} from "react-native-safe-area-context";
-import {useTheme} from "@react-navigation/native";
-import {useThemeColor} from "@/hooks/useThemeColor";
-const ProfileImage = require("../assets/images/ProfileImage.jpeg")
-const SettingsImage = require("../assets/images/settings.png")
-const DistanceImage = require("../assets/images/man-walking.png")
-const UnknownImage = require("../assets/images/unknown.png")
-const FamilleImage = require("../assets/images/famille.png")
-const TimeImage = require("../assets/images/clock.png")
+import { ThemedText } from "@/components/ui/themed/ThemedText";
+import { FlatList, Image, StyleSheet, Text, View } from "react-native";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
+import { useThemeColor } from "@/hooks/useThemeColor";
+import React, { useState } from "react";
+import { SucessStub } from "@/screens/SucessStub";
+import SucessListItemVertical from "@/components/SucessListItemVertical";
+
+const ProfileImage = require("../assets/images/ProfileImage.jpeg");
+const SettingsImage = require("../assets/images/settings.png");
+const DistanceImage = require("../assets/images/man-walking.png");
+const UnknownImage = require("../assets/images/unknown.png");
+const FamilleImage = require("../assets/images/famille.png");
+const TimeImage = require("../assets/images/clock.png");
+
 export default function ProfilScreen() {
-    const insets = useSafeAreaInsets();
+    const stub = new SucessStub();
+    const sampleSuccesses = stub.getSuccesses();
     const tintColor = useThemeColor({ light: 'black', dark: 'white' }, 'background');
-    return (
-        <SafeAreaView style={{
-            flex: 1,
-        }}>
 
-            <Image source={SettingsImage} style={[styles.settings, {tintColor}]} />
+    const renderHeader = () => (
+        <View>
+            <Image source={SettingsImage} style={[styles.settings, { tintColor }]} />
             <Image source={ProfileImage} style={styles.profile} />
-            <ThemedText style={styles.text}>Statistiques</ThemedText>
-            <ThemedText style={styles.text}>
-            <Image source={DistanceImage} style={[styles.image, {tintColor}]} />
-                Distance marchées
-            </ThemedText>
-            <ThemedText style={styles.text}>
-            <Image source={UnknownImage} style={[styles.image, {tintColor}]} />
-                Espèces découvertes
-            </ThemedText>
-            <ThemedText style={styles.text}>
-                <Image source={FamilleImage} style={[styles.image, {tintColor}]}/>
-                Familles complétées
-            </ThemedText>
-            <ThemedText style={styles.text}>
-                <Image source={TimeImage} style={[styles.image, {tintColor}]} />
-                Date début
-            </ThemedText>
+            <ThemedText style={styles.title}>Statistiques</ThemedText>
 
+            <View style={styles.container}>
+                <Image source={DistanceImage} style={[styles.image, { tintColor }]} />
+                <ThemedText style={styles.text}>Distance marchées</ThemedText>
+            </View>
+            <View style={styles.container}>
+                <Image source={UnknownImage} style={[styles.image, { tintColor }]} />
+                <ThemedText style={styles.text}>Espèces découvertes</ThemedText>
+            </View>
+            <View style={styles.container}>
+                <Image source={FamilleImage} style={[styles.image, { tintColor }]} />
+                <ThemedText style={styles.text}>Familles complétées</ThemedText>
+            </View>
+            <View style={styles.container}>
+                <Image source={TimeImage} style={[styles.image, { tintColor }]} />
+                <ThemedText style={styles.text}>Date d'inscription</ThemedText>
+            </View>
 
+            <ThemedText style={styles.title}>Succès</ThemedText>
+        </View>
+    );
+
+    return (
+        <SafeAreaView style={{ flex: 1 }}>
+            <FlatList
+                data={sampleSuccesses}
+                keyExtractor={(item) => item.nom}
+                renderItem={({ item }) => <SucessListItemVertical items={item} />}
+                numColumns={3}
+                ListHeaderComponent={renderHeader}
+            />
         </SafeAreaView>
-    )
+    );
 }
+
 const styles = StyleSheet.create({
+    container: {
+        flexDirection: 'row',
+        alignSelf: "center",
+        height: 45,
+    },
+    title: {
+        height: 50,
+        textAlign: "center",
+        margin: 20,
+        fontSize: 24,
+    },
     text: {
-        height : 50,
-        textAlign : "center",
-        margin : 5
+        height: 50,
+        textAlign: "center",
+        margin: 5,
     },
-    settings : {
-        tintColor : "white",
-        width : 35,
-        height : 35,
-        margin : 10,
-        alignSelf : "flex-end"
-
+    settings: {
+        tintColor: "white",
+        width: 35,
+        height: 35,
+        margin: 10,
+        alignSelf: "flex-end",
     },
-    image : {
-        width : 35,
-        height : 35,
-        margin : 5,
-        alignSelf : "center"
-
+    image: {
+        width: 30,
+        height: 30,
+        margin: 5,
+        alignSelf: "center",
     },
-    profile : {
-        alignSelf : "center",
-        width : 160,
-        height : 160,
-        margin : 30,
-        borderRadius: 500
-    }
-
+    profile: {
+        alignSelf: "center",
+        width: 160,
+        height: 160,
+        margin: 30,
+        borderRadius: 500,
+    },
 });
