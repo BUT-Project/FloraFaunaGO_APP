@@ -1,5 +1,5 @@
 import {useCamera} from "@/components/camera/hooks";
-import { useRef, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import Animated, {useAnimatedStyle, useSharedValue, withSpring} from "react-native-reanimated";
 import {ThemedView} from "@/components/ui/themed/ThemedView";
 import {Dimensions, SafeAreaView, StyleSheet, TouchableOpacity, View} from "react-native";
@@ -10,6 +10,7 @@ import MainMapView from "@/components/MainMapView";
 import BlurSegmented from "@/components/BluredSegmented";
 import {ThemedText} from "@/components/ui/themed/ThemedText";
 import {useQuery} from "@tanstack/react-query";
+import * as Location from "expo-location";
 
 type Specie = {
     id: string;
@@ -25,6 +26,25 @@ type Specie = {
 const {width: SCREEN_WIDTH} = Dimensions.get('window');
 
 export default function HomeScreen() {
+
+    const [location, setLocation] = useState<Location.LocationObject | null>(null);
+    // Allert dans le contexte de l'application
+    // const [errorMsg, setErrorMsg] = useState<string|null>(null);
+
+    useEffect(() => {
+        (async () => {
+
+            let { status } = await Location.requestForegroundPermissionsAsync();
+            if (status !== 'granted') {
+                console.log('Permission to access location was denied');
+                // setErrorMsg('Permission to access location was denied');
+                return;
+            }
+
+            let location = await Location.getCurrentPositionAsync();
+            setLocation(location);
+        })();
+    }, []);
 
     const slideAnim = useSharedValue(0);
 
@@ -129,7 +149,7 @@ export default function HomeScreen() {
                             <ARProgressIndicator width={SCREEN_WIDTH} height={SCREEN_WIDTH}/>
                         </View>
                     )}
-                    <MainMapView  style={styles.map}/>
+                    <MainMapView location={location}  style={styles.map}/>
                 </Animated.View>
             </ThemedView>
 
