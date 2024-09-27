@@ -5,37 +5,37 @@ import { SucessFactory } from "./SucessFactory";
 const SUCCESSES = [
     {
         "nom": "Succès A",
-        "image": "https://placekitten.com/400/400?image=1",
+        "image": "checkmark-circle-outline",
         "description": "Description du succès A",
         "avancement": 20
     },
     {
         "nom": "Succès B",
-        "image": "https://placekitten.com/400/400?image=2",
+        "image": "checkmark-circle-outline",
         "description": "Description du succès B",
         "avancement": 50
     },
     {
         "nom": "Succès C",
-        "image": "https://placekitten.com/400/400?image=3",
+        "image": "checkmark-circle-outline",
         "description": "Description du succès C",
         "avancement": 80
     },
     {
         "nom": "Succès D",
-        "image": "https://placekitten.com/400/400?image=1",
+        "image": "checkmark-circle-outline",
         "description": "Description du succès A",
         "avancement": 20
     },
     {
         "nom": "Succès E",
-        "image": "https://placekitten.com/400/400?image=2",
+        "image": "checkmark-circle-outline",
         "description": "Description du succès B",
         "avancement": 50
     },
     {
         "nom": "Succès F",
-        "image": "https://placekitten.com/400/400?image=3",
+        "image": "checkmark-circle-outline",
         "description": "Description du succès C",
         "avancement": 80
     }

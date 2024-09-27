@@ -4,7 +4,11 @@ import {AnimatedCircularProgress} from "react-native-circular-progress";
 import {Circle} from "react-native-svg";
 import {useThemeColor} from "@/hooks/useThemeColor";
 import {Sucess} from "../screens/Sucess"
-const AntIcon = require("../assets/images/ant.png")
+import {TabBarIcon} from "@/components/navigation/TabBarIcon";
+import {ThemedView} from "@/components/ui/themed/ThemedView";
+import {ThemedText} from "@/components/ui/themed/ThemedText";
+
+
 
 type SucessListItemsProps = {
     items : Sucess;
@@ -13,23 +17,25 @@ type SucessListItemsProps = {
 export default function SucessListItemVertical(props:SucessListItemsProps){
     const tintColor = useThemeColor({ light: 'black', dark: 'white' }, 'background');
     const color = useThemeColor({ light: 'black', dark: 'white' }, 'background');
+    const backgroundColor = useThemeColor({ light: 'black', dark: 'white' }, 'background');
 
     return(
-        <View style={styles.itemsContainer}>
-            <View style={styles.itemContainer} >
+        <ThemedView style={styles.itemsContainer}>
+            <ThemedView style={styles.itemContainer} >
             <AnimatedCircularProgress
                 size={100}
                 width={10}
                 fill={props.items.avancement}
-                tintColor="#00e0ff"
-                backgroundColor="#3d5875"
-                padding={10}
+                tintColor="#2C9F54"
+                backgroundColor="#808080"
+                //padding={15}
 
-                renderCap={({ center }) => <Circle cx={center.x} cy={center.y} r="10" fill="blue" />}
+                //renderCap={({ center }) => <Circle cx={center.x} cy={center.y} r="10" fill="blue" />}
             >
                 {
                     (fill) => (
-                        <Image style={styles.image} source={{uri:props.items.image}} />
+                        //@ts-ignore
+                        <TabBarIcon size={35} name={props.items.image} style={[styles.image,{color:tintColor}]}  />
                     )
                 }
             </AnimatedCircularProgress>
@@ -38,10 +44,10 @@ export default function SucessListItemVertical(props:SucessListItemsProps){
                 {props.items.avancement}% Tache accomplie
             </Text>
                 */}
-            <Text style={[styles.text, {color}]}>{props.items.nom}</Text>
+            <ThemedText style={[styles.text, {color}]}>{props.items.nom}</ThemedText>
 
-            </View>
-        </View>
+            </ThemedView>
+        </ThemedView>
     );
 
 }
@@ -50,7 +56,7 @@ const styles = StyleSheet.create({
         position: 'relative',
         flexDirection: 'row',
         alignItems: 'center',
-        marginVertical: 5,
+        margin: 4,
         width : Dimensions.get('window').width * 0.33
     },
     itemContainer:{
@@ -61,11 +67,6 @@ const styles = StyleSheet.create({
         fontSize:12
     },
     image : {
-        width : 30,
-        height : 30,
-        margin : 5,
         alignSelf : "center",
-
-
     }
 });
