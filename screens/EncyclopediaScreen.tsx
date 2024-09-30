@@ -1,29 +1,29 @@
 
 import {FlatList, StyleSheet} from "react-native";
 import SearchBar from "../components/ui/SearchBar";
-import {Specie} from "@/app/(tabs)/encyclopedia";
 import SpeciesListItem from "@/components/encyclopedia/SpeciesListItem";
 import { useState} from "react";
 import {ThemedView} from "@/components/ui/themed/ThemedView";
 import SpeciesFilter from "@/components/encyclopedia/SpeciesFilter";
 import {SafeView} from "@/components/ui/SafeView";
+import Capture from "@/model/Capture";
 
 interface EncyclopediaScreenProps {
-    species: Specie[]
+    captures: Capture[]
 }
 
 export default function EncyclopediaScreen(props: EncyclopediaScreenProps) {
-    const [filteredData, setFilteredData] = useState(props.species);
+    const [filteredData, setFilteredData] = useState(props.captures);
 
     return (
         <SafeView>
 
             <ThemedView style={styles.header}>
                 <ThemedView style={styles.searchBar}>
-                    <SearchBar baseData={props.species} setFilteredData={setFilteredData} placeholder={"Rechercher..."}/>
+                    <SearchBar baseData={props.captures} setFilteredData={setFilteredData} placeholder={"Rechercher..."}/>
                 </ThemedView>
 
-                <SpeciesFilter baseSpecies={props.species} setFilteredSpecies={setFilteredData}/>
+                <SpeciesFilter baseSpecies={props.captures} setFilteredSpecies={setFilteredData}/>
             </ThemedView>
 
             <FlatList
