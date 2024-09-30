@@ -1,18 +1,18 @@
 import {StyleSheet, Text, View, Image, ImageBackground, Dimensions} from 'react-native';
 import {ThemedView} from "@/components/ui/themed/ThemedView";
 import {ThemedText} from "@/components/ui/themed/ThemedText";
-import {Specie} from "@/app/(tabs)/encyclopedia";
+import Capture from "@/model/Capture";
 
-type SpeciesListItemProps={
-    specie:Specie
+type CapturesListItemProps={
+    capture:Capture
 }
 const { width } = Dimensions.get('window');
 const itemSize = width / 3 - 15;
-export default function SpeciesListItem(props: SpeciesListItemProps){
+export default function CapturesListItem(props: CapturesListItemProps){
     return (
         <ThemedView style={styles.container}>
-            <ImageBackground source={{uri:props.specie.image}} style={styles.image} imageStyle={styles.imageStyle}>
-                <ThemedText style={styles.name}>{props.specie.name}</ThemedText>
+            <ImageBackground source={{uri:props.capture.specie.image}} style={styles.image} imageStyle={styles.imageStyle}>
+                <ThemedText style={styles.name}>{props.capture.specie.name}</ThemedText>
             </ImageBackground>
         </ThemedView>
     )

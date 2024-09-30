@@ -1,22 +1,24 @@
-import {Modal, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {FlatList, Modal, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {ThemedView} from "@/components/ui/themed/ThemedView";
 import {ThemedText} from "@/components/ui/themed/ThemedText";
-import {Specie} from "@/app/(tabs)/encyclopedia";
 import {useState} from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import Capture from "@/model/Capture";
+import {Kingdom} from "@/model/Kingdom";
+import FilterChips from "@/components/encyclopedia/FilterChips";
 
 type SpeciesFilterProps={
-    baseSpecies:Specie[],
+    baseSpecies:Capture[],
     setFilteredSpecies:any;
 }
 
-export default function SpeciesFilter(props: SpeciesFilterProps){
+export default function CapturesFilterModal(props: SpeciesFilterProps){
     const [visible,setVisible] = useState(false)
     const sortAscending = () => {
-        props.setFilteredSpecies([...props.baseSpecies].sort((s1, s2) => s1.name.localeCompare(s2.name)));
+        props.setFilteredSpecies([...props.baseSpecies].sort((s1, s2) => s1.specie.name.localeCompare(s2.specie.name)));
     }
     const sortDescending = () => {
-        props.setFilteredSpecies([...props.baseSpecies].sort((s1, s2) => s2.name.localeCompare(s1.name)));
+        props.setFilteredSpecies([...props.baseSpecies].sort((s1, s2) => s2.specie.name.localeCompare(s1.specie.name)));
     }
 
     return (
@@ -45,6 +47,8 @@ export default function SpeciesFilter(props: SpeciesFilterProps){
                         </TouchableOpacity>
                     </ThemedView>
                     <ThemedText>Filter :</ThemedText>
+                    <ThemedText>Kingdom :</ThemedText>
+                    <FlatList data={Object.values(Kingdom)} renderItem={(item) => (<FilterChips name={item.item}/>)} horizontal={true}/>
                 </ThemedView>
 
             </Modal>

@@ -1,10 +1,10 @@
 
 import {FlatList, StyleSheet} from "react-native";
-import SearchBar from "../components/ui/SearchBar";
-import SpeciesListItem from "@/components/encyclopedia/SpeciesListItem";
+import CaptureSearchBar from "../components/encyclopedia/CaptureSearchBar";
+import SpeciesListItem from "@/components/encyclopedia/CapturesListItem";
 import { useState} from "react";
 import {ThemedView} from "@/components/ui/themed/ThemedView";
-import SpeciesFilter from "@/components/encyclopedia/SpeciesFilter";
+import CapturesFilterModal from "@/components/encyclopedia/CapturesFilterModal";
 import {SafeView} from "@/components/ui/SafeView";
 import Capture from "@/model/Capture";
 
@@ -20,20 +20,19 @@ export default function EncyclopediaScreen(props: EncyclopediaScreenProps) {
 
             <ThemedView style={styles.header}>
                 <ThemedView style={styles.searchBar}>
-                    <SearchBar baseData={props.captures} setFilteredData={setFilteredData} placeholder={"Rechercher..."}/>
+                    <CaptureSearchBar baseData={props.captures} setFilteredData={setFilteredData} placeholder={"Rechercher..."}/>
                 </ThemedView>
-
-                <SpeciesFilter baseSpecies={props.captures} setFilteredSpecies={setFilteredData}/>
+                <CapturesFilterModal baseSpecies={props.captures} setFilteredSpecies={setFilteredData}/>
             </ThemedView>
 
             <FlatList
-                style={styles.speciesList}
+                style={styles.capturesList}
                 showsVerticalScrollIndicator={false}
                 columnWrapperStyle={styles.columnWrapper}
                 contentContainerStyle={styles.listContent}
                 data={filteredData}
-                keyExtractor={specie => String(specie.id)}
-                renderItem={(specie) => <SpeciesListItem specie={specie.item}/>}
+                keyExtractor={capture => String(capture.id)}
+                renderItem={(capture) => <SpeciesListItem capture={capture.item}/>}
                 numColumns={3}
 
             />
@@ -42,7 +41,7 @@ export default function EncyclopediaScreen(props: EncyclopediaScreenProps) {
 }
 
 const styles = StyleSheet.create({
-    speciesList:{
+    capturesList:{
         flex: 1,
         marginTop: 5,
     },

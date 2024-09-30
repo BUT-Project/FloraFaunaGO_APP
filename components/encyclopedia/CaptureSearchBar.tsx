@@ -9,12 +9,12 @@ type SearchBarProps={
     placeholder:string,
 }
 
-export default function SearchBar(props: SearchBarProps){
+export default function CaptureSearchBar(props: SearchBarProps){
     const [searchText, setSearchText] = useState('');
     const searchFilterFunction = (text:string) => {
         if (text) {
-            const newData = props.baseData.filter((specie) => {
-                const specieName = specie.name ? specie.name.toUpperCase() : ''.toUpperCase();
+            const newData = props.baseData.filter((item) => {
+                const specieName = item.specie.name ? item.specie.name.toUpperCase() : ''.toUpperCase();
                 const textData = text.toUpperCase();
                 return specieName.indexOf(textData) > -1;
             });
