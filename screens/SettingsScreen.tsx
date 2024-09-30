@@ -1,58 +1,67 @@
 import {useThemeColor} from "@/hooks/useThemeColor";
-import {Appearance, Button, StyleSheet, TouchableOpacity, useColorScheme, View} from "react-native";
+import {Appearance, Button, Pressable, StyleSheet, Switch, TouchableOpacity, useColorScheme, View} from "react-native";
 import {ThemedView} from "@/components/ui/themed/ThemedView";
 import {ThemedText} from "@/components/ui/themed/ThemedText";
 import React, {useEffect, useState} from "react";
 import {SafeAreaView} from "react-native-safe-area-context";
-
+import { LinearGradient } from 'expo-linear-gradient';
 
 
 export default function SettingsScreen() {
-    const systemTheme = Appearance.getColorScheme(); // Thème détecté par le système
+    const systemTheme = Appearance.getColorScheme();
     const [theme, setTheme] = useState(systemTheme || 'light'); // État du thème
 
-    // Utiliser useEffect pour synchroniser le thème avec le système au démarrage
+
     useEffect(() => {
         Appearance.setColorScheme(theme); // Appliquer le schéma de couleurs actuel
     }, [theme]);
 
+
     const toggleTheme = () => {
         setTheme(prevTheme => {
-            const newTheme = prevTheme === 'light' ? 'dark' : 'light'; // Inverser le thème
+            const newTheme = prevTheme === 'light' ? 'dark' : 'light';
             Appearance.setColorScheme(newTheme);
             return newTheme;
         });
     };
-
-    const color = useThemeColor({light: 'white', dark: 'black'}, 'background');
-    const colorReverse = useThemeColor({light: 'black', dark: 'white'}, 'background');
-    const backgroundColor = useThemeColor({light: 'black', dark: 'white'}, 'background');
-
+    const [switchBut, setswitchBut] = useState(false);
+    const switchChange = () => {
+        setswitchBut(previousState => !previousState);
+    };
 
     return (
+
         <ThemedView style={{flex: 1}}>
-             <SafeAreaView >
-                 <ThemedText style={[styles.title,{color:colorReverse}]}>Settings</ThemedText>
-                 <TouchableOpacity style={[styles.button,{backgroundColor}]}>
-                     <ThemedText style={[styles.buttonText,{color}]}>Mode offline</ThemedText>
+            <LinearGradient style={{flex:1}}  colors={["#90EE90","#0D98BA"]}>
+             <SafeAreaView>
+
+                 <ThemedText style={styles.title}>Settings</ThemedText>
+                 <Pressable onPress={switchChange} style={styles.button}>
+                     <ThemedText style={styles.buttonText}>Mode offline</ThemedText>
+                     <Switch value={switchBut} trackColor={{false: "#767577", true: "#90EE90"}} style={styles.switch}  />
+                 </Pressable>
+
+                 <TouchableOpacity style={styles.button}>
+                     <ThemedText style={styles.buttonText}>Modifier l'adresse mail</ThemedText>
                  </TouchableOpacity>
 
-                 <TouchableOpacity style={[styles.button,{backgroundColor}]}>
-                     <ThemedText style={[styles.buttonText,{color}]}>Modifier l'adresse mail</ThemedText>
+                 <TouchableOpacity onPress={toggleTheme} style={styles.button}>
+                     <ThemedText style={styles.buttonText}>Changer le thème</ThemedText>
                  </TouchableOpacity>
 
-                 <TouchableOpacity onPress={toggleTheme} style={[styles.button,{backgroundColor}]}>
-                     <ThemedText style={[styles.buttonText,{color}]}>Changer le thème</ThemedText>
+                 <TouchableOpacity style={styles.button}>
+                     <ThemedText style={styles.buttonText}>Activer l'économie de batterie</ThemedText>
                  </TouchableOpacity>
 
-                 <TouchableOpacity style={[styles.button,{backgroundColor}]}>
-                     <ThemedText style={[styles.buttonText,{color}]}>Activer l'économie de batterie</ThemedText>
+                 <TouchableOpacity style={styles.button}>
+                     <ThemedText style={styles.buttonText}>Deconnexion</ThemedText>
                  </TouchableOpacity>
 
-                 <TouchableOpacity style={[styles.button, styles.deleteButton]}>
-                     <ThemedText style={[styles.buttonText,{color}]}>Supprimer le compte</ThemedText>
+                 <TouchableOpacity style={styles.button}>
+                     <ThemedText style={[styles.deleteText]}>Supprimer le compte</ThemedText>
                  </TouchableOpacity>
              </SafeAreaView>
+            </LinearGradient>
         </ThemedView>
 
     );
@@ -63,22 +72,33 @@ const styles = StyleSheet.create({
         padding:25,
         fontWeight:"bold",
         fontSize : 32,
-        alignSelf:"center"
+        alignSelf:"center",
+        color : "#FFFFFF"
+    },
+    switch:{
+        paddingLeft:10,
     },
     button: {
+        height:50,
         alignSelf : "center",
-        padding: 25,
+        flexDirection:"row",
+        justifyContent:"center",
+        padding: 10,
+        minWidth:"90%",
         borderRadius: 10,
         marginVertical: 10,
         width: '80%',
         alignItems: 'center',
-    },
-    deleteButton: {
-        backgroundColor: '#ff0000', // bouton rouge pour supprimer
+        backgroundColor : "#FFFFFF"
     },
     buttonText: {
         color: '#000000',
         fontSize: 16,
         fontWeight: 'bold',
     },
+    deleteText:{
+        color:'#ff0000',
+        fontSize: 16,
+        fontWeight: 'bold'
+    }
 });

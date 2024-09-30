@@ -27,7 +27,7 @@ export default function SucessListItemVertical(props:SucessListItemsProps){
                 width={10}
                 fill={props.items.avancement}
                 tintColor="#2C9F54"
-                backgroundColor="#808080"
+                backgroundColor="#DADADA"
                 //padding={15}
 
                 //renderCap={({ center }) => <Circle cx={center.x} cy={center.y} r="10" fill="blue" />}
