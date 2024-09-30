@@ -12,9 +12,16 @@ steps:
     commands:
       - npm install
       - npm run
+      - npm run test -- --coverage
+    volumes:
+      - name: coverage-data
+        path: /src/test/coverage
 
   - name: code-analysis
     image: node:latest
+    volumes:
+      - name: coverage-data
+        path: /src/test/coverage
     environment:
       SONAR_TOKEN:
         from_secret: SONAR_TOKEN
@@ -27,5 +34,9 @@ steps:
       - unzip -o $HOME/.sonar/sonar-scanner.zip -d $HOME/.sonar/
       - export PATH=$SONAR_SCANNER_HOME/bin:$PATH
       - export SONAR_SCANNER_OPTS="-server"
-      - sonar-scanner -D sonar.projectKey=FFGO -D sonar.sources=. -D sonar.host.url=https://codefirst.iut.uca.fr/sonar
+      - sonar-scanner -D sonar.projectKey=FFGO -D sonar.sources=. -D sonar.host.url=https://codefirst.iut.uca.fr/sonar -Dsonar.javascript.lcov.reportPaths=/src/test/coverage/lcov.info -Dsonar.exclusions=**/lcov-report/**
     depends_on: [ app-build ]
+    
+volumes:
+  - name: coverage-data
+    temp: {}
