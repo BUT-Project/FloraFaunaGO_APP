@@ -1,5 +1,4 @@
-import {useThemeColor} from "@/hooks/useThemeColor";
-import {Appearance, Button, Pressable, StyleSheet, Switch, TouchableOpacity, useColorScheme, View} from "react-native";
+import {Appearance, Pressable, StyleSheet, Switch, TouchableOpacity} from "react-native";
 import {ThemedView} from "@/components/ui/themed/ThemedView";
 import {ThemedText} from "@/components/ui/themed/ThemedText";
 import React, {useEffect, useState} from "react";

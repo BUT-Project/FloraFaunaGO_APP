@@ -1,8 +1,5 @@
 import {Link, Stack} from "expo-router";
-import {TabBarIcon} from "@/components/navigation/TabBarIcon";
-import {ImageBackground, Image, TouchableOpacity, Appearance} from "react-native";
-import {useThemeColor} from "@/hooks/useThemeColor";
-import {useEffect, useState} from "react";
+import { Image, TouchableOpacity} from "react-native";
 
 const croix = require("../../../assets/images/croix.png")
 

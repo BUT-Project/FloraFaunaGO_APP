@@ -1,7 +1,6 @@
 import { Sucess } from "./Sucess";
 import { SucessFactory } from "./SucessFactory";
 
-// Exemples de données de succès
 const SUCCESSES = [
     {
         "nom": "Succès A",

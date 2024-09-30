@@ -1,13 +1,12 @@
 import {ThemedText} from "@/components/ui/themed/ThemedText";
-import {FlatList, Image, StyleSheet, Text, TouchableOpacity, View} from "react-native";
-import {SafeAreaView, useSafeAreaInsets} from "react-native-safe-area-context";
+import {FlatList, Image, StyleSheet, TouchableOpacity} from "react-native";
+import {SafeAreaView} from "react-native-safe-area-context";
 import {useThemeColor} from "@/hooks/useThemeColor";
-import React, {useState} from "react";
+import React from "react";
 import {SucessStub} from "@/model/SucessStub";
 import SucessListItemVertical from "@/components/SucessListItemVertical";
 import {ThemedView} from "@/components/ui/themed/ThemedView";
-import {navigate} from "expo-router/build/global-state/routing";
-import {Link, Stack, useRouter} from 'expo-router';
+import {Link} from 'expo-router';
 
 const ProfileImage = require("../assets/images/ProfileImage.jpeg");
 const SettingsImage = require("../assets/images/settings.png");
