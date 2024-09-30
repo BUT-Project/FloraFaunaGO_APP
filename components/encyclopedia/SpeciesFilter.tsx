@@ -4,22 +4,30 @@ import {ThemedText} from "@/components/ui/themed/ThemedText";
 import {Specie} from "@/app/(tabs)/encyclopedia";
 import {useState} from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import {ICONS} from "jest-util";
 
 type SpeciesFilterProps={
     baseSpecies:Specie[],
-    setFilteredSpecies:any
+    setFilteredSpecies:any;
 }
 
 export default function SpeciesFilter(props: SpeciesFilterProps){
     const [visible,setVisible] = useState(false)
+    const sortAscending = () => {
+        props.setFilteredSpecies([...props.baseSpecies].sort((s1, s2) => s1.name.localeCompare(s2.name)));
+    }
+    const sortDescending = () => {
+        props.setFilteredSpecies([...props.baseSpecies].sort((s1, s2) => s2.name.localeCompare(s1.name)));
+    }
 
     return (
         <>
             <TouchableOpacity style={styles.filterButton} onPress={()=>setVisible(true)}>
                 <Ionicons name={"filter"} size={24}/>
             </TouchableOpacity>
-            <Modal animationType={"slide"} transparent={true} visible={visible}>
+
+
+            <Modal animationType={"slide"} transparent={true} visible={visible} onRequestClose={() =>setVisible(false)  }>
+                <TouchableOpacity style={styles.dismissButton} onPress={() => setVisible(false)}/>
                 <ThemedView style={styles.modalContent}>
                     <ThemedView style={styles.titleContainer}>
                         <ThemedText>Filter and sort the encyclopedia :</ThemedText>
@@ -29,17 +37,19 @@ export default function SpeciesFilter(props: SpeciesFilterProps){
                     </ThemedView>
                     <ThemedText>Sort :</ThemedText>
                     <ThemedView style={styles.sortContainer}>
-                        <TouchableOpacity>
-                            <Ionicons name={"link"}/>
+                        <TouchableOpacity onPress={sortAscending}>
+                            <Ionicons name={"chevron-up-outline"} size={25}/>
                         </TouchableOpacity>
-                        <TouchableOpacity>
-                            <Ionicons name={"link"}/>
+                        <TouchableOpacity onPress={sortDescending}>
+                            <Ionicons name={"chevron-down-outline"} size={25}/>
                         </TouchableOpacity>
                     </ThemedView>
                     <ThemedText>Filter :</ThemedText>
                 </ThemedView>
 
             </Modal>
+
+
         </>
 
     )
@@ -51,8 +61,12 @@ const styles = StyleSheet.create({
         padding:5,
         width:"10%"
     },
+    dismissButton:{
+        height:'70%',
+        width:"100%",
+    },
     modalContent: {
-        height: '25%',
+        height: '30%',
         width: '100%',
         borderTopRightRadius: 15,
         borderTopLeftRadius: 15,
@@ -74,6 +88,7 @@ const styles = StyleSheet.create({
         flexDirection:"row",
         justifyContent:"space-between",
         alignItems:"center",
-
+        gap:5,
+        padding:10
     }
 })

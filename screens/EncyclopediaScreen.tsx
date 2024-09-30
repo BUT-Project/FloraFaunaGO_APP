@@ -1,13 +1,12 @@
 
-import {FlatList, StyleSheet, TextInput, TouchableOpacity} from "react-native";
+import {FlatList, StyleSheet} from "react-native";
 import SearchBar from "../components/ui/SearchBar";
 import {Specie} from "@/app/(tabs)/encyclopedia";
 import SpeciesListItem from "@/components/encyclopedia/SpeciesListItem";
-import {SafeAreaView} from "react-native-safe-area-context";
-import {SetStateAction, useState} from "react";
-import Ionicons from "@expo/vector-icons/Ionicons";
+import { useState} from "react";
 import {ThemedView} from "@/components/ui/themed/ThemedView";
 import SpeciesFilter from "@/components/encyclopedia/SpeciesFilter";
+import {SafeView} from "@/components/ui/SafeView";
 
 interface EncyclopediaScreenProps {
     species: Specie[]
@@ -17,11 +16,13 @@ export default function EncyclopediaScreen(props: EncyclopediaScreenProps) {
     const [filteredData, setFilteredData] = useState(props.species);
 
     return (
-        <SafeAreaView style={{flex:1}}>
+        <SafeView>
+
             <ThemedView style={styles.header}>
                 <ThemedView style={styles.searchBar}>
                     <SearchBar baseData={props.species} setFilteredData={setFilteredData} placeholder={"Rechercher..."}/>
                 </ThemedView>
+
                 <SpeciesFilter baseSpecies={props.species} setFilteredSpecies={setFilteredData}/>
             </ThemedView>
 
@@ -36,7 +37,7 @@ export default function EncyclopediaScreen(props: EncyclopediaScreenProps) {
                 numColumns={3}
 
             />
-        </SafeAreaView>
+        </SafeView>
     )
 }
 
