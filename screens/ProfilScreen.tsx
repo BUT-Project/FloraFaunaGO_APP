@@ -3,7 +3,7 @@ import {FlatList, Image, StyleSheet, Text, TouchableOpacity, View} from "react-n
 import {SafeAreaView, useSafeAreaInsets} from "react-native-safe-area-context";
 import {useThemeColor} from "@/hooks/useThemeColor";
 import React, {useState} from "react";
-import {SucessStub} from "@/screens/SucessStub";
+import {SucessStub} from "@/model/SucessStub";
 import SucessListItemVertical from "@/components/SucessListItemVertical";
 import {ThemedView} from "@/components/ui/themed/ThemedView";
 import {navigate} from "expo-router/build/global-state/routing";
