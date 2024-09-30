@@ -6,9 +6,9 @@ export default class User {
     email: string;
     passwordHash: string;
     inscriptionDate: Date;
-    captures:Array<Capture>;
+    captures:Capture[];
 
-    constructor(id: number, username: string, email: string, passwordHash: string, inscriptionDate: Date,captures:Array<Capture>) {
+    constructor(id: number, username: string, email: string, passwordHash: string, inscriptionDate: Date,captures:Capture[]) {
         this.id = id;
         this.username = username;
         this.email = email;
