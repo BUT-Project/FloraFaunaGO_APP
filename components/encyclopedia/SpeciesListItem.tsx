@@ -7,7 +7,7 @@ type SpeciesListItemProps={
     specie:Specie
 }
 const { width } = Dimensions.get('window');
-const itemSize = width / 3 - 10;
+const itemSize = width / 3 - 15;
 export default function SpeciesListItem(props: SpeciesListItemProps){
     return (
         <ThemedView style={styles.container}>
