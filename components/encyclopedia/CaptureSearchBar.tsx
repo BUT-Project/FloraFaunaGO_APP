@@ -52,6 +52,7 @@ const styles = StyleSheet.create({
         paddingHorizontal:12,
     },
     searchBar: {
-        height:35,
+        height:37,
+        width:"90%",
     },
 })
