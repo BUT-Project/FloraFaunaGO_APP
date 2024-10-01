@@ -4,7 +4,6 @@ export class Sucess{
     private _avancement: number;
     private _description: string;
 
-    // Constructeur
     public constructor(nom: string, image: string, description: string, avancement: number) {
         this._nom = nom;
         this._image = image;
