@@ -1,6 +1,8 @@
 export enum Family {
-    Canid,
-    Bovids,
-    Leporids,
-    Hominids
+    Canid="Canid",
+    Bovids="Bovids",
+    Leporids="Leporids",
+    Hominids="Hominids",
+    Coccinellidae="Coccinellidae",
+    Sciuridae="Sciuridae",
 }
