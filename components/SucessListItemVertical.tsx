@@ -1,7 +1,6 @@
-import React, {useEffect, useState} from 'react';
-import {StyleSheet, Text, View, Image,Dimensions } from 'react-native';
+import React from 'react';
+import {StyleSheet,Dimensions } from 'react-native';
 import {AnimatedCircularProgress} from "react-native-circular-progress";
-import {Circle} from "react-native-svg";
 import {useThemeColor} from "@/hooks/useThemeColor";
 import {Sucess} from "../model/Sucess"
 import {TabBarIcon} from "@/components/navigation/TabBarIcon";
