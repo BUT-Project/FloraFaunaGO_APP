@@ -1,5 +1,5 @@
 import {ThemedText} from "@/components/ui/themed/ThemedText";
-import {FlatList, Image, StyleSheet, TouchableOpacity} from "react-native";
+import {FlatList, Image, StyleSheet, TouchableOpacity, View} from "react-native";
 import {SafeAreaView} from "react-native-safe-area-context";
 import {useThemeColor} from "@/hooks/useThemeColor";
 import React from "react";
@@ -26,11 +26,11 @@ export default function ProfilScreen() {
             </Link>
 
             <Image source={ProfileImage} style={styles.profile}/>
-            <ThemedText style={styles.title}>Statistiques</ThemedText>
+            <ThemedText style={styles.title}>──── Statistiques ────</ThemedText>
 
             <ThemedView style={styles.container}>
-                <FontAwesome5 size={30} name="walking" style={[styles.settings, {color: tintColor}]}/>
-                <ThemedText style={styles.text}>Distance marchées</ThemedText>
+                <FontAwesome5 size={32} name="walking" style={[styles.settings, {color: tintColor}]}/>
+                <ThemedText style={styles.text}>  Distance marchées</ThemedText>
             </ThemedView>
             <ThemedView style={styles.container}>
                 <FontAwesome6 size={30} name="circle-question" style={[styles.settings, {color: tintColor}]}/>
@@ -38,13 +38,13 @@ export default function ProfilScreen() {
             </ThemedView>
             <ThemedView style={styles.container}>
                 <FontAwesome5 size={30} name="dna" style={[styles.settings, {color: tintColor}]}/>
-                <ThemedText style={styles.text}>Familles complétées</ThemedText>
+                <ThemedText style={styles.text}> Familles complétées</ThemedText>
             </ThemedView>
             <ThemedView style={styles.container}>
                 <AntDesign size={30} name="clockcircleo" style={[styles.settings, {color:tintColor}]}/>
                 <ThemedText style={styles.text}>Date d'inscription</ThemedText>
             </ThemedView>
-            <ThemedText style={styles.title}>Succès</ThemedText>
+            <ThemedText style={styles.title}>────── Succès ──────</ThemedText>
         </ThemedView>
     );
 
@@ -62,35 +62,29 @@ export default function ProfilScreen() {
         </ThemedView>
     );
 }
-
 const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
-        alignSelf: "center",
+        alignItems: 'center',
+        marginLeft:'23%',
+        justifyContent: 'flex-start',
         height: 50,
+        marginVertical: 5,
     },
     title: {
-        height: 50,
         textAlign: "center",
-        fontWeight:"bold",
-        marginTop:35,
+        fontWeight: "bold",
+        marginTop: 35,
         margin: 20,
         fontSize: 24,
     },
     text: {
-        textAlign: "center",
-        verticalAlign : "middle",
-        margin: 5,
+        textAlignVertical:'center',
+        fontSize: 16,
     },
     settings: {
-        tintColor: "white",
-        width: 40,
-        height: 45,
-        margin: 10,
-    },
-    image: {
-        margin: 10,
-        alignSelf: "center",
+        marginRight: 10,
+        color: "white",
     },
     profile: {
         alignSelf: "center",
