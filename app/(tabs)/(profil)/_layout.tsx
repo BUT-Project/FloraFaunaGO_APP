@@ -1,7 +1,7 @@
 import {Link, Stack} from "expo-router";
-import { Image, TouchableOpacity} from "react-native";
+import {TouchableOpacity} from "react-native";
+import Ionicons from "@expo/vector-icons/Ionicons";
 
-const croix = require("../../../assets/images/croix.png")
 
 export default function Layout() {
 
@@ -18,9 +18,10 @@ export default function Layout() {
                 headerLeft : () =>(
                     <Link href="/(profil)/profil" asChild>
                         <TouchableOpacity>
-                            <Image
-                                source={croix}
-                                style={{ tintColor:"#808080", width: 25, height: 25, marginRight:15 }} // Taille de l'image
+                            <Ionicons
+                                name="close"
+                                size={25}
+                                style={{ color:"#808080", marginRight:15 }}
                             />
                         </TouchableOpacity>
                     </Link>)

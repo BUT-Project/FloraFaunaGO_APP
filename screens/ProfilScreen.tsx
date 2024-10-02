@@ -7,13 +7,10 @@ import {SucessStub} from "@/model/SucessStub";
 import SucessListItemVertical from "@/components/SucessListItemVertical";
 import {ThemedView} from "@/components/ui/themed/ThemedView";
 import {Link} from 'expo-router';
+import {TabBarIcon} from "@/components/navigation/TabBarIcon";
+import {AntDesign, FontAwesome5, FontAwesome6} from "@expo/vector-icons";
 
 const ProfileImage = require("../assets/images/ProfileImage.jpeg");
-const SettingsImage = require("../assets/images/settings.png");
-const DistanceImage = require("../assets/images/man-walking.png");
-const UnknownImage = require("../assets/images/unknown.png");
-const FamilleImage = require("../assets/images/famille.png");
-const TimeImage = require("../assets/images/clock.png");
 
 export default function ProfilScreen() {
     const stub = new SucessStub();
@@ -24,7 +21,7 @@ export default function ProfilScreen() {
         <ThemedView>
             <Link href={"/(profil)/settings"}  style={{ alignSelf: "flex-end",}} asChild>
                 <TouchableOpacity>
-                    <Image source={SettingsImage} style={[styles.settings, {tintColor}]}/>
+                    <TabBarIcon size={30} name="settings" style={[styles.settings, {color: tintColor}]}/>
                 </TouchableOpacity>
             </Link>
 
@@ -32,22 +29,21 @@ export default function ProfilScreen() {
             <ThemedText style={styles.title}>Statistiques</ThemedText>
 
             <ThemedView style={styles.container}>
-                <Image source={DistanceImage} style={[styles.image, {tintColor}]}/>
+                <FontAwesome5 size={30} name="walking" style={[styles.settings, {color: tintColor}]}/>
                 <ThemedText style={styles.text}>Distance marchées</ThemedText>
             </ThemedView>
             <ThemedView style={styles.container}>
-                <Image source={UnknownImage} style={[styles.image, {tintColor}]}/>
+                <FontAwesome6 size={30} name="circle-question" style={[styles.settings, {color: tintColor}]}/>
                 <ThemedText style={styles.text}>Espèces découvertes</ThemedText>
             </ThemedView>
             <ThemedView style={styles.container}>
-                <Image source={FamilleImage} style={[styles.image, {tintColor}]}/>
+                <FontAwesome5 size={30} name="dna" style={[styles.settings, {color: tintColor}]}/>
                 <ThemedText style={styles.text}>Familles complétées</ThemedText>
             </ThemedView>
             <ThemedView style={styles.container}>
-                <Image source={TimeImage} style={[styles.image, {tintColor}]}/>
+                <AntDesign size={30} name="clockcircleo" style={[styles.settings, {color:tintColor}]}/>
                 <ThemedText style={styles.text}>Date d'inscription</ThemedText>
             </ThemedView>
-
             <ThemedText style={styles.title}>Succès</ThemedText>
         </ThemedView>
     );
@@ -71,29 +67,29 @@ const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
         alignSelf: "center",
-        height: 45,
+        height: 50,
     },
     title: {
         height: 50,
         textAlign: "center",
+        fontWeight:"bold",
+        marginTop:35,
         margin: 20,
         fontSize: 24,
     },
     text: {
-        height: 50,
         textAlign: "center",
+        verticalAlign : "middle",
         margin: 5,
     },
     settings: {
         tintColor: "white",
-        width: 35,
-        height: 35,
+        width: 40,
+        height: 45,
         margin: 10,
     },
     image: {
-        width: 30,
-        height: 30,
-        margin: 5,
+        margin: 10,
         alignSelf: "center",
     },
     profile: {
