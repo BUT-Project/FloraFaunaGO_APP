@@ -3,12 +3,12 @@ import {ThemedView} from "@/components/ui/themed/ThemedView";
 import {ThemedText} from "@/components/ui/themed/ThemedText";
 import Capture from "@/model/Capture";
 
-type CapturesListItemProps={
+type SpeciesCapturesListItemProps={
     capture:Capture
 }
 const { width } = Dimensions.get('window');
 const itemSize = width / 3 - 15;
-export default function CapturesListItem(props: CapturesListItemProps){
+export default function SpeciesListItem(props: SpeciesCapturesListItemProps){
     return (
         <ThemedView style={styles.container}>
             <ImageBackground source={{uri:props.capture.specie.image}} style={styles.image} imageStyle={styles.imageStyle}>
