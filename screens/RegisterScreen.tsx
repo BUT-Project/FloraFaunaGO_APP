@@ -7,11 +7,9 @@ import {
     TouchableOpacity, Platform, Alert
 } from 'react-native';
 import Ionicons from "@expo/vector-icons/Ionicons";
-import {ThemedView} from "@/components/ui/themed/ThemedView";
 import {Link} from "expo-router";
 import normalize from "@/components/ui/responsive/Normalize";
 import {Audio} from 'expo-av';
-import DismissKeyboard from "@/components/ui/DismissKeyboard";
 import {InputWithIcon} from "@/components/ui/InputWithIcon";
 
 export default function RegisterScreen() {
@@ -28,10 +26,7 @@ export default function RegisterScreen() {
     } = useRegisterViewModel();
 
     return (
-        <DismissKeyboard>
-            <ThemedView style={styles.container}>
-                <Text style={styles.versionText}>v2.0</Text>
-                <Image source={require("../assets/images/logo_FFGO.png")} style={styles.imageLogo}/>
+        <View style={styles.content}>
                 <Text style={styles.title}>S'INSCRIRE</Text>
                 {failedSignup && (
                     <Text style={styles.errorText}>{errorMessage}</Text>
@@ -65,31 +60,13 @@ export default function RegisterScreen() {
                         <Text style={styles.linkText}>Se connecter</Text>
                     </Link>
                 </View>
-            </ThemedView>
-        </DismissKeyboard>
-    );
+        </View>)
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
+    content: {
         alignItems: 'center',
-        paddingHorizontal: 20,
-    },
-    versionText: {
-        position: 'absolute',
-        top: 40,
-        right: 20,
-        color: 'gray',
-        fontWeight: 'bold',
-        fontSize: normalize(17)
-    },
-    imageLogo: {
-        width: normalize(324),
-        height: normalize(162),
-        resizeMode: "contain",
-        marginBottom: normalize(40),
+        width: '100%',
     },
     title: {
         fontWeight: 'bold',

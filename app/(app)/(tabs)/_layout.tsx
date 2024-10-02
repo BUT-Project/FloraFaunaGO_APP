@@ -7,7 +7,7 @@ import {useSafeAreaInsets} from "react-native-safe-area-context";
 export default function TabLayout() {
     const colorScheme = useColorScheme();
     const insets = useSafeAreaInsets();
-    return <Redirect href="/register"/>;
+    // return <Redirect href="/(auth)/register"/>;
     return (
         <Tabs
             screenOptions={{
@@ -31,7 +31,8 @@ export default function TabLayout() {
                         <TabBarIcon name={focused ? 'book' : 'book-outline'} color={color}/>
                     ),
                 }}
-            /><Tabs.Screen
+            />
+            <Tabs.Screen
             name="(profil)"
             options={{
                 title: 'Profil',

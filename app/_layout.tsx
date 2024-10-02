@@ -1,6 +1,6 @@
 import {DarkTheme, DefaultTheme, ThemeProvider} from '@react-navigation/native';
 import {useFonts} from 'expo-font';
-import {Slot} from 'expo-router';
+import {Slot, useRouter} from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import {useEffect} from 'react';
 import 'react-native-reanimated';
@@ -14,7 +14,7 @@ export default function RootLayout() {
     const [loaded] = useFonts({
         SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
     });
-
+const router = useRouter();
     useEffect(() => {
         if (loaded) {
             SplashScreen.hideAsync();
