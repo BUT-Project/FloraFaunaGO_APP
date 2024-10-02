@@ -3,5 +3,6 @@ export enum Class {
     Birds ="Birds",
     Reptiles ="Reptiles",
     Amphibians ="Amphibians",
-    Fish="Fish"
+    Fish="Fish",
+    Insects="Insects"
 }
