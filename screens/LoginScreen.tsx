@@ -10,10 +10,8 @@ import normalize from '@/components/ui/responsive/Normalize';
 
 import {useState, useCallback} from 'react';
 import {Alert} from 'react-native';
-import {useRouter} from "expo-router";
-import {ThemedView} from "@/components/ui/themed/ThemedView";
+import {Link} from "expo-router";
 import {Entypo, FontAwesome} from "@expo/vector-icons";
-import DismissKeyboard from "@/components/ui/DismissKeyboard";
 import {InputWithIcon} from "@/components/ui/InputWithIcon";
 
 export interface LoginCredentials {
@@ -22,7 +20,6 @@ export interface LoginCredentials {
 }
 
 export default function LoginScreen() {
-    const router = useRouter();
     const {
         username,
         setUsername,
@@ -35,73 +32,54 @@ export default function LoginScreen() {
     } = useLoginViewModel();
 
     return (
-        <DismissKeyboard>
-            <ThemedView style={styles.container}>
-                <Text style={styles.versionText}>v2.0</Text>
-                <Image source={require("../assets/images/logo_FFGO.png")} style={styles.imageLogo}/>
-                <Text style={styles.title}>SE CONNECTER</Text>
-                {failedLogin && (
-                    <Text style={styles.errorText}>Email ou mot de passe incorrect!</Text>
-                )}
-                <InputWithIcon
-                    icon="user"
-                    placeholder="Email"
-                    value={username}
-                    onChangeText={setUsername}
-                    keyboardType="email-address"
-                />
-                <InputWithIcon
-                    icon="lock"
-                    placeholder="Password"
-                    value={password}
-                    onChangeText={setPassword}
-                    secureTextEntry
-                />
-                <View style={styles.rememberMeContainer}>
-                    <TouchableOpacity
-                        style={[styles.checkbox, rememberMe && styles.checkboxChecked]}
-                        onPress={toggleRememberMe}
-                    >
-                        {rememberMe && (
-                            <FontAwesome name="check" color="white" size={14}/>
-                        )}
-                    </TouchableOpacity>
-                    <Text style={styles.rememberMeText}>SE SOUVENIR DE MOI</Text>
-                </View>
-                <TouchableOpacity style={styles.button} onPress={submitForm}>
-                    <Entypo name="check" size={40} color="#AFEDEC"/>
+        <View style={styles.content}>
+
+            <Text style={styles.title}>SE CONNECTER</Text>
+            {failedLogin && (
+                <Text style={styles.errorText}>Email ou mot de passe incorrect!</Text>
+            )}
+            <InputWithIcon
+                icon="user"
+                placeholder="Email"
+                value={username}
+                onChangeText={setUsername}
+                keyboardType="email-address"
+            />
+            <InputWithIcon
+                icon="lock"
+                placeholder="Password"
+                value={password}
+                onChangeText={setPassword}
+                secureTextEntry
+            />
+            <View style={styles.rememberMeContainer}>
+                <TouchableOpacity
+                    style={[styles.checkbox, rememberMe && styles.checkboxChecked]}
+                    onPress={toggleRememberMe}
+                >
+                    {rememberMe && (
+                        <FontAwesome name="check" color="white" size={14}/>
+                    )}
                 </TouchableOpacity>
-                <View style={styles.footer}>
-                    <Text style={styles.footerText}>Tu n'as pas de compte? </Text>
-                    <TouchableOpacity onPress={() => router.replace('/register')}>
+                <Text style={styles.rememberMeText}>SE SOUVENIR DE MOI</Text>
+            </View>
+            <TouchableOpacity style={styles.button} onPress={submitForm}>
+                <Entypo name="check" size={40} color="#AFEDEC"/>
+            </TouchableOpacity>
+            <View style={styles.footer}>
+                <Text style={styles.footerText}>Tu n'as pas de compte? </Text>
+                <Link href="/register" replace>
                         <Text style={styles.linkText}>S'inscrire</Text>
-                    </TouchableOpacity>
-                </View>
-            </ThemedView>
-        </DismissKeyboard>
+                </Link>
+            </View>
+        </View>
     );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
+    content: {
         alignItems: 'center',
-        paddingHorizontal: 20,
-    },
-    versionText: {
-        position: 'absolute',
-        top: 40,
-        right: 20,
-        color: 'gray',
-        fontWeight: 'bold',
-        fontSize: normalize(17)
-    },
-    imageLogo: {
-        width: normalize(324),
-        height: normalize(162),
-        resizeMode: "contain",
-        marginBottom: normalize(40),
+        width: '100%',
     },
     title: {
         fontWeight: 'bold',

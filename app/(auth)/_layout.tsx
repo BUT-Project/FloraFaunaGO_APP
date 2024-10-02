@@ -1,4 +1,4 @@
-import {Slot, Stack} from "expo-router";
+import {Slot} from "expo-router";
 import normalize from "@/components/ui/responsive/Normalize";
 import {StyleSheet, Image} from "react-native";
 import DismissKeyboard from "@/components/ui/DismissKeyboard";
@@ -8,15 +8,9 @@ export default function AuthLayout() {
     return (
         <DismissKeyboard>
             <ThemedView style={commonAuthStyles.container}>
-                <ThemedText style={commonAuthStyles.versionText}>v2.0</ThemedText>
+                <ThemedText style={commonAuthStyles.versionText}>v0.2</ThemedText>
                 <Image source={require("@/assets/images/logo_FFGO.png")} style={commonAuthStyles.imageLogo}/>
-                {/*<Stack />*/}
-                <Slot/>
-                {/* <Stack>*/}
-                {/*     <Stack.Screen name="login" options={{headerShown: false, title: "Login"}}/>*/}
-                {/*     <Stack.Screen name="register" options={{headerShown: false, title: "Register"}}/>*/}
-                {/*     <Stack.Screen name="forgot-password" options={{headerShown: false, title: "Forgot Password"}}/>*/}
-                {/* </Stack>*/}
+                <Slot initialRouteName="login"/>
             </ThemedView>
         </DismissKeyboard>
     );

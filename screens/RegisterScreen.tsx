@@ -1,7 +1,6 @@
 import React, {useCallback, useState} from 'react';
 import {
     View,
-    Image,
     StyleSheet,
     Text,
     TouchableOpacity, Platform, Alert
@@ -27,39 +26,39 @@ export default function RegisterScreen() {
 
     return (
         <View style={styles.content}>
-                <Text style={styles.title}>S'INSCRIRE</Text>
-                {failedSignup && (
-                    <Text style={styles.errorText}>{errorMessage}</Text>
-                )}
-                <InputWithIcon
-                    icon="user"
-                    placeholder="Username"
-                    value={username}
-                    onChangeText={setUsername}
-                />
-                <InputWithIcon
-                    icon="envelope"
-                    placeholder="Email"
-                    value={email}
-                    onChangeText={setEmail}
-                    keyboardType="email-address"
-                />
-                <InputWithIcon
-                    icon="lock"
-                    placeholder="Password"
-                    value={password}
-                    onChangeText={setPassword}
-                    secureTextEntry
-                />
-                <TouchableOpacity style={styles.button} onPress={submitForm}>
-                    <Ionicons name={'repeat'} size={40} color="#AFEDEC"/>
-                </TouchableOpacity>
-                <View style={styles.footer}>
-                    <Text style={styles.footerText}>Tu as déjà un compte? </Text>
-                    <Link href="/(auth)/login" replace>
-                        <Text style={styles.linkText}>Se connecter</Text>
-                    </Link>
-                </View>
+            <Text style={styles.title}>S'INSCRIRE</Text>
+            {failedSignup && (
+                <Text style={styles.errorText}>{errorMessage}</Text>
+            )}
+            <InputWithIcon
+                icon="user"
+                placeholder="Username"
+                value={username}
+                onChangeText={setUsername}
+            />
+            <InputWithIcon
+                icon="envelope"
+                placeholder="Email"
+                value={email}
+                onChangeText={setEmail}
+                keyboardType="email-address"
+            />
+            <InputWithIcon
+                icon="lock"
+                placeholder="Password"
+                value={password}
+                onChangeText={setPassword}
+                secureTextEntry
+            />
+            <TouchableOpacity style={styles.button} onPress={submitForm}>
+                <Ionicons name={'repeat'} size={40} color="#AFEDEC"/>
+            </TouchableOpacity>
+            <View style={styles.footer}>
+                <Text style={styles.footerText}>Tu as déjà un compte? </Text>
+                <Link href="/login" replace>
+                    <Text style={styles.linkText}>Se connecter</Text>
+                </Link>
+            </View>
         </View>)
 }
 
