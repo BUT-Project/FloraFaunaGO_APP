@@ -7,6 +7,8 @@ import {Class} from "@/model/Class";
 import {Kingdom} from "@/model/Kingdom";
 import {Family} from "@/model/Family";
 import Capture from "@/model/Capture";
+import CaptureDetail from "@/model/CaptureDetail";
+import Location from "@/model/Location";
 
 const eurylaime = new Specie(1,"Eurylaime vert","Calyptomena viridis","Petit oiseau vert tout mignon, tout choupi",
     new Habitat("Jungle",Climate.Tropical),Diet.Herbivores,Kingdom.Animal,Class.Birds,Family.Bovids,
@@ -24,7 +26,10 @@ const squirel = new Specie(3,"Écureuil gris","Sciurus carolinensis",
 
 export default function Encyclopedia() {
   const captures = [
-      new Capture(1,"",eurylaime,[]),
+      new Capture(1,"",eurylaime,[
+          new CaptureDetail(1,new Date(),false,new Location(332,232,323,1,1)),
+          new CaptureDetail(2,new Date(),false,new Location(332,232,323,1,1)),
+      ]),
       new Capture(2,"",coccinelle,[]),
       new Capture(3,"",squirel,[]),
   ]

@@ -1,7 +1,7 @@
 export enum Climate {
-    Tropical,
-    Dry,
-    Temperate,
-    Continental,
-    Polar,
+    Tropical="Tropical",
+    Dry="Dry",
+    Temperate="Temperate",
+    Continental="Continental",
+    Polar="Polar",
 }
