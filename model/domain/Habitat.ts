@@ -1,4 +1,4 @@
-import {Climate} from "@/model/Climate";
+import {Climate} from "@/model/domain/Climate";
 
 export default class Habitat{
     zone: string;

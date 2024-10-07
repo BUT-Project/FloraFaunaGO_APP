@@ -1,4 +1,4 @@
-import Location from "@/model/Location";
+import Location from "@/model/domain/Location";
 
 export default class CaptureDetail {
     id: number;

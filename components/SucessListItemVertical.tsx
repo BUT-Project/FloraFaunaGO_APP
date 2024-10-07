@@ -2,7 +2,7 @@ import React from 'react';
 import {StyleSheet,Dimensions } from 'react-native';
 import {AnimatedCircularProgress} from "react-native-circular-progress";
 import {useThemeColor} from "@/hooks/useThemeColor";
-import {Sucess} from "../model/Sucess"
+import {Sucess} from "model/domain/Sucess"
 import {TabBarIcon} from "@/components/navigation/TabBarIcon";
 import {ThemedView} from "@/components/ui/themed/ThemedView";
 import {ThemedText} from "@/components/ui/themed/ThemedText";

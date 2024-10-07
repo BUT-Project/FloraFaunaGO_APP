@@ -1,7 +1,7 @@
 import {StyleSheet, Text, View, Image, ImageBackground, Dimensions} from 'react-native';
 import {ThemedView} from "@/components/ui/themed/ThemedView";
 import {ThemedText} from "@/components/ui/themed/ThemedText";
-import Capture from "@/model/Capture";
+import Capture from "@/model/domain/Capture";
 
 type CapturesListItemProps={
     capture:Capture

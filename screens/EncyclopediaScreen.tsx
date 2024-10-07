@@ -6,7 +6,7 @@ import { useState} from "react";
 import {ThemedView} from "@/components/ui/themed/ThemedView";
 import CapturesFilterModal from "@/components/encyclopedia/CapturesFilterModal";
 import {SafeView} from "@/components/ui/SafeView";
-import Capture from "@/model/Capture";
+import Capture from "@/model/domain/Capture";
 import {Link} from "expo-router";
 
 interface EncyclopediaScreenProps {

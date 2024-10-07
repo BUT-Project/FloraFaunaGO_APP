@@ -1,5 +1,5 @@
-import CaptureDetail from "@/model/CaptureDetail";
-import Specie from "@/model/Specie";
+import CaptureDetail from "@/model/domain/CaptureDetail";
+import Specie from "@/model/domain/Specie";
 
 export default class Capture {
     id: number;

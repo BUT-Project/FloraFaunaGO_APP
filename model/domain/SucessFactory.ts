@@ -1,4 +1,4 @@
-import { Sucess } from "./Sucess";
+import { Sucess } from "model/domain/Sucess";
 
 export class SucessFactory {
     public static createSuccesses(jsonArray: string): Sucess[] {

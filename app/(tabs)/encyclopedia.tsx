@@ -1,12 +1,12 @@
 import EncyclopediaScreen from "@/screens/EncyclopediaScreen";
-import Specie from "@/model/Specie";
-import Habitat from "@/model/Habitat";
-import {Climate} from "@/model/Climate";
-import {Diet} from "@/model/Diet";
-import {Class} from "@/model/Class";
-import {Kingdom} from "@/model/Kingdom";
-import {Family} from "@/model/Family";
-import Capture from "@/model/Capture";
+import Specie from "@/model/domain/Specie";
+import Habitat from "@/model/domain/Habitat";
+import {Climate} from "@/model/domain/Climate";
+import {Diet} from "@/model/domain/Diet";
+import {Class} from "@/model/domain/Class";
+import {Kingdom} from "@/model/domain/Kingdom";
+import {Family} from "@/model/domain/Family";
+import Capture from "@/model/domain/Capture";
 
 const eurylaime = new Specie(1,"Eurylaime vert","Calyptomena viridis","Petit oiseau vert tout mignon, tout choupi",
     new Habitat("Jungle",Climate.Tropical),Diet.Herbivores,Kingdom.Animal,Class.Birds,Family.Bovids,

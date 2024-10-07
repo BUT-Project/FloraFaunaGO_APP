@@ -1,4 +1,4 @@
-import Capture from "@/model/Capture";
+import Capture from "@/model/domain/Capture";
 
 export default class User {
     id: number;

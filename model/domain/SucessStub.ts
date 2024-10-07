@@ -1,5 +1,5 @@
-import { Sucess } from "./Sucess";
-import { SucessFactory } from "./SucessFactory";
+import { Sucess } from "model/domain/Sucess";
+import { SucessFactory } from "model/domain/SucessFactory";
 
 const SUCCESSES = [
     {
