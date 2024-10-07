@@ -1,9 +1,14 @@
-class GenericClient{
+class GenericClient {
+    public baseUrl: string;
+
+    constructor(baseUrl: string) {
+        this.baseUrl = baseUrl;
+    }
+
     private async request<T>(endpoint: string, method: string, body?: any): Promise<T> {
         const url = `${this.baseUrl}${endpoint}`;
         const headers = {
             'Content-Type': 'application/json',
-            // Add any other headers here, like authorization
         };
 
         const response = await fetch(url, {

@@ -3,12 +3,11 @@ import {FilterPredicate} from "@/dal/FilterPredicate";
 import Specie from "@/model/Specie";
 import {ApiClient} from "@/dal/apiLib/ApiClient";
 
-export class SpeciesClient extends SpeciesRepository {
+export class SpeciesClient extends SpeciesRepository extends GenericClient {
 
     constructor(dataMgr: ApiClient) {
         super();
     }
-
 
     count(filter: FilterPredicate<Specie>): Promise<number> {
         return Promise.resolve(0);
@@ -33,5 +32,4 @@ export class SpeciesClient extends SpeciesRepository {
     update(id: string, item: Specie): Promise<void> {
         return Promise.resolve(undefined);
     }
-
 }
