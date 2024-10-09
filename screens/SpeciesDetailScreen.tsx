@@ -1,5 +1,5 @@
 
-import {Animated, FlatList, Image, StyleSheet} from "react-native";
+import {Animated, FlatList, Image, StyleSheet, TouchableOpacity} from "react-native";
 import Capture from "@/model/Capture";
 import {ThemedText} from "@/components/ui/themed/ThemedText";
 import {ThemedView} from "@/components/ui/themed/ThemedView";
@@ -13,6 +13,8 @@ import {Kingdom} from "@/model/Kingdom";
 import {Class} from "@/model/Class";
 import {Family} from "@/model/Family";
 import CaptureDetails from "@/components/encyclopedia/CaptureDetails";
+import MapView, {Marker} from "react-native-maps";
+import {Link} from "expo-router";
 
 
 interface SpeciesDetailScreenProps {
@@ -63,14 +65,32 @@ export default function SpeciesDetailScreen(props: SpeciesDetailScreenProps) {
                             <ThemedText style={styles.description}>{props.capture.specie.description}</ThemedText>
                         </ThemedView>
                         <ThemedView style={styles.mapContainer}>
-
+                            <MapView
+                                style={styles.map}
+                                initialRegion={{
+                                    longitude:props.capture.specie.locations[0].longitude,
+                                    latitude:props.capture.specie.locations[0].latitude,
+                                    latitudeDelta: 0.3,
+                                    longitudeDelta: 0.3,
+                                }}
+                            >
+                                {props.capture.specie.locations.map((loc) => (
+                                    <Marker coordinate={{longitude:loc.longitude,latitude:loc.latitude}}/>
+                                ))}
+                            </MapView>
                         </ThemedView>
                     </ThemedView>
                     <ThemedView style={styles.familyContainer}>
                         <ThemedText>Famille :</ThemedText>
                         <FlatList
                             data={FAMILY_TEST}
-                              renderItem={(capture) => <SpeciesListItem capture={capture.item}/>}
+                              renderItem={(capture) => (
+                                  <Link  href={{params: { id: capture.item.id.toString()}, pathname:"/(encyclopedia)/[id]" }} asChild>
+                                      <TouchableOpacity>
+                                          <SpeciesListItem capture={capture.item}/>
+                                      </TouchableOpacity>
+                                  </Link>
+                              )}
                             horizontal={true}/>
                     </ThemedView>
                     <ThemedView style={styles.capturesContainer}>
@@ -121,11 +141,12 @@ const styles = StyleSheet.create({
     mapDescContainer:{
         flexDirection:"row",
         gap:10,
-        padding:10,
+        paddingHorizontal:10,
+        height:150,
 
     },
     descContainer:{
-        width:"65%",
+        width:"54%",
         padding:7,
         borderRadius:15,
         backgroundColor:"#000",
@@ -134,7 +155,13 @@ const styles = StyleSheet.create({
         color:"#FFF"
     },
     mapContainer:{
-        width:"35%",
+        width:"44%",
+        borderRadius:15,
+        overflow:"hidden"
+    },
+    map:{
+        width:"100%",
+        height:"100%",
     },
     familyContainer:{
         paddingHorizontal:10,
