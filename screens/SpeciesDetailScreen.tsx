@@ -1,5 +1,5 @@
 
-import {Animated, FlatList, Image, StyleSheet, TouchableOpacity} from "react-native";
+import {Animated, FlatList, StyleSheet, TouchableOpacity} from "react-native";
 import Capture from "@/model/Capture";
 import {ThemedText} from "@/components/ui/themed/ThemedText";
 import {ThemedView} from "@/components/ui/themed/ThemedView";
@@ -15,7 +15,9 @@ import {Family} from "@/model/Family";
 import CaptureDetails from "@/components/encyclopedia/CaptureDetails";
 import MapView, {Marker} from "react-native-maps";
 import {Link} from "expo-router";
-
+import PagerView from 'react-native-pager-view';
+import React from "react";
+import SpeciesImagePager from "@/components/encyclopedia/SpeciesImagePager";
 
 interface SpeciesDetailScreenProps {
     capture: Capture
@@ -40,7 +42,7 @@ export default function SpeciesDetailScreen(props: SpeciesDetailScreenProps) {
     return (
             <ScrollView>
                 <ThemedView style={styles.container}>
-                    <Image style={styles.image} source={{uri:props.capture.specie.image}}/>
+                    <SpeciesImagePager speciePhoto={props.capture.specie.image} userPhoto={props.capture.photo}/>
                     <ThemedView style={styles.nameContainer}>
                         <ThemedText style={styles.specieName}>{props.capture.specie.name}</ThemedText>
                         <ThemedText style={styles.specieScientificName}>{props.capture.specie.name}</ThemedText>
@@ -53,9 +55,7 @@ export default function SpeciesDetailScreen(props: SpeciesDetailScreenProps) {
                             <ThemedText>Habitat : {props.capture.specie.habitat.climate.toString()},{props.capture.specie.habitat.zone}</ThemedText>
                         </ThemedView>
                         <ThemedView style={styles.halfVerticalContainer}>
-
                             <ThemedText>Famille : {props.capture.specie.family.toString()}</ThemedText>
-
                             <ThemedText>Régime : {props.capture.specie.diet.toString()}</ThemedText>
                         </ThemedView>
                     </ThemedView>
@@ -95,13 +95,12 @@ export default function SpeciesDetailScreen(props: SpeciesDetailScreenProps) {
                     </ThemedView>
                     <ThemedView style={styles.capturesContainer}>
                         <ThemedText>Vos captures :</ThemedText>
-                        <FlatList
-                            data={props.capture.capturesDetails}
-                            renderItem={(captureDetail) =><CaptureDetails captureDetail={captureDetail.item}/>}
-                            horizontal={true}
-                        />
+                        <PagerView style={styles.capturesList} initialPage={0}>
+                            {props.capture.capturesDetails.map((captureDetail) => (
+                                <CaptureDetails captureDetail={captureDetail} key={captureDetail.id}/>
+                            ))}
+                        </PagerView>
                     </ThemedView>
-
                     <ThemedText style={styles.captureDate}>Date de capture : {oldestCapture.date.toLocaleDateString()}</ThemedText>
                 </ThemedView>
             </ScrollView>
@@ -112,10 +111,6 @@ const styles = StyleSheet.create({
     container:{
         gap:10,
         flex:1,
-    },
-    image:{
-        width:"100%",
-        height:250,
     },
     nameContainer:{
         paddingHorizontal:10
@@ -171,9 +166,14 @@ const styles = StyleSheet.create({
     capturesContainer:{
         paddingHorizontal:10,
         gap:5,
-        width:"100%"
+        width:"100%",
+    },
+    capturesList:{
+        width:"100%",
+        height:200,
     },
     captureDate:{
         alignSelf:"center"
-    }
+    },
+
 });
