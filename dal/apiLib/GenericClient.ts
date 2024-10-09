@@ -5,7 +5,7 @@ class GenericClient {
         this.baseUrl = baseUrl;
     }
 
-    private async request<T>(endpoint: string, method: string, body?: any): Promise<T> {
+    protected async request<T>(endpoint: string, method: string, body?: any): Promise<T> {
         const url = `${this.baseUrl}${endpoint}`;
         const headers = {
             'Content-Type': 'application/json',
