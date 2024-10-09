@@ -1,40 +1,38 @@
 import Capture from "@/model/Capture";
 import {useState} from "react";
+import {Sucess} from "@/model/Sucess";
+import Specie from "@/model/Specie";
 
-export default function StubCaptures(Captures: Capture[]) {
-    const [captures, setCaptures] = useState<Capture[]>(Captures);
+export default class StubCaptures {
 
-    // CREATE: Add a new capture to the list
-    function createCapture(newCapture: Capture) {
-        setCaptures([...captures, newCapture]);
+    constructor(public Captures: Capture[]) {
+    }
+     createCapture(newCapture: Capture) {
+        this.Captures.push(newCapture)
     }
 
     // READ: Get all captures or a specific one by ID
-    function readCapture(id?: number): Capture | Capture[] | null {
-        if (id !== undefined) {
-            return captures.find(capture => capture.id === id) || null;
-        }
-        return captures;
+     readCapture(id: number): Capture | null {
+        return this.Captures.find(capture => capture.id === id) || null;
+
+    }
+
+
+     readAllCaptures(page: number = 1, pageSize: number = 10): Capture[]  {
+        const startIndex = (page - 1) * pageSize;
+        const endIndex = startIndex + pageSize;
+        return this.Captures.slice(startIndex, endIndex)
     }
 
     // UPDATE: Update a capture by ID
-    function updateCapture(updatedCapture: Capture) {
-        setCaptures(
-            captures.map(capture =>
-                capture.id === updatedCapture.id ? { ...capture, ...updatedCapture } : capture
-            )
+     updateCapture(updatedCapture: Capture) {
+        return this.Captures.map(capture =>
+            capture.id === updatedCapture.id ? { ...capture, ...updatedCapture } : capture
         );
     }
 
     // DELETE: Remove a capture by ID
-    function deleteCapture(id: number) {
-        setCaptures(captures.filter(capture => capture.id !== id));
+       deleteCapture(id: number) {
+           this.Captures.filter(capture => capture.id !== id);
     }
-
-    return {
-        createCapture,
-        readCapture,
-        updateCapture,
-        deleteCapture,
-    };
 }

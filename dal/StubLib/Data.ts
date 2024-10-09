@@ -9,6 +9,7 @@ import {Climate} from "@/model/Climate";
 import User from "@/model/User";
 import Capture from "@/model/Capture";
 import CaptureDetail from "@/model/CaptureDetail";
+import {Sucess} from "@/model/Sucess";
 
 const specie1= new Specie(1, 'Lion', 'Panthera leo', 'Le roi de la jungle', new Habitat('jungle', Climate.Tropical), Diet.Carnivores, Kingdom.Animal, Class.Mammals, Family.Bovids, [], 'image'
 )
@@ -49,3 +50,13 @@ export const CaptureList = [
     new Capture(3, 'https://example.com/photos/capture3.jpg', specie1, [captureDetail1]),
     new Capture(4, 'https://example.com/photos/capture4.jpg', specie1, [captureDetail2])
 ];
+
+export const SucessList = [
+    new Sucess("Succès A", "checkmark-circle-outline", "Description du succès A", 25),
+    new Sucess("Succès B", "checkmark-circle-outline", "Description du succès B", 50),
+    new Sucess("Succès C", "checkmark-circle-outline", "Description du succès C", 75),
+    new Sucess("Succès D", "checkmark-circle-outline", "Description du succès D", 90),
+    new Sucess("Succès E", "checkmark-circle-outline", "Description du succès E", 10),
+    new Sucess("Succès F", "checkmark-circle-outline", "Description du succès F", 60),
+    new Sucess("Succès G", "checkmark-circle-outline", "Description du succès G", 100),
+]
