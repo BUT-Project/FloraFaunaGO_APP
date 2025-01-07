@@ -34,13 +34,9 @@ export default function EncyclopediaScreen(props: EncyclopediaScreenProps) {
                 data={filteredData}
                 keyExtractor={capture => String(capture.id)}
                 renderItem={(capture) =>
-                    <Link  href={{params: { id: capture.item.id.toString()}, pathname:"/(encyclopedia)/[id]" }} asChild>
-                        <TouchableOpacity>
-                            <SpeciesListItem capture={capture.item}/>
-                        </TouchableOpacity>
-                    </Link>}
+                    <SpeciesListItem capture={capture.item} key={capture.item.id}/>
+                }
                 numColumns={3}
-
             />
         </SafeView>
     )

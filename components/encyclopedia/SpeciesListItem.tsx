@@ -1,7 +1,8 @@
-import {StyleSheet, Text, View, Image, ImageBackground, Dimensions} from 'react-native';
+import {StyleSheet, TouchableOpacity, ImageBackground, Dimensions} from 'react-native';
 import {ThemedView} from "@/components/ui/themed/ThemedView";
 import {ThemedText} from "@/components/ui/themed/ThemedText";
 import Capture from "@/model/Capture";
+import {Link} from "expo-router";
 
 type SpeciesCapturesListItemProps={
     capture:Capture
@@ -10,11 +11,15 @@ const { width } = Dimensions.get('window');
 const itemSize = width / 3 - 15;
 export default function SpeciesListItem(props: SpeciesCapturesListItemProps){
     return (
-        <ThemedView style={styles.container}>
-            <ImageBackground source={{uri:props.capture.specie.image}} style={styles.image} imageStyle={styles.imageStyle}>
-                <ThemedText style={styles.name}>{props.capture.specie.name}</ThemedText>
-            </ImageBackground>
-        </ThemedView>
+        <Link  href={{params: { id: props.capture.id.toString()}, pathname:"/(encyclopedia)/[id]" }} asChild>
+            <TouchableOpacity>
+                <ThemedView style={styles.container}>
+                    <ImageBackground source={{uri:props.capture.specie.image}} style={styles.image} imageStyle={styles.imageStyle}>
+                        <ThemedText style={styles.name}>{props.capture.specie.name}</ThemedText>
+                    </ImageBackground>
+                </ThemedView>
+            </TouchableOpacity>
+        </Link>
     )
 }
 

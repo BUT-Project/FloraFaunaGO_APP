@@ -15,7 +15,7 @@ export default function CaptureDetails(props: CaptureDetailsProps){
     return (
         <ThemedView style={styles.container}>
             <ThemedView style={styles.infoContainer}>
-                <ThemedText>Informations :</ThemedText>
+                <ThemedText type={"defaultSemiBold"}>Informations :</ThemedText>
                 <ThemedText>Longitude : {props.captureDetail.location.longitude} </ThemedText>
                 <ThemedText>Latitude : {props.captureDetail.location.latitude} </ThemedText>
                 <ThemedText>Altitude : {props.captureDetail.location.altitude} </ThemedText>
@@ -23,7 +23,7 @@ export default function CaptureDetails(props: CaptureDetailsProps){
                 <ThemedText>Date : {props.captureDetail.date.toLocaleDateString()}</ThemedText>
             </ThemedView>
             <ThemedView style={styles.locationContainer}>
-                <ThemedText>Localisation:</ThemedText>
+                <ThemedText type={"defaultSemiBold"}>Localisation:</ThemedText>
                 <ThemedView style={styles.mapContainer}>
                     <MapView
                         ref={mapRef}
@@ -41,7 +41,6 @@ export default function CaptureDetails(props: CaptureDetailsProps){
                                 longitude:props.captureDetail.location.longitude,
                                 latitude:props.captureDetail.location.latitude,
                             }}
-
                         />
                     </MapView>
                 </ThemedView>
@@ -65,14 +64,14 @@ const styles = StyleSheet.create({
         flexDirection:"row",
     },
     locationContainer:{
-      width:"50%",
+        width:"50%",
         gap:3,
     },
     mapContainer:{
         width:"100%",
+        aspectRatio:1,
         borderRadius:15,
         overflow:"hidden",
-        height:150,
     },
     map:{
         width:"100%",

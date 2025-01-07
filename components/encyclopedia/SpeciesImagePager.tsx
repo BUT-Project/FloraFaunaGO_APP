@@ -6,11 +6,16 @@ import PagerView, {
 } from 'react-native-pager-view';
 import {ExpandingDot} from "react-native-animated-pagination-dots";
 import React from "react";
+import screen from "react-native-screens/src/components/Screen";
 
 type SpeciesImagePagerProps = {
     speciePhoto: any;
+    specieName:string;
+    specieScientificName:string;
     userPhoto : any;
 }
+
+const width = Dimensions.get('window').width;
 
 export default function SpeciesImagePager(props: SpeciesImagePagerProps) {
     const paginationData = [
@@ -21,9 +26,6 @@ export default function SpeciesImagePager(props: SpeciesImagePagerProps) {
             key:"2"
         }
     ]
-
-    const width = Dimensions.get('window').width;
-    const ref = React.useRef<PagerView>(null);
     const scrollOffsetAnimatedValue = React.useRef(new Animated.Value(0)).current;
     const positionAnimatedValue = React.useRef(new Animated.Value(0)).current;
     const inputRange = [0, paginationData.length];
@@ -58,22 +60,31 @@ export default function SpeciesImagePager(props: SpeciesImagePagerProps) {
         return (
             <ThemedView style={styles.pagerContainer}>
                 <PagerView style={styles.imagesContainer} initialPage={0} onPageScroll={onPageScroll}>
-                    <Image style={styles.image} source={{uri:props.speciePhoto}} key="1"/>
+                    <ImageBackground style={styles.image} source={{uri:props.speciePhoto}} key="1">
+                        <ThemedView style={styles.infoChip}>
+                            <ThemedText style={[styles.text,styles.specieName]}>{props.specieName}</ThemedText>
+                            <ThemedText style={[styles.text,styles.specieScientificName]}>{props.specieScientificName}</ThemedText>
+                        </ThemedView>
+                    </ImageBackground>
                     <ImageBackground style={styles.image} source={{uri:props.userPhoto}} key="2">
                         <ThemedView style={styles.infoChip}>
-                            <ThemedText style={{color:"#fff"}}>Votre photo</ThemedText>
+                            <ThemedText style={styles.text}>Votre photo</ThemedText>
                         </ThemedView>
 
                     </ImageBackground>
                 </PagerView>
-                <ExpandingDot data={paginationData} scrollX={scrollX} inActiveDotOpacity={0.6} containerStyle={{top:30}} dotStyle={styles.dotStyle}/>
-
+                <ExpandingDot data={paginationData} scrollX={scrollX} inActiveDotOpacity={0.6} containerStyle={styles.dotsContainer} dotStyle={styles.dotStyle}/>
             </ThemedView>
         )
     else
         return (
             <ThemedView style={styles.imagesContainer}>
-                <Image style={styles.image} source={{uri:props.speciePhoto}} />
+                <ImageBackground style={styles.image} source={{uri:props.speciePhoto}}>
+                    <ThemedView style={styles.infoChip}>
+                        <ThemedText style={[styles.text,styles.specieName]}>{props.specieName}</ThemedText>
+                        <ThemedText style={[styles.text,styles.specieScientificName]}>{props.specieScientificName}</ThemedText>
+                    </ThemedView>
+                </ImageBackground>
             </ThemedView>
             )
 }
@@ -86,16 +97,17 @@ const styles = StyleSheet.create({
     },
     imagesContainer:{
         width:"100%",
-        height:250,
+        height:width*9/16,
     },
     image:{
         width:"100%",
         height:"100%",
+        resizeMode:"contain",
         alignItems:"flex-start",
         justifyContent:"flex-end",
     },
     infoChip:{
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        backgroundColor: 'rgba(0, 0, 0, 0.7)',
         margin:5,
         padding: 5,
         textAlign: 'center',
@@ -109,7 +121,19 @@ const styles = StyleSheet.create({
         marginHorizontal: 5
     },
     dotsContainer:{
-        justifyContent: 'center',
-        alignSelf: 'center',
+        position: 'absolute',
+        bottom: 15,
+        alignSelf: 'center'
+    },
+    text:{
+        color:"#fff"
+    },
+    specieName:{
+        fontSize:18,
+        fontWeight: '600',
+    },
+    specieScientificName:{
+        fontSize:16,
+        fontStyle:"italic",
     }
 });
