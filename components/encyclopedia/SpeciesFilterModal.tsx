@@ -16,7 +16,7 @@ type SpeciesFilterProps={
     setFilteredSpecies:any;
 }
 
-export default function CapturesFilterModal(props: SpeciesFilterProps){
+export default function SpeciesFilterModal(props: SpeciesFilterProps){
     const [visible,setVisible] = useState(false);
     const [kingdom,setKingdom] = useState<Kingdom | null>();
     const [bioClass,setBioClass] = useState<Class | null>(null);

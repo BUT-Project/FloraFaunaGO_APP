@@ -15,7 +15,7 @@ export default class Specie{
     kingdom:Kingdom;
     class:Class;
     family:Family;
-    locations:Location[]
+    locations:Location[];
     image: string;
 
     constructor(id: number, name: string, scientificName: string, description: string, habitat:Habitat, diet:Diet, kingdom:Kingdom, animalClass:Class, family:Family,locations:Location[], image: string) {

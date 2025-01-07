@@ -9,7 +9,7 @@ type SearchBarProps={
     placeholder:string,
 }
 
-export default function CaptureSearchBar(props: SearchBarProps){
+export default function SpeciesSearchBar(props: SearchBarProps){
     const [searchText, setSearchText] = useState('');
     const searchFilterFunction = (text:string) => {
         if (text) {

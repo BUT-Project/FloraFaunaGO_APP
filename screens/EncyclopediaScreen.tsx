@@ -1,12 +1,13 @@
 
-import {FlatList, StyleSheet} from "react-native";
-import CaptureSearchBar from "../components/encyclopedia/CaptureSearchBar";
-import SpeciesListItem from "@/components/encyclopedia/CapturesListItem";
+import {FlatList, StyleSheet, TouchableOpacity} from "react-native";
+import SpeciesSearchBar from "../components/encyclopedia/SpeciesSearchBar";
+import SpeciesListItem from "@/components/encyclopedia/SpeciesListItem";
 import { useState} from "react";
 import {ThemedView} from "@/components/ui/themed/ThemedView";
-import CapturesFilterModal from "@/components/encyclopedia/CapturesFilterModal";
 import {SafeView} from "@/components/ui/SafeView";
 import Capture from "@/model/Capture";
+import SpeciesFilterModal from "@/components/encyclopedia/SpeciesFilterModal";
+import {Link, useRouter} from "expo-router";
 
 interface EncyclopediaScreenProps {
     captures: Capture[]
@@ -14,15 +15,15 @@ interface EncyclopediaScreenProps {
 
 export default function EncyclopediaScreen(props: EncyclopediaScreenProps) {
     const [filteredData, setFilteredData] = useState(props.captures);
-
+    const router = useRouter()
     return (
         <SafeView>
 
             <ThemedView style={styles.header}>
                 <ThemedView style={styles.searchBar}>
-                    <CaptureSearchBar baseData={props.captures} setFilteredData={setFilteredData} placeholder={"Rechercher..."}/>
+                    <SpeciesSearchBar baseData={props.captures} setFilteredData={setFilteredData} placeholder={"Rechercher..."}/>
                 </ThemedView>
-                <CapturesFilterModal baseSpecies={props.captures} setFilteredSpecies={setFilteredData}/>
+                <SpeciesFilterModal baseSpecies={props.captures} setFilteredSpecies={setFilteredData}/>
             </ThemedView>
 
             <FlatList
@@ -32,9 +33,10 @@ export default function EncyclopediaScreen(props: EncyclopediaScreenProps) {
                 contentContainerStyle={styles.listContent}
                 data={filteredData}
                 keyExtractor={capture => String(capture.id)}
-                renderItem={(capture) => <SpeciesListItem capture={capture.item}/>}
+                renderItem={(capture) =>
+                    <SpeciesListItem capture={capture.item} key={capture.item.id}/>
+                }
                 numColumns={3}
-
             />
         </SafeView>
     )
@@ -58,6 +60,5 @@ const styles = StyleSheet.create({
     },
     columnWrapper: {
         justifyContent: 'space-between',
-
     }
 });
