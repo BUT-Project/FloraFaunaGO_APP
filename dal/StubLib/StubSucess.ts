@@ -1,5 +1,4 @@
 import {Sucess} from "@/model/Sucess";
-import Capture from "@/model/Capture";
 
 export default class StubSucess {
     constructor(public Sucesses: Sucess[]) {
@@ -14,7 +13,7 @@ export default class StubSucess {
     }
 
     // READ: Obtenir tous les succès avec pagination
-     readAllSuccesses(page: number = 1, pageSize: number = 10): Sucess[]  {
+     public readAllSuccesses(page: number = 1, pageSize: number = 10): Sucess[]  {
         const startIndex = (page - 1) * pageSize;
         const endIndex = startIndex + pageSize;
         return this.Sucesses.slice(startIndex, endIndex)

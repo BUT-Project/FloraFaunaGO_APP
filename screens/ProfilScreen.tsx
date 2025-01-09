@@ -1,20 +1,20 @@
 import {ThemedText} from "@/components/ui/themed/ThemedText";
-import {FlatList, Image, StyleSheet, TouchableOpacity, View} from "react-native";
+import {FlatList, Image, StyleSheet, TouchableOpacity} from "react-native";
 import {SafeAreaView} from "react-native-safe-area-context";
 import {useThemeColor} from "@/hooks/useThemeColor";
 import React from "react";
-import {SucessStub} from "@/model/SucessStub";
+import StubData from "@/dal/StubLib/StubData"
 import SucessListItemVertical from "@/components/SucessListItemVertical";
 import {ThemedView} from "@/components/ui/themed/ThemedView";
 import {Link} from 'expo-router';
 import {TabBarIcon} from "@/components/navigation/TabBarIcon";
 import {AntDesign, FontAwesome5, FontAwesome6} from "@expo/vector-icons";
 
-const ProfileImage = require("../assets/images/ProfileImage.jpeg");
+let ProfileImage: {};
+ProfileImage = require("../assets/images/ProfileImage.jpeg");
 
 export default function ProfilScreen() {
-    const stub = new SucessStub();
-    const sampleSuccesses = stub.getSuccesses();
+    const sampleSuccesses = new StubData().stubSucess.readAllSuccesses();
     const tintColor = useThemeColor({light: 'black', dark: 'white'}, 'background');
 
     const renderHeader = () => (

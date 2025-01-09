@@ -11,8 +11,8 @@ export default class StubData {
     private ListSucess = SucessList
 
     public stubSpecies =  new StubSpecies(this.ListSpecie)
-    public stubCapture = StubCaptures(this.ListCapture)
-    public stubUsers = StubUsers(this.ListUser)
-    public stubSucess = StubSucess(this.ListSucess)
+    public stubCapture = new StubCaptures(this.ListCapture)
+    public stubUsers = new StubUsers(this.ListUser)
+    public stubSucess = new StubSucess(this.ListSucess)
 
 }
