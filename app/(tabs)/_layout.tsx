@@ -9,15 +9,14 @@ import { TouchableOpacity,StyleSheet } from 'react-native';
 import {ThemedText} from "@/components/ui/themed/ThemedText";
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
-  const insets = useSafeAreaInsets();
     const colorScheme = useColorScheme();
+    const insets = useSafeAreaInsets();
     const [isCapture, setIsCapture] = React.useState(false)
     const takePhoto = async () => {
         alert("Prise de la photo")
     };
-  return (
 
+    return (
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
@@ -64,7 +63,7 @@ export default function TabLayout() {
             }}
         />
         <Tabs.Screen
-            name="encyclopedia"
+            name="(encyclopedia)"
             options={{
                 title: 'Encyclopedia',
                 tabBarIcon: ({ color, focused }) => (
@@ -79,3 +78,17 @@ export default function TabLayout() {
     </Tabs>
   );
 }
+
+const styles = StyleSheet.create({
+    iconContainer: {
+        flex:1,
+        flexDirection:"column",
+        alignItems: 'center',
+        margin:0,
+    },
+    captureText: {
+        fontSize: 10,
+        color: Colors.light.icon,
+        marginTop: 2,
+    },
+});
