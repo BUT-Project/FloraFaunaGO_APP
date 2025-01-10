@@ -1,4 +1,4 @@
-import {Animated, Dimensions, Image, ImageBackground, StyleSheet} from 'react-native';
+import {Animated, Dimensions, ImageBackground, StyleSheet} from 'react-native';
 import { ThemedText } from "@/components/ui/themed/ThemedText";
 import {ThemedView} from "@/components/ui/themed/ThemedView";
 import PagerView, {
@@ -6,7 +6,6 @@ import PagerView, {
 } from 'react-native-pager-view';
 import {ExpandingDot} from "react-native-animated-pagination-dots";
 import React from "react";
-import screen from "react-native-screens/src/components/Screen";
 import {Colors} from "@/constants/Colors";
 
 type SpeciesImagePagerProps = {
@@ -20,12 +19,8 @@ const width = Dimensions.get('window').width;
 
 export default function SpeciesImagePager(props: SpeciesImagePagerProps) {
     const paginationData = [
-        {
-            key:"1"
-        },
-        {
-            key:"2"
-        }
+        { key:"1" },
+        { key:"2" }
     ]
     const scrollOffsetAnimatedValue = React.useRef(new Animated.Value(0)).current;
     const positionAnimatedValue = React.useRef(new Animated.Value(0)).current;
