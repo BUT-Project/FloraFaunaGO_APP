@@ -1,4 +1,4 @@
-import {Appearance, Pressable, StyleSheet, Switch, TouchableOpacity} from "react-native";
+import {Appearance, Dimensions, Pressable, ScrollView, StyleSheet, Switch, TouchableOpacity} from "react-native";
 import {ThemedView} from "@/components/ui/themed/ThemedView";
 import {ThemedText} from "@/components/ui/themed/ThemedText";
 import React, {useEffect, useState} from "react";
@@ -6,6 +6,7 @@ import {SafeAreaView} from "react-native-safe-area-context";
 import { LinearGradient } from 'expo-linear-gradient';
 
 
+const { width,height } = Dimensions.get('window');
 export default function SettingsScreen() {
     const systemTheme = Appearance.getColorScheme();
     const [theme, setTheme] = useState(systemTheme || 'light'); // État du thème
@@ -29,8 +30,9 @@ export default function SettingsScreen() {
     };
 
     return (
+<ScrollView style={{flex:1}} contentContainerStyle={{flexGrow: 1}} >
+        <ThemedView  style={{flex: 1}}>
 
-        <ThemedView style={{flex: 1}}>
             <LinearGradient style={{flex:1}}  colors={["#90EE90","#0D98BA"]}>
              <SafeAreaView>
 
@@ -62,42 +64,50 @@ export default function SettingsScreen() {
              </SafeAreaView>
             </LinearGradient>
         </ThemedView>
+</ScrollView>
 
     );
 }
 const styles = StyleSheet.create({
-    title:{
-        margin:30,
-        padding:25,
-        fontWeight:"bold",
-        fontSize : 32,
-        alignSelf:"center",
-        color : "#FFFFFF"
+    scrollContainer: {
+        display:"flex",
+        flex:1,
+
+
     },
-    switch:{
-        paddingLeft:10,
+    safeArea: {
+        flex: 1,
+        paddingHorizontal: '5%',
+    },
+    title: {
+        paddingVertical: height * 0.05,
+        fontWeight: "bold",
+        fontSize: width * 0.08,
+        alignSelf: "center",
+        color: "#FFFFFF",
+    },
+    switch: {
+
     },
     button: {
-        height:50,
-        alignSelf : "center",
-        flexDirection:"row",
-        justifyContent:"center",
-        padding: 10,
-        minWidth:"90%",
+        alignSelf: "center",
+        flexDirection: "row",
+        justifyContent: "center",
+        padding: width * 0.035,
+        minWidth: "80%",
         borderRadius: 10,
-        marginVertical: 10,
-        width: '80%',
-        alignItems: 'center',
-        backgroundColor : "#FFFFFF"
+        height:50,
+        marginVertical: height * 0.015,
+        backgroundColor: "#FFFFFF",
     },
     buttonText: {
         color: '#000000',
-        fontSize: 16,
+        fontSize: width * 0.03,
         fontWeight: 'bold',
     },
-    deleteText:{
-        color:'#ff0000',
-        fontSize: 16,
-        fontWeight: 'bold'
-    }
+    deleteText: {
+        color: '#ff0000',
+        fontSize: width * 0.035,
+        fontWeight: 'bold',
+    },
 });

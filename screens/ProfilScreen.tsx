@@ -1,5 +1,5 @@
 import {ThemedText} from "@/components/ui/themed/ThemedText";
-import {FlatList, Image, StyleSheet, TouchableOpacity} from "react-native";
+import {FlatList, Image, StyleSheet, TouchableOpacity,Dimensions} from "react-native";
 import {SafeAreaView} from "react-native-safe-area-context";
 import {useThemeColor} from "@/hooks/useThemeColor";
 import React, {useEffect, useState} from "react";
@@ -14,7 +14,7 @@ import StubData from "@/dal/StubLib/StubData";
 
 let ProfileImage: {};
 ProfileImage = require("../assets/images/ProfileImage.jpeg");
-
+const { width,height } = Dimensions.get('window');
 export default function ProfilScreen() {
     const [Successes, setSuccesses] = useState<Sucess[]>([]); // Initialiser avec un tableau vide
     const {Sucess} = StubData.getInstance()
@@ -55,9 +55,10 @@ export default function ProfilScreen() {
     );
 
     return (
-        <ThemedView style={{flex: 1}}>
+        <ThemedView>
             <SafeAreaView>
                 <FlatList
+
                     data={Successes?? []}
                     keyExtractor={(item) => item.nom}
                     renderItem={({item}) => <SucessListItemVertical items={item}/>}
@@ -69,34 +70,35 @@ export default function ProfilScreen() {
     );
 }
 const styles = StyleSheet.create({
+
     container: {
+        display:"flex",
         flexDirection: 'row',
         alignItems: 'center',
-        marginLeft:'23%',
+        alignSelf : 'center',
         justifyContent: 'flex-start',
-        height: 50,
+        height: width* 0.15,
         marginVertical: 5,
     },
     title: {
         textAlign: "center",
         fontWeight: "bold",
-        marginTop: 35,
-        margin: 20,
-        fontSize: 24,
+        margin: "8%",
+        fontSize: width * 0.06,
     },
     text: {
         textAlignVertical:'center',
-        fontSize: 16,
+        fontSize: width* 0.05,
     },
     settings: {
-        marginRight: 10,
+        marginRight: width* 0.05,
         color: "white",
     },
     profile: {
         alignSelf: "center",
-        width: 160,
-        height: 160,
-        margin: 30,
+        width: width* 0.4,
+        height: width* 0.4,
+        margin: "10%",
         borderRadius: 500,
     },
 });
