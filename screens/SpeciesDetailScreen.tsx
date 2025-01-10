@@ -1,10 +1,10 @@
 import React from "react";
-import {ScrollView, FlatList, StyleSheet, TouchableOpacity} from "react-native";
-import Capture from "@/model/Capture";
+import {ScrollView, FlatList, StyleSheet} from "react-native";
 import {ThemedText} from "@/components/ui/themed/ThemedText";
 import {ThemedView} from "@/components/ui/themed/ThemedView";
 import SpeciesListItem from "@/components/encyclopedia/SpeciesListItem";
 import Specie from "@/model/Specie";
+import Capture from "@/model/Capture";
 import Habitat from "@/model/Habitat";
 import {Climate} from "@/model/Climate";
 import {Diet} from "@/model/Diet";
@@ -110,7 +110,7 @@ export default function SpeciesDetailScreen(props: SpeciesDetailScreenProps) {
                         horizontal={true}
                     />
                 </ThemedView>
-                { capture.capturesDetails.length > 0 &&
+                { capture.capturesDetails.length > 0 ?
                     <>
                         <ThemedView style={styles.section}>
                             <ThemedText type={"defaultSemiBold"}>Vos captures :</ThemedText>
@@ -124,6 +124,10 @@ export default function SpeciesDetailScreen(props: SpeciesDetailScreenProps) {
                             <ThemedText style={styles.captureDate}>Date de capture : {oldestCapture.date.toLocaleDateString()}</ThemedText>
                         }
                     </>
+                    :
+                    <ThemedView style={styles.section}>
+                        <ThemedText style={styles.captureDate}>Vous n'avez pas encore capturé cette espèce. Regardez la carte plus haut pour voir où vous pouvez le trouver !</ThemedText>
+                    </ThemedView>
             }
             </ThemedView>
         </ScrollView>
@@ -179,8 +183,9 @@ const styles = StyleSheet.create({
         aspectRatio:16/9
     },
     captureDate:{
+        textAlign:"center",
         alignSelf:"center",
-       marginBottom:10,
+        marginBottom:10,
     },
     infoRow:{
         flexDirection:"row",

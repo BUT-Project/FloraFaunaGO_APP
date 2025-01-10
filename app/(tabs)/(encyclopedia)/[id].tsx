@@ -19,7 +19,7 @@ export default function details() {
         "https://s3.animalia.bio/animals/photos/full/1.25x1/lesser-green-broadbill-7150956749jpg.webp?id=7bb2b71f1c8886f6aba586e7d27a85a5");
     const myCapture = new Capture(Number(captureId),"https://cdn.discordapp.com/attachments/1284271143729107094/1292839375499165748/20241007_152113.jpg?ex=6707d4fe&is=6706837e&hm=7a616ef7082dc28ba24a9d805e19a3733d65fe898e8cc7a17caf5c47775f5cd6&",eurylaime,[
         new CaptureDetail(2,new Date(),false,new Location(23,23,323,1,1)),
-        new CaptureDetail(3,new Date(),false,new Location(-45,-34,323,1,1)),
+       // new CaptureDetail(3,new Date(),false,new Location(-45,-34,323,1,1)),
     ]);
     return (
         <SpeciesDetailScreen capture={myCapture} />
