@@ -46,8 +46,7 @@ export default function TabLayout() {
             }}
             options={{
                 tabBarButton: (props) => (
-                    <TouchableOpacity {...props} style={[styles.iconContainer, { padding: isCapture ? 3 : 5}]}>
-
+                    <TouchableOpacity {...props} style={[styles.iconContainer, { paddingTop: isCapture? 3 : 6}]}>
                         <TabBarIcon
                             name={isCapture ? "ellipse-outline" : "home-outline"}
                             size={ isCapture ? 50 : 26}
@@ -58,7 +57,6 @@ export default function TabLayout() {
                         }
                     </TouchableOpacity>
                 ),
-
                 tabBarStyle: { backgroundColor: 'transparent' },
             }}
         />
@@ -81,8 +79,10 @@ export default function TabLayout() {
 
 const styles = StyleSheet.create({
     iconContainer: {
+        flex:1,
+        flexDirection:"column",
         alignItems: 'center',
-        height: '100%',
+        margin:0,
     },
     captureText: {
         fontSize: 10,
