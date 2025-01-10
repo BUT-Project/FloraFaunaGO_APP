@@ -1,4 +1,4 @@
-import {Animated, Dimensions, Image, ImageBackground, StyleSheet} from 'react-native';
+import {Animated, Dimensions, ImageBackground, StyleSheet} from 'react-native';
 import { ThemedText } from "@/components/ui/themed/ThemedText";
 import {ThemedView} from "@/components/ui/themed/ThemedView";
 import PagerView, {
@@ -6,7 +6,7 @@ import PagerView, {
 } from 'react-native-pager-view';
 import {ExpandingDot} from "react-native-animated-pagination-dots";
 import React from "react";
-import screen from "react-native-screens/src/components/Screen";
+import {Colors} from "@/constants/Colors";
 
 type SpeciesImagePagerProps = {
     speciePhoto: any;
@@ -19,12 +19,8 @@ const width = Dimensions.get('window').width;
 
 export default function SpeciesImagePager(props: SpeciesImagePagerProps) {
     const paginationData = [
-        {
-            key:"1"
-        },
-        {
-            key:"2"
-        }
+        { key:"1" },
+        { key:"2" }
     ]
     const scrollOffsetAnimatedValue = React.useRef(new Animated.Value(0)).current;
     const positionAnimatedValue = React.useRef(new Animated.Value(0)).current;
@@ -57,37 +53,47 @@ export default function SpeciesImagePager(props: SpeciesImagePagerProps) {
     );
 
     if(props.userPhoto)
-        return (
-            <ThemedView style={styles.pagerContainer}>
-                <PagerView style={styles.imagesContainer} initialPage={0} onPageScroll={onPageScroll}>
-                    <ImageBackground style={styles.image} source={{uri:props.speciePhoto}} key="1">
-                        <ThemedView style={styles.infoChip}>
-                            <ThemedText style={[styles.text,styles.specieName]}>{props.specieName}</ThemedText>
-                            <ThemedText style={[styles.text,styles.specieScientificName]}>{props.specieScientificName}</ThemedText>
-                        </ThemedView>
-                    </ImageBackground>
-                    <ImageBackground style={styles.image} source={{uri:props.userPhoto}} key="2">
-                        <ThemedView style={styles.infoChip}>
-                            <ThemedText style={styles.text}>Votre photo</ThemedText>
-                        </ThemedView>
+        {
+            return (
+                        <ThemedView style={styles.pagerContainer}>
+                            <PagerView style={styles.imagesContainer} initialPage={0} onPageScroll={onPageScroll}>
+                                <ImageBackground style={styles.image} source={{uri:props.speciePhoto}} key="1">
+                                    <ThemedView style={styles.infoChip}>
+                                        <ThemedText style={[styles.text,styles.specieName]}>{props.specieName}</ThemedText>
+                                        <ThemedText style={[styles.text,styles.specieScientificName]}>{props.specieScientificName}</ThemedText>
+                                    </ThemedView>
+                                </ImageBackground>
+                                <ImageBackground style={styles.image} source={{uri:props.userPhoto}} key="2">
+                                    <ThemedView style={styles.infoChip}>
+                                        <ThemedText style={styles.text}>Votre photo</ThemedText>
+                                    </ThemedView>
 
-                    </ImageBackground>
-                </PagerView>
-                <ExpandingDot data={paginationData} scrollX={scrollX} inActiveDotOpacity={0.6} containerStyle={styles.dotsContainer} dotStyle={styles.dotStyle}/>
-            </ThemedView>
-        )
-    else
+                                </ImageBackground>
+                            </PagerView>
+                            <ExpandingDot
+                                data={paginationData}
+                                scrollX={scrollX}
+                                inActiveDotOpacity={0.6}
+                                containerStyle={styles.dotsContainer}
+                                activeDotColor={Colors.light.tint}
+                                dotStyle={styles.dotStyle}/>
+                        </ThemedView>
+                    )
+        }
+    else {
         return (
             <ThemedView style={styles.imagesContainer}>
-                <ImageBackground style={styles.image} source={{uri:props.speciePhoto}}>
+                <ImageBackground style={styles.image} source={{uri: props.speciePhoto}}>
                     <ThemedView style={styles.infoChip}>
-                        <ThemedText style={[styles.text,styles.specieName]}>{props.specieName}</ThemedText>
-                        <ThemedText style={[styles.text,styles.specieScientificName]}>{props.specieScientificName}</ThemedText>
+                        <ThemedText style={[styles.text, styles.specieName]}>{props.specieName}</ThemedText>
+                        <ThemedText
+                            style={[styles.text, styles.specieScientificName]}>{props.specieScientificName}</ThemedText>
                     </ThemedView>
                 </ImageBackground>
             </ThemedView>
-            )
-}
+        );
+    };
+};
 
 
 

@@ -1,5 +1,5 @@
 
-import {FlatList, StyleSheet, TouchableOpacity} from "react-native";
+import {FlatList, StyleSheet, View} from "react-native";
 import SpeciesSearchBar from "../components/encyclopedia/SpeciesSearchBar";
 import SpeciesListItem from "@/components/encyclopedia/SpeciesListItem";
 import { useState} from "react";
@@ -7,37 +7,39 @@ import {ThemedView} from "@/components/ui/themed/ThemedView";
 import {SafeView} from "@/components/ui/SafeView";
 import Capture from "@/model/Capture";
 import SpeciesFilterModal from "@/components/encyclopedia/SpeciesFilterModal";
-import {Link, useRouter} from "expo-router";
-
+import {ThemedText} from "@/components/ui/themed/ThemedText";
 interface EncyclopediaScreenProps {
     captures: Capture[]
 }
 
 export default function EncyclopediaScreen(props: EncyclopediaScreenProps) {
     const [filteredData, setFilteredData] = useState(props.captures);
-    const router = useRouter()
     return (
         <SafeView>
-
-            <ThemedView style={styles.header}>
-                <ThemedView style={styles.searchBar}>
-                    <SpeciesSearchBar baseData={props.captures} setFilteredData={setFilteredData} placeholder={"Rechercher..."}/>
+                <ThemedView style={styles.header}>
+                    <ThemedView style={styles.searchBar}>
+                        <SpeciesSearchBar baseData={props.captures} setFilteredData={setFilteredData} placeholder={"Rechercher..."}/>
+                    </ThemedView>
+                    <SpeciesFilterModal baseSpecies={props.captures} setFilteredSpecies={setFilteredData}/>
                 </ThemedView>
-                <SpeciesFilterModal baseSpecies={props.captures} setFilteredSpecies={setFilteredData}/>
-            </ThemedView>
+                <FlatList
+                    style={styles.capturesList}
+                    showsVerticalScrollIndicator={false}
+                    columnWrapperStyle={styles.columnWrapper}
+                    contentContainerStyle={styles.listContent}
+                    data={filteredData}
+                    keyExtractor={capture => capture.id?.toString()}
+                    renderItem={(capture) =>
+                        <SpeciesListItem capture={capture.item} key={capture.item.id}/>
+                    }
+                    ListEmptyComponent={() => (
+                        <View style={styles.empty}>
+                            <ThemedText type={"subtitle"}>Aucune espèce trouvée.</ThemedText>
+                        </View>
+                    )}
+                    numColumns={3}
+                />
 
-            <FlatList
-                style={styles.capturesList}
-                showsVerticalScrollIndicator={false}
-                columnWrapperStyle={styles.columnWrapper}
-                contentContainerStyle={styles.listContent}
-                data={filteredData}
-                keyExtractor={capture => String(capture.id)}
-                renderItem={(capture) =>
-                    <SpeciesListItem capture={capture.item} key={capture.item.id}/>
-                }
-                numColumns={3}
-            />
         </SafeView>
     )
 }
@@ -56,9 +58,15 @@ const styles = StyleSheet.create({
         width:"90%"
     },
     listContent: {
+        flex:1,
         padding: 5,
     },
     columnWrapper: {
         justifyContent: 'space-between',
-    }
+    },
+    empty:{
+        flex:1,
+        justifyContent:"center",
+        alignItems:"center",
+    },
 });
