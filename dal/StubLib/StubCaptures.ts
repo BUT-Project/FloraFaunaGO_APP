@@ -2,37 +2,73 @@ import Capture from "@/model/Capture";
 import {useState} from "react";
 import {Sucess} from "@/model/Sucess";
 import Specie from "@/model/Specie";
+import {FilterPredicate} from "@/dal/StubLib/FilterPredicate";
+import {GenericRepository} from "@/dal/StubLib/IGenericRepository";
+import {PagingResult} from "@/dal/StubLib/PagingResult";
 
-export default class StubCaptures {
-
+export default class StubCaptures extends GenericRepository<Capture> {
     constructor(public Captures: Capture[]) {
-    }
-     createCapture(newCapture: Capture) {
-        this.Captures.push(newCapture)
+        super();
     }
 
-    // READ: Get all captures or a specific one by ID
-     readCapture(id: number): Capture | null {
-        return this.Captures.find(capture => capture.id === id) || null;
-
+    count(filter: FilterPredicate<Capture>): Promise<number> {
+        return new Promise((resolve, reject) => {
+            try {
+                const filteredItems = this.Captures.filter(filter);
+                resolve(filteredItems.length);
+            } catch (error) {
+                reject(new Error('An error occurred while counting items'));
+            }
+        });
     }
 
-
-     readAllCaptures(page: number = 1, pageSize: number = 10): Capture[]  {
-        const startIndex = (page - 1) * pageSize;
-        const endIndex = startIndex + pageSize;
-        return this.Captures.slice(startIndex, endIndex)
+    create(newCapture: Capture): Promise<void> {
+        return new Promise((resolve) => {
+            this.Captures.push(newCapture);
+            resolve();
+        });
     }
 
-    // UPDATE: Update a capture by ID
-     updateCapture(updatedCapture: Capture) {
-        return this.Captures.map(capture =>
-            capture.id === updatedCapture.id ? { ...capture, ...updatedCapture } : capture
-        );
+    getById(id: number): Promise<Capture> {
+        return new Promise((resolve) => {
+            const capture = this.Captures.find(capture => capture.id === id) || null;
+        });
     }
 
-    // DELETE: Remove a capture by ID
-       deleteCapture(id: number) {
-           this.Captures.filter(capture => capture.id !== id);
+    getAll(page: number = 1, pageSize: number = 10): Promise<PagingResult<Capture>> {
+        return new Promise((resolve) => {
+            const startIndex = (page - 1) * pageSize;
+            const endIndex = startIndex + pageSize;
+            const items = this.Captures.slice(startIndex, endIndex);
+            const total = this.Captures.length;
+            const pagingResult = new PagingResult<Capture>(page, items.length, total, items);
+            resolve(pagingResult);
+        });
+    }
+
+    update(id: number, updatedCapture: Capture): Promise<void> {
+        return new Promise((resolve, reject) => {
+            const index = this.Captures.findIndex(capture => capture.id === id);
+            if (index === -1) {
+                reject(new Error('Capture not found'));
+                return;
+            }
+            this.Captures[index] = { ...this.Captures[index], ...updatedCapture };
+            resolve();
+        });
+    }
+
+    delete(id: number): Promise<void> {
+        return new Promise((resolve, reject) => {
+            const initialLength = this.Captures.length;
+            this.Captures = this.Captures.filter(capture => capture.id !== id);
+
+            if (this.Captures.length === initialLength) {
+                reject(new Error('Capture not found'));
+                return;
+            }
+
+            resolve();
+        });
     }
 }
