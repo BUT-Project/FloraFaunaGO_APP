@@ -13,7 +13,6 @@ import {Class} from "@/model/Class";
 import {Family} from "@/model/Family";
 import CaptureDetails from "@/components/encyclopedia/CaptureDetails";
 import MapView, {Marker} from "react-native-maps";
-import {Link} from "expo-router";
 import PagerView from 'react-native-pager-view';
 import SpeciesImagePager from "@/components/encyclopedia/SpeciesImagePager";
 
@@ -160,7 +159,6 @@ const styles = StyleSheet.create({
     },
     mapContainer:{
         width:"44%",
-
         aspectRatio:1,
         borderRadius:15,
         overflow:"hidden"

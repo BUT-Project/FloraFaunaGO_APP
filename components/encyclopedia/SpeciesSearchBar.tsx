@@ -2,6 +2,7 @@ import {StyleSheet, TextInput} from 'react-native';
 import {ThemedView} from "@/components/ui/themed/ThemedView";
 import {useState} from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import {useThemeColor} from "@/hooks/useThemeColor";
 
 type SearchBarProps={
     baseData:any[],
@@ -10,6 +11,7 @@ type SearchBarProps={
 }
 
 export default function SpeciesSearchBar(props: SearchBarProps){
+    const color = useThemeColor({ light: "#000", dark: "#fff" }, 'text');
     const [searchText, setSearchText] = useState('');
     const searchFilterFunction = (text:string) => {
         if (text) {
@@ -29,20 +31,19 @@ export default function SpeciesSearchBar(props: SearchBarProps){
     return (
         <ThemedView style={styles.searchBarContainer}>
             <TextInput
-                style={styles.searchBar}
+                style={[styles.searchBar,{color:color}]}
                 value={searchText}
                 placeholder={props.placeholder}
                 onChangeText={(text) => searchFilterFunction(text)}
             />
-            <Ionicons name={"search"} size={20}/>
+            <Ionicons name={"search"} color={color} size={20}/>
         </ThemedView>
-    )
-}
+    );
+};
 
 const styles = StyleSheet.create({
     searchBarContainer: {
         borderRadius: 10,
-        borderColor: '#ccc',
         borderWidth: 1,
         flexDirection:"row",
         justifyContent:"space-between",
