@@ -1,4 +1,4 @@
-import {FlatList, Modal, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {FlatList, Modal, StyleSheet, TouchableOpacity} from 'react-native';
 import {ThemedView} from "@/components/ui/themed/ThemedView";
 import {ThemedText} from "@/components/ui/themed/ThemedText";
 import {useState} from "react";

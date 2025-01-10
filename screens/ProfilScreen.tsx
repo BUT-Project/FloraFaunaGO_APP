@@ -1,20 +1,26 @@
 import {ThemedText} from "@/components/ui/themed/ThemedText";
-import {FlatList, Image, StyleSheet, TouchableOpacity, View} from "react-native";
+import {FlatList, Image, StyleSheet, TouchableOpacity} from "react-native";
 import {SafeAreaView} from "react-native-safe-area-context";
 import {useThemeColor} from "@/hooks/useThemeColor";
-import React from "react";
-import {SucessStub} from "@/model/SucessStub";
+import React, {useEffect, useState} from "react";
+import DataService from "@/dal/DataService";
 import SucessListItemVertical from "@/components/SucessListItemVertical";
 import {ThemedView} from "@/components/ui/themed/ThemedView";
 import {Link} from 'expo-router';
 import {TabBarIcon} from "@/components/navigation/TabBarIcon";
 import {AntDesign, FontAwesome5, FontAwesome6} from "@expo/vector-icons";
+import {Sucess} from "@/model/Sucess";
+import StubData from "@/dal/StubLib/StubData";
 
-const ProfileImage = require("../assets/images/ProfileImage.jpeg");
+let ProfileImage: {};
+ProfileImage = require("../assets/images/ProfileImage.jpeg");
 
 export default function ProfilScreen() {
-    const stub = new SucessStub();
-    const sampleSuccesses = stub.getSuccesses();
+    const [Successes, setSuccesses] = useState<Sucess[]>([]); // Initialiser avec un tableau vide
+    const {Sucess} = StubData.getInstance()
+    useEffect(() => {
+        Sucess.getAll().then(res => setSuccesses(res.items))
+    }, []);
     const tintColor = useThemeColor({light: 'black', dark: 'white'}, 'background');
 
     const renderHeader = () => (
@@ -52,7 +58,7 @@ export default function ProfilScreen() {
         <ThemedView style={{flex: 1}}>
             <SafeAreaView>
                 <FlatList
-                    data={sampleSuccesses}
+                    data={Successes?? []}
                     keyExtractor={(item) => item.nom}
                     renderItem={({item}) => <SucessListItemVertical items={item}/>}
                     numColumns={3}
