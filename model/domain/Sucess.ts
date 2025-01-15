@@ -1,31 +1,31 @@
 export class Sucess{
-    private _nom: string;
-    private _image: string;
-    private _avancement: number;
-    private _description: string;
+    private _nom: string
+    private _image: string
+    private _avancement: number
+    private _description: string
 
     public constructor(nom: string, image: string, description: string, avancement: number) {
-        this._nom = nom;
-        this._image = image;
-        this._description = description;
-        this._avancement = avancement;
+        this._nom = nom
+        this._image = image
+        this._description = description
+        this._avancement = avancement
     }
 
     // Getters
     public get nom(): string {
-        return this._nom;
+        return this._nom
     }
 
     public get image(): string {
-        return this._image;
+        return this._image
     }
 
     public get avancement(): number {
-        return this._avancement;
+        return this._avancement
     }
 
     public get description(): string {
-        return this._description;
+        return this._description
     }
 
 }

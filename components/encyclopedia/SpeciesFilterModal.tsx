@@ -1,4 +1,4 @@
-import {FlatList, Modal, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {FlatList, Modal, StyleSheet, TouchableOpacity} from 'react-native';
 import {ThemedView} from "@/components/ui/themed/ThemedView";
 import {ThemedText} from "@/components/ui/themed/ThemedText";
 import {useState} from "react";
@@ -10,13 +10,16 @@ import {Class} from "@/model/domain/Class";
 import {Family} from "@/model/domain/Family";
 import {Diet} from "@/model/domain/Diet";
 import {SafeView} from "@/components/ui/SafeView";
+import {useThemeColor} from "@/hooks/useThemeColor";
 
 type SpeciesFilterProps={
     baseSpecies:Capture[],
     setFilteredSpecies:any;
 }
 
-export default function CapturesFilterModal(props: SpeciesFilterProps){
+export default function SpeciesFilterModal(props: SpeciesFilterProps){
+    const color = useThemeColor({ light: "#000", dark: "#fff" }, 'text');
+
     const [visible,setVisible] = useState(false);
     const [kingdom,setKingdom] = useState<Kingdom | null>();
     const [bioClass,setBioClass] = useState<Class | null>(null);
@@ -74,7 +77,7 @@ export default function CapturesFilterModal(props: SpeciesFilterProps){
     return (
         <>
             <TouchableOpacity style={styles.filterButton} onPress={()=>setVisible(true)}>
-                <Ionicons name={"filter"} size={24}/>
+                <Ionicons name={"filter"} color={color}  size={24}/>
             </TouchableOpacity>
             <Modal animationType={"slide"} transparent={true} visible={visible} onRequestClose={() =>setVisible(false)  }>
                 <SafeView>
@@ -91,10 +94,10 @@ export default function CapturesFilterModal(props: SpeciesFilterProps){
                     <ThemedView style={styles.sortContainer}>
                         <ThemedText>Sort :</ThemedText>
                         <TouchableOpacity onPress={sortAscending}>
-                            <Ionicons name={"chevron-up-outline"} size={25}/>
+                            <Ionicons name={"chevron-up-outline"} color={color} size={25}/>
                         </TouchableOpacity>
                         <TouchableOpacity onPress={sortDescending}>
-                            <Ionicons name={"chevron-down-outline"} size={25}/>
+                            <Ionicons name={"chevron-down-outline"} color={color} size={25}/>
                         </TouchableOpacity>
                     </ThemedView>
                     <ThemedView style={styles.filteringOptions}>
