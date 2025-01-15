@@ -8,12 +8,16 @@ import {SafeView} from "@/components/ui/SafeView";
 import Capture from "@/model/Capture";
 import SpeciesFilterModal from "@/components/encyclopedia/SpeciesFilterModal";
 import {ThemedText} from "@/components/ui/themed/ThemedText";
+import { useGetSpecies } from "@/hooks/useGetSpecies";
 interface EncyclopediaScreenProps {
     captures: Capture[]
 }
 
 export default function EncyclopediaScreen(props: EncyclopediaScreenProps) {
     const [filteredData, setFilteredData] = useState(props.captures);
+    const {data,isLoading,error} = useGetSpecies()
+    console.log(data)
+
     return (
         <SafeView>
                 <ThemedView style={styles.header}>
