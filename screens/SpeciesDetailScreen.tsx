@@ -2,7 +2,7 @@ import React from "react";
 import {ScrollView, FlatList, StyleSheet} from "react-native";
 import {ThemedText} from "@/components/ui/themed/ThemedText";
 import {ThemedView} from "@/components/ui/themed/ThemedView";
-import SpeciesListItem from "@/components/encyclopedia/SpeciesListItem";
+import CaptureListItem from "@/components/encyclopedia/CaptureListItem";
 import Specie from "@/model/Specie";
 import Capture from "@/model/Capture";
 import Habitat from "@/model/Habitat";
@@ -105,7 +105,7 @@ export default function SpeciesDetailScreen(props: SpeciesDetailScreenProps) {
                         keyExtractor={(item) => `FamilyMember-${item.id}`}
 
                         renderItem={(capture) => (
-                            <SpeciesListItem capture={capture.item}/>
+                            <CaptureListItem capture={capture.item}/>
                         )}
                         horizontal={true}
                     />

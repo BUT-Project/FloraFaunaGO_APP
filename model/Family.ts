@@ -5,4 +5,12 @@ export enum Family {
     Hominids="Hominids",
     Coccinellidae="Coccinellidae",
     Sciuridae="Sciuridae",
+    Snakes="Snakes",
+    Phascolarctides="Phascolarctidés",
+    Spheniscidae="Manchots",
+    Testudines="Testudines",
+    Lizards="Lizards",
+    Chamaeleonidae="Chamaeleonidae",
+    Delphinidae="Delphinidae",
+    Accipitridae="Accipitridae"
 }

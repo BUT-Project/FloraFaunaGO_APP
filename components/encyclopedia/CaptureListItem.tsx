@@ -4,12 +4,13 @@ import {ThemedText} from "@/components/ui/themed/ThemedText";
 import Capture from "@/model/Capture";
 import {Link} from "expo-router";
 
-type SpeciesCapturesListItemProps={
+type CaptureListItemProps={
     capture:Capture
 }
 const { width } = Dimensions.get('window');
 const itemSize = width / 3 - 15;
-export default function SpeciesListItem(props: SpeciesCapturesListItemProps){
+
+export default function CaptureListItem(props: CaptureListItemProps){
     return (
         <Link  href={{params: { id: props.capture.id.toString()}, pathname:"/(encyclopedia)/[id]" }} asChild>
             <TouchableOpacity>

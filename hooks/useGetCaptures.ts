@@ -1,18 +1,18 @@
 import { PagingResult } from "@/dal/StubLib/PagingResult";
 import StubData from "@/dal/StubLib/StubData";
 import { useEffect, useState } from "react";
-import Specie from "@/model/Specie";
+import Capture from "@/model/Capture";
 
-interface GetSpeciesProps
+interface useGetCapturesProps
  {
     page:number;
     pageSize:number;
 }
 
 
-export function useGetSpecies(page: number = 1, pageSize: number = 10) {
+export function useGetCaptures(page: number = 1, pageSize: number = 20, name:string) {
   const [isLoading, setIsLoading] = useState(false);
-  const [data, setData] = useState<PagingResult<Specie> | null>(null);
+  const [data, setData] = useState<PagingResult<Capture> | null>(null);
   const [error, setError] = useState<unknown>(null);
 
   useEffect(() => {
@@ -21,8 +21,8 @@ export function useGetSpecies(page: number = 1, pageSize: number = 10) {
       setError(null); 
 
       try {
-        const { Species } = StubData.getInstance();
-        const result = await Species.getAll(page, pageSize);
+        const { Capture } = StubData.getInstance();
+        const result = await Capture.getAll(page, pageSize);
         setData(result);
       } catch (err) {
         setError(err);
