@@ -1,42 +1,51 @@
-import { PagingResult } from "@/dal/StubLib/PagingResult";
+import { useState, useEffect, useCallback } from "react";
 import StubData from "@/dal/StubLib/StubData";
-import { useEffect, useState } from "react";
+import { PagingResult } from "@/dal/StubLib/PagingResult";
 import Capture from "@/model/Capture";
 
-interface useGetCapturesProps
- {
-    page:number;
-    pageSize:number;
-}
 
-
-export function useGetCaptures(page: number = 1, pageSize: number = 20, name:string) {
+export function useGetCaptures(
+  page: number = 1,
+  pageSize: number = 20,
+  name: string
+) {
+  const [isListEnd, setIsListEnd] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [data, setData] = useState<PagingResult<Capture> | null>(null);
+  const [captures, setCaptures] = useState<Capture[]>([]); 
+
   const [error, setError] = useState<unknown>(null);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+
+  const refresh = useCallback(() => {
+    setRefreshTrigger((prev) => prev + 1);
+  }, []);
 
   useEffect(() => {
     const fetchSpecies = async () => {
-      setIsLoading(true);
-      setError(null); 
+      if (isLoading || isListEnd) return; 
 
+      setIsLoading(true);
+      setError(null);
       try {
         const { Capture } = StubData.getInstance();
         const result = await Capture.getAll(page, pageSize);
-        setData(result);
+        setIsListEnd(result && result.count * result.index >= result.total);
+        setCaptures((prev) => [...prev, ...result.items]);
       } catch (err) {
         setError(err);
       } finally {
-        setIsLoading(false); 
+        setIsLoading(false);
       }
     };
 
     fetchSpecies();
-  }, [page, pageSize]); 
+  }, [page, pageSize, refreshTrigger]); 
 
   return {
-    data,
+    captures,
     isLoading,
     error,
+    isListEnd,
+    refresh,
   };
 }

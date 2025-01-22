@@ -12,5 +12,10 @@ export enum Family {
     Lizards="Lizards",
     Chamaeleonidae="Chamaeleonidae",
     Delphinidae="Delphinidae",
-    Accipitridae="Accipitridae"
+    Accipitridae="Accipitridae",
+    Columbidae="Columbidae",
+    Muridae="Muridae",
+    Vespertilionidae="Vespertilionidae",
+    Corvidae="Corvidae",
+    Erinaceidae='Erinaceidae'
 }

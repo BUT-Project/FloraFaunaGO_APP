@@ -1,5 +1,5 @@
 
-import {ActivityIndicator, FlatList, StyleSheet, View} from "react-native";
+import {ActivityIndicator, Button, FlatList, StyleSheet, View} from "react-native";
 import SpeciesSearchBar from "../components/encyclopedia/SpeciesSearchBar";
 import CaptureListItem from "@/components/encyclopedia/CaptureListItem";
 import { useState} from "react";
@@ -14,10 +14,16 @@ interface EncyclopediaScreenProps {
 }
 
 export default function EncyclopediaScreen(props: EncyclopediaScreenProps) {
-    const [filteredData, setFilteredData] = useState(props.captures);
     const [name,setName] = useState("")
-    const {data,isLoading,error} = useGetCaptures()
-    console.log(data)
+    const [page,setPage] = useState(1)
+    const {captures,isLoading,error,isListEnd,refresh} = useGetCaptures(page,20,"")
+    console.log(captures)
+
+    const fetchMoreData = () => {
+        if(!isListEnd){
+            setPage(page+1)
+        }
+    }
 
     return (
         <SafeView>
@@ -25,7 +31,7 @@ export default function EncyclopediaScreen(props: EncyclopediaScreenProps) {
                 <ThemedView style={styles.searchBar}>
                     <SpeciesSearchBar search={name} setSearch={setName} placeholder={"Rechercher..."}/>
                 </ThemedView>
-                <SpeciesFilterModal baseSpecies={props.captures} setFilteredSpecies={setFilteredData}/>
+                <SpeciesFilterModal baseSpecies={props.captures} setFilteredSpecies={()=>{}}/>
             </ThemedView>
             { isLoading && 
                 <ActivityIndicator  size={"large"}/>
@@ -35,7 +41,7 @@ export default function EncyclopediaScreen(props: EncyclopediaScreenProps) {
                 showsVerticalScrollIndicator={false}
                 columnWrapperStyle={styles.columnWrapper}
                 contentContainerStyle={styles.listContent}
-                data={data?.items || []}
+                data={captures || []}
                 keyExtractor={capture => capture.id?.toString()}
                 renderItem={({item}) =>
                     <CaptureListItem capture={item}/>
@@ -43,8 +49,16 @@ export default function EncyclopediaScreen(props: EncyclopediaScreenProps) {
                 ListEmptyComponent={() => (
                     <View style={styles.empty}>
                         <ThemedText type={"subtitle"}>Aucune espèce trouvée.</ThemedText>
+                        <Button title="Raffraîchir" onPress={() => refresh}/>
                     </View>
                 )}
+                ListFooterComponent={()=>(
+                    <View style={styles.footer}>
+                        {isListEnd && <ThemedText>Pas de capture en plus pour le moment. </ThemedText>}
+                    </View>
+                )}
+                onEndReachedThreshold={0.2}
+                onEndReached={fetchMoreData}
                 numColumns={3}
             />
 
@@ -66,7 +80,7 @@ const styles = StyleSheet.create({
         width:"90%"
     },
     listContent: {
-        flex:1,
+        flexGrow:1,
         padding: 5,
     },
     columnWrapper: {
@@ -77,4 +91,10 @@ const styles = StyleSheet.create({
         justifyContent:"center",
         alignItems:"center",
     },
+    footer:{
+        flex: 1, 
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginVertical: 10
+    }
 });

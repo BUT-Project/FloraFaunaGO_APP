@@ -12,7 +12,7 @@ export function SafeView({ ...otherProps }: SafeViewProps) {
         paddingTop:insets.top,
         paddingLeft:insets.left,
         paddingRight:insets.right,
-        paddingBottom:insets.bottom,
+        //paddingBottom:insets.bottom,
         flex: 1,
         }} {...otherProps} />;
 }

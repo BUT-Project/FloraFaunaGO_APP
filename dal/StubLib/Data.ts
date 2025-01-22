@@ -31,17 +31,22 @@ const specie7 = new Specie(7, 'Rhinocéros', 'Rhinoceros unicornis', 'Le rhinoc�
 const specie8 = new Specie(8, 'Guépard', 'Acinonyx jubatus', 'Le mammifère le plus rapide sur terre.', new Habitat('savane', Climate.Tropical), Diet.Carnivores, Kingdom.Animal, Class.Mammals, Family.Bovids, [location5, location7], 'https://www.easytravel.co.tz/wp-content/uploads/2020/09/Adult-Cheetah-Cornering-Savannah-Mara-Kenya.jpg');
 const specie9 = new Specie(9, 'Panda géant', 'Ailuropoda melanoleuca', 'Symbole de la conservation de la nature.', new Habitat('forêt de bambous', Climate.Temperate), Diet.Herbivores, Kingdom.Animal, Class.Mammals, Family.Bovids, [location8], 'https://upload.wikimedia.org/wikipedia/commons/0/0f/Grosser_Panda.JPG');
 const specie10 = new Specie(10, 'Orang-outan', 'Pongo pygmaeus', 'Un grand singe vivant dans les forêts tropicales.', new Habitat('forêt tropicale', Climate.Tropical), Diet.Omnivores, Kingdom.Animal, Class.Mammals, Family.Bovids, [location9], 'https://www.conservation-nature.fr/wp-content/uploads/2021/02/orang-outan-1.jpg');
-const specie11 = new Specie(11, 'Koala', 'Phascolarctos cinereus', 'Un marsupial herbivore qui vit dans les forêts d\'eucalyptus en Australie.', new Habitat('forêt d\'eucalyptus', Climate.Temperate), Diet.Herbivores, Kingdom.Animal, Class.Mammals, Family.Phascolarctides, [location1], 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Koala_climbing_tree.jpg/400px-Koala_climbing_tree.jpg');
-const specie12 = new Specie(12, 'Loup gris', 'Canis lupus', 'Un prédateur social vivant en meutes.', new Habitat('forêts et toundras', Climate.Temperate), Diet.Carnivores, Kingdom.Animal, Class.Mammals, Family.Canid, [location7, location8], 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Canis_lupus_laying.jpg/400px-Canis_lupus_laying.jpg');
-const specie13 = new Specie(13, 'Manchot empereur', 'Aptenodytes forsteri', 'Un oiseau qui vit en Antarctique.', new Habitat('banquise', Climate.Polar), Diet.Carnivores, Kingdom.Animal, Class.Birds, Family.Spheniscidae, [location2], 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Emperor_Penguin_with_chicks.jpg/400px-Emperor_Penguin_with_chicks.jpg');
+const specie11 = new Specie(11, 'Koala', 'Phascolarctos cinereus', 'Un marsupial herbivore qui vit dans les forêts d\'eucalyptus en Australie.', new Habitat('forêt d\'eucalyptus', Climate.Temperate), Diet.Herbivores, Kingdom.Animal, Class.Mammals, Family.Phascolarctides, [location1], 'https://d1jyxxz9imt9yb.cloudfront.net/medialib/1594/image/s768x1300/DR_2020-01-18_Koroit-Victoria-AU_Bushfires-MosswoodWildlife-RescuedKoalas_1D_MelanieMahoney_094V1077_reduced.jpg');
+const specie12 = new Specie(12, 'Loup gris', 'Canis lupus', 'Un prédateur social vivant en meutes.', new Habitat('forêts et toundras', Climate.Temperate), Diet.Carnivores, Kingdom.Animal, Class.Mammals, Family.Canid, [location7, location8], 'https://www.ecozonia.fr/photos/gallery_200_adobestockij205973952_1596638148_large_.jpg');
+const specie13 = new Specie(13, 'Manchot empereur', 'Aptenodytes forsteri', 'Un oiseau qui vit en Antarctique.', new Habitat('banquise', Climate.Polar), Diet.Carnivores, Kingdom.Animal, Class.Birds, Family.Spheniscidae, [location2], 'https://media.venturatravel.org/unsafe/800x600/smart/header_media/6acc180a-f1b5-4596-ab62-aaac82624664-emperor-penguin-oceanwide-.jpeg');
 const specie14 = new Specie(14, 'Dauphin', 'Delphinus delphis', 'Un mammifère marin très intelligent.', new Habitat('océans', Climate.Temperate), Diet.Carnivores, Kingdom.Animal, Class.Mammals, Family.Delphinidae, [location8, location9], 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Common_Dolphin.jpg/400px-Common_Dolphin.jpg');
-const specie15 = new Specie(15, 'Aigle royal', 'Aquila chrysaetos', 'Un grand oiseau de proie.', new Habitat('montagnes et vallées', Climate.Temperate), Diet.Carnivores, Kingdom.Animal, Class.Birds, Family.Accipitridae, [location3], 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Golden_Eagle_in_flight_-_5.jpg/400px-Golden_Eagle_in_flight_-_5.jpg');
+const specie15 = new Specie(15, 'Aigle royal', 'Aquila chrysaetos', 'Un grand oiseau de proie.', new Habitat('montagnes et vallées', Climate.Temperate), Diet.Carnivores, Kingdom.Animal, Class.Birds, Family.Accipitridae, [location3], 'https://www.ekolien.fr/medias/2022/03/aigle-royal-presentation.jpeg');
 const specie16 = new Specie(16, 'Tortue verte', 'Chelonia mydas', 'Une grande tortue marine herbivore.', new Habitat('océans tropicaux', Climate.Tropical), Diet.Herbivores, Kingdom.Animal, Class.Reptiles, Family.Testudines, [location5], 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Green_turtle_swimming_over_coral_reefs_in_Kona.jpg/400px-Green_turtle_swimming_over_coral_reefs_in_Kona.jpg');
 const specie17 = new Specie(17, 'Cobra royal', 'Ophiophagus hannah', 'Le plus grand serpent venimeux.', new Habitat('forêts tropicales', Climate.Tropical), Diet.Carnivores, Kingdom.Animal, Class.Reptiles, Family.Snakes, [location4], 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/King_Cobra_Bangalore.jpg/400px-King_Cobra_Bangalore.jpg');
-const specie18 = new Specie(18, 'Fennec', 'Vulpes zerda', 'Un renard du désert avec de grandes oreilles.', new Habitat('déserts', Climate.Dry), Diet.Omnivores, Kingdom.Animal, Class.Mammals, Family.Canid, [location6], 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Fennec_Fox_Vulpes_zerda.jpg/400px-Fennec_Fox_Vulpes_zerda.jpg');
+const specie18 = new Specie(18, 'Fennec', 'Vulpes zerda', 'Un renard du désert avec de grandes oreilles.', new Habitat('déserts', Climate.Dry), Diet.Omnivores, Kingdom.Animal, Class.Mammals, Family.Canid, [location6], 'https://lh4.googleusercontent.com/proxy/bXzKKBP-hrWcn6DRqazBS0e805XC6riVWEQeJVYkO8fUCK8VNOlBXZt9sDJmxBbaE7H9uuZsfDovw6qRvuR48Xx-fKI');
 const specie19 = new Specie(19, 'Caméléon panthère', 'Furcifer pardalis', 'Un caméléon coloré de Madagascar.', new Habitat('forêts tropicales', Climate.Tropical), Diet.Insectivores, Kingdom.Animal, Class.Reptiles, Family.Lizards, [location7], 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ed/Panther_chameleon_%28Furcifer_pardalis%29_male_Ambohitantely.jpg/400px-Panther_chameleon_%28Furcifer_pardalis%29_male_Ambohitantely.jpg');
 const specie20 = new Specie(20, 'Paon bleu', 'Pavo cristatus', 'Un oiseau célèbre pour son plumage éclatant.', new Habitat('forêts ouvertes', Climate.Tropical), Diet.Omnivores, Kingdom.Animal, Class.Birds, Family.Leporids, [location7], 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/54/Peacock_Plumage.jpg/400px-Peacock_Plumage.jpg');
-
+const specie21 = new Specie(21,'Pigeon','Columba livia','Oiseau commun des villes.',new Habitat('villes', Climate.Temperate),Diet.Omnivores,Kingdom.Animal,Class.Birds,Family.Columbidae,[location6, location7],'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Columba_livia_%28feral_pigeon%29.jpg/400px-Columba_livia_%28feral_pigeon%29.jpg');
+const specie22 = new Specie(22,'Rat brun','Rattus norvegicus','Rongeur urbain omniprésent.',new Habitat('égouts et bâtiments abandonnés', Climate.Temperate),Diet.Omnivores,Kingdom.Animal,Class.Mammals,Family.Muridae,[location4, location5],'https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Brown_rat_Rattus_norvegicus.jpg/400px-Brown_rat_Rattus_norvegicus.jpg');
+const specie23 = new Specie(23,'Renard roux','Vulpes vulpes','Un prédateur opportuniste dans les villes.',new Habitat('banlieues et parcs', Climate.Temperate),Diet.Omnivores,Kingdom.Animal,Class.Mammals,Family.Canid,[location6],'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Fox-2019.jpg/400px-Fox-2019.jpg');
+const specie24 = new Specie(24,'Chauve-souris pipistrelle','Pipistrellus pipistrellus','Chauve-souris commune des villes.',new Habitat('toits et cavités', Climate.Temperate),Diet.Insectivores,Kingdom.Animal, Class.Mammals,Family.Vespertilionidae,[location3, location4],'https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Pipistrellus_pipistrellus_on_white.jpg/400px-Pipistrellus_pipistrellus_on_white.jpg');
+const specie25 = new Specie(25,'Corneille noire','Corvus corone','Oiseau intelligent et curieux des villes.',new Habitat('parcs et rues', Climate.Temperate),Diet.Omnivores,Kingdom.Animal,Class.Birds,Family.Corvidae,[location2, location8],'https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/Corvus_corone_corone_%28Marek_Szczepanek%29.jpg/400px-Corvus_corone_corone_%28Marek_Szczepanek%29.jpg');
+const specie26 = new Specie(26,'Hérisson d\'Europe','Erinaceus europaeus','Mammifère nocturne commun dans les jardins.',new Habitat('jardins', Climate.Temperate),Diet.Insectivores,Kingdom.Animal,Class.Mammals,Family.Erinaceidae,[location7],'https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/European_Hedgehog_amongst_autumn_leaves.JPG/400px-European_Hedgehog_amongst_autumn_leaves.JPG');
 const captureDetail1: CaptureDetail = new CaptureDetail(1, new Date('2024-01-01'), false, location1);
 const captureDetail2: CaptureDetail = new CaptureDetail(2, new Date('2024-02-01'), true, location2);
 
@@ -65,6 +70,14 @@ const capture17: Capture = new Capture(17, null, specie17, []);
 const capture18: Capture = new Capture(18, null, specie18, []);
 const capture19: Capture = new Capture(19, null, specie19, []);
 const capture20: Capture = new Capture(20, null, specie20, []);
+const capture21 = new Capture(21, 'Pigeon', specie21, []);
+const capture22 = new Capture(22, 'Rat brun', specie22, []);
+const capture23 = new Capture(23, 'Renard roux', specie23, []);
+const capture24 = new Capture(24, 'Chauve-souris pipistrelle', specie24, []);
+const capture25 = new Capture(25, 'Corneille noire', specie25, []);
+const capture26 = new Capture(26, 'Hérisson d\'Europe', specie26, []);
+
+
 
 const sucess1: Sucess = new Sucess("Succès A", "checkmark-circle-outline", "Description du succès A", 25)
 const sucess2: Sucess = new Sucess("Succès B", "checkmark-circle-outline", "Description du succès B", 50)
@@ -107,6 +120,12 @@ export const CaptureList = [
     capture17,
     capture18,
     capture19,
-    capture20
+    capture20,
+    capture21,
+    capture22,
+    capture23,
+    capture24,
+    capture25,
+    capture26,
 ];
 
