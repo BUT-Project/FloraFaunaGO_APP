@@ -1,8 +1,9 @@
-import {StyleSheet, TouchableOpacity, ImageBackground, Dimensions} from 'react-native';
+import {StyleSheet, TouchableOpacity, Dimensions, ImageBackground} from 'react-native';
 import {ThemedView} from "@/components/ui/themed/ThemedView";
 import {ThemedText} from "@/components/ui/themed/ThemedText";
 import Capture from "@/model/Capture";
 import {Link} from "expo-router";
+import { LoadingImageBackground } from '../ui/LoadingImageBackground';
 
 type CaptureListItemProps={
     capture:Capture
@@ -15,9 +16,15 @@ export default function CaptureListItem(props: CaptureListItemProps){
         <Link  href={{params: { id: props.capture.id.toString()}, pathname:"/(encyclopedia)/[id]" }} asChild>
             <TouchableOpacity>
                 <ThemedView style={styles.container}>
-                    <ImageBackground source={{uri:props.capture.specie.image}} style={styles.image} imageStyle={styles.imageStyle}>
+                    <LoadingImageBackground
+                        source={{ uri: props.capture.specie.image }}
+                        containerStyle={styles.image}
+                        width={itemSize}
+                        height={itemSize}
+                        imageStyle={styles.image}
+                    >
                         <ThemedText style={styles.name}>{props.capture.specie.name}</ThemedText>
-                    </ImageBackground>
+                    </LoadingImageBackground>
                 </ThemedView>
             </TouchableOpacity>
         </Link>
@@ -40,7 +47,7 @@ const styles = StyleSheet.create({
     },
     name: {
         color: 'white',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        backgroundColor: 'rgba(0, 0, 0, 0.35)',
         padding: 5,
         textAlign: 'center',
         borderRadius: 10,

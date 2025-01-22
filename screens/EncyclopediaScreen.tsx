@@ -15,15 +15,7 @@ interface EncyclopediaScreenProps {
 
 export default function EncyclopediaScreen(props: EncyclopediaScreenProps) {
     const [name,setName] = useState("")
-    const [page,setPage] = useState(1)
-    const {captures,isLoading,error,isListEnd,refresh} = useGetCaptures(page,20,"")
-    console.log(captures)
-
-    const fetchMoreData = () => {
-        if(!isListEnd){
-            setPage(page+1)
-        }
-    }
+    const {captures=[],isLoading,isLoadingMore,error,isListEnd,refresh,fetchMoreData} = useGetCaptures(20,"")
 
     return (
         <SafeView>
@@ -33,34 +25,37 @@ export default function EncyclopediaScreen(props: EncyclopediaScreenProps) {
                 </ThemedView>
                 <SpeciesFilterModal baseSpecies={props.captures} setFilteredSpecies={()=>{}}/>
             </ThemedView>
-            { isLoading && 
-                <ActivityIndicator  size={"large"}/>
+            { isLoading ? 
+                <ActivityIndicator size={"large"}/>
+                :
+                <FlatList
+                    style={styles.capturesList}
+                    showsVerticalScrollIndicator={false}
+                    columnWrapperStyle={styles.columnWrapper}
+                    contentContainerStyle={styles.listContent}
+                    data={captures}
+                    keyExtractor={capture => capture.id?.toString()}
+                    renderItem={({item}) =>
+                        <CaptureListItem capture={item}/>
+                    }
+                    ListEmptyComponent={() => (
+                        <View style={styles.empty}>
+                            <ThemedText type={"subtitle"}>Aucune espèce trouvée.</ThemedText>
+                            <Button title="Raffraîchir" onPress={() => refresh}/>
+                        </View>
+                    )}
+                    ListFooterComponent={()=>(
+                        <View style={styles.footer}>
+                            {isListEnd && <ThemedText>Pas de capture en plus pour le moment. </ThemedText>}
+                            {isLoadingMore && <ActivityIndicator size={"small"} />}
+                        </View>
+                    )}
+                    onEndReachedThreshold={0.2}
+                    onEndReached={fetchMoreData}
+                    numColumns={3}
+                />
             }
-            <FlatList
-                style={styles.capturesList}
-                showsVerticalScrollIndicator={false}
-                columnWrapperStyle={styles.columnWrapper}
-                contentContainerStyle={styles.listContent}
-                data={captures || []}
-                keyExtractor={capture => capture.id?.toString()}
-                renderItem={({item}) =>
-                    <CaptureListItem capture={item}/>
-                }
-                ListEmptyComponent={() => (
-                    <View style={styles.empty}>
-                        <ThemedText type={"subtitle"}>Aucune espèce trouvée.</ThemedText>
-                        <Button title="Raffraîchir" onPress={() => refresh}/>
-                    </View>
-                )}
-                ListFooterComponent={()=>(
-                    <View style={styles.footer}>
-                        {isListEnd && <ThemedText>Pas de capture en plus pour le moment. </ThemedText>}
-                    </View>
-                )}
-                onEndReachedThreshold={0.2}
-                onEndReached={fetchMoreData}
-                numColumns={3}
-            />
+
 
         </SafeView>
     )
