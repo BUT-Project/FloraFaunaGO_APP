@@ -44,7 +44,6 @@ export default function SucessListItemVertical(props:SucessListItemsProps){
             </Text>
                 */}
             <ThemedText style={[styles.text, {color}]}>{props.items.nom}</ThemedText>
-
             </ThemedView>
         </ThemedView>
     );
@@ -56,15 +55,20 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
-        width : "33%"
+        width : "33%",
     },
     itemContainer:{
         flexDirection: 'column',
         alignItems: 'center',
         alignSelf:"center",
+
     },
     text:{
-        fontSize:12
+        flex:1,
+        fontSize:11,
+        lineHeight:15,
+        height:30,
+        textAlign : "center",
     },
     image : {
         alignSelf : "center",

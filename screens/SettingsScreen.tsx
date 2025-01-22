@@ -80,6 +80,7 @@ const styles = StyleSheet.create({
     },
     title: {
         fontWeight: "bold",
+        margin:25,
         alignSelf: "center",
         color: "#FFFFFF",
     },
@@ -94,17 +95,17 @@ const styles = StyleSheet.create({
         minWidth: "80%",
         borderRadius: 10,
         height:50,
-        marginVertical: "3%",
+        marginVertical: "4%",
         backgroundColor: "#FFFFFF",
     },
     buttonText: {
         color: '#000000',
-        fontSize: 24,
+        fontSize: 16,
         fontWeight: 'bold',
     },
     deleteText: {
         color: '#ff0000',
-        fontSize: width * 0.035,
         fontWeight: 'bold',
+        fontSize: 16,
     },
 });

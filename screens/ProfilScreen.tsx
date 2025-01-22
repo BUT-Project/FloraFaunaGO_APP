@@ -50,7 +50,10 @@ export default function ProfilScreen() {
             </Link>
 
             <Image source={ProfileImage} style={styles.profile}/>
-            <ThemedText type={"title"} style={styles.title} >──── Statistiques ────</ThemedText>
+            <ThemedView style={styles.lineContainer}>
+            <ThemedView style={styles.line} />
+            <ThemedText type={"title"} style={styles.title} >Statistiques</ThemedText><ThemedView style={styles.line} />
+            </ThemedView>
 
             <ThemedView style={styles.container}>
                 <FontAwesome5 size={32} name="walking" style={[styles.settings, {color: tintColor}]}/>
@@ -68,7 +71,10 @@ export default function ProfilScreen() {
                 <AntDesign size={30} name="clockcircleo" style={[styles.settings, {color:tintColor}]}/>
                 <ThemedText style={styles.text}>Date d'inscription</ThemedText>
             </ThemedView>
-            <ThemedText type={"title"} style={styles.title}>────── Succès ──────</ThemedText>
+            <ThemedView style={styles.lineContainer}>
+                <ThemedView style={styles.line} />
+                <ThemedText type={"title"} style={styles.title} >Succès</ThemedText><ThemedView style={styles.line} />
+            </ThemedView>
             <ThemedView style={styles.pagination}>
                 <Button
                     title="Précédent"
@@ -99,8 +105,6 @@ export default function ProfilScreen() {
                     numColumns={3}
                     ListHeaderComponent={renderHeader}
                     columnWrapperStyle={{ justifyContent: "space-between", marginBottom: 10 }}
-                    ListFooterComponent={loading ? <ActivityIndicator style={styles.loader} size="large" color={tintColor} /> : null}
-
                 />
             </SafeAreaView>
         </ThemedView>
@@ -108,6 +112,16 @@ export default function ProfilScreen() {
 }
 
 const styles = StyleSheet.create({
+    lineContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        width: '100%',
+    },
+    line: {
+        flex: 1,
+        height: 4,
+        backgroundColor: '#ccc',
+    },
     list: {
     alignSelf : "center",
     },
@@ -116,8 +130,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         padding: 16,
-        borderTopWidth: 1,
-        borderTopColor: '#ccc',
+
     },
     pageInfo: {
         fontSize: 16,
