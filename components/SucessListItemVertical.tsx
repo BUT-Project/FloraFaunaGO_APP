@@ -54,13 +54,14 @@ const styles = StyleSheet.create({
     itemsContainer: {
         position: 'relative',
         flexDirection: 'row',
+        justifyContent: 'center',
         alignItems: 'center',
-        margin: 4,
-        width : Dimensions.get('window').width * 0.33
+        width : "33%"
     },
     itemContainer:{
         flexDirection: 'column',
         alignItems: 'center',
+        alignSelf:"center",
     },
     text:{
         fontSize:12

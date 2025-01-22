@@ -50,7 +50,7 @@ export default function ProfilScreen() {
             </Link>
 
             <Image source={ProfileImage} style={styles.profile}/>
-            <ThemedText style={styles.title}>──── Statistiques ────</ThemedText>
+            <ThemedText type={"title"} style={styles.title} >──── Statistiques ────</ThemedText>
 
             <ThemedView style={styles.container}>
                 <FontAwesome5 size={32} name="walking" style={[styles.settings, {color: tintColor}]}/>
@@ -68,7 +68,7 @@ export default function ProfilScreen() {
                 <AntDesign size={30} name="clockcircleo" style={[styles.settings, {color:tintColor}]}/>
                 <ThemedText style={styles.text}>Date d'inscription</ThemedText>
             </ThemedView>
-            <ThemedText style={styles.title}>────── Succès ──────</ThemedText>
+            <ThemedText type={"title"} style={styles.title}>────── Succès ──────</ThemedText>
             <ThemedView style={styles.pagination}>
                 <Button
                     title="Précédent"
@@ -92,11 +92,13 @@ export default function ProfilScreen() {
         <ThemedView>
             <SafeAreaView>
                 <FlatList
+                    style={styles.list}
                     data={Successes?? []}
                     keyExtractor={(item) => item.nom}
                     renderItem={({item}) => <SucessListItemVertical items={item}/>}
                     numColumns={3}
                     ListHeaderComponent={renderHeader}
+                    columnWrapperStyle={{ justifyContent: "space-between", marginBottom: 10 }}
                     ListFooterComponent={loading ? <ActivityIndicator style={styles.loader} size="large" color={tintColor} /> : null}
 
                 />
@@ -104,7 +106,11 @@ export default function ProfilScreen() {
         </ThemedView>
     );
 }
+
 const styles = StyleSheet.create({
+    list: {
+    alignSelf : "center",
+    },
     pagination: {
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -129,11 +135,9 @@ const styles = StyleSheet.create({
         height: 50,
         marginVertical: 5,
     },
-    title: {
-        textAlign: "center",
-        fontWeight: "bold",
-        margin: "8%",
-        fontSize: width > 600 ? width * 0.04 : width * 0.06,
+    title : {
+        margin:20,
+        textAlign: "center"
     },
     text: {
         textAlignVertical:'center',
