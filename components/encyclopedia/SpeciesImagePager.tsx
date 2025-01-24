@@ -1,4 +1,4 @@
-import {Animated, Dimensions, ImageBackground, StyleSheet} from 'react-native';
+import {Animated, Dimensions, ImageBackground, StyleSheet, TouchableOpacity} from 'react-native';
 import { ThemedText } from "@/components/ui/themed/ThemedText";
 import {ThemedView} from "@/components/ui/themed/ThemedView";
 import PagerView, {
@@ -7,13 +7,15 @@ import PagerView, {
 import {ExpandingDot} from "react-native-animated-pagination-dots";
 import React from "react";
 import {Colors} from "@/constants/Colors";
+import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 
 type SpeciesImagePagerProps = {
     speciePhoto: any;
     specieName:string;
     specieScientificName:string;
     userPhoto : any;
-}
+};
 
 const width = Dimensions.get('window').width;
 
@@ -51,6 +53,7 @@ export default function SpeciesImagePager(props: SpeciesImagePagerProps) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
         []
     );
+    const router = useRouter();
 
     if(props.userPhoto)
         {
@@ -58,6 +61,9 @@ export default function SpeciesImagePager(props: SpeciesImagePagerProps) {
                 <ThemedView style={styles.pagerContainer}>
                     <PagerView style={styles.imagesContainer} initialPage={0} onPageScroll={onPageScroll}>
                         <ImageBackground style={styles.image} source={{uri:props.speciePhoto}} key="1">
+                            <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+                                <Ionicons name={'chevron-back'} size={30} color={'#fff'}/>
+                            </TouchableOpacity>
                             <ThemedView style={styles.infoChip}>
                                 <ThemedText style={[styles.text,styles.specieName]}>{props.specieName}</ThemedText>
                                 <ThemedText style={[styles.text,styles.specieScientificName]}>{props.specieScientificName}</ThemedText>
@@ -84,10 +90,12 @@ export default function SpeciesImagePager(props: SpeciesImagePagerProps) {
         return (
             <ThemedView style={styles.imagesContainer}>
                 <ImageBackground style={styles.image} source={{uri: props.speciePhoto}}>
+                    <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+                        <Ionicons name={'chevron-back'} size={30} color={'#fff'}/>
+                    </TouchableOpacity>
                     <ThemedView style={styles.infoChip}>
-                        <ThemedText style={[styles.text, styles.specieName]}>{props.specieName}</ThemedText>
-                        <ThemedText
-                            style={[styles.text, styles.specieScientificName]}>{props.specieScientificName}</ThemedText>
+                        <ThemedText style={[styles.text,styles.specieName]}>{props.specieName}</ThemedText>
+                        <ThemedText style={[styles.text,styles.specieScientificName]}>{props.specieScientificName}</ThemedText>
                     </ThemedView>
                 </ImageBackground>
             </ThemedView>
@@ -141,5 +149,15 @@ const styles = StyleSheet.create({
     specieScientificName:{
         fontSize:16,
         fontStyle:"italic",
+    },
+    backButton:{
+        position: "absolute",
+        top: 0, 
+        left: 0, 
+        margin:5,
+        padding: 1, 
+        borderRadius: 5, 
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+
     }
 });
