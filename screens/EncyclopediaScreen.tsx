@@ -76,10 +76,9 @@ const styles = StyleSheet.create({
     },
     listContent: {
         flexGrow:1,
-        padding: 5,
     },
     columnWrapper: {
-        justifyContent: 'space-between',
+        justifyContent: 'flex-start',
     },
     empty:{
         flex:1,

@@ -1,34 +1,46 @@
-import {StyleSheet, TouchableOpacity, Dimensions, ImageBackground} from 'react-native';
-import {ThemedView} from "@/components/ui/themed/ThemedView";
-import {ThemedText} from "@/components/ui/themed/ThemedText";
+import React from 'react';
+import { StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
+import { ThemedView } from "@/components/ui/themed/ThemedView";
+import { ThemedText } from "@/components/ui/themed/ThemedText";
 import Capture from "@/model/Capture";
-import {Link} from "expo-router";
+import { Link } from "expo-router";
 import { LoadingImageBackground } from '../ui/LoadingImageBackground';
 
-type CaptureListItemProps={
-    capture:Capture
-}
-const { width } = Dimensions.get('window');
-const itemSize = width / 3 - 15;
+type CaptureListItemProps = {
+    capture: Capture;
+};
 
-export default function CaptureListItem(props: CaptureListItemProps){
+const { width } = Dimensions.get('window');
+const itemSize = (width / 3) - 10;
+
+export default function CaptureListItem({ capture }: CaptureListItemProps) {
+    const isCaptured = React.useMemo(() => capture.capturesDetails.length > 0, [capture]);
+
     return (
-        <Link  href={{params: { id: props.capture.id.toString()}, pathname:"/(encyclopedia)/[id]" }} asChild>
+        <Link
+            href={{ params: { id: capture.id.toString() }, pathname: "/(encyclopedia)/[id]" }}
+            asChild
+        >
             <TouchableOpacity>
                 <ThemedView style={styles.container}>
                     <LoadingImageBackground
-                        source={{ uri: props.capture.specie.image }}
+                        source={{ uri: capture.specie.image }}
                         containerStyle={styles.image}
                         width={itemSize}
                         height={itemSize}
                         imageStyle={styles.image}
                     >
-                        <ThemedText style={styles.name}>{props.capture.specie.name}</ThemedText>
+                        {/* Ajout de la superposition conditionnelle */}
+                        {!isCaptured && <ThemedView style={styles.overlay} />}
+                        
+                        <ThemedText style={styles.name}>
+                            {capture.specie.name}
+                        </ThemedText>
                     </LoadingImageBackground>
                 </ThemedView>
             </TouchableOpacity>
         </Link>
-    )
+    );
 }
 
 const styles = StyleSheet.create({
@@ -52,4 +64,9 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         borderRadius: 10,
     },
-})
+    overlay: {
+        ...StyleSheet.absoluteFillObject, 
+        backgroundColor: 'rgba(0, 0, 0, 0.75)', 
+        borderRadius: 10, 
+    },
+});

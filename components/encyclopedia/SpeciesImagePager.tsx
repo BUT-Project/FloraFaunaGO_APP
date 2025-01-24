@@ -55,30 +55,30 @@ export default function SpeciesImagePager(props: SpeciesImagePagerProps) {
     if(props.userPhoto)
         {
             return (
-                        <ThemedView style={styles.pagerContainer}>
-                            <PagerView style={styles.imagesContainer} initialPage={0} onPageScroll={onPageScroll}>
-                                <ImageBackground style={styles.image} source={{uri:props.speciePhoto}} key="1">
-                                    <ThemedView style={styles.infoChip}>
-                                        <ThemedText style={[styles.text,styles.specieName]}>{props.specieName}</ThemedText>
-                                        <ThemedText style={[styles.text,styles.specieScientificName]}>{props.specieScientificName}</ThemedText>
-                                    </ThemedView>
-                                </ImageBackground>
-                                <ImageBackground style={styles.image} source={{uri:props.userPhoto}} key="2">
-                                    <ThemedView style={styles.infoChip}>
-                                        <ThemedText style={styles.text}>Votre photo</ThemedText>
-                                    </ThemedView>
+                <ThemedView style={styles.pagerContainer}>
+                    <PagerView style={styles.imagesContainer} initialPage={0} onPageScroll={onPageScroll}>
+                        <ImageBackground style={styles.image} source={{uri:props.speciePhoto}} key="1">
+                            <ThemedView style={styles.infoChip}>
+                                <ThemedText style={[styles.text,styles.specieName]}>{props.specieName}</ThemedText>
+                                <ThemedText style={[styles.text,styles.specieScientificName]}>{props.specieScientificName}</ThemedText>
+                            </ThemedView>
+                        </ImageBackground>
+                        <ImageBackground style={styles.image} source={{uri:props.userPhoto}} key="2">
+                            <ThemedView style={styles.infoChip}>
+                                <ThemedText style={styles.text}>Votre photo</ThemedText>
+                            </ThemedView>
 
-                                </ImageBackground>
-                            </PagerView>
-                            <ExpandingDot
-                                data={paginationData}
-                                scrollX={scrollX}
-                                inActiveDotOpacity={0.6}
-                                containerStyle={styles.dotsContainer}
-                                activeDotColor={Colors.light.tint}
-                                dotStyle={styles.dotStyle}/>
-                        </ThemedView>
-                    )
+                        </ImageBackground>
+                    </PagerView>
+                    <ExpandingDot
+                        data={paginationData}
+                        scrollX={scrollX}
+                        inActiveDotOpacity={0.6}
+                        containerStyle={styles.dotsContainer}
+                        activeDotColor={Colors.light.tint}
+                        dotStyle={styles.dotStyle}/>
+                </ThemedView>
+            )
         }
     else {
         return (
