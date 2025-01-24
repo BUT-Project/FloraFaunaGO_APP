@@ -47,23 +47,17 @@ export const SucessList = [
     new Sucess("Pêcheur Expert", "fish", "Attrapez 30 poissons lors de vos aventures.", 50),
     new Sucess("Chasseur de Trésors", "bug", "Trouvez et collectionnez 20 insectes rares.", 75),
     new Sucess("Explorateur des Bois", "leaf", "Visitez 10 forêts ou réserves naturelles.", 90),
-    new Sucess("Protecteur des fleurs", "flower", "Plantez et entretenez 15 variétés de fleurs.", 10),
-    new Sucess("Gardien des Arbres", "leaf", "Plantez 5 arbres et assurez leur croissance.", 60),
     new Sucess("Naturaliste Accompli", "planet", "Complétez toutes les quêtes liées à la nature.", 100),
-    new Sucess("Connaisseur des Cieux", "sunny", "Identifiez 5 constellations lors de vos aventures nocturnes.", 25),
-    new Sucess("Amoureux des Plantes", "leaf", "Collectionnez 10 plantes différentes pour votre jardin.", 50),
     new Sucess("Dompteur d'Oiseaux", "paw", "Interagissez avec 15 espèces d'oiseaux sauvages.", 75),
     new Sucess("Voyageur Aventurier", "airplane", "Voyagez dans 5 régions différentes.", 90),
-    new Sucess("Semeur d'Espoir", "flower", "Aidez à restaurer une prairie ou un jardin communautaire.", 10),
-    new Sucess("Compagnon Fidèle", "paw", "Adoptez et élevez un animal domestique.", 60),
     new Sucess("Guide des Montagnes", "leaf", "Randonnez jusqu'au sommet de 3 montagnes.", 100),
-    new Sucess("Héros des Océans", "fish", "Participez à une mission de nettoyage des plages.", 25),
-    new Sucess("Gardien des Abeilles", "bug", "Créez et entretenez un rucher.", 50),
     new Sucess("Roi de la Forêt", "leaf", "Passez 50 heures à explorer les bois.", 75),
-    new Sucess("Aventurier des Profondeurs", "fish", "Explorez 3 récifs coralliens sous-marins.", 90),
-    new Sucess("Cultivateur Dévoué", "leaf", "Entretenez un potager avec 8 variétés de légumes.", 10),
-    new Sucess("Observateur du Ciel", "moon", "Observez un phénomène céleste rare.", 60),
-    new Sucess("Éco-Héros", "planet", "Impliquez-vous dans 5 projets écologiques communautaires.", 100),
+    new Sucess("Maitre de l'air", "airplane", "Capturez 5 espèces d'oiseaux", 75),
+    new Sucess("Maitre de l'eau", "water", "Capturez 5 espèces marines", 75),
+    new Sucess("Voyageur", "walk", "Parcourez 10km", 75),
+
+
+
 ];
 
 export const UserList = [

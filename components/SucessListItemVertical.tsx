@@ -1,11 +1,12 @@
 import React from 'react';
-import {StyleSheet,Dimensions } from 'react-native';
+import {StyleSheet, Dimensions, TouchableOpacity} from 'react-native';
 import {AnimatedCircularProgress} from "react-native-circular-progress";
 import {useThemeColor} from "@/hooks/useThemeColor";
 import {Sucess} from "../model/Sucess"
 import {TabBarIcon} from "@/components/navigation/TabBarIcon";
 import {ThemedView} from "@/components/ui/themed/ThemedView";
 import {ThemedText} from "@/components/ui/themed/ThemedText";
+import {Link} from "expo-router";
 
 
 
@@ -19,6 +20,9 @@ export default function SucessListItemVertical(props:SucessListItemsProps){
     const backgroundColor = useThemeColor({ light: 'black', dark: 'white' }, 'background');
 
     return(
+        <Link href={{params: { id: props.items.nom}, pathname:"/(profil)/[id]" }} style={styles.itemsContainer} asChild>
+            <TouchableOpacity>
+
         <ThemedView style={styles.itemsContainer}>
             <ThemedView style={styles.itemContainer} >
             <AnimatedCircularProgress
@@ -46,6 +50,8 @@ export default function SucessListItemVertical(props:SucessListItemsProps){
             <ThemedText style={[styles.text, {color}]}>{props.items.nom}</ThemedText>
             </ThemedView>
         </ThemedView>
+            </TouchableOpacity>
+        </Link>
     );
 
 }

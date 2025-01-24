@@ -1,5 +1,5 @@
 import {ThemedText} from "@/components/ui/themed/ThemedText";
-import {FlatList, Image, StyleSheet, TouchableOpacity, Dimensions, ActivityIndicator, Button} from "react-native";
+import {FlatList, Image, StyleSheet, TouchableOpacity, Dimensions, Button} from "react-native";
 import {SafeAreaView} from "react-native-safe-area-context";
 import {useThemeColor} from "@/hooks/useThemeColor";
 import React, {useEffect, useState} from "react";
@@ -19,7 +19,6 @@ export default function ProfilScreen() {
     const {Sucess} = StubData.getInstance()
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(false);
-    const [hasMore, setHasMore] = useState(true);
     const [totalPages, setTotalPages] = useState(1);
 
     const fetchSuccesses = async (currentPage: number) => {
@@ -39,6 +38,7 @@ export default function ProfilScreen() {
         fetchSuccesses(page);
     }, [page]);
 
+
     const tintColor = useThemeColor({light: 'black', dark: 'white'}, 'background');
 
     const renderHeader = () => (
@@ -57,7 +57,7 @@ export default function ProfilScreen() {
 
             <ThemedView style={styles.container}>
                 <FontAwesome5 size={32} name="walking" style={[styles.settings, {color: tintColor}]}/>
-                <ThemedText style={styles.text}>  Distance marchées</ThemedText>
+                <ThemedText style={styles.text}>  Distance marchées </ThemedText>
             </ThemedView>
             <ThemedView style={styles.container}>
                 <FontAwesome6 size={30} name="circle-question" style={[styles.settings, {color: tintColor}]}/>
@@ -77,15 +77,13 @@ export default function ProfilScreen() {
             </ThemedView>
             <ThemedView style={styles.pagination}>
                 <Button
-                    title="Précédent"
+                    title="<"
                     onPress={() => setPage((prev) => Math.max(prev - 1, 1))}
                     disabled={page === 1}
                 />
-                <ThemedText style={styles.pageInfo}>
-                    Page {page} sur {totalPages}
-                </ThemedText>
+                <ThemedText style={styles.pageInfo}>Page {page} sur {totalPages}</ThemedText>
                 <Button
-                    title="Suivant"
+                    title=">"
                     onPress={() => setPage((prev) => Math.min(prev + 1, totalPages))}
                     disabled={page === totalPages}
                 />
