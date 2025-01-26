@@ -36,30 +36,30 @@ export default function SettingsScreen() {
             <LinearGradient style={{flex:1}}  colors={["#90EE90","#0D98BA"]}>
              <SafeAreaView>
 
-                 <ThemedText style={styles.title}>Settings</ThemedText>
+                 <ThemedText type={"title"} style={styles.title}>Settings</ThemedText>
                  <Pressable onPress={switchChange} style={styles.button}>
-                     <ThemedText style={styles.buttonText}>Mode offline</ThemedText>
+                     <ThemedText type={"subtitle"} style={styles.buttonText}>Mode offline</ThemedText>
                      <Switch value={switchBut} trackColor={{false: "#767577", true: "#90EE90"}} style={styles.switch}  />
                  </Pressable>
 
                  <TouchableOpacity style={styles.button}>
-                     <ThemedText style={styles.buttonText}>Modifier l'adresse mail</ThemedText>
+                     <ThemedText type={"subtitle"} style={styles.buttonText}>Modifier l'adresse mail</ThemedText>
                  </TouchableOpacity>
 
                  <TouchableOpacity onPress={toggleTheme} style={styles.button}>
-                     <ThemedText style={styles.buttonText}>Changer le thème</ThemedText>
+                     <ThemedText type={"subtitle"} style={styles.buttonText}>Changer le thème</ThemedText>
                  </TouchableOpacity>
 
                  <TouchableOpacity style={styles.button}>
-                     <ThemedText style={styles.buttonText}>Activer l'économie de batterie</ThemedText>
+                     <ThemedText type={"subtitle"} style={styles.buttonText}>Activer l'économie de batterie</ThemedText>
                  </TouchableOpacity>
 
                  <TouchableOpacity style={styles.button}>
-                     <ThemedText style={styles.buttonText}>Deconnexion</ThemedText>
+                     <ThemedText type={"subtitle"} style={styles.buttonText}>Deconnexion</ThemedText>
                  </TouchableOpacity>
 
                  <TouchableOpacity style={styles.button}>
-                     <ThemedText style={[styles.deleteText]}>Supprimer le compte</ThemedText>
+                     <ThemedText type={"subtitle"} style={[styles.deleteText]}>Supprimer le compte</ThemedText>
                  </TouchableOpacity>
              </SafeAreaView>
             </LinearGradient>
@@ -73,16 +73,14 @@ const styles = StyleSheet.create({
         display:"flex",
         flex:1,
 
-
     },
     safeArea: {
         flex: 1,
         paddingHorizontal: '5%',
     },
     title: {
-        paddingVertical: height * 0.05,
         fontWeight: "bold",
-        fontSize: width * 0.08,
+        margin:25,
         alignSelf: "center",
         color: "#FFFFFF",
     },
@@ -93,21 +91,21 @@ const styles = StyleSheet.create({
         alignSelf: "center",
         flexDirection: "row",
         justifyContent: "center",
-        padding: width * 0.035,
+        padding: 10,
         minWidth: "80%",
         borderRadius: 10,
         height:50,
-        marginVertical: height * 0.015,
+        marginVertical: "4%",
         backgroundColor: "#FFFFFF",
     },
     buttonText: {
         color: '#000000',
-        fontSize: width * 0.03,
+        fontSize: 16,
         fontWeight: 'bold',
     },
     deleteText: {
         color: '#ff0000',
-        fontSize: width * 0.035,
         fontWeight: 'bold',
+        fontSize: 16,
     },
 });

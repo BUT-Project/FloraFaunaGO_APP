@@ -26,12 +26,17 @@ export default class StubSucess  extends GenericRepository<Sucess> {
     }
 
 
-    getById(nom?: string): Promise<Sucess> {
+     getById(nom?: string): Promise<Sucess> {
         return new Promise((resolve) => {
-            this.Sucesses.find(suc => suc.nom == nom) || null});
+            const suc = this.Sucesses.find(suc => suc.nom == nom)
+            if(suc !== undefined) {
+                resolve(suc)
+            }
+        });
+
     }
 
-    public async getAll(page: number = 1, pageSize: number = 10): Promise<PagingResult<Sucess>> {
+    public async getAll(page: number = 1, pageSize: number = 9): Promise<PagingResult<Sucess>> {
         const startIndex = (page - 1) * pageSize;
         const endIndex = startIndex + pageSize;
 

@@ -87,14 +87,23 @@ const sucess2: Sucess = new Sucess("Succès B", "checkmark-circle-outline", "Des
 export const SpecieList = [specie1,specie2,specie3,specie4,specie5,specie6];
 
 export const SucessList = [
-    new Sucess("Succès A", "checkmark-circle-outline", "Description du succès A", 25),
-    new Sucess("Succès B", "checkmark-circle-outline", "Description du succès B", 50),
-    new Sucess("Succès C", "checkmark-circle-outline", "Description du succès C", 75),
-    new Sucess("Succès D", "checkmark-circle-outline", "Description du succès D", 90),
-    new Sucess("Succès E", "checkmark-circle-outline", "Description du succès E", 10),
-    new Sucess("Succès F", "checkmark-circle-outline", "Description du succès F", 60),
-    new Sucess("Succès G", "checkmark-circle-outline", "Description du succès G", 100),
-]
+    new Sucess("Maître des Animaux", "paw", "Débloqué en interagissant avec 50 animaux différents.", 25),
+    new Sucess("Pêcheur Expert", "fish", "Attrapez 30 poissons lors de vos aventures.", 50),
+    new Sucess("Chasseur de Trésors", "bug", "Trouvez et collectionnez 20 insectes rares.", 75),
+    new Sucess("Explorateur des Bois", "leaf", "Visitez 10 forêts ou réserves naturelles.", 90),
+    new Sucess("Naturaliste Accompli", "planet", "Complétez toutes les quêtes liées à la nature.", 100),
+    new Sucess("Dompteur d'Oiseaux", "paw", "Interagissez avec 15 espèces d'oiseaux sauvages.", 75),
+    new Sucess("Voyageur Aventurier", "airplane", "Voyagez dans 5 régions différentes.", 90),
+    new Sucess("Guide des Montagnes", "leaf", "Randonnez jusqu'au sommet de 3 montagnes.", 100),
+    new Sucess("Roi de la Forêt", "leaf", "Passez 50 heures à explorer les bois.", 75),
+    new Sucess("Maitre de l'air", "airplane", "Capturez 5 espèces d'oiseaux", 75),
+    new Sucess("Maitre de l'eau", "water", "Capturez 5 espèces marines", 75),
+    new Sucess("Voyageur", "walk", "Parcourez 10km", 75),
+
+
+
+];
+
 export const UserList = [
     new User(1, 'JohnDoe', 'johndoe@example.com', 'hashedpassword1', new Date('2022-01-01'), [capture1, capture2],[sucess1]),
     new User(2, 'JaneDoe', 'janedoe@example.com', 'hashedpassword2', new Date('2022-02-01'), [capture3],[]),
