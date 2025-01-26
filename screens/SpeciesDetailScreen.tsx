@@ -3,39 +3,21 @@ import {ScrollView, FlatList, StyleSheet, ActivityIndicator} from "react-native"
 import {ThemedText} from "@/components/ui/themed/ThemedText";
 import {ThemedView} from "@/components/ui/themed/ThemedView";
 import CaptureListItem from "@/components/encyclopedia/CaptureListItem";
-import Specie from "@/model/Specie";
-import Capture from "@/model/Capture";
-import Habitat from "@/model/Habitat";
-import {Climate} from "@/model/Climate";
-import {Diet} from "@/model/Diet";
-import {Kingdom} from "@/model/Kingdom";
-import {Class} from "@/model/Class";
-import {Family} from "@/model/Family";
 import CaptureDetails from "@/components/encyclopedia/CaptureDetails";
-import MapView, {Marker} from "react-native-maps";
 import PagerView from 'react-native-pager-view';
 import SpeciesImagePager from "@/components/encyclopedia/SpeciesImagePager";
 import { useGetCaptureById } from "@/hooks/useGetCaptureById";
 import { SafeView } from "@/components/ui/SafeView";
+import { ExtendableMap } from "@/components/ui/ExtendableMap";
+import { useGetCaptureByFamily } from "@/hooks/useGetCaptureByFamily";
 
 interface SpeciesDetailScreenProps {
     captureId: number;
 }
-
-const eurylaimePsittacin = new Specie(1,"Eurylaime Psittacin","Psarisomus dalhousiae","L'eurylaime psittacin (Psarisomus dalhousiae) est une espèce d'oiseaux que l'on trouve dans l'Himalaya, s'étendant vers l'est à travers l'Inde du Nord-Est jusqu'en Asie du Sud-Est (Jameson, 1885). C'est la seule espèce du genre Psarisomus (Swainson, 1837). L'Eurylaime psittacin mesure environ 25 cm de longueur et pèse entre 50 et 60 grammes. Il peut être identifié par son cri aigu.",
-    new Habitat("Jungle",Climate.Tropical),Diet.Herbivores,Kingdom.Animal,Class.Birds,Family.Bovids,
-    [],
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Psarisomus_dalhousiae_-_Kaeng_Krachan.jpg/480px-Psarisomus_dalhousiae_-_Kaeng_Krachan.jpg");
-const FAMILY_TEST = [
-    new Capture(1,"",eurylaimePsittacin,[]),
-    new Capture(2,"",eurylaimePsittacin,[]),
-    new Capture(3,"",eurylaimePsittacin,[]),
-    new Capture(4,"",eurylaimePsittacin,[]),
-    new Capture(5,"",eurylaimePsittacin,[]),
-]
 export default function SpeciesDetailScreen({captureId}: SpeciesDetailScreenProps) {
 
-    const { capture,isLoading,error} = useGetCaptureById(captureId)
+    const { capture,isLoading,error} = useGetCaptureById(captureId);
+    const { captures:family,isLoading:isFamLoading,fetchMoreData,error:errorFam,isListEnd,isLoadingMore} = useGetCaptureByFamily(capture?.specie.family);
     const oldestCapture = React.useMemo(() =>  {
         if(capture){
             if(capture.capturesDetails?.length > 0 ){
@@ -46,6 +28,13 @@ export default function SpeciesDetailScreen({captureId}: SpeciesDetailScreenProp
         }
         else return null;  
     },[capture?.capturesDetails]);
+
+    if(error){
+        console.error(error);
+    }
+    if(errorFam){
+        console.error(errorFam)
+    }
     if(isLoading){
         return(
             <ThemedView style={styles.container}>
@@ -103,33 +92,39 @@ export default function SpeciesDetailScreen({captureId}: SpeciesDetailScreenProp
                         <ThemedView style={styles.descContainer}>
                             <ThemedText style={styles.description}>{capture.specie.description}</ThemedText>
                         </ThemedView>
-                        <ThemedView style={styles.mapContainer}>
-                            <MapView
-                                style={styles.map}
-                                initialRegion={{
-                                    longitude:capture.specie.locations[0].longitude,
-                                    latitude:capture.specie.locations[0].latitude,
-                                    latitudeDelta: 0.3,
-                                    longitudeDelta: 0.3,
-                                }}
-                            >
-                                {capture.specie.locations.map((loc,index) => (
-                                    <Marker coordinate={{longitude:loc.longitude,latitude:loc.latitude}} key={`Marker-${index}`} />
-                                ))}
-                            </MapView>
-                        </ThemedView>
+                        <ExtendableMap locations={capture.specie.locations} mapStyle={styles.map} style={styles.mapContainer}/>
+                    
                     </ThemedView>
                     <ThemedView style={styles.section}>
                         <ThemedText type={"defaultSemiBold"}>Famille :</ThemedText>
-                        <FlatList
-                            data={FAMILY_TEST}
-                            keyExtractor={(item) => `FamilyMember-${item.id}`}
-
-                            renderItem={(capture) => (
-                                <CaptureListItem capture={capture.item}/>
-                            )}
-                            horizontal={true}
-                        />
+                        { isFamLoading ?
+                            <ThemedView>
+                                <ActivityIndicator size={'small'} />
+                            </ThemedView>
+                            :
+                            <FlatList
+                                data={family}
+                                keyExtractor={(item) => `FamilyMember-${item.id}`}
+                                renderItem={(capture) => (
+                                    <CaptureListItem capture={capture.item}/>
+                                )}
+                                ListEmptyComponent={()=>(
+                                    <ThemedView style={styles.emptyFam}>
+                                        <ThemedText>Aucune espèce trouvée</ThemedText>
+                                    </ThemedView>
+                                )}
+                                ListFooterComponent={()=>(
+                                    <ThemedView>
+                                        {isListEnd && <ThemedText>Pas de capture en plus pour le moment. </ThemedText>}
+                                        {isLoadingMore && <ActivityIndicator size={"small"} />}
+                                    </ThemedView>
+                                )}
+                                onEndReached={fetchMoreData}
+                                onEndReachedThreshold={0.5}
+                                horizontal={true}
+                            />
+                        }
+                        
                     </ThemedView>
                     { capture.capturesDetails.length > 0 ?
                         <>
@@ -217,5 +212,10 @@ const styles = StyleSheet.create({
     bold:{
         fontWeight:"600",
         flexWrap:"wrap"
+    },
+    emptyFam:{
+        flex:1,
+        justifyContent:"center",
+        alignItems:"center"
     }
 });

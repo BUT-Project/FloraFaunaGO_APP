@@ -2,50 +2,27 @@ import {StyleSheet} from 'react-native';
 import {ThemedView} from "@/components/ui/themed/ThemedView";
 import {ThemedText} from "@/components/ui/themed/ThemedText";
 import CaptureDetail from "@/model/CaptureDetail";
-import MapView, {Marker} from 'react-native-maps';
-import {useRef} from "react";
+import { ExtendableMap } from '../ui/ExtendableMap';
 
 type CaptureDetailsProps={
     captureDetail:CaptureDetail
 }
 
-export default function CaptureDetails(props: CaptureDetailsProps){
-    const mapRef = useRef<MapView>(null);
-
+export default function CaptureDetails({captureDetail}: CaptureDetailsProps){
     return (
         <ThemedView style={styles.container}>
             <ThemedView style={styles.infoContainer}>
                 <ThemedText type={"defaultSemiBold"}>Informations :</ThemedText>
-                <ThemedText>Longitude : {props.captureDetail.location.longitude} </ThemedText>
-                <ThemedText>Latitude : {props.captureDetail.location.latitude} </ThemedText>
-                <ThemedText>Altitude : {props.captureDetail.location.altitude} </ThemedText>
-                <ThemedText>Shiny : {props.captureDetail.shiny ? "Oui" : "Non"}</ThemedText>
-                <ThemedText>Date : {props.captureDetail.date.toLocaleDateString()}</ThemedText>
+                <ThemedText>Longitude : {captureDetail.location.longitude} </ThemedText>
+                <ThemedText>Latitude : {captureDetail.location.latitude} </ThemedText>
+                <ThemedText>Altitude : {captureDetail.location.altitude} </ThemedText>
+                <ThemedText>Shiny : {captureDetail.shiny ? "Oui" : "Non"}</ThemedText>
+                <ThemedText>Date : {captureDetail.date.toLocaleDateString()}</ThemedText>
             </ThemedView>
             <ThemedView style={styles.locationContainer}>
                 <ThemedText type={"defaultSemiBold"}>Localisation:</ThemedText>
-                <ThemedView style={styles.mapContainer}>
-                    <MapView
-                        ref={mapRef}
-                        style={styles.map}
-                        initialRegion={{
-                            longitude: props.captureDetail.location.longitude,
-                            latitude: props.captureDetail.location.latitude,
-                            latitudeDelta: 0.3,
-                            longitudeDelta: 0.3,
-                        }}
-                        showsUserLocation={true}
-                    >
-                        <Marker
-                            coordinate={{
-                                longitude:props.captureDetail.location.longitude,
-                                latitude:props.captureDetail.location.latitude,
-                            }}
-                        />
-                    </MapView>
-                </ThemedView>
+                <ExtendableMap locations={[captureDetail.location]} style={styles.mapContainer}  mapStyle={styles.map}/>
             </ThemedView>
-
         </ThemedView>
     )
 }

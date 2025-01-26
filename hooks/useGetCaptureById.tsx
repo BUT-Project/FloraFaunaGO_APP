@@ -8,7 +8,7 @@ export function useGetCaptureById(
     const [isLoading, setIsLoading] = useState(false);
     const [capture, setCapture] = useState<Capture | null>(null); 
     const [error, setError] = useState<unknown>(null);
-    console.log(id)
+    
     useEffect(() => {
         const fetchCapture = async () => {
         if (isLoading) return; 
