@@ -17,5 +17,6 @@ export enum Family {
     Muridae="Muridae",
     Vespertilionidae="Vespertilionidae",
     Corvidae="Corvidae",
-    Erinaceidae='Erinaceidae'
+    Erinaceidae='Erinaceidae',
+    Felidae="Felidae",
 }

@@ -2,6 +2,7 @@ import Capture from "@/model/Capture";
 import {FilterPredicate} from "@/dal/StubLib/FilterPredicate";
 import {GenericRepository} from "@/dal/StubLib/IGenericRepository";
 import {PagingResult} from "@/dal/StubLib/PagingResult";
+import { Family } from "@/model/Family";
 
 export default class StubCaptures extends GenericRepository<Capture | null> {
     constructor(public Captures: Capture[]) {
@@ -39,6 +40,17 @@ export default class StubCaptures extends GenericRepository<Capture | null> {
             const startIndex = (page - 1) * pageSize;
             const endIndex = startIndex + pageSize;
             const items = this.Captures.slice(startIndex, endIndex);
+            const total = this.Captures.length;
+            const pagingResult = new PagingResult<Capture>(page, items.length, total, items);
+            resolve(pagingResult);
+        });
+    }
+
+    getByFamily(family:Family, page: number = 1, pageSize: number = 10) : Promise<PagingResult<Capture>> {
+        return new Promise((resolve) => {
+            const startIndex = (page - 1) * pageSize;
+            const endIndex = startIndex + pageSize;
+            const items = this.Captures.filter((capture) => capture.specie.family === family).slice(startIndex, endIndex);
             const total = this.Captures.length;
             const pagingResult = new PagingResult<Capture>(page, items.length, total, items);
             resolve(pagingResult);
