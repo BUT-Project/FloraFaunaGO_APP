@@ -1,6 +1,5 @@
 import {StyleSheet, TextInput} from 'react-native';
 import {ThemedView} from "@/components/ui/themed/ThemedView";
-import {useState} from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import {useThemeColor} from "@/hooks/useThemeColor";
 

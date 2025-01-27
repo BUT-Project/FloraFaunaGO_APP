@@ -33,7 +33,7 @@ export default function SpeciesDetailScreen({captureId}: SpeciesDetailScreenProp
         console.error(error);
     }
     if(errorFam){
-        console.error(errorFam)
+        console.error(errorFam);
     }
     if(isLoading){
         return(

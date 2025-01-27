@@ -19,4 +19,14 @@ export enum Family {
     Corvidae="Corvidae",
     Erinaceidae='Erinaceidae',
     Felidae="Felidae",
+    Apididae="Apididae",
+    Asteraceae="Asteraceae",
+    Fagaceae="Fagaceae",
+    Malvaceae="Malvaceae",
+    Papilionidae="Papilionidae",
+    Lamiaceae="Lamiaceae",
+    Formicidae="Formicidae",
+    Sapindaceae="Sapindaceae",
+    Scarabaeidae="Scarabaeidae"
+
 }

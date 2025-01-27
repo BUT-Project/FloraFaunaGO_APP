@@ -4,5 +4,6 @@ export enum Class {
     Reptiles ="Reptiles",
     Amphibians ="Amphibians",
     Fish="Fish",
-    Insects="Insects"
+    Insects="Insects",
+    Angiosperms="Angiosperms"
 }

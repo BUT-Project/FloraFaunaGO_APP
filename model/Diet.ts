@@ -3,4 +3,6 @@ export enum Diet{
     Herbivores = "Herbivores",
     Omnivores = "Omnivores",
     Insectivores ="Insectivores",
+    Nectarivores = "Nectarivores",
+    Autotrophs = "Autotrophs"
 }
