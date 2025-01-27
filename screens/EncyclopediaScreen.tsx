@@ -5,15 +5,11 @@ import CaptureListItem from "@/components/encyclopedia/CaptureListItem";
 import { useState} from "react";
 import {ThemedView} from "@/components/ui/themed/ThemedView";
 import {SafeView} from "@/components/ui/SafeView";
-import Capture from "@/model/Capture";
 import SpeciesFilterModal from "@/components/encyclopedia/SpeciesFilterModal";
 import {ThemedText} from "@/components/ui/themed/ThemedText";
 import { useGetCaptures } from "@/hooks/useGetCaptures";
-interface EncyclopediaScreenProps {
-    captures: Capture[]
-}
 
-export default function EncyclopediaScreen(props: EncyclopediaScreenProps) {
+export default function EncyclopediaScreen() {
     const [name,setName] = useState("")
     const {captures=[],isLoading,isLoadingMore,error,isListEnd,refresh,fetchMoreData} = useGetCaptures(20,"")
 
@@ -23,7 +19,7 @@ export default function EncyclopediaScreen(props: EncyclopediaScreenProps) {
                 <ThemedView style={styles.searchBar}>
                     <SpeciesSearchBar search={name} setSearch={setName} placeholder={"Rechercher..."}/>
                 </ThemedView>
-                <SpeciesFilterModal baseSpecies={props.captures} setFilteredSpecies={()=>{}}/>
+                <SpeciesFilterModal baseSpecies={captures} setFilteredSpecies={()=>{}}/>
             </ThemedView>
             { isLoading ? 
                 <ActivityIndicator size={"large"}/>

@@ -1,5 +1,5 @@
 import React from "react";
-import {ScrollView, FlatList, StyleSheet, ActivityIndicator} from "react-native";
+import {ScrollView, FlatList, StyleSheet, ActivityIndicator, Dimensions} from "react-native";
 import {ThemedText} from "@/components/ui/themed/ThemedText";
 import {ThemedView} from "@/components/ui/themed/ThemedView";
 import CaptureListItem from "@/components/encyclopedia/CaptureListItem";
@@ -10,10 +10,14 @@ import { useGetCaptureById } from "@/hooks/useGetCaptureById";
 import { SafeView } from "@/components/ui/SafeView";
 import { ExtendableMap } from "@/components/ui/ExtendableMap";
 import { useGetCaptureByFamily } from "@/hooks/useGetCaptureByFamily";
+import { ExtendableText } from "@/components/encyclopedia/ExtendableText";
 
 interface SpeciesDetailScreenProps {
     captureId: number;
 }
+
+const width = Dimensions.get('screen').width;
+
 export default function SpeciesDetailScreen({captureId}: SpeciesDetailScreenProps) {
 
     const { capture,isLoading,error} = useGetCaptureById(captureId);
@@ -89,11 +93,8 @@ export default function SpeciesDetailScreen({captureId}: SpeciesDetailScreenProp
                     </ThemedView>
 
                     <ThemedView style={styles.sectionRow}>
-                        <ThemedView style={styles.descContainer}>
-                            <ThemedText style={styles.description}>{capture.specie.description}</ThemedText>
-                        </ThemedView>
+                        <ExtendableText text={capture.specie.description} style={styles.descContainer} textStyle={styles.description} />
                         <ExtendableMap locations={capture.specie.locations} mapStyle={styles.map} style={styles.mapContainer}/>
-                    
                     </ThemedView>
                     <ThemedView style={styles.section}>
                         <ThemedText type={"defaultSemiBold"}>Famille :</ThemedText>
@@ -121,6 +122,7 @@ export default function SpeciesDetailScreen({captureId}: SpeciesDetailScreenProp
                                 )}
                                 onEndReached={fetchMoreData}
                                 onEndReachedThreshold={0.5}
+                                showsHorizontalScrollIndicator={false}
                                 horizontal={true}
                             />
                         }
@@ -166,11 +168,10 @@ const styles = StyleSheet.create({
     },
     sectionRow:{
         flexDirection:"row",
-        gap:7,
-        padding:7,
+        gap:10,
+        padding:5,
         paddingHorizontal:10,
         borderBottomWidth:1,
-        maxHeight:500,
     },
     halfVerticalContainer:{
         flexDirection:"column",
@@ -178,16 +179,18 @@ const styles = StyleSheet.create({
         width:"50%"
     },
     descContainer:{
-        width:"54%",
-        padding:7,
+        width:(width/2)-15,
+        padding:5,
         borderRadius:15,
+        aspectRatio:1,
+        overflow:"hidden",
         backgroundColor:"#000",
     },
     description:{
-        color:"#FFF"
+        color:"#FFF",
     },
     mapContainer:{
-        width:"44%",
+        width:(width/2)-15,
         aspectRatio:1,
         borderRadius:15,
         overflow:"hidden"
