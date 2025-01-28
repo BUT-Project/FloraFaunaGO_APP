@@ -1,7 +1,12 @@
-import Animated from "react-native-reanimated";
-import {Image, StyleSheet, View, ViewStyle} from "react-native";
-import {ThemedText} from "@/components/ui/themed/ThemedText";
-import React from "react";
+import Animated, {
+    useAnimatedStyle,
+    withTiming,
+    useSharedValue,
+    withSpring
+} from "react-native-reanimated";
+import { Image, StyleSheet, View, ViewStyle, Pressable } from "react-native";
+import { ThemedText } from "@/components/ui/themed/ThemedText";
+import React, { useState } from "react";
 import Specie from "@/model/domain/Specie";
 
 interface SpecieCardProps {
@@ -11,14 +16,55 @@ interface SpecieCardProps {
 
 const BORDER_RADIUS = 20;
 const CARD_WIDTH = 250;
-const CARD_HEIGHT = 450;
+const COLLAPSED_HEIGHT = 450;
+const EXPANDED_HEIGHT = 550;
+const MAX_COLLAPSED_LINES = 2;
 
 export default function SpecieCard(props: SpecieCardProps) {
-    const {id, name, image, description} = props.specie;
+    const { id, name, image, description, family } = props.specie;
     const formattedId = `#${id.toString().padStart(3, '0')}`;
 
+    // State for tracking if description is expanded
+    const [isExpanded, setIsExpanded] = useState(false);
+
+    // Animation values
+    const cardHeight = useSharedValue(COLLAPSED_HEIGHT);
+    const descriptionHeight = useSharedValue(70);
+
+    // Animated styles
+    const animatedCardStyle = useAnimatedStyle(() => ({
+        height: cardHeight.value,
+    }));
+
+    const animatedDescriptionStyle = useAnimatedStyle(() => ({
+        height: descriptionHeight.value,
+        overflow: 'hidden'
+    }));
+
+    // Handle description press
+    const handleDescriptionPress = () => {
+        setIsExpanded(!isExpanded);
+
+        // Animate both card and description heights
+        cardHeight.value = withSpring(
+            isExpanded ? COLLAPSED_HEIGHT : EXPANDED_HEIGHT,
+            {
+                damping: 15,
+                stiffness: 100
+            }
+        );
+
+        descriptionHeight.value = withSpring(
+            isExpanded ? 70 : 170,
+            {
+                damping: 15,
+                stiffness: 100
+            }
+        );
+    };
+
     return (
-        <Animated.View style={[styles.container, props.style]}>
+        <Animated.View style={[styles.container, animatedCardStyle, props.style]}>
             <View style={styles.cardContent}>
                 <View style={styles.header}>
                     <ThemedText style={styles.name}>{name || 'Unknown'}</ThemedText>
@@ -34,9 +80,20 @@ export default function SpecieCard(props: SpecieCardProps) {
                     />
                 </View>
                 <View style={styles.typeContainer}>
-                    <ThemedText style={styles.type}>{'Unknown Type'}</ThemedText>
+                    <ThemedText style={styles.type}>{family || 'Unknown Type'}</ThemedText>
                 </View>
-                <ThemedText style={styles.description}>{description || 'No description available.'}</ThemedText>
+
+                <Pressable onPress={handleDescriptionPress} style={styles.descriptionContainer}>
+                    <Animated.View style={animatedDescriptionStyle}>
+                        <ThemedText
+                            style={styles.description}
+                            numberOfLines={isExpanded ? undefined : MAX_COLLAPSED_LINES}
+                        >
+                            {description || 'No description available.'}
+                        </ThemedText>
+                    </Animated.View>
+                </Pressable>
+
                 <ThemedText style={styles.id}>ID: {formattedId}</ThemedText>
             </View>
         </Animated.View>
@@ -46,7 +103,6 @@ export default function SpecieCard(props: SpecieCardProps) {
 const styles = StyleSheet.create({
     container: {
         width: CARD_WIDTH + 20,
-        height: CARD_HEIGHT + 20,
         borderRadius: BORDER_RADIUS,
         borderColor: 'rgba(255, 255, 255, 0.1)',
         borderWidth: 1,
@@ -106,11 +162,22 @@ const styles = StyleSheet.create({
         color: 'white',
         fontWeight: 'bold',
     },
+    descriptionContainer: {
+        backgroundColor: '#F0F0F0',
+        flex: 1,
+        marginBottom: 8,
+    },
     description: {
         fontSize: 14,
         fontStyle: 'italic',
         color: '#666',
-        marginBottom: 8,
+        marginBottom: 4,
+    },
+    expandButton: {
+        fontSize: 12,
+        color: '#3498DB',
+        textAlign: 'right',
+        marginBottom: 4,
     },
     id: {
         fontSize: 12,
