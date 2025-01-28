@@ -1,40 +1,24 @@
 import {StyleSheet, TextInput} from 'react-native';
 import {ThemedView} from "@/components/ui/themed/ThemedView";
-import {useState} from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import {useThemeColor} from "@/hooks/useThemeColor";
 
 type SearchBarProps={
-    baseData:any[],
-    setFilteredData:any,
+    search:string;
+    setSearch:any;
     placeholder:string,
 }
 
 export default function SpeciesSearchBar(props: SearchBarProps){
     const color = useThemeColor({ light: "#000", dark: "#fff" }, 'text');
-    const [searchText, setSearchText] = useState('');
-    const searchFilterFunction = (text:string) => {
-        if (text) {
-            const newData = props.baseData.filter((item) => {
-                const specieName = item.specie.name ? item.specie.name.toUpperCase() : ''.toUpperCase();
-                const textData = text.toUpperCase();
-                return specieName.indexOf(textData) > -1;
-            });
-            props.setFilteredData(newData);
-            setSearchText(text);
-        } else {
-            props.setFilteredData(props.baseData);
-            setSearchText(text);
-        }
-
-    }
+   
     return (
         <ThemedView style={styles.searchBarContainer}>
             <TextInput
                 style={[styles.searchBar,{color:color}]}
-                value={searchText}
+                value={props.search}
                 placeholder={props.placeholder}
-                onChangeText={(text) => searchFilterFunction(text)}
+                onChangeText={(text) => props.setSearch(text)}
             />
             <Ionicons name={"search"} color={color} size={20}/>
         </ThemedView>

@@ -9,6 +9,12 @@ export default function Layout() {
         <Stack>
             <Stack.Screen name="profil" options={{
                 headerShown: false}}/>
+            <Stack.Screen name="[id]"
+                          options={{
+                              title: "",
+                              headerBackTitleVisible: true}}
+
+            />
             <Stack.Screen name="settings"
             options={{
 

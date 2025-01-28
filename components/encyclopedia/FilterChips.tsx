@@ -9,11 +9,12 @@ type FilterChipsProps = {
 
 export default function FilterChips(props: FilterChipsProps) {
     return (
-        <TouchableOpacity  style={[
-                    styles.chip,
-                    props.selectedFilter === props.item && styles.selectedChip,
-                ]}
-                           onPress={() => props.onFilterChange(props.item)}
+        <TouchableOpacity  
+            style={[
+                styles.chip,
+                props.selectedFilter === props.item && styles.selectedChip,
+            ]}
+            onPress={() => props.onFilterChange(props.item)}
         >
             <ThemedText  style={props.selectedFilter === props.item ? styles.selectedName: styles.name }>
                 {props.item.toString()}
@@ -30,7 +31,8 @@ const styles = StyleSheet.create({
         padding: 5,
         borderWidth:1,
         borderColor:"#000",
-        textAlign: 'center',
+        justifyContent:"center",
+        alignItems:"center",
         borderRadius: 10,
         margin:2,
     },

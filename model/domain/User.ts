@@ -8,7 +8,7 @@ export default class User {
     passwordHash: string
     inscriptionDate: Date
     captures:Capture[]
-    _success:Sucess[]
+    success:Sucess[]
 
     constructor(id: number, username: string, email: string, passwordHash: string, inscriptionDate: Date,captures:Capture[],success:Sucess[]) {
         this.id = id
@@ -17,6 +17,6 @@ export default class User {
         this.passwordHash = passwordHash
         this.inscriptionDate = inscriptionDate
         this.captures=captures
-        this._success = success
+        this.success = success
     }
 }

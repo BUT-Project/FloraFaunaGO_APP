@@ -1,3 +1,4 @@
+import React from 'react';
 import {FlatList, Modal, StyleSheet, TouchableOpacity} from 'react-native';
 import {ThemedView} from "@/components/ui/themed/ThemedView";
 import {ThemedText} from "@/components/ui/themed/ThemedText";
@@ -80,15 +81,13 @@ export default function SpeciesFilterModal(props: SpeciesFilterProps){
                 <Ionicons name={"filter"} color={color}  size={24}/>
             </TouchableOpacity>
             <Modal animationType={"slide"} transparent={true} visible={visible} onRequestClose={() =>setVisible(false)  }>
-                <SafeView>
-
-                </SafeView>
+               
                 <TouchableOpacity style={styles.dismissButton} onPress={() => setVisible(false)}/>
                 <ThemedView style={styles.modalContent}>
                     <ThemedView style={styles.titleContainer}>
                         <ThemedText>Filter and sort the encyclopedia :</ThemedText>
                         <TouchableOpacity>
-                            <Ionicons name={"close"} size={23} onPress={()=>setVisible(false)}/>
+                            <Ionicons name={"close"} color={color} size={25} onPress={()=>setVisible(false)}/>
                         </TouchableOpacity>
                     </ThemedView>
                     <ThemedView style={styles.sortContainer}>
