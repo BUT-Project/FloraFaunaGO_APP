@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {StyleSheet, Dimensions, TouchableOpacity} from 'react-native';
 import {AnimatedCircularProgress} from "react-native-circular-progress";
 import {useThemeColor} from "@/hooks/useThemeColor";
@@ -7,6 +7,7 @@ import {TabBarIcon} from "@/components/navigation/TabBarIcon";
 import {ThemedView} from "@/components/ui/themed/ThemedView";
 import {ThemedText} from "@/components/ui/themed/ThemedText";
 import {Link} from "expo-router";
+import SuccessDetailScreen from "@/screens/SuccessDetailScreen";
 
 
 
@@ -18,10 +19,16 @@ export default function SucessListItemVertical(props:SucessListItemsProps){
     const tintColor = useThemeColor({ light: 'black', dark: 'white' }, 'background');
     const color = useThemeColor({ light: 'black', dark: 'white' }, 'background');
     const backgroundColor = useThemeColor({ light: 'black', dark: 'white' }, 'background');
+    const [modalVisible, setModalVisible] = useState(false);
 
     return(
-        <Link href={{params: { id: props.items.nom}, pathname:"/(profil)/[id]" }} style={styles.itemsContainer} asChild>
-            <TouchableOpacity>
+        <>
+        <SuccessDetailScreen
+            visible={modalVisible}
+            onClose={() => setModalVisible(false)}
+            sucess={props.items}
+        />
+            <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.itemsContainer}>
 
         <ThemedView style={styles.itemsContainer}>
             <ThemedView style={styles.itemContainer} >
@@ -51,7 +58,8 @@ export default function SucessListItemVertical(props:SucessListItemsProps){
             </ThemedView>
         </ThemedView>
             </TouchableOpacity>
-        </Link>
+            </>
+
     );
 
 }

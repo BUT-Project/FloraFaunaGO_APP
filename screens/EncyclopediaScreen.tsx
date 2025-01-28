@@ -8,6 +8,7 @@ import {SafeView} from "@/components/ui/SafeView";
 import SpeciesFilterModal from "@/components/encyclopedia/SpeciesFilterModal";
 import {ThemedText} from "@/components/ui/themed/ThemedText";
 import { useGetCaptures } from "@/hooks/useGetCaptures";
+import React from "react";
 
 export default function EncyclopediaScreen() {
     const [name,setName] = useState("")

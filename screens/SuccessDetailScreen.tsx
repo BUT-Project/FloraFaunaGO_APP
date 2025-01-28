@@ -1,71 +1,91 @@
 import { ThemedView } from "@/components/ui/themed/ThemedView";
 import { ThemedText } from "@/components/ui/themed/ThemedText";
 import {Sucess} from "@/model/Sucess";
-import {StyleSheet} from "react-native";
+import {Modal, StyleSheet, TouchableOpacity} from "react-native";
 import {ScrollView} from "react-native";
+import React from "react";
+import Ionicons from "@expo/vector-icons/Ionicons";
 
 interface SucessDetailScreenProps {
- sucess : Sucess
+    visible: boolean;
+    onClose: () => void;
+    sucess: Sucess;
 
 }
 
-export default function SuccessDetailScreen( props : SucessDetailScreenProps) {
-    const { sucess } = props;
+export default function SuccessDetailScreen( { visible, onClose, sucess }: SucessDetailScreenProps) {
+
 
     return (
-        <ScrollView>
-            <ThemedView style={styles.container}>
-                <ThemedText type="title" style={styles.title}>
-                    {sucess.nom}
-                </ThemedText>
+        <Modal animationType="slide" visible={visible} transparent={true} onRequestClose={onClose}>
+            <TouchableOpacity style={styles.overlay} activeOpacity={1} onPress={onClose}>
+                <ThemedView style={styles.container}>
 
-                <ThemedText style={styles.description}>
-                    {sucess.description}
-                </ThemedText>
+                    <ScrollView>
+                        <ThemedText type="title" style={styles.title}>
+                            {sucess.nom}
+                        </ThemedText>
 
-                <ThemedView style={styles.progressContainer}>
-                    <ThemedText style={styles.progressText}>
-                        Avancement : {sucess.avancement}%
-                    </ThemedText>
-                    <ThemedView style={styles.progressBar}>
-                        <ThemedView
-                            style={[
-                                styles.progressFill,
-                                { width: `${sucess.avancement}%` },
-                            ]}
-                        />
-                    </ThemedView>
+                        <ThemedText style={styles.description}>
+                            {sucess.description}
+                        </ThemedText>
+
+                        <ThemedView style={styles.progressContainer}>
+                            <ThemedText style={styles.progressText}>
+                                Avancement : {sucess.avancement}%
+                            </ThemedText>
+                            <ThemedView style={styles.progressBar}>
+                                <ThemedView
+                                    style={[
+                                        styles.progressFill,
+                                        { width: `${sucess.avancement}%` },
+                                    ]}
+                                />
+                            </ThemedView>
+                        </ThemedView>
+                    </ScrollView>
                 </ThemedView>
-            </ThemedView>
-        </ScrollView>
+            </TouchableOpacity>
+        </Modal>
     );
 }
 
 const styles = StyleSheet.create({
-    container: {
+    overlay: {
         flex: 1,
-        padding: 16,
-        alignItems: 'center',
+        backgroundColor: "rgba(0, 0, 0, 0.5)",
+        justifyContent: "center",
+        alignItems: "center",
     },
-    image: {
-        width: 200,
-        height: 200,
-        borderRadius: 100,
-        marginBottom: 16,
+    container: {
+        width: "90%",
+        borderRadius: 12,
+        padding: 16,
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
+    },
+    closeButtonColor:{
+        color:"#808080"
+    },
+    closeButton: {
+        alignSelf: "flex-end"
     },
     title: {
         fontSize: 24,
-        fontWeight: 'bold',
+        fontWeight: "bold",
         marginBottom: 16,
-        textAlign: 'center',
+        textAlign: "center",
     },
     description: {
         fontSize: 16,
         marginBottom: 16,
-        textAlign: 'justify',
+        textAlign: "justify",
     },
     progressContainer: {
-        width: '100%',
+        width: "100%",
         marginTop: 16,
     },
     progressText: {
@@ -74,12 +94,12 @@ const styles = StyleSheet.create({
     },
     progressBar: {
         height: 10,
-        backgroundColor: '#ddd',
+        backgroundColor: "#ddd",
         borderRadius: 5,
-        overflow: 'hidden',
+        overflow: "hidden",
     },
     progressFill: {
-        height: '100%',
-        backgroundColor: '#4caf50',
+        height: "100%",
+        backgroundColor: "#4caf50",
     },
 });
