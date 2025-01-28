@@ -118,6 +118,7 @@ export default function HomeScreen() {
             router.push({
                 pathname: '/capture',
                 params: {
+                    pictureUri: capturedImage,
                     imageUri: identifiedSpecie.image,
                     specieId: identifiedSpecie.id,
                     specieName: identifiedSpecie.name,

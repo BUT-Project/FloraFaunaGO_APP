@@ -18,6 +18,7 @@ interface CaptureScreenParams extends Record<string, string | string[]> {
     imageUri: string;
     specieId: string;
     specieName: string;
+    pictureUri: string;
 }
 
 export default function PokemonCapture() {
@@ -26,7 +27,8 @@ export default function PokemonCapture() {
     const {
         imageUri,
         specieId,
-        specieName
+        specieName,
+        pictureUri,
     } = params;
 
     const router = useRouter();
@@ -103,6 +105,7 @@ export default function PokemonCapture() {
                     onPress: () => router.replace({
                         pathname: '/(home)/reveal',
                         params: {
+                            imageUri: pictureUri,
                             specieId: specieId // Make sure specieId is available in your component's scope
                         }
                     })
