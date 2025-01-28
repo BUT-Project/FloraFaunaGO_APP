@@ -155,8 +155,8 @@ export default function RevealScreen({specie}: RevealScreenProps) {
             />
             {thumbnail.main ? (
                 <EntranceFlipAnimation content={
+                    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}} ref={thumbRef}>
                     <FlipAnimationContainer
-                        ref={thumbRef}
                         frontContent={
                             <ThemedView style={[styles.card]}>
                                 <Animated.View style={[styles.imageContainer]}>
@@ -170,6 +170,7 @@ export default function RevealScreen({specie}: RevealScreenProps) {
                             setIsBackShowing(isBackVisible);
                         }}
                     />
+                    </View>
                 }
                                        onAnimationComplete={
                                            () => {

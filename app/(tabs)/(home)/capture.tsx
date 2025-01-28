@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Canvas, Circle, Group, Image, SkImage, useClock, useImage,} from "@shopify/react-native-skia";
+import {Canvas, Circle, Group, Image, SkImage, useClock, useImage, Rect} from "@shopify/react-native-skia";
 import {runOnJS, useDerivedValue, useSharedValue, withRepeat, withSequence, withTiming,} from 'react-native-reanimated';
 import {Alert, Dimensions, TouchableOpacity, View} from "react-native";
 import {Gesture, GestureDetector} from "react-native-gesture-handler";
@@ -163,7 +163,29 @@ export default function PokemonCapture() {
                 runOnJS(resetPokeball)();
             }
         });
+    const cagePulse = useSharedValue(1);
+    const particles = useSharedValue(Array.from({length: 20}, () => ({
+        x: Math.random() * 100 - 50,
+        y: Math.random() * 100 - 200,
+        speed: Math.random() * 0.5 + 0.2,
+        size: Math.random() * 3 + 2
+    })));
 
+    useEffect(() => {
+        // Particle animation
+        particles.value = particles.value.map(p => ({
+            ...p,
+            y: (p.y + p.speed) % 100 - 200
+        }));
+    }, [clock]);
+
+    // Add cage opening animation
+    const cageOpenProgress = useSharedValue(0);
+    useEffect(() => {
+        if (captureSuccess) {
+            cageOpenProgress.value = withTiming(1, {duration: 800});
+        }
+    }, [captureSuccess]);
     return (
         <GestureDetector gesture={throwGesture}>
             <View style={{flex: 1}}>
@@ -183,59 +205,62 @@ export default function PokemonCapture() {
                             <Image
                                 image={specieImage}
                                 fit="contain"
-                                x={-35}
-                                y={-200}
+                                x={-50} // Adjusted to center the image
+                                y={-50} // Adjusted to center the image
                                 width={100}
                                 height={100}
                             />
                         )}
                         {!captureSuccess && (
-                            <Circle
-                                cx={0}
-                                cy={-150}
-                                r={50}
-                                color={captureRingColor}
-                                style="stroke"
-                                strokeWidth={5}
-                            />
+                            <>
+                                {/* Cage Structure */}
+                                {/* Vertical Bars */}
+                                {Array.from({length: 8}).map((_, i) => {
+                                    const xPos = -60 + (i * 15);
+                                    return (
+                                        <Rect
+                                            key={`vertical-${i}`}
+                                            x={xPos - 2.5}
+                                            y={-50} // Adjusted to center the cage
+                                            width={5}
+                                            height={100} // Adjusted height to fit the centered position
+                                            color="#666"
+                                            style="stroke"
+                                            strokeWidth={2}
+                                        />
+                                    );
+                                })}
+                                {/* Horizontal Bars */}
+                                <Rect
+                                    x={-60}
+                                    y={-50} // Adjusted to center the cage
+                                    width={120}
+                                    height={5}
+                                    color="#666"
+                                    style="stroke"
+                                    strokeWidth={2}
+                                />
+                                <Rect
+                                    x={-60}
+                                    y={50} // Adjusted to center the cage
+                                    width={120}
+                                    height={5}
+                                    color="#666"
+                                    style="stroke"
+                                    strokeWidth={2}
+                                />
+                                {/* Decorative Top Ring */}
+                                <Circle
+                                    cx={0}
+                                    cy={-50} // Adjusted to center the cage
+                                    r={40}
+                                    color="#888"
+                                    style="stroke"
+                                    strokeWidth={4}
+                                />
+                            </>
                         )}
-                        <Circle
-                            cx={0}
-                            cy={-150}
-                            r={100 / 2}
-                            color="red"
-                            style="stroke"
-                            strokeWidth={3}
-                        />
                     </Group>
-                    {/* Debug visuals */}
-                    {/*<Circle*/}
-                    {/*    cx={pokemonX}*/}
-                    {/*    cy={pokemonY}*/}
-                    {/*    r={100 / 2}*/}
-                    {/*    color="rgba(255, 0, 0, 0.3)"*/}
-                    {/*/>*/}
-                    {/*<Circle*/}
-                    {/*    cx={pokeballX}*/}
-                    {/*    cy={pokeballY}*/}
-                    {/*    r={POKEBALL_BASE_SIZE * pokeballScale.value / 2}*/}
-                    {/*    color="rgba(0, 0, 255, 0.3)"*/}
-                    {/*/>*/}
-                    {/*<Line*/}
-                    {/*    p1={{ x: pokemonX.value, y: pokemonY.value }}*/}
-                    {/*    p2={{ x: pokeballX.value, y: pokeballY.value }}*/}
-                    {/*    color="green"*/}
-                    {/*    style="stroke"*/}
-                    {/*    strokeWidth={2}*/}
-                    {/*/>*/}
-                    {/*<SkText*/}
-                    {/*    x={10}*/}
-                    {/*    y={30}*/}
-                    {/*    font={font}*/}
-                    {/*    text={`Colliding: ${isColliding.value ? 'Yes' : 'No'}`}*/}
-                    {/*    color="white"*/}
-                    {/*/>*/}
-
                     {pokeball && (
                         <Image
                             image={pokeball}
@@ -248,7 +273,6 @@ export default function PokemonCapture() {
                         />
                     )}
                 </Canvas>
-
                 <TouchableOpacity
                     style={{
                         position: 'absolute',
