@@ -17,7 +17,7 @@ export function ExtendableText({ text, textStyle, style }: ExtendableTextProps) 
 
     return (
         <>
-            <TouchableOpacity style={style} onLongPress={() => setIsExtended(true)}>
+            <TouchableOpacity style={style} onPress={() => setIsExtended(true)}>
                <ThemedText style={textStyle}>{text}</ThemedText>
                <ThemedView style={styles.icon}>
                     <Ionicons name={'chevron-forward'} size={30} color={'#fff'}/>
