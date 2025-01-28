@@ -1,27 +1,28 @@
 import React from "react";
-import {ActivityIndicator, Dimensions, FlatList, ScrollView, StyleSheet} from "react-native";
+import {ScrollView, FlatList, StyleSheet, ActivityIndicator, Dimensions} from "react-native";
 import {ThemedText} from "@/components/ui/themed/ThemedText";
 import {ThemedView} from "@/components/ui/themed/ThemedView";
 import CaptureListItem from "@/components/encyclopedia/CaptureListItem";
 import CaptureDetails from "@/components/encyclopedia/CaptureDetails";
 import PagerView from 'react-native-pager-view';
 import SpeciesImagePager from "@/components/encyclopedia/SpeciesImagePager";
-import {useGetCaptureById} from "@/hooks/useGetCaptureById";
-import {SafeView} from "@/components/ui/SafeView";
-import {ExtendableMap} from "@/components/ui/ExtendableMap";
-import {useGetCaptureByFamily} from "@/hooks/useGetCaptureByFamily";
-import {ExtendableText} from "@/components/encyclopedia/ExtendableText";
+import { useGetCaptureById } from "@/hooks/useGetCaptureById";
+import { SafeView } from "@/components/ui/SafeView";
+import { ExtendableMap } from "@/components/ui/ExtendableMap";
+import { useGetCaptureByFamily } from "@/hooks/useGetCaptureByFamily";
+import { ExtendableText } from "@/components/encyclopedia/ExtendableText";
 
 interface SpeciesDetailScreenProps {
     captureId: number;
 }
 
-const width = Dimensions.get('screen').width;
+const { width } = Dimensions.get('window');
+const itemSize = (width / 3) - 10;
 
 export default function SpeciesDetailScreen({captureId}: SpeciesDetailScreenProps) {
 
     const { capture,isLoading,error} = useGetCaptureById(captureId);
-    const { captures:family,isLoading:isFamLoading,fetchMoreData,error:errorFam,isListEnd,isLoadingMore} = useGetCaptureByFamily(capture?.specie.family);
+    const { captures:family,isLoading:isFamLoading,fetchMoreData,error:errorFam,isListEnd,isLoadingMore} = useGetCaptureByFamily(capture?.specie.family,capture?.id);
     const oldestCapture = React.useMemo(() =>  {
         if(capture){
             if(capture.capturesDetails?.length > 0 ){
@@ -53,17 +54,12 @@ export default function SpeciesDetailScreen({captureId}: SpeciesDetailScreenProp
             </ThemedView>
         );
     }
-
+   
     return (
         <SafeView>
             <ScrollView>
                 <ThemedView style={styles.container}>
-                    <SpeciesImagePager
-                        speciePhoto={capture.specie.image}
-                        specieName={capture.specie.name}
-                        specieScientificName={capture.specie.scientificName}
-                        userPhoto={capture.photo}
-                    />
+                    <SpeciesImagePager capture={capture}/>
                     <ThemedView style={styles.sectionRow}>
                         <ThemedView style={styles.halfVerticalContainer}>
                             <ThemedView style={styles.infoRow}>
@@ -114,12 +110,14 @@ export default function SpeciesDetailScreen({captureId}: SpeciesDetailScreenProp
                                         <ThemedText>Aucune espèce trouvée</ThemedText>
                                     </ThemedView>
                                 )}
-                                ListFooterComponent={()=>(
-                                    <ThemedView>
-                                        {isListEnd && <ThemedText>Pas de capture en plus pour le moment. </ThemedText>}
-                                        {isLoadingMore && <ActivityIndicator size={"small"} />}
-                                    </ThemedView>
-                                )}
+                                ListFooterComponent={() =>
+                                    family.length > 0 && (
+                                        <ThemedView style={styles.footerFam}>
+                                            {isListEnd && <ThemedText style={{ textAlign: "center" }}>Pas plus de capture pour le moment.</ThemedText>}
+                                            {isLoadingMore && <ActivityIndicator size={"small"} />}
+                                        </ThemedView>
+                                    )
+                                }
                                 onEndReached={fetchMoreData}
                                 onEndReachedThreshold={0.5}
                                 showsHorizontalScrollIndicator={false}
@@ -217,8 +215,17 @@ const styles = StyleSheet.create({
         flexWrap:"wrap"
     },
     emptyFam:{
-        flex:1,
+        width:width,
         justifyContent:"center",
         alignItems:"center"
-    }
+    },
+    footerFam: {
+        margin:5,
+        width:itemSize,
+        height:itemSize,
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "#f9f9f9",
+        borderRadius: 10,
+    },
 });

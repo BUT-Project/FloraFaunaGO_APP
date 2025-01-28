@@ -1,32 +1,32 @@
-import {Animated, Dimensions, StyleSheet, TouchableOpacity} from 'react-native';
-import {ThemedText} from "@/components/ui/themed/ThemedText";
+import {Animated, Dimensions, ImageBackground, StyleSheet, TouchableOpacity} from 'react-native';
+import { ThemedText } from "@/components/ui/themed/ThemedText";
 import {ThemedView} from "@/components/ui/themed/ThemedView";
-import PagerView, {PagerViewOnPageScrollEventData,} from 'react-native-pager-view';
+import PagerView, {
+    PagerViewOnPageScrollEventData,
+} from 'react-native-pager-view';
 import {ExpandingDot} from "react-native-animated-pagination-dots";
-import React from "react";
+import React, {useMemo, useRef} from "react";
 import {Colors} from "@/constants/Colors";
-import {Ionicons} from '@expo/vector-icons';
-import {useRouter} from 'expo-router';
-import {LoadingImageBackground} from '../ui/LoadingImageBackground';
+import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
+import { LoadingImageBackground } from '../ui/LoadingImageBackground';
+import Capture from "@/model/domain/Capture";
 
 type SpeciesImagePagerProps = {
-    speciePhoto: any;
-    specieName:string;
-    specieScientificName:string;
-    userPhoto : any;
+    capture:Capture
 };
 
 const width = Dimensions.get('window').width;
 
 
 
-export default function SpeciesImagePager(props: SpeciesImagePagerProps) {
+export default function SpeciesImagePager({capture}: SpeciesImagePagerProps) {
     const paginationData = [
         { key:"1" },
         { key:"2" }
     ]
-    const scrollOffsetAnimatedValue = React.useRef(new Animated.Value(0)).current;
-    const positionAnimatedValue = React.useRef(new Animated.Value(0)).current;
+    const scrollOffsetAnimatedValue = useRef(new Animated.Value(0)).current;
+    const positionAnimatedValue = useRef(new Animated.Value(0)).current;
     const inputRange = [0, paginationData.length];
     const scrollX = Animated.add(
         scrollOffsetAnimatedValue,
@@ -36,19 +36,29 @@ export default function SpeciesImagePager(props: SpeciesImagePagerProps) {
         outputRange: [0, paginationData.length * width],
     });
 
+    const isCaptured = useMemo(() => capture.capturesDetails.length > 0, [capture]);
+
     const SpecieImage = () => (
-        <LoadingImageBackground style={styles.image} containerStyle={styles.imagesContainer} imageStyle={styles.imagesContainer} width={width} height={width*9/16} source={{uri:props.speciePhoto}} key="1">
+        <LoadingImageBackground
+            style={styles.image}
+            containerStyle={styles.imagesContainer}
+            imageStyle={styles.imagesContainer}
+            width={width}
+            height={width*9/16}
+            source={{uri:capture.specie.image}}
+            key="1">
+            {!isCaptured && <ThemedView style={styles.overlay} />}
             <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
                 <Ionicons name={'chevron-back'} size={30} color={'#fff'}/>
             </TouchableOpacity>
             <ThemedView style={styles.infoChip}>
-                <ThemedText style={[styles.text,styles.specieName]}>{props.specieName}</ThemedText>
-                <ThemedText style={[styles.text,styles.specieScientificName]}>{props.specieScientificName}</ThemedText>
+                <ThemedText style={[styles.text,styles.specieName]}>{capture.specie.name}</ThemedText>
+                <ThemedText style={[styles.text,styles.specieScientificName]}>{capture.specie.scientificName}</ThemedText>
             </ThemedView>
         </LoadingImageBackground>
     );
 
-    const onPageScroll = React.useMemo(
+    const onPageScroll = useMemo(
         () =>
             Animated.event<PagerViewOnPageScrollEventData>(
                 [
@@ -68,13 +78,19 @@ export default function SpeciesImagePager(props: SpeciesImagePagerProps) {
     );
     const router = useRouter();
 
-    if(props.userPhoto)
+    if(capture.photo)
         {
             return (
                 <ThemedView style={styles.pagerContainer}>
                     <PagerView style={styles.imagesContainer} initialPage={0} onPageScroll={onPageScroll}>
                        <SpecieImage key="1"/>
-                        <LoadingImageBackground style={styles.image} containerStyle={styles.imagesContainer} imageStyle={styles.imagesContainer} width={width} height={width*9/16} source={{uri:props.userPhoto}} key="2">
+                        <LoadingImageBackground
+                            style={styles.image}
+                            containerStyle={styles.imagesContainer}
+                            imageStyle={styles.imagesContainer}
+                            width={width} height={width*9/16}
+                            source={{uri:capture.photo}}
+                            key="2">
                             <ThemedView style={styles.infoChip}>
                                 <ThemedText style={styles.text}>Votre photo</ThemedText>
                             </ThemedView>
@@ -154,6 +170,10 @@ const styles = StyleSheet.create({
         padding: 1, 
         borderRadius: 5, 
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
-
-    }
+    },
+    overlay: {
+        ...StyleSheet.absoluteFillObject,
+        backgroundColor: 'rgba(0, 0, 0, 0.75)',
+        borderRadius: 10,
+    },
 });

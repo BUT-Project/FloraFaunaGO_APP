@@ -48,13 +48,17 @@ export default class StubCaptures implements ICaptureRepository {
         });
     }
 
-    getByFamily(family:Family, page: number = 1, pageSize: number = 10) : Promise<PagingResult<Capture>> {
+    getByFamily(family:Family, page: number = 1, pageSize: number = 10, selfId?:number) : Promise<PagingResult<Capture>> {
         return new Promise((resolve) => {
             const startIndex = (page - 1) * pageSize;
             const endIndex = startIndex + pageSize;
-            const items = this.Captures.filter((capture) => capture.specie.family === family).slice(startIndex, endIndex);
-            const total = this.Captures.length;
-            const pagingResult = new PagingResult<Capture>(page, items.length, total, items);
+            const items = this.Captures.filter((capture) =>
+                capture.specie.family === family &&
+                (selfId === undefined || capture.id !== selfId)
+            );
+            const pageItems = items.slice(startIndex, endIndex);
+            const total = items.length;
+            const pagingResult = new PagingResult<Capture>(page, pageItems.length, total, pageItems);
             resolve(pagingResult);
         });
     }

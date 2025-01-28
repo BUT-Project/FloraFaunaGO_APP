@@ -5,7 +5,8 @@ import {Family} from "@/model/domain/Family";
 
 export function useGetCaptureByFamily(
   family: Family | undefined,
-  pageSize: number = 20,
+  selfId?: number,
+  pageSize: number = 10,
 ) {
     
     const [isListEnd, setIsListEnd] = useState(false);
@@ -15,11 +16,11 @@ export function useGetCaptureByFamily(
     const [captures, setCaptures] = useState<Capture[]>([]); 
     const [error, setError] = useState<unknown>(null);
     const [refreshTrigger, setRefreshTrigger] = useState(0);
-    
+
     const refresh = useCallback(() => {
-    setRefreshTrigger((prev) => prev + 1);
+        setRefreshTrigger((prev) => prev + 1);
     }, []);
-    
+
     const fetchMoreData = () => {
         if(!isListEnd && !isLoadingMore){
             setIsLoadingMore(true)
@@ -28,7 +29,7 @@ export function useGetCaptureByFamily(
     }
 
     useEffect(() => {
-        const fetchSpecies = async () => {
+        const fetchCaptures = async () => {
             if(!family) return;
             if (isLoading || isListEnd) return; 
             if(captures.length == 0) setIsLoading(true);
@@ -47,8 +48,8 @@ export function useGetCaptureByFamily(
                 setIsLoadingMore(false);
             }
         };
-    
-        fetchSpecies();
+
+        fetchCaptures();
     }, [family, page, pageSize, refreshTrigger]); 
     
     return {
