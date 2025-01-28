@@ -1,6 +1,5 @@
 import Animated, {
     useAnimatedStyle,
-    withTiming,
     useSharedValue,
     withSpring
 } from "react-native-reanimated";
