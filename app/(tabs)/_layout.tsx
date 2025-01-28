@@ -1,22 +1,31 @@
-import { Tabs } from 'expo-router';
-import React from 'react';
+import { Redirect, Tabs } from 'expo-router';
+import React, { useEffect } from 'react';
+import { TouchableOpacity, StyleSheet } from 'react-native';
 
 import { TabBarIcon } from '@/components/navigation/TabBarIcon';
+import { ThemedText } from "@/components/ui/themed/ThemedText";
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
-import {useSafeAreaInsets} from "react-native-safe-area-context";
-import { TouchableOpacity,StyleSheet } from 'react-native';
-import {ThemedText} from "@/components/ui/themed/ThemedText";
+import {useAuthStore} from "@/context/zustand/strore/AuthStore";
 
 export default function TabLayout() {
     const colorScheme = useColorScheme();
-    const insets = useSafeAreaInsets();
-    const [isCapture, setIsCapture] = React.useState(false)
+    const [isCapture, setIsCapture] = React.useState(false);
+    const { isAuthenticated, checkAuth } = useAuthStore();
+
+    useEffect(() => {
+        // Check authentication status when component mounts
+        checkAuth();
+    }, []);
+
     const takePhoto = async () => {
-        alert("Prise de la photo")
+        alert("Prise de la photo");
     };
 
-    // return <Redirect href="/(auth)/register"/>;
+    // Redirect to register if not authenticated
+    // if (!isAuthenticated) {
+    //     return <Redirect href="/(auth)/register" />;
+    // }
 
     return (
         <Tabs
@@ -42,23 +51,22 @@ export default function TabLayout() {
                     tabPress: () => {
                         if (!isCapture) {
                             setIsCapture(true);
-                        }
-                        else {
+                        } else {
                             takePhoto();
                         }
                     }
                 }}
                 options={{
                     tabBarButton: (props) => (
-                        <TouchableOpacity {...props} style={[styles.iconContainer, { paddingTop: isCapture? 3 : 6}]}>
+                        <TouchableOpacity {...props} style={[styles.iconContainer, { paddingTop: isCapture ? 3 : 6 }]}>
                             <TabBarIcon
                                 name={isCapture ? "ellipse-outline" : "home-outline"}
-                                size={ isCapture ? 50 : 26}
+                                size={isCapture ? 50 : 26}
                                 color={Colors.light.icon}
                             />
-                            {!isCapture &&
-                                <ThemedText style={styles.captureText} >Capture</ThemedText>
-                            }
+                            {!isCapture && (
+                                <ThemedText style={styles.captureText}>Capture</ThemedText>
+                            )}
                         </TouchableOpacity>
                     ),
                     tabBarStyle: { backgroundColor: 'transparent' },
@@ -76,17 +84,16 @@ export default function TabLayout() {
                     tabPress: () => setIsCapture(false),
                 }}
             />
-
         </Tabs>
     );
 }
 
 const styles = StyleSheet.create({
     iconContainer: {
-        flex:1,
-        flexDirection:"column",
+        flex: 1,
+        flexDirection: "column",
         alignItems: 'center',
-        margin:0,
+        margin: 0,
     },
     captureText: {
         fontSize: 10,

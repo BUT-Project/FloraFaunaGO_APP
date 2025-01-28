@@ -1,15 +1,15 @@
 import { render } from '@testing-library/react-native';
 
 import CaptureListItem from "@/components/encyclopedia/CaptureListItem";
-import Capture from "@/model/Capture";
-import Specie from "@/model/Specie";
-import Habitat from "@/model/Habitat";
-import {Climate} from "@/model/Climate";
-import {Diet} from "@/model/Diet";
-import {Kingdom} from "@/model/Kingdom";
-import {Class} from "@/model/Class";
-import {Family} from "@/model/Family";
-import Location from "@/model/Location";
+import Capture from "@/model/domain/Capture";
+import Specie from "@/model/domain/Specie";
+import Habitat from "@/model/domain/Habitat";
+import {Climate} from "@/model/domain/Climate";
+import {Diet} from "@/model/domain/Diet";
+import {Kingdom} from "@/model/domain/Kingdom";
+import {Class} from "@/model/domain/Class";
+import {Family} from "@/model/domain/Family";
+import Location from "@/model/domain/Location";
 describe('<CaptureListItem />', () => {
     test('Text renders correctly on CaptureListItem', () => {
 

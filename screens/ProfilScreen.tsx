@@ -8,15 +8,16 @@ import {ThemedView} from "@/components/ui/themed/ThemedView";
 import {Link} from 'expo-router';
 import {TabBarIcon} from "@/components/navigation/TabBarIcon";
 import {AntDesign, FontAwesome5, FontAwesome6} from "@expo/vector-icons";
-import {Sucess} from "@/model/Sucess";
+import {Success} from "@/model/domain/Success";
 import StubData from "@/dal/StubLib/StubData";
+import {PagedRequest} from "@/shared/PagedRequest";
 
 let ProfileImage: {};
 ProfileImage = require("../assets/images/ProfileImage.jpeg");
 const { width } = Dimensions.get('window');
 export default function ProfilScreen() {
-    const [Successes, setSuccesses] = useState<Sucess[]>([]);
-    const {Sucess} = StubData.getInstance()
+    const [Successes, setSuccesses] = useState<Success[]>([]);
+    const {successRepository} = StubData.getInstance()
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(false);
     const [totalPages, setTotalPages] = useState(1);
@@ -24,9 +25,13 @@ export default function ProfilScreen() {
     const fetchSuccesses = async (currentPage: number) => {
         setLoading(true);
         try {
-            const response = await Sucess.getAll(currentPage,9);
-            setSuccesses(response.items);
-            setTotalPages(Math.ceil(response.total / 9));
+            const PageRequest : PagedRequest = {
+                index: currentPage,
+                count: 9
+            }
+            const response = await successRepository?.getAll(PageRequest);
+            setSuccesses(response?.items ?? []);
+            setTotalPages(Math.ceil(response?.total ?? 1 / 9));
         } catch (error) {
             console.error('Erreur lors de la récupération des succès :', error);
         } finally {

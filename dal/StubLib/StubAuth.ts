@@ -1,15 +1,18 @@
-import User from "@/model/User";
+import User from "@/model/domain/User";
+import IAuthService from "@/model/service/IAuthService";
 
 
-export default class StubAuth {
+export default class StubAuth implements IAuthService{
+
+    private currentUser: User | null = null;
 
     constructor(public Users: User[]) {
     }
     login(username: string, password: string): Promise<User> {
-        const user = this.Users.find(u => u.username === username);
-
+        const user = this.Users.find(u => u.username.toLocaleLowerCase() == username);
         return new Promise((resolve, reject) => {
             if (user !== undefined) {
+                this.currentUser = user;
                     resolve(user);
                 }
             else {
@@ -18,6 +21,7 @@ export default class StubAuth {
         });
     }
     register(email: string, password: string): Promise<User> {
+        console.log(email)
         return new Promise((resolve, reject) => {
             const existingUser = this.Users.find(user => user.email === email);
 
@@ -36,15 +40,21 @@ export default class StubAuth {
             };
 
             this.Users.push(newUser);
+            this.currentUser = newUser;
             resolve(newUser);
         });
     }
-    logout()  {
-
-
+    logout(): Promise<void> {
+        this.currentUser = null;
+        return Promise.resolve();
     }
 
+    getUser(): Promise<User | null> {
+        return Promise.resolve(this.currentUser);
+    }
 
-
+    isAuthenticated(): Promise<boolean> {
+        return Promise.resolve(this.currentUser !== null);
+    }
 
 }

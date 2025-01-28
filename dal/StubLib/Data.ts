@@ -1,20 +1,20 @@
-import Habitat from "@/model/Habitat";
-import {Diet} from "@/model/Diet";
-import {Kingdom} from "@/model/Kingdom";
-import {Class} from "@/model/Class";
-import {Family} from "@/model/Family";
-import Location from "@/model/Location";
-import Specie from "@/model/Specie"
-import {Climate} from "@/model/Climate";
-import User from "@/model/User";
-import Capture from "@/model/Capture";
-import CaptureDetail from "@/model/CaptureDetail";
-import {Sucess} from "@/model/Sucess";
+import Habitat from "@/model/domain/Habitat";
+import {Diet} from "@/model/domain/Diet";
+import {Kingdom} from "@/model/domain/Kingdom";
+import {Class} from "@/model/domain/Class";
+import {Family} from "@/model/domain/Family";
+import Location from "@/model/domain/Location";
+import Specie from "@/model/domain/Specie"
+import {Climate} from "@/model/domain/Climate";
+import User from "@/model/domain/User";
+import Capture from "@/model/domain/Capture";
+import CaptureDetail from "@/model/domain/CaptureDetail";
+import {Success} from "@/model/domain/Success";
 
 const location1: Location = new Location(13.33,19.09,3, 5, 1); // Desert Tchad
 const location2: Location = new Location(-2.97,38.92,3, 5, 1);   //Savane Kenya
-const location3: Location = new Location(3, 4, 5, 5, 1); 
-const location4: Location = new Location(3, 4, 5, 5, 1); 
+const location3: Location = new Location(3, 4, 5, 5, 1);
+const location4: Location = new Location(3, 4, 5, 5, 1);
 const location5: Location = new Location(5, 6, 7, 5, 1);
 const location6: Location = new Location(6, 7, 8, 5, 1);
 const location7: Location = new Location(48.83, 2.36, 9, 5, 1); //Paris
@@ -100,32 +100,32 @@ const capture35 = new Capture(35, null, specie35, []);
 const capture36 = new Capture(36, null, specie36, []);
 
 
-const sucess1: Sucess = new Sucess("Succès A", "checkmark-circle-outline", "Description du succès A", 25)
-const sucess2: Sucess = new Sucess("Succès B", "checkmark-circle-outline", "Description du succès B", 50)
+const Success1: Success = new Success("Succès A", "checkmark-circle-outline", "Description du succès A", 25)
+const Success2: Success = new Success("Succès B", "checkmark-circle-outline", "Description du succès B", 50)
 
 
 export const SpecieList = [specie1,specie2,specie3,specie4,specie5,specie6];
 
-export const SucessList = [
-    new Sucess("Maître des Animaux", "paw", "Débloqué en interagissant avec 50 animaux différents.", 25),
-    new Sucess("Pêcheur Expert", "fish", "Attrapez 30 poissons lors de vos aventures.", 50),
-    new Sucess("Chasseur de Trésors", "bug", "Trouvez et collectionnez 20 insectes rares.", 75),
-    new Sucess("Explorateur des Bois", "leaf", "Visitez 10 forêts ou réserves naturelles.", 90),
-    new Sucess("Naturaliste Accompli", "planet", "Complétez toutes les quêtes liées à la nature.", 100),
-    new Sucess("Dompteur d'Oiseaux", "paw", "Interagissez avec 15 espèces d'oiseaux sauvages.", 75),
-    new Sucess("Voyageur Aventurier", "airplane", "Voyagez dans 5 régions différentes.", 90),
-    new Sucess("Guide des Montagnes", "leaf", "Randonnez jusqu'au sommet de 3 montagnes.", 100),
-    new Sucess("Roi de la Forêt", "leaf", "Passez 50 heures à explorer les bois.", 75),
-    new Sucess("Maitre de l'air", "airplane", "Capturez 5 espèces d'oiseaux", 75),
-    new Sucess("Maitre de l'eau", "water", "Capturez 5 espèces marines", 75),
-    new Sucess("Voyageur", "walk", "Parcourez 10km", 75),
+export const SuccessList = [
+    new Success("Maître des Animaux", "paw", "Débloqué en interagissant avec 50 animaux différents.", 25),
+    new Success("Pêcheur Expert", "fish", "Attrapez 30 poissons lors de vos aventures.", 50),
+    new Success("Chasseur de Trésors", "bug", "Trouvez et collectionnez 20 insectes rares.", 75),
+    new Success("Explorateur des Bois", "leaf", "Visitez 10 forêts ou réserves naturelles.", 90),
+    new Success("Naturaliste Accompli", "planet", "Complétez toutes les quêtes liées à la nature.", 100),
+    new Success("Dompteur d'Oiseaux", "paw", "Interagissez avec 15 espèces d'oiseaux sauvages.", 75),
+    new Success("Voyageur Aventurier", "airplane", "Voyagez dans 5 régions différentes.", 90),
+    new Success("Guide des Montagnes", "leaf", "Randonnez jusqu'au sommet de 3 montagnes.", 100),
+    new Success("Roi de la Forêt", "leaf", "Passez 50 heures à explorer les bois.", 75),
+    new Success("Maitre de l'air", "airplane", "Capturez 5 espèces d'oiseaux", 75),
+    new Success("Maitre de l'eau", "water", "Capturez 5 espèces marines", 75),
+    new Success("Voyageur", "walk", "Parcourez 10km", 75),
 ];
 
 export const UserList = [
-    new User(1, 'JohnDoe', 'johndoe@example.com', 'hashedpassword1', new Date('2022-01-01'), [capture1, capture2],[sucess1]),
+    new User(1, 'JohnDoe', 'johndoe@example.com', 'hashedpassword1', new Date('2022-01-01'), [capture1, capture2],[Success1]),
     new User(2, 'JaneDoe', 'janedoe@example.com', 'hashedpassword2', new Date('2022-02-01'), [capture3],[]),
-    new User(3, 'AliceSmith', 'alicesmith@example.com', 'hashedpassword3', new Date('2022-03-01'), [],[sucess2]),
-    new User(4, 'BobBrown', 'bobbrown@example.com', 'hashedpassword4', new Date('2022-04-01'), [capture1],[sucess1,sucess2])
+    new User(3, 'AliceSmith', 'alicesmith@example.com', 'hashedpassword3', new Date('2022-03-01'), [],[Success2]),
+    new User(4, 'BobBrown', 'bobbrown@example.com', 'hashedpassword4', new Date('2022-04-01'), [capture1],[Success1,Success2])
 ];
 export const CaptureList = [
     capture1,

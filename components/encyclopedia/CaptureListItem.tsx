@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
 import { ThemedView } from "@/components/ui/themed/ThemedView";
 import { ThemedText } from "@/components/ui/themed/ThemedText";
-import Capture from "@/model/Capture";
+import Capture from "@/model/domain/Capture";
 import { Link } from "expo-router";
 import { LoadingImageBackground } from '../ui/LoadingImageBackground';
 

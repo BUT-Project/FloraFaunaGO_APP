@@ -4,11 +4,13 @@ import {Slot, Stack, useRouter} from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import {useEffect} from 'react';
 import 'react-native-reanimated';
+import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 
 import {useColorScheme} from '@/hooks/useColorScheme';
 // Prevent the splash screens from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 export default function RootLayout() {
+    const queryClient = new QueryClient();
     const colorScheme = useColorScheme();
     const [loaded] = useFonts({
         SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
@@ -25,6 +27,8 @@ export default function RootLayout() {
 
     return (
         <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+            <QueryClientProvider client={queryClient}>
+
             <Stack
                 initialRouteName="(auth)"
             >
@@ -32,6 +36,8 @@ export default function RootLayout() {
                 <Stack.Screen name="(auth)" options={{headerShown: false}}/>
                 <Stack.Screen name="+not-found"/>
             </Stack>
+            </QueryClientProvider>
+
         </ThemeProvider>
     );
 }

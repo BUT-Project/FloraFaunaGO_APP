@@ -10,9 +10,10 @@ import normalize from '@/components/ui/responsive/Normalize';
 
 import {useState, useCallback} from 'react';
 import {Alert} from 'react-native';
-import {Link} from "expo-router";
+import {Link, router} from "expo-router";
 import {Entypo, FontAwesome} from "@expo/vector-icons";
 import {InputWithIcon} from "@/components/ui/InputWithIcon";
+import {useAuthStore} from "@/context/zustand/strore/AuthStore";
 
 export interface LoginCredentials {
     email: string;
@@ -23,6 +24,7 @@ export default function LoginScreen() {
     const {
         username,
         setUsername,
+        isLoading,
         password,
         setPassword,
         rememberMe,
@@ -63,7 +65,7 @@ export default function LoginScreen() {
                 </TouchableOpacity>
                 <Text style={styles.rememberMeText}>SE SOUVENIR DE MOI</Text>
             </View>
-            <TouchableOpacity style={styles.button} onPress={submitForm}>
+            <TouchableOpacity style={styles.button} onPress={submitForm} disabled={isLoading}>
                 <Entypo name="check" size={40} color="#AFEDEC"/>
             </TouchableOpacity>
             <View style={styles.footer}>
@@ -152,44 +154,53 @@ const styles = StyleSheet.create({
         textDecorationLine: 'underline',
     },
 });
-
-function useLoginViewModel() {
+export function useLoginViewModel() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [rememberMe, setRememberMe] = useState(false);
     const [failedLogin, setFailedLogin] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
-    const simulateLogin = useCallback((credentials: LoginCredentials, rememberMe: boolean) => {
-        return new Promise<boolean>((resolve) => {
-            setTimeout(() => {
-                // Simulate a successful login if the email includes "@" and password is not empty
-                const success = credentials.email.includes('@') && credentials.password.length > 0;
-                resolve(success);
-            }, 1000); // Simulate network delay
-        });
-    }, []);
+    const { login } = useAuthStore();
 
     const submitForm = useCallback(async () => {
+        if (!username.trim() || !password) {
+            Alert.alert('Error', 'Please fill in all fields');
+            return;
+        }
+
         const credentials: LoginCredentials = {
             email: username.toLowerCase().trim(),
             password: password
         };
 
+        setIsLoading(true);
         try {
-            const success = await simulateLogin(credentials, rememberMe);
-            if (success) {
-                setFailedLogin(false);
-                Alert.alert('Success', 'Login successful!');
-            } else {
-                setFailedLogin(true);
-            }
+            await login(credentials.email, credentials.password);
+            setFailedLogin(false);
+
+            // If login is successful, redirect to the main app
+            router.replace('/(tabs)');
         } catch (error) {
-            Alert.alert('Error', 'A network error occurred. Please try again.');
+            setFailedLogin(true);
+            if (error instanceof Error) {
+                Alert.alert('Error', error.message);
+            } else {
+                Alert.alert('Error', 'An unexpected error occurred. Please try again.');
+            }
+        } finally {
+            setIsLoading(false);
         }
-    }, [username, password, rememberMe, simulateLogin]);
+    }, [username, password, login]);
 
     const toggleRememberMe = useCallback(() => {
         setRememberMe(prev => !prev);
+    }, []);
+
+    const clearForm = useCallback(() => {
+        setUsername('');
+        setPassword('');
+        setFailedLogin(false);
     }, []);
 
     return {
@@ -199,7 +210,9 @@ function useLoginViewModel() {
         setPassword,
         rememberMe,
         failedLogin,
+        isLoading,
         submitForm,
-        toggleRememberMe
+        toggleRememberMe,
+        clearForm
     };
 }

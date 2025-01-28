@@ -1,5 +1,5 @@
 import Capture from "@/model/domain/Capture";
-import {Sucess} from "@/model/domain/Sucess";
+import {Success} from "@/model/domain/Success";
 
 export default class User {
     id: number
@@ -8,7 +8,7 @@ export default class User {
     passwordHash: string
     inscriptionDate: Date
     captures:Capture[]
-    success:Sucess[]
+    _success:Sucess[]
 
     constructor(id: number, username: string, email: string, passwordHash: string, inscriptionDate: Date,captures:Capture[],success:Sucess[]) {
         this.id = id

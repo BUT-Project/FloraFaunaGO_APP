@@ -1,5 +1,6 @@
-import {FilterPredicate} from "@/dal/StubLib/FilterPredicate";
-import {PagingResult} from "@/dal/StubLib/PagingResult";
+import {FilterPredicate} from "@/shared/FilterPredicate";
+import {PagingResult} from "@/shared/PagingResult";
+import {PagedRequest} from "@/shared/PagedRequest";
 
 export abstract class GenericRepository<T> {
     abstract create(item: T): Promise<void>;
@@ -10,7 +11,7 @@ export abstract class GenericRepository<T> {
 
     abstract getById(id: any): Promise<T>;
 
-    abstract getAll(page: number, pageSize: number): Promise<PagingResult<T>>;
+    abstract getAll(request: PagedRequest): Promise<PagingResult<T>>;
 
     abstract count(filter: FilterPredicate<T>): Promise<number>;
 }

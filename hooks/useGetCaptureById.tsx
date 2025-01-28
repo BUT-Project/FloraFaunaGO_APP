@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import StubData from "@/dal/StubLib/StubData";
-import Capture from "@/model/Capture";
+import Capture from "@/model/domain/Capture";
 
 export function useGetCaptureById(
   id: number,
@@ -15,8 +15,9 @@ export function useGetCaptureById(
         setIsLoading(true);
         setError(null);
         try {
-            const { Capture } = StubData.getInstance();
-            const result = await Capture.getById(id);
+            const { captureRepository } = StubData.getInstance();
+            const result = await captureRepository?.getById(id);
+            if(result != undefined)
             setCapture(result);
         } catch (err) {
             setError(err);

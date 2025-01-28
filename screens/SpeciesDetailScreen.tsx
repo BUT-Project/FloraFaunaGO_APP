@@ -26,11 +26,11 @@ export default function SpeciesDetailScreen({captureId}: SpeciesDetailScreenProp
         if(capture){
             if(capture.capturesDetails?.length > 0 ){
                 return capture.capturesDetails?.reduce((oldest, current) => {
-                   return current.date < oldest.date ? current : oldest;
-               })
-           }
+                    return current.date < oldest.date ? current : oldest;
+                })
+            }
         }
-        else return null;  
+        else return null;
     },[capture?.capturesDetails]);
 
     if(error){
@@ -53,7 +53,7 @@ export default function SpeciesDetailScreen({captureId}: SpeciesDetailScreenProp
             </ThemedView>
         );
     }
-   
+
     return (
         <SafeView>
             <ScrollView>
@@ -126,7 +126,7 @@ export default function SpeciesDetailScreen({captureId}: SpeciesDetailScreenProp
                                 horizontal={true}
                             />
                         }
-                        
+
                     </ThemedView>
                     { capture.capturesDetails.length > 0 ?
                         <>
@@ -146,11 +146,11 @@ export default function SpeciesDetailScreen({captureId}: SpeciesDetailScreenProp
                         <ThemedView style={styles.section}>
                             <ThemedText style={styles.captureDate}>Vous n'avez pas encore capturé cette espèce. Regardez la carte plus haut pour voir où vous pouvez le trouver !</ThemedText>
                         </ThemedView>
-                }
+                    }
                 </ThemedView>
             </ScrollView>
         </SafeView>
-     
+
     );
 };
 

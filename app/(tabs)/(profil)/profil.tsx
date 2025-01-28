@@ -1,5 +1,8 @@
-import {Text} from "react-native";
+import ProfilScreen from "@/screens/ProfilScreen";
 
-export default function Profil(){
-    return <Text>Profil</Text>
+export default function Profil() {
+    return (
+        <ProfilScreen/>
+    )
+
 }
