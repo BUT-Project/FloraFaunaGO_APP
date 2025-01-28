@@ -1,102 +1,50 @@
-import React, {useState, useRef, useEffect} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
-    View,
-    StyleSheet,
+    ActivityIndicator,
     Dimensions,
-    ScrollView,
-    Text,
-    TouchableOpacity,
-    TextInput,
+    Image,
     Keyboard,
-    Image, ViewStyle
+    ScrollView,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View,
+    ViewStyle
 } from 'react-native';
 import MapView, {Marker} from 'react-native-maps';
 import Animated, {
-    useSharedValue,
-    useAnimatedStyle,
-    withTiming,
     Easing,
+    Extrapolate,
     interpolate,
-    Extrapolate, withSpring, withRepeat, withSequence,
+    useAnimatedStyle,
+    useSharedValue,
+    withRepeat,
+    withSequence,
+    withSpring,
+    withTiming,
 } from 'react-native-reanimated';
 import {Ionicons} from '@expo/vector-icons';
 import {
     GestureHandlerRootView,
-    TapGestureHandler,
     State,
+    TapGestureHandler,
     TapGestureHandlerStateChangeEvent
 } from 'react-native-gesture-handler';
 import Svg, {Circle, Defs, RadialGradient, Stop} from 'react-native-svg';
-import * as Location from 'expo-location';
+import * as LocationExpo from 'expo-location';
 import {ThemedView} from "@/components/ui/themed/ThemedView";
+import {Family} from '@/model/domain/Family';
+import Specie from "@/model/domain/Specie";
+import StubData from "@/dal/StubLib/StubData";
+import {useInfiniteSpecies} from "@/hooks/useInfiniteSpecies";
+import Location from "@/model/domain/Location";
 
 const {width, height} = Dimensions.get('window');
 const SEARCH_HANDLE_WIDTH = 50;
 const BOTTOM_OFFSET = 20;
 const SPACING = 16;
-type Species = {
-    id: number;
-    coordinate: {
-        latitude: number;
-        longitude: number;
-    };
-    image: string;
-    radius: number;
-    color: string;
-    name: string;
-    family: string;
-};
-type Family = 'All' | 'Canidae' | 'Felidae' | 'Formicidae' | 'Lepidoptera' | 'Plantae';
-
-const species: Species[] = [
-    {
-        id: 1,
-        coordinate: {latitude: 45.7796, longitude: 3.0862},
-        name: 'Red Fox',
-        family: 'Canidae',
-        radius: 50,
-        color: 'red',
-        image: 'https://images.unsplash.com/photo-1474511320723-9a56873867b5?q=80&w=2072&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
-    },
-    {
-        id: 2,
-        coordinate: {latitude: 45.7746, longitude: 3.0902},
-        name: 'European Wildcat',
-        family: 'Felidae',
-        radius: 80,
-        color: 'blue',
-        image: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?q=80&w=2043&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
-    },
-    {
-        id: 3,
-        coordinate: {latitude: 45.7736, longitude: 3.0822},
-        name: 'Red Wood Ant',
-        family: 'Formicidae',
-        radius: 90,
-        color: 'green',
-        image: 'https://images.unsplash.com/photo-1579278084099-e7593776949e?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
-    },
-    {
-        id: 4,
-        coordinate: {latitude: 45.7806, longitude: 3.0872},
-        name: 'Peacock Butterfly',
-        family: 'Lepidoptera',
-        radius: 35,
-        color: 'purple',
-        image: 'https://images.unsplash.com/photo-1535068484622-7a077e5aa558?q=80&w=1935&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
-    },
-    {
-        id: 5,
-        coordinate: {latitude: 45.7756, longitude: 3.0892},
-        name: 'Common Oak',
-        family: 'Plantae',
-        radius: 45,
-        color: 'orange',
-        image: 'https://images.unsplash.com/photo-1502082553048-f009c37129b9?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8dHJlZXxlbnwwfHwwfHx8MA%3D%3D'
-    },
-];
-const families: Family[] = ['All', 'Canidae', 'Felidae', 'Formicidae', 'Lepidoptera', 'Plantae'];
-
+const families = Object.values(Family);
 const Chip = ({label, isSelected, onPress}: { label: string; isSelected: boolean; onPress: () => void }) => (
     <TouchableOpacity
         style={[styles.chip, isSelected && styles.selectedChip]}
@@ -123,13 +71,30 @@ const BlurredZone = ({color, size}
 );
 
 export default function MapInterface(
-    {location, style}: { location: Location.LocationObject | null, style: ViewStyle }
+    {location, style}: { location: LocationExpo.LocationObject | null, style: ViewStyle }
 ) {
-    const [selectedCategory, setSelectedCategory] = useState<Family>('All');
+
+    const {speciesRepository} = StubData.getInstance();
+
+    const {
+        items: species,
+        isLoading,
+        isFetching,
+        filterByName,
+        filterByFamily,
+        fetchNextPage,
+        hasNextPage,
+        clearFilters,
+    } = useInfiniteSpecies(speciesRepository, {
+        pageSize: 20,
+        enabled: true
+    });
+
+    const [selectedCategory, setSelectedCategory] = useState<Family | null>(null);
     const [searchQuery, setSearchQuery] = useState('');
     const [isSearchActive, setIsSearchActive] = useState(false);
     const [keyboardHeight, setKeyboardHeight] = useState(0);
-    const [selectedMarker, setSelectedMarker] = useState<Species | null>(null);
+    const [selectedMarker, setSelectedMarker] = useState<Specie | null>(null);
 
     const pulseAnim = useSharedValue(0.5);
 
@@ -209,11 +174,6 @@ export default function MapInterface(
         padding: resultsPadding.value,
     }));
 
-    const filteredSpecies = species.filter(marker =>
-        (selectedCategory === 'All' || marker.family === selectedCategory) &&
-        (searchQuery === '' || marker.name.toLowerCase().includes(searchQuery.toLowerCase()))
-    );
-
     const animatedMarkerStyle = useAnimatedStyle(() => ({
         transform: [{scale: withSpring(markerScale.value, {damping: 10, stiffness: 100})}],
     }));
@@ -224,26 +184,62 @@ export default function MapInterface(
         };
     });
 
+    const RandomColor = (seed: number) => {
+        return `hsl(${Math.floor(seed * 137.508 + 360) % 360}, 100%, 50%)`;
+    };
+
+    const getSpeciesLocations = (species: Specie[]) => {
+        return species.flatMap(specie =>
+            specie.locations.map(loc => ({
+                ...loc,
+                specieId: specie.id,
+                specieName: specie.name,
+                specieFamily: specie.family,
+                specieImage: specie.image,
+                color: RandomColor(specie.id),
+            }))
+        );
+    };
+
+    // Updated map region calculation
+    const calculateMapRegion = (locations: Location[]) => {
+        if (locations.length === 0) return null;
+
+        const lats = locations.map(l => l.latitude);
+        const lngs = locations.map(l => l.longitude);
+
+        const minLat = Math.min(...lats);
+        const maxLat = Math.max(...lats);
+        const minLng = Math.min(...lngs);
+        const maxLng = Math.max(...lngs);
+
+        return {
+            latitude: (minLat + maxLat) / 2,
+            longitude: (minLng + maxLng) / 2,
+            latitudeDelta: (maxLat - minLat) * 1.5,
+            longitudeDelta: (maxLng - minLng) * 1.5,
+        };
+    };
+
+    // Updated chip handler
     const handleChipPress = (category: Family) => {
-        setSelectedCategory(category);
+        setSelectedCategory(prev => prev === category ? null : category);
+        if (category) {
+            filterByFamily(category);
+        } else {
+            clearFilters();
+        }
 
-        const markersToFocus = category === 'All' ? species : species.filter(marker => marker.family === category);
+        if (mapRef.current) {
+            const filteredSpecies = category
+                ? species.filter(s => s.family === category)
+                : species;
+            const allLocations = getSpeciesLocations(filteredSpecies);
+            const region = calculateMapRegion(allLocations);
 
-        if (mapRef.current && markersToFocus.length > 0) {
-            const coordinates = markersToFocus.map(marker => marker.coordinate);
-            const minLat = Math.min(...coordinates.map(c => c.latitude));
-            const maxLat = Math.max(...coordinates.map(c => c.latitude));
-            const minLng = Math.min(...coordinates.map(c => c.longitude));
-            const maxLng = Math.max(...coordinates.map(c => c.longitude));
-
-            const region = {
-                latitude: (minLat + maxLat) / 2,
-                longitude: (minLng + maxLng) / 2,
-                latitudeDelta: (maxLat - minLat) * 1.5,
-                longitudeDelta: (maxLng - minLng) * 1.5,
-            };
-
-            mapRef.current.animateToRegion(region, 1000);
+            if (region) {
+                mapRef.current.animateToRegion(region, 1000);
+            }
         }
     };
 
@@ -297,17 +293,21 @@ export default function MapInterface(
     };
 
 
-    const handleResultPress = (marker: Species) => {
-        setSelectedMarker(marker);
-        if (mapRef.current) {
-            mapRef.current.animateToRegion({
-                ...marker.coordinate,
-                latitudeDelta: 0.01,
-                longitudeDelta: 0.01,
-            }, 1000);
+    const handleResultPress = (specie: Specie) => {
+        setSelectedMarker(specie);
+        if (mapRef.current && specie.locations.length > 0) {
+            const region = calculateMapRegion(specie.locations);
+            if (region) {
+                mapRef.current.animateToRegion({
+                    ...region,
+                    latitudeDelta: 0.01,
+                    longitudeDelta: 0.01,
+                }, 1000);
+            }
         }
-        dismissSearch()
+        dismissSearch();
     };
+
     const handleOutsidePress = (event: TapGestureHandlerStateChangeEvent) => {
         if (event.nativeEvent.state === State.ACTIVE) {
             Keyboard.dismiss();
@@ -317,119 +317,137 @@ export default function MapInterface(
         }
     };
 
+    const handleScroll = ({ nativeEvent }: any) => {
+        if (hasNextPage && !isFetching) {
+            const { layoutMeasurement, contentOffset, contentSize } = nativeEvent;
+            const isEndReached = layoutMeasurement.height + contentOffset.y >= contentSize.height - 20;
+
+            if (isEndReached) {
+                fetchNextPage();
+            }
+        }
+    };
+
     return (
         <GestureHandlerRootView style={[styles.container, style]}>
             <TapGestureHandler onHandlerStateChange={handleOutsidePress}>
                 <View style={styles.container}>
-                    <Animated.View style={styles.container}>
-                        <MapView
-                            ref={mapRef}
-                            style={styles.map}
-                            initialRegion={
-                                location
-                                    ? {
-                                        latitude: location.coords.latitude,
-                                        longitude: location.coords.longitude,
-                                        latitudeDelta: 0.0922,
-                                        longitudeDelta: 0.0421,
-                                    }
-                                    : {
-                                        latitude: 45.7796,
-                                        longitude: 3.0862,
-                                        latitudeDelta: 0.0922,
-                                        longitudeDelta: 0.0421,
-                                    }
-                            }
-                        >
-                            {filteredSpecies.map((marker) => (
+                    <MapView
+                        ref={mapRef}
+                        style={styles.map}
+                        initialRegion={
+                            location
+                                ? {
+                                    latitude: location.coords.latitude,
+                                    longitude: location.coords.longitude,
+                                    latitudeDelta: 0.0922,
+                                    longitudeDelta: 0.0421,
+                                }
+                                : {
+                                    latitude: 45.7796,
+                                    longitude: 3.0862,
+                                    latitudeDelta: 0.0922,
+                                    longitudeDelta: 0.0421,
+                                }
+                        }
+                    >
+                        {species.map((specie) => (
+                            specie.locations.map((location, locationIndex) => (
                                 <AnimatedMarker
-                                    key={marker.id}
-                                    coordinate={marker.coordinate}
-                                    style={animatedMarkerStyle}
-                                    onPress={() => {
-                                        handleResultPress(marker);
+                                    key={`${specie.id}-${locationIndex}`}
+                                    coordinate={{
+                                        latitude: location.latitude,
+                                        longitude: location.longitude
                                     }}
+                                    style={animatedMarkerStyle}
+                                    onPress={() => handleResultPress(specie)}
                                 >
                                     <View style={[styles.markerContainer, {
-                                        width: marker.radius * 2,
-                                        height: marker.radius * 2
+                                        width: location.radius * 2,
+                                        height: location.radius * 2
                                     }]}>
-                                        <BlurredZone color={marker.color} size={marker.radius * 2}/>
-                                        <Image source={{uri: marker.image}} style={styles.markerImage}/>
+                                        <BlurredZone color={RandomColor(specie.id)} size={location.radius * 2}/>
+                                        <Image source={{ uri: specie.image }} style={styles.markerImage}/>
                                     </View>
                                 </AnimatedMarker>
-                            ))}
+                            ))
+                        ))}
 
-                            {location && (
-
-                                <Marker
-                                    coordinate={{
-                                        latitude: location.coords.latitude,
-                                        longitude: location.coords.longitude,
-                                    }}
-                                    title="My Location"
-                                >
-                                    <Animated.View style={[styles.pulseCircle, animatedCircleStyle]}>
-                                        <ThemedView style={styles.markerDot}/>
-                                    </Animated.View>
-
-                                </Marker>
-                            )}
-                        </MapView>
-                        <Animated.View style={[styles.bottomContainer, bottomContainerStyle]}>
-                            <TapGestureHandler onHandlerStateChange={() => {
-                            }}>
-                                <Animated.View>
-                                    <Animated.View style={[styles.searchBarContainer, searchContainerStyle]}>
-                                        <TouchableOpacity onPress={handleSearchPress}
-                                                          style={styles.searchIconContainer}>
-                                            <Ionicons name="search" size={24} color="white"/>
-                                        </TouchableOpacity>
-                                        {isSearchActive && (
-                                            <TextInput
-                                                style={styles.searchInput}
-                                                placeholder="Search..."
-                                                placeholderTextColor="#999"
-                                                value={searchQuery}
-                                                onChangeText={handleSearchChange}
-                                                onBlur={handleSearchBlur}
-                                                onFocus={handleSearchFocus}
-                                            />
-                                        )}
-                                        {isSearchActive && (
-                                            <TouchableOpacity onPress={dismissSearch} style={styles.closeIconContainer}>
-                                                <Ionicons name="close" size={24} color="white"/>
-                                            </TouchableOpacity>
-                                        )}
-                                    </Animated.View>
-                                    <Animated.View style={[styles.resultsCard, resultsCardStyle]}>
-                                        <ScrollView>
-                                            {filteredSpecies.map((specie) => (
-                                                <TouchableOpacity
-                                                    key={specie.id}
-                                                    style={styles.resultItem}
-                                                    onPress={() => handleResultPress(specie)}
-                                                >
-                                                    <Text style={styles.resultItemText}>{specie.name}</Text>
-                                                    <Text style={styles.resultItemFamily}>{specie.family}</Text>
-                                                </TouchableOpacity>
-                                            ))}
-                                        </ScrollView>
-                                    </Animated.View>
-                                    <Animated.View style={[styles.chipContainer, chipContainerStyle]}>
-                                        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                                            {families.map((category) => (
-                                                <Chip
-                                                    key={category}
-                                                    label={category}
-                                                    isSelected={selectedCategory === category}
-                                                    onPress={() => handleChipPress(category)}
-                                                />
-                                            ))}
-                                        </ScrollView>
-                                    </Animated.View>
+                        {location && (
+                            <Marker
+                                coordinate={{
+                                    latitude: location.coords.latitude,
+                                    longitude: location.coords.longitude,
+                                }}
+                                title="My Location"
+                            >
+                                <Animated.View style={[styles.pulseCircle, animatedCircleStyle]}>
+                                    <ThemedView style={styles.markerDot}/>
                                 </Animated.View>
-                            </TapGestureHandler>
+                            </Marker>
+                        )}
+                    </MapView>
+
+                    {/* Rest of the UI components (search bar, chips, results list) remain the same... */}
+                    <Animated.View style={[styles.bottomContainer, bottomContainerStyle]}>
+                        {/* Search bar */}
+                        <Animated.View style={[styles.searchBarContainer, searchContainerStyle]}>
+                            <TouchableOpacity onPress={handleSearchPress} style={styles.searchIconContainer}>
+                                <Ionicons name="search" size={24} color="white"/>
+                            </TouchableOpacity>
+                            {isSearchActive && (
+                                <>
+                                    <TextInput
+                                        style={styles.searchInput}
+                                        placeholder="Search..."
+                                        placeholderTextColor="#999"
+                                        value={searchQuery}
+                                        onChangeText={handleSearchChange}
+                                        onBlur={handleSearchBlur}
+                                        onFocus={handleSearchFocus}
+                                    />
+                                    <TouchableOpacity onPress={dismissSearch} style={styles.closeIconContainer}>
+                                        <Ionicons name="close" size={24} color="white"/>
+                                    </TouchableOpacity>
+                                </>
+                            )}
+                        </Animated.View>
+
+                        {/* Results list */}
+                        <Animated.View style={[styles.resultsCard, resultsCardStyle]}>
+                            <ScrollView onScroll={handleScroll} scrollEventThrottle={16}>
+                                {species.map((specie) => (
+                                    <TouchableOpacity
+                                        key={specie.id}
+                                        style={styles.resultItem}
+                                        onPress={() => handleResultPress(specie)}
+                                    >
+                                        <Text style={styles.resultItemText}>{specie.name}</Text>
+                                        <Text style={styles.resultItemFamily}>
+                                            {specie.family} • {specie.locations.length} location{specie.locations.length !== 1 ? 's' : ''}
+                                        </Text>
+                                    </TouchableOpacity>
+                                ))}
+                                {isFetching && (
+                                    <View style={styles.loadingContainer}>
+                                        <ActivityIndicator size="small" color="#000"/>
+                                    </View>
+                                )}
+                            </ScrollView>
+                        </Animated.View>
+
+                        {/* Category chips */}
+                        <Animated.View style={[styles.chipContainer, chipContainerStyle]}>
+                            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                                {families.map((category) => (
+                                    <Chip
+                                        key={category}
+                                        label={category}
+                                        isSelected={selectedCategory === category}
+                                        onPress={() => handleChipPress(category)}
+                                    />
+                                ))}
+                            </ScrollView>
                         </Animated.View>
                     </Animated.View>
                 </View>
@@ -552,5 +570,9 @@ const styles = StyleSheet.create({
         backgroundColor: '#679BFF',
         borderWidth: 2,
         borderColor: 'white',
+    },
+    loadingContainer: {
+        padding: 20,
+        alignItems: 'center',
     },
 });

@@ -1,8 +1,7 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {FlatList, Modal, StyleSheet, TouchableOpacity} from 'react-native';
 import {ThemedView} from "@/components/ui/themed/ThemedView";
 import {ThemedText} from "@/components/ui/themed/ThemedText";
-import {useState} from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import Capture from "@/model/domain/Capture";
 import {Kingdom} from "@/model/domain/Kingdom";
@@ -10,7 +9,6 @@ import FilterChips from "@/components/encyclopedia/FilterChips";
 import {Class} from "@/model/domain/Class";
 import {Family} from "@/model/domain/Family";
 import {Diet} from "@/model/domain/Diet";
-import {SafeView} from "@/components/ui/SafeView";
 import {useThemeColor} from "@/hooks/useThemeColor";
 
 type SpeciesFilterProps={

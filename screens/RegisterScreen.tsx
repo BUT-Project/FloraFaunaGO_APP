@@ -1,11 +1,5 @@
-import React, {useCallback, useState} from 'react';
-import {
-    View,
-    StyleSheet,
-    Text,
-    TouchableOpacity, Platform, Alert
-} from 'react-native';
-import Ionicons from "@expo/vector-icons/Ionicons";
+import React from 'react';
+import {Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {Link} from "expo-router";
 import normalize from "@/components/ui/responsive/Normalize";
 import {InputWithIcon} from "@/components/ui/InputWithIcon";

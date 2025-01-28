@@ -1,15 +1,13 @@
-import {Animated, Dimensions, ImageBackground, StyleSheet, TouchableOpacity} from 'react-native';
-import { ThemedText } from "@/components/ui/themed/ThemedText";
+import {Animated, Dimensions, StyleSheet, TouchableOpacity} from 'react-native';
+import {ThemedText} from "@/components/ui/themed/ThemedText";
 import {ThemedView} from "@/components/ui/themed/ThemedView";
-import PagerView, {
-    PagerViewOnPageScrollEventData,
-} from 'react-native-pager-view';
+import PagerView, {PagerViewOnPageScrollEventData,} from 'react-native-pager-view';
 import {ExpandingDot} from "react-native-animated-pagination-dots";
 import React from "react";
 import {Colors} from "@/constants/Colors";
-import { Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
-import { LoadingImageBackground } from '../ui/LoadingImageBackground';
+import {Ionicons} from '@expo/vector-icons';
+import {useRouter} from 'expo-router';
+import {LoadingImageBackground} from '../ui/LoadingImageBackground';
 
 type SpeciesImagePagerProps = {
     speciePhoto: any;

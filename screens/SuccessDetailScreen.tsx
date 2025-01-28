@@ -1,8 +1,7 @@
-import { ThemedView } from "@/components/ui/themed/ThemedView";
-import { ThemedText } from "@/components/ui/themed/ThemedText";
+import {ThemedView} from "@/components/ui/themed/ThemedView";
+import {ThemedText} from "@/components/ui/themed/ThemedText";
 import {Success} from "@/model/domain/Success";
-import {StyleSheet} from "react-native";
-import {ScrollView} from "react-native";
+import {ScrollView, StyleSheet} from "react-native";
 
 interface SucessDetailScreenProps {
  sucess : Success

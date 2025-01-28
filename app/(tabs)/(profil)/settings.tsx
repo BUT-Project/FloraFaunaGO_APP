@@ -1,5 +1,5 @@
-import {Text} from "react-native";
+import SettingsScreen from "@/screens/SettingsScreen";
 
 export default function Settings() {
-    return <Text>Settings</Text>
+    return <SettingsScreen />;
 }

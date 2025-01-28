@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import {useEffect, useState} from "react";
 import StubData from "@/dal/StubLib/StubData";
 import Capture from "@/model/domain/Capture";
 

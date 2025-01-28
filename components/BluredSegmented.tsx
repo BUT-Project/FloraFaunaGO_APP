@@ -1,24 +1,17 @@
 import {BlurView} from 'expo-blur';
 import {useMemo, useState} from 'react';
 import {
-    ImageBackground,
     LayoutChangeEvent,
     LayoutRectangle,
     Platform,
     StyleProp,
     StyleSheet,
-    Switch,
     Text,
     TouchableOpacity,
     View,
     ViewStyle,
 } from 'react-native';
-import Animated, {
-    SharedValue,
-    useAnimatedStyle,
-    useSharedValue,
-    withTiming,
-} from 'react-native-reanimated';
+import Animated, {SharedValue, useAnimatedStyle, useSharedValue, withTiming,} from 'react-native-reanimated';
 
 const BAR_X_PADDING = 1;
 const TRANSITION_DURATION_MS = 600;

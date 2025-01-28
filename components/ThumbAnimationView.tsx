@@ -1,11 +1,6 @@
 import React, {useEffect, useRef} from 'react';
-import {useWindowDimensions, StyleSheet} from 'react-native';
-import Animated, {
-    SharedValue,
-    interpolate,
-    useAnimatedStyle,
-    useSharedValue,
-} from 'react-native-reanimated';
+import {StyleSheet, useWindowDimensions} from 'react-native';
+import Animated, {interpolate, SharedValue, useAnimatedStyle, useSharedValue,} from 'react-native-reanimated';
 import {ThumbType} from "@/screens/RevealScreen";
 
 interface ThumbAnimationViewProps {

@@ -1,11 +1,11 @@
-import { Redirect, Tabs } from 'expo-router';
-import React, { useEffect } from 'react';
-import { TouchableOpacity, StyleSheet } from 'react-native';
+import {Tabs} from 'expo-router';
+import React, {useEffect} from 'react';
+import {StyleSheet, TouchableOpacity} from 'react-native';
 
-import { TabBarIcon } from '@/components/navigation/TabBarIcon';
-import { ThemedText } from "@/components/ui/themed/ThemedText";
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
+import {TabBarIcon} from '@/components/navigation/TabBarIcon';
+import {ThemedText} from "@/components/ui/themed/ThemedText";
+import {Colors} from '@/constants/Colors';
+import {useColorScheme} from '@/hooks/useColorScheme';
 import {useAuthStore} from "@/context/zustand/strore/AuthStore";
 
 export default function TabLayout() {

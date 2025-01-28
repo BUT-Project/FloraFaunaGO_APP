@@ -1,12 +1,13 @@
 import {ReactNode, useEffect} from 'react';
-import {StyleSheet, Dimensions} from 'react-native';
+import {Dimensions, StyleSheet} from 'react-native';
 import Animated, {
-    useSharedValue,
+    Easing,
+    runOnJS,
     useAnimatedStyle,
-    withTiming,
-    withSequence,
+    useSharedValue,
     withDelay,
-    Easing, runOnJS,
+    withSequence,
+    withTiming,
 } from 'react-native-reanimated';
 
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');

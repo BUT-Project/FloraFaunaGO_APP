@@ -1,14 +1,14 @@
 // @refresh reset
-import React, {useEffect, useMemo} from 'react';
-import {View, StyleSheet, ViewStyle} from 'react-native';
+import React, {useEffect} from 'react';
+import {StyleSheet, View, ViewStyle} from 'react-native';
 import {Canvas, Circle, Group} from '@shopify/react-native-skia';
 import {
+    SharedValue,
+    useDerivedValue,
     useSharedValue,
     withRepeat,
-    withTiming,
     withSequence,
-    useDerivedValue,
-    SharedValue,
+    withTiming,
 } from 'react-native-reanimated';
 
 const NUM_X = 4;

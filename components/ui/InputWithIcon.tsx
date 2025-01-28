@@ -1,4 +1,4 @@
-import {TextInput, TextInputProps, View,StyleSheet} from "react-native";
+import {StyleSheet, TextInput, TextInputProps, View} from "react-native";
 import React from "react";
 import {FontAwesome} from "@expo/vector-icons";
 import normalize from "@/components/ui/responsive/Normalize";

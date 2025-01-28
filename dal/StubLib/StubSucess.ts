@@ -1,4 +1,3 @@
-import {GenericRepository} from "@/model/service/IGenericRepository";
 import {FilterPredicate} from "@/shared/FilterPredicate";
 import {PagingResult} from "@/shared/PagingResult";
 import {ISuccessRepository} from "@/model/service/ISuccessRepository";

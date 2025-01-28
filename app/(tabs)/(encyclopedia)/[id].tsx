@@ -1,5 +1,5 @@
-import { ThemedText } from "@/components/ui/themed/ThemedText";
-import { ThemedView } from "@/components/ui/themed/ThemedView";
+import {ThemedText} from "@/components/ui/themed/ThemedText";
+import {ThemedView} from "@/components/ui/themed/ThemedView";
 import SpeciesDetailScreen from "@/screens/SpeciesDetailScreen";
 import {useLocalSearchParams} from "expo-router";
 

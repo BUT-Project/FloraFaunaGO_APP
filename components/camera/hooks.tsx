@@ -1,7 +1,6 @@
 import Specie from "@/model/domain/Specie";
-import {RefObject, useCallback, useEffect, useRef, useState} from "react";
-import {CameraType, CameraView, useCameraPermissions} from "expo-camera";
-import {CameraViewRef} from "expo-camera/src/Camera.types";
+import {useCallback, useEffect, useState} from "react";
+import {CameraType, useCameraPermissions} from "expo-camera";
 import Habitat from "@/model/domain/Habitat";
 import {Climate} from "@/model/domain/Climate";
 import {Diet} from "@/model/domain/Diet";

@@ -2,7 +2,7 @@ import {StyleSheet} from 'react-native';
 import {ThemedView} from "@/components/ui/themed/ThemedView";
 import {ThemedText} from "@/components/ui/themed/ThemedText";
 import CaptureDetail from "@/model/domain/CaptureDetail";
-import { ExtendableMap } from '../ui/ExtendableMap';
+import {ExtendableMap} from '../ui/ExtendableMap';
 
 type CaptureDetailsProps={
     captureDetail:CaptureDetail

@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, Dimensions, TouchableOpacity} from 'react-native';
+import {StyleSheet, TouchableOpacity} from 'react-native';
 import {AnimatedCircularProgress} from "react-native-circular-progress";
 import {useThemeColor} from "@/hooks/useThemeColor";
 import {Success} from "@/model/domain/Success";
@@ -7,7 +7,6 @@ import {TabBarIcon} from "@/components/navigation/TabBarIcon";
 import {ThemedView} from "@/components/ui/themed/ThemedView";
 import {ThemedText} from "@/components/ui/themed/ThemedText";
 import {Link} from "expo-router";
-
 
 
 type SucessListItemsProps = {

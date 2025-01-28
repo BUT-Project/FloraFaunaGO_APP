@@ -1,16 +1,16 @@
 import React from "react";
-import {ScrollView, FlatList, StyleSheet, ActivityIndicator, Dimensions} from "react-native";
+import {ActivityIndicator, Dimensions, FlatList, ScrollView, StyleSheet} from "react-native";
 import {ThemedText} from "@/components/ui/themed/ThemedText";
 import {ThemedView} from "@/components/ui/themed/ThemedView";
 import CaptureListItem from "@/components/encyclopedia/CaptureListItem";
 import CaptureDetails from "@/components/encyclopedia/CaptureDetails";
 import PagerView from 'react-native-pager-view';
 import SpeciesImagePager from "@/components/encyclopedia/SpeciesImagePager";
-import { useGetCaptureById } from "@/hooks/useGetCaptureById";
-import { SafeView } from "@/components/ui/SafeView";
-import { ExtendableMap } from "@/components/ui/ExtendableMap";
-import { useGetCaptureByFamily } from "@/hooks/useGetCaptureByFamily";
-import { ExtendableText } from "@/components/encyclopedia/ExtendableText";
+import {useGetCaptureById} from "@/hooks/useGetCaptureById";
+import {SafeView} from "@/components/ui/SafeView";
+import {ExtendableMap} from "@/components/ui/ExtendableMap";
+import {useGetCaptureByFamily} from "@/hooks/useGetCaptureByFamily";
+import {ExtendableText} from "@/components/encyclopedia/ExtendableText";
 
 interface SpeciesDetailScreenProps {
     captureId: number;

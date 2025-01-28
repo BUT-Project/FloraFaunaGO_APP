@@ -1,9 +1,10 @@
 import {Slot} from "expo-router";
 import normalize from "@/components/ui/responsive/Normalize";
-import {StyleSheet, Image} from "react-native";
+import {Image, StyleSheet} from "react-native";
 import DismissKeyboard from "@/components/ui/DismissKeyboard";
 import {ThemedView} from "@/components/ui/themed/ThemedView";
 import {ThemedText} from "@/components/ui/themed/ThemedText";
+
 export default function AuthLayout() {
     return (
         <DismissKeyboard>

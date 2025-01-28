@@ -5,7 +5,6 @@ import User from "@/model/domain/User";
 import {PagedRequest} from "@/shared/PagedRequest";
 
 
-
 export default class StubUsers implements IUserRepository{
     constructor(public Users: User[]) {
     }

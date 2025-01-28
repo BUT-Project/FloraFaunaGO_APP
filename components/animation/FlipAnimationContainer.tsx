@@ -1,11 +1,11 @@
-import React, { useState, ReactNode, forwardRef } from "react";
-import {StyleSheet, Pressable, ViewStyle, PressableProps, View} from "react-native";
+import React, {forwardRef, ReactNode, useState} from "react";
+import {Pressable, PressableProps, StyleSheet, View, ViewStyle} from "react-native";
 import Animated, {
-    useSharedValue,
     useAnimatedStyle,
-    withTiming,
-    withSequence,
+    useSharedValue,
     withDelay,
+    withSequence,
+    withTiming,
 } from "react-native-reanimated";
 
 interface FlipAnimationContainerProps extends PressableProps {

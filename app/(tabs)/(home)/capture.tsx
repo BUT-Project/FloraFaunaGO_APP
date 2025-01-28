@@ -1,27 +1,10 @@
-import React, {useState, useEffect} from 'react';
-import {
-    useImage,
-    Image,
-    Canvas,
-    useClock,
-    Circle,
-    Group,
-    Text as SkText,
-    SkImage, Rect, Line, useFont,
-} from "@shopify/react-native-skia";
-import {
-    useSharedValue,
-    withTiming,
-    useDerivedValue,
-    withRepeat,
-    withSequence,
-    runOnJS,
-} from 'react-native-reanimated';
+import React, {useEffect, useState} from 'react';
+import {Canvas, Circle, Group, Image, SkImage, useClock, useImage,} from "@shopify/react-native-skia";
+import {runOnJS, useDerivedValue, useSharedValue, withRepeat, withSequence, withTiming,} from 'react-native-reanimated';
 import {Alert, Dimensions, TouchableOpacity, View} from "react-native";
 import {Gesture, GestureDetector} from "react-native-gesture-handler";
 import {ThemedText} from "@/components/ui/themed/ThemedText";
-import {Link, useRouter} from "expo-router";
-import {Asset} from "expo-asset";
+import {useRouter} from "expo-router";
 
 const {width: screenWidth, height: screenHeight} = Dimensions.get("screen");
 const center = {

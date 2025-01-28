@@ -1,4 +1,4 @@
-import {CaptureList, SpecieList,SuccessList, UserList} from "./Data"
+import {CaptureList, SpecieList, SuccessList, UserList} from "./Data"
 import StubSpecies from "@/dal/StubLib/StubSpecies";
 import StubCaptures from "@/dal/StubLib/StubCaptures";
 import StubUsers from "@/dal/StubLib/StubUsers";

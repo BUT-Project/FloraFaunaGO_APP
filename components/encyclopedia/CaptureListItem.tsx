@@ -1,10 +1,10 @@
 import React from 'react';
-import { StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
-import { ThemedView } from "@/components/ui/themed/ThemedView";
-import { ThemedText } from "@/components/ui/themed/ThemedText";
+import {Dimensions, StyleSheet, TouchableOpacity} from 'react-native';
+import {ThemedView} from "@/components/ui/themed/ThemedView";
+import {ThemedText} from "@/components/ui/themed/ThemedText";
 import Capture from "@/model/domain/Capture";
-import { Link } from "expo-router";
-import { LoadingImageBackground } from '../ui/LoadingImageBackground';
+import {Link} from "expo-router";
+import {LoadingImageBackground} from '../ui/LoadingImageBackground';
 
 type CaptureListItemProps = {
     capture: Capture;

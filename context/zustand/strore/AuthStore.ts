@@ -1,4 +1,4 @@
-import { create } from 'zustand';
+import {create} from 'zustand';
 import StubData from "@/dal/StubLib/StubData";
 import User from "@/model/domain/User";
 

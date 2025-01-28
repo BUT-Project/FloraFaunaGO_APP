@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { View, TouchableOpacity, Image, StyleSheet, Dimensions, ActivityIndicator } from 'react-native';
-import { Ionicons } from "@expo/vector-icons";
-import Animated, { Easing, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
-import { Link } from "expo-router";
-import { ThemedText } from "@/components/ui/themed/ThemedText";
+import React, {useEffect, useState} from 'react';
+import {ActivityIndicator, Dimensions, Image, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {Ionicons} from "@expo/vector-icons";
+import Animated, {Easing, useAnimatedStyle, useSharedValue, withTiming} from "react-native-reanimated";
+import {Link} from "expo-router";
+import {ThemedText} from "@/components/ui/themed/ThemedText";
 import Specie from "@/model/domain/Specie";
 import SpeciesInfoCard from "@/components/camera/SpeciesInfoCard";
 

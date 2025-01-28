@@ -11,7 +11,7 @@ import BlurSegmented from "@/components/BluredSegmented";
 import {ThemedText} from "@/components/ui/themed/ThemedText";
 import {useQuery} from "@tanstack/react-query";
 import * as Location from "expo-location";
-import { useRouter } from "expo-router";
+import {useRouter} from "expo-router";
 import StubData from "@/dal/StubLib/StubData";
 import Specie from "@/model/domain/Specie";
 

@@ -1,7 +1,7 @@
-import { useState, useEffect, useCallback } from "react";
+import {useCallback, useEffect, useState} from "react";
 import StubData from "@/dal/StubLib/StubData";
 import Capture from "@/model/domain/Capture";
-import { Family } from "@/model/domain/Family";
+import {Family} from "@/model/domain/Family";
 
 export function useGetCaptureByFamily(
   family: Family | undefined,

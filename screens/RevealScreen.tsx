@@ -1,16 +1,15 @@
-import React, {useRef, useEffect, useState, useContext} from 'react';
-import {SafeAreaView, StyleSheet, View, Pressable, Text, TouchableOpacity} from 'react-native';
+import React, {useContext, useEffect, useRef, useState} from 'react';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import Animated, {
-    useAnimatedSensor,
-    useAnimatedStyle,
-    SensorType,
-    useSharedValue,
-    withTiming,
-    withRepeat,
     Easing,
     runOnJS,
+    SensorType,
+    useAnimatedSensor,
+    useAnimatedStyle,
+    useSharedValue,
+    withRepeat,
+    withTiming,
 } from 'react-native-reanimated';
-import {Image} from 'react-native';
 import SpecieCard from "@/components/SpecieCard";
 import Specie from "@/model/domain/Specie";
 import Location from "@/model/domain/Location";

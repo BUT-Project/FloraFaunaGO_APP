@@ -1,4 +1,4 @@
-import { render } from '@testing-library/react-native';
+import {render} from '@testing-library/react-native';
 
 import CaptureListItem from "@/components/encyclopedia/CaptureListItem";
 import Capture from "@/model/domain/Capture";
@@ -10,6 +10,7 @@ import {Kingdom} from "@/model/domain/Kingdom";
 import {Class} from "@/model/domain/Class";
 import {Family} from "@/model/domain/Family";
 import Location from "@/model/domain/Location";
+
 describe('<CaptureListItem />', () => {
     test('Text renders correctly on CaptureListItem', () => {
 

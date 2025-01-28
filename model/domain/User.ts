@@ -1,5 +1,4 @@
 import Capture from "@/model/domain/Capture";
-import {Success} from "@/model/domain/Success";
 
 export default class User {
     id: number

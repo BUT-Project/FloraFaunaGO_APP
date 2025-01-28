@@ -1,11 +1,7 @@
-import Animated, {
-    useAnimatedStyle,
-    useSharedValue,
-    withSpring
-} from "react-native-reanimated";
-import { Image, StyleSheet, View, ViewStyle, Pressable } from "react-native";
-import { ThemedText } from "@/components/ui/themed/ThemedText";
-import React, { useState } from "react";
+import Animated, {useAnimatedStyle, useSharedValue, withSpring} from "react-native-reanimated";
+import {Image, Pressable, StyleSheet, View, ViewStyle} from "react-native";
+import {ThemedText} from "@/components/ui/themed/ThemedText";
+import React, {useState} from "react";
 import Specie from "@/model/domain/Specie";
 
 interface SpecieCardProps {

@@ -1,6 +1,6 @@
 import React from "react";
-import ContentLoader, { Rect } from "react-content-loader/native";
-import { useThemeColor } from "@/hooks/useThemeColor";
+import ContentLoader, {Rect} from "react-content-loader/native";
+import {useThemeColor} from "@/hooks/useThemeColor";
 
 export type SkeletonProps = {
     width:number;

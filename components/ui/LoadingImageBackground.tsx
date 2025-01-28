@@ -1,5 +1,5 @@
-import React, { useState, useRef, useLayoutEffect } from 'react';
-import { View, ImageBackground, StyleSheet, type ImageBackgroundProps } from 'react-native';
+import React, {useState} from 'react';
+import {ImageBackground, type ImageBackgroundProps, StyleSheet, View} from 'react-native';
 import Skeleton from './Skeleton';
 
 export type LoadingImageBackgroundProps = ImageBackgroundProps & {

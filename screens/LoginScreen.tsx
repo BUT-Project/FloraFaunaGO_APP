@@ -1,15 +1,6 @@
-import React from 'react';
-import {
-    View,
-    Image,
-    StyleSheet,
-    Text,
-    TouchableOpacity, Platform,
-} from 'react-native';
+import React, {useCallback, useState} from 'react';
+import {Alert, Platform, StyleSheet, Text, TouchableOpacity, View,} from 'react-native';
 import normalize from '@/components/ui/responsive/Normalize';
-
-import {useState, useCallback} from 'react';
-import {Alert} from 'react-native';
 import {Link, router} from "expo-router";
 import {Entypo, FontAwesome} from "@expo/vector-icons";
 import {InputWithIcon} from "@/components/ui/InputWithIcon";

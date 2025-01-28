@@ -1,13 +1,12 @@
-
 import {ActivityIndicator, Button, FlatList, StyleSheet, View} from "react-native";
 import SpeciesSearchBar from "../components/encyclopedia/SpeciesSearchBar";
 import CaptureListItem from "@/components/encyclopedia/CaptureListItem";
-import { useState} from "react";
+import {useState} from "react";
 import {ThemedView} from "@/components/ui/themed/ThemedView";
 import {SafeView} from "@/components/ui/SafeView";
 import SpeciesFilterModal from "@/components/encyclopedia/SpeciesFilterModal";
 import {ThemedText} from "@/components/ui/themed/ThemedText";
-import { useGetCaptures } from "@/hooks/useGetCaptures";
+import {useGetCaptures} from "@/hooks/useGetCaptures";
 
 export default function EncyclopediaScreen() {
     const [name,setName] = useState("")

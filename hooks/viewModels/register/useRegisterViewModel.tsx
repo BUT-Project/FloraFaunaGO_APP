@@ -2,7 +2,6 @@ import {useCallback, useState} from "react";
 import {Audio} from "expo-av";
 import {registerSchema} from "@/components/form/auth/RegisterForm";
 import {Alert} from "react-native";
-import {ISuccessRepository} from "@/model/service/ISuccessRepository";
 import IAuthService from "@/model/service/IAuthService";
 import {router} from "expo-router";
 import {useAuthStore} from "@/context/zustand/strore/AuthStore";
