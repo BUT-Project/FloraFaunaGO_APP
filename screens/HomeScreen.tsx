@@ -29,7 +29,6 @@ export default function HomeScreen() {
             let { status } = await Location.requestForegroundPermissionsAsync();
             if (status !== 'granted') {
                 console.log('Permission to access location was denied');
-                // setErrorMsg('Permission to access location was denied');
                 return;
             }
 
@@ -46,15 +45,15 @@ export default function HomeScreen() {
     const [capturedImage, setCapturedImage] = useState<string | null>(null);
     const [showProgress, setShowProgress] = useState(false);
     const [isCameraReady, setIsCameraReady] = useState(false);
-
+    const [base64Image, setBase64Image] = useState<string | null>(null);
     const [activeView, setActiveView] = useState('camera');
 
-    const {isLoading, refetch} = useQuery<Specie, Error>({
+    const {isLoading, refetch, data: identifiedSpecie} = useQuery<Specie, Error>({
         queryKey: ['identifySpecie'],
         queryFn: async (): Promise<Specie> => {
             if (!speciesRepository) throw new Error('No Repository');
-            if (!capturedImage) throw new Error('No image URI');
-            return await speciesRepository.identifySpecies(capturedImage);
+            if (!base64Image) throw new Error('No base64 image data');
+            return await speciesRepository.identifySpecies(base64Image);
         },
         enabled: false,
     });
@@ -70,6 +69,7 @@ export default function HomeScreen() {
         try {
             const photo = await cameraRef.current.takePictureAsync({base64: true});
             setCapturedImage(photo?.uri ?? null);
+            setBase64Image(photo?.base64 ?? null);  // Store the base64 data
             await refetch();
         } catch (error) {
             console.error('Error capturing image:', error);
@@ -114,12 +114,18 @@ export default function HomeScreen() {
     }
 
     useEffect(() => {
-        if (capturedImage && !showProgress && !isLoading) {
+        if (capturedImage && !showProgress && !isLoading && identifiedSpecie) {
             router.push({
                 pathname: '/capture',
+                params: {
+                    imageUri: identifiedSpecie.image,
+                    specieId: identifiedSpecie.id,
+                    specieName: identifiedSpecie.name,
+                }
             });
         }
-    }, [capturedImage, showProgress, isLoading, router]);
+    }, [capturedImage, showProgress, isLoading, identifiedSpecie, router, location, base64Image]);
+
 
     return (
         <SafeAreaView style={styles.container}>

@@ -4,7 +4,7 @@ import {runOnJS, useDerivedValue, useSharedValue, withRepeat, withSequence, with
 import {Alert, Dimensions, TouchableOpacity, View} from "react-native";
 import {Gesture, GestureDetector} from "react-native-gesture-handler";
 import {ThemedText} from "@/components/ui/themed/ThemedText";
-import {useRouter} from "expo-router";
+import {useLocalSearchParams, useRouter} from "expo-router";
 
 const {width: screenWidth, height: screenHeight} = Dimensions.get("screen");
 const center = {
@@ -14,14 +14,27 @@ const center = {
 const [upperLimit, lowerLimit] = [center.y - 200, center.y + 100];
 const POKEBALL_BASE_SIZE = 50;
 
+interface CaptureScreenParams extends Record<string, string | string[]> {
+    imageUri: string;
+    specieId: string;
+    specieName: string;
+}
+
 export default function PokemonCapture() {
+    const params = useLocalSearchParams<CaptureScreenParams>();
+
+    const {
+        imageUri,
+        specieId,
+        specieName
+    } = params;
 
     const router = useRouter();
     const clock = useClock();
     const [captureSuccess, setCaptureSuccess] = useState(false);
 
     const background: SkImage | null = useImage(require("@/assets/scene/landscape.jpg"));
-    const pokemonImage: SkImage | null = useImage(require("@/assets/scene/pika.png"));
+    const specieImage: SkImage | null = useImage(imageUri);
     const pokeball: SkImage | null = useImage(require("@/assets/scene/ball.png"));
 
     const isDragging = useSharedValue(false);
@@ -85,7 +98,15 @@ export default function PokemonCapture() {
         if (captureChance > captureDifficulty.value) {
             setCaptureSuccess(true);
             Alert.alert('Gotcha!', 'You captured the Pokémon!', [
-                {text: 'OK', onPress: () => router.replace('/(home)/reveal')},
+                {
+                    text: 'OK',
+                    onPress: () => router.replace({
+                        pathname: '/(home)/reveal',
+                        params: {
+                            specieId: specieId // Make sure specieId is available in your component's scope
+                        }
+                    })
+                },
             ]);
         } else {
             Alert.alert('Oh no!', 'The Pokémon broke free!');
@@ -139,7 +160,6 @@ export default function PokemonCapture() {
                 runOnJS(resetPokeball)();
             }
         });
-    // const font = useFont(require("@/assets/fonts/SpaceMono-Regular.ttf"), 32);
 
     return (
         <GestureDetector gesture={throwGesture}>
@@ -156,9 +176,9 @@ export default function PokemonCapture() {
                         />
                     )}
                     <Group transform={groupTransform}>
-                        {pokemonImage && (
+                        {specieImage && (
                             <Image
-                                image={pokemonImage}
+                                image={specieImage}
                                 fit="contain"
                                 x={-35}
                                 y={-200}
