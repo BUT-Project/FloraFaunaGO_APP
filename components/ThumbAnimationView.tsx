@@ -6,7 +6,7 @@ import Animated, {
     useAnimatedStyle,
     useSharedValue,
 } from 'react-native-reanimated';
-import {ThumbType} from "@/screen/RevealScreen";
+import {ThumbType} from "@/screens/RevealScreen";
 
 interface ThumbAnimationViewProps {
     customThumbView: React.ReactNode;
@@ -29,7 +29,7 @@ export default function ThumbAnimationView({
 
     const thumbCoords = useSharedValue({x: position.x, y: position.y});
     const tabCoords = useSharedValue({
-        x: window.width / 2 - 80,
+        x: window.width / 2,
         y: window.height - 100,
     });
 

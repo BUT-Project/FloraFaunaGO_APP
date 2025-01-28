@@ -1,4 +1,4 @@
-import Animated, {SensorType, useAnimatedSensor, useAnimatedStyle} from "react-native-reanimated";
+import Animated from "react-native-reanimated";
 import {Image, StyleSheet, View, ViewStyle} from "react-native";
 import {ThemedText} from "@/components/ui/themed/ThemedText";
 import React from "react";
@@ -10,47 +10,54 @@ interface SpecieCardProps {
 }
 
 const BORDER_RADIUS = 20;
-
 const CARD_WIDTH = 250;
 const CARD_HEIGHT = 450;
-export default function SpecieCard(props: SpecieCardProps) {
 
+export default function SpecieCard(props: SpecieCardProps) {
     const {id, name, image, description} = props.specie;
     const formattedId = `#${id.toString().padStart(3, '0')}`;
 
     return (
-        <Animated.View style={[styles.animatedViewStyle, props.style]}>
-            <View style={StyleSheet.absoluteFill}>
-                <View style={styles.cardContent}>
-                    <View style={styles.header}>
-                        <ThemedText style={styles.name}>{name || 'Unknown'}</ThemedText>
-                        <View style={styles.pvContainer}>
-                            <ThemedText style={styles.pv}>PV {Math.floor(Math.random() * 100) + 50}</ThemedText>
-                        </View>
+        <Animated.View style={[styles.container, props.style]}>
+            <View style={styles.cardContent}>
+                <View style={styles.header}>
+                    <ThemedText style={styles.name}>{name || 'Unknown'}</ThemedText>
+                    <View style={styles.pvContainer}>
+                        <ThemedText style={styles.pv}>PV {Math.floor(Math.random() * 100) + 50}</ThemedText>
                     </View>
-                    <View style={styles.imageContainer}>
-                        <Image
-                            source={{uri: image || 'https://via.placeholder.com/200'}}
-                            style={styles.image}
-                            resizeMode="cover"
-                        />
-                    </View>
-                    <View style={styles.typeContainer}>
-                        <ThemedText style={styles.type}>{'Unknown Type'}</ThemedText>
-                    </View>
-                    <ThemedText style={styles.description}>{description || 'No description available.'}</ThemedText>
-                    <ThemedText style={styles.id}>ID: {formattedId}</ThemedText>
                 </View>
+                <View style={styles.imageContainer}>
+                    <Image
+                        source={{uri: image || 'https://via.placeholder.com/200'}}
+                        style={styles.image}
+                        resizeMode="cover"
+                    />
+                </View>
+                <View style={styles.typeContainer}>
+                    <ThemedText style={styles.type}>{'Unknown Type'}</ThemedText>
+                </View>
+                <ThemedText style={styles.description}>{description || 'No description available.'}</ThemedText>
+                <ThemedText style={styles.id}>ID: {formattedId}</ThemedText>
             </View>
         </Animated.View>
     );
 }
+
 const styles = StyleSheet.create({
-    card: {
-        padding: 16,
+    container: {
+        width: CARD_WIDTH + 20,
+        height: CARD_HEIGHT + 20,
+        borderRadius: BORDER_RADIUS,
+        borderColor: 'rgba(255, 255, 255, 0.1)',
+        borderWidth: 1,
+        backgroundColor: 'white',
+        overflow: 'hidden',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     cardContent: {
         flex: 1,
+        width: '100%',
         backgroundColor: 'white',
         borderRadius: 12,
         padding: 12,
@@ -109,22 +116,5 @@ const styles = StyleSheet.create({
         fontSize: 12,
         color: '#999',
         textAlign: 'right',
-    },
-    imageStyle: {
-        width: CARD_WIDTH,
-        height: CARD_HEIGHT,
-        borderRadius: BORDER_RADIUS,
-    },
-    animatedViewStyle: {
-        borderColor: 'rgba(255, 255, 255, 0.1)',
-        borderWidth: 1,
-        backgroundColor: 'white',
-        width: CARD_WIDTH + 20,
-        height: CARD_HEIGHT + 20,
-        borderRadius: BORDER_RADIUS,
-        overflow: 'hidden',
-        position: 'absolute',
-        alignItems: 'center',
-        justifyContent: 'center',
     },
 });

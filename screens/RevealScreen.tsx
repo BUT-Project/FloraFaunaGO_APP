@@ -47,14 +47,12 @@ export default function RevealScreen() {
 
     const thumbAnimation = useSharedValue(0);
 
-
     const animatedSensor = useAnimatedSensor(SensorType.ROTATION);
     const animationCompleted = useSharedValue(false);
     const indicatorOpacity = useSharedValue(0);
     const indicatorScale = useSharedValue(1);
 
     const cardHeight = useSharedValue(1);
-
 
     const [isBackShowing, setIsBackShowing] = useState(false);
 
@@ -78,7 +76,6 @@ export default function RevealScreen() {
         };
     });
 
-
     const handleScreenPress = () => {
         if (animationCompleted.value) {
             indicatorOpacity.value = withTiming(0, {duration: 300});
@@ -101,6 +98,7 @@ export default function RevealScreen() {
 
         return () => clearTimeout(timeout);
     }, []);
+
     const cardStyle = useAnimatedStyle(() => {
         return {
             transform: [{scale: cardHeight.value}],
@@ -140,9 +138,8 @@ export default function RevealScreen() {
         );
     };
 
-    const location1: Location = new Location(13.33,19.09,3, 5, 1); // Desert Tchad
+    const location1: Location = new Location(13.33, 19.09, 3, 5, 1); // Desert Tchad
     const specie = new Specie(1, 'Lion', 'Panthera leo', "Le Lion (Panthera leo) est une espèce de mammifères carnivores de la famille des Félidés. La femelle du lion est la lionne, son petit est le lionceau. Le mâle adulte, aisément reconnaissable à son importante crinière, accuse une masse moyenne qui peut être variable selon les zones géographiques où il se trouve, allant de 145 à 180 kg pour les lions d'Asie à plus de 225 kg pour les lions d'Afrique.", new Habitat('jungle', Climate.Tropical), Diet.Carnivores, Kingdom.Animal, Class.Mammals, Family.Felidae, [location1, location1], 'https://upload.wikimedia.org/wikipedia/commons/6/6f/011_The_lion_king_Tryggve_in_the_Serengeti_National_Park_Photo_by_Giles_Laurent.jpg');
-
 
     return (
         <ThemedView style={styles.container}
