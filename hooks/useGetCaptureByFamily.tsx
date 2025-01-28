@@ -5,7 +5,8 @@ import { Family } from "@/model/Family";
 
 export function useGetCaptureByFamily(
   family: Family | undefined,
-  pageSize: number = 20,
+  selfId?: number,
+  pageSize: number = 10,
 ) {
     
     const [isListEnd, setIsListEnd] = useState(false);
@@ -14,12 +15,7 @@ export function useGetCaptureByFamily(
     const [page,setPage] = useState(1)
     const [captures, setCaptures] = useState<Capture[]>([]); 
     const [error, setError] = useState<unknown>(null);
-    const [refreshTrigger, setRefreshTrigger] = useState(0);
-    
-    const refresh = useCallback(() => {
-    setRefreshTrigger((prev) => prev + 1);
-    }, []);
-    
+
     const fetchMoreData = () => {
         if(!isListEnd && !isLoadingMore){
             setIsLoadingMore(true)
@@ -28,14 +24,14 @@ export function useGetCaptureByFamily(
     }
 
     useEffect(() => {
-        const fetchSpecies = async () => {
+        const fetchCaptures = async () => {
             if(!family) return;
             if (isLoading || isListEnd) return; 
             if(captures.length == 0) setIsLoading(true);
             setError(null);
             try {
                 const { Capture } = StubData.getInstance();
-                const result = await Capture.getByFamily(family, page, pageSize);
+                const result = await Capture.getByFamily(family, page, pageSize, selfId);
                 setIsListEnd(captures.length >= result.total);
                 setCaptures((prev) => [...prev, ...result.items]);
             } catch (err) {
@@ -45,9 +41,8 @@ export function useGetCaptureByFamily(
                 setIsLoadingMore(false);
             }
         };
-    
-        fetchSpecies();
-    }, [family, page, pageSize, refreshTrigger]); 
+        fetchCaptures();
+    }, [family, page, pageSize]); 
     
     return {
         captures,
@@ -56,6 +51,5 @@ export function useGetCaptureByFamily(
         error,
         isListEnd,
         fetchMoreData,
-        refresh,
     };
 }
