@@ -37,6 +37,12 @@
           "microphonePermission": "Allow FFGO to access your microphone",
           "recordAudioAndroid": true
         }
+      ],
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow FFGO to use your location."
+        }
       ]
     ],
     "experiments": {

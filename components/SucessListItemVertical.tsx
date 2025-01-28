@@ -2,7 +2,7 @@ import React from 'react';
 import {StyleSheet, Dimensions, TouchableOpacity} from 'react-native';
 import {AnimatedCircularProgress} from "react-native-circular-progress";
 import {useThemeColor} from "@/hooks/useThemeColor";
-import {Sucess} from "model/domain/Sucess"
+import {Success} from "@/model/domain/Success";
 import {TabBarIcon} from "@/components/navigation/TabBarIcon";
 import {ThemedView} from "@/components/ui/themed/ThemedView";
 import {ThemedText} from "@/components/ui/themed/ThemedText";
@@ -11,7 +11,7 @@ import {Link} from "expo-router";
 
 
 type SucessListItemsProps = {
-    items : Sucess;
+    items : Success;
 }
 
 export default function SucessListItemVertical(props:SucessListItemsProps){
