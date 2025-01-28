@@ -1,0 +1,257 @@
+import React, {useRef, useEffect, useState, useContext} from 'react';
+import {SafeAreaView, StyleSheet, View, Pressable, Text, TouchableOpacity} from 'react-native';
+import Animated, {
+    useAnimatedSensor,
+    useAnimatedStyle,
+    SensorType,
+    useSharedValue,
+    withTiming,
+    withRepeat,
+    Easing,
+    runOnJS,
+} from 'react-native-reanimated';
+import {Image} from 'react-native';
+import SpecieCard from "@/components/SpecieCard";
+import Specie from "@/model/domain/Specie";
+import Location from "@/model/domain/Location";
+import Habitat from "@/model/domain/Habitat";
+import {ThemedView} from "@/components/ui/themed/ThemedView";
+import FlipAnimationContainer from "@/components/animation/FlipAnimationContainer";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import EntranceFlipAnimation from "@/components/animation/EntranceFlipAnimation";
+import {ThemedText} from "@/components/ui/themed/ThemedText";
+import {UploadContext} from "@/context/UploadContext";
+import ThumbAnimationView from "@/components/ThumbAnimationView";
+import {Family} from "@/model/domain/Family";
+import {Kingdom} from "@/model/domain/Kingdom";
+import {Climate} from "@/model/domain/Climate";
+import {Diet} from "@/model/domain/Diet";
+import {Class} from "@/model/domain/Class";
+import {router} from "expo-router";
+
+export type ThumbType = {
+    main: string | null | undefined;
+    anim: string | null | undefined;
+};
+export default function RevealScreen() {
+    const addingState = useContext(UploadContext);
+
+    const [thumbnail, setThumbnail] = useState<ThumbType>({
+        main: null,
+        anim: null,
+    });
+
+    const [thumbPosition, setThumbPosition] = useState({x: 0, y: 0});
+
+    const thumbRef = useRef<View>(null);
+
+    const thumbAnimation = useSharedValue(0);
+
+
+    const animatedSensor = useAnimatedSensor(SensorType.ROTATION);
+    const animationCompleted = useSharedValue(false);
+    const indicatorOpacity = useSharedValue(0);
+    const indicatorScale = useSharedValue(1);
+
+    const cardHeight = useSharedValue(1);
+
+
+    const [isBackShowing, setIsBackShowing] = useState(false);
+
+    const style = useAnimatedStyle(() => {
+        const {pitch, yaw, qy} = animatedSensor.sensor.value;
+
+        let num = qy > 0 ? 30 : 50;
+
+        let yawValue = qy > 0 ? num * 2.5 * parseFloat(qy.toFixed(2)) : num * parseFloat(qy.toFixed(2));
+        let pitchValue = 26 * parseFloat(pitch.toFixed(2));
+
+        return {
+            transform: [{translateX: yawValue}, {translateY: pitchValue}],
+        };
+    });
+
+    const indicatorStyle = useAnimatedStyle(() => {
+        return {
+            opacity: indicatorOpacity.value,
+            transform: [{scale: indicatorScale.value}],
+        };
+    });
+
+
+    const handleScreenPress = () => {
+        if (animationCompleted.value) {
+            indicatorOpacity.value = withTiming(0, {duration: 300});
+            console.log("Screen clicked and indicator hidden!");
+        }
+    };
+
+    useEffect(() => {
+        setThumbnail({main: specie.image, anim: null});
+        // Simulate animation completion after 3 seconds
+        const timeout = setTimeout(() => {
+            animationCompleted.value = true;
+            indicatorOpacity.value = withTiming(1, {duration: 500});
+            indicatorScale.value = withRepeat(
+                withTiming(1.2, {duration: 1000, easing: Easing.inOut(Easing.ease)}),
+                -1,
+                true
+            );
+        }, 3000);
+
+        return () => clearTimeout(timeout);
+    }, []);
+    const cardStyle = useAnimatedStyle(() => {
+        return {
+            transform: [{scale: cardHeight.value}],
+        };
+    });
+
+    function addToCollection() {
+        try {
+            // logic to create post
+            if (isBackShowing) {
+                cardHeight.value = withTiming(0.4, {duration: 300});
+            }
+            addingState?.setUploading(true);
+            setTimeout(() => {
+                addingState?.setUploading(false);
+            }, 3000);
+            router.replace('/(tabs)');
+
+        } catch (error) {
+            console.log('Error : addingState', error);
+            console.log('Error : addingState', error);
+        }
+    }
+
+    const onLeave = async () => {
+        setThumbnail({main: null, anim: specie.image});
+
+        thumbAnimation.value = withTiming(
+            1,
+            {duration: 800, easing: Easing.bezier(0.12, 0, 0.39, 0)},
+            finished => {
+                if (finished) {
+                    runOnJS(setThumbnail)({main: null, anim: null});
+                    runOnJS(addToCollection)();
+                }
+            },
+        );
+    };
+
+    const location1: Location = new Location(13.33,19.09,3, 5, 1); // Desert Tchad
+    const specie = new Specie(1, 'Lion', 'Panthera leo', "Le Lion (Panthera leo) est une espèce de mammifères carnivores de la famille des Félidés. La femelle du lion est la lionne, son petit est le lionceau. Le mâle adulte, aisément reconnaissable à son importante crinière, accuse une masse moyenne qui peut être variable selon les zones géographiques où il se trouve, allant de 145 à 180 kg pour les lions d'Asie à plus de 225 kg pour les lions d'Afrique.", new Habitat('jungle', Climate.Tropical), Diet.Carnivores, Kingdom.Animal, Class.Mammals, Family.Felidae, [location1, location1], 'https://upload.wikimedia.org/wikipedia/commons/6/6f/011_The_lion_king_Tryggve_in_the_Serengeti_National_Park_Photo_by_Giles_Laurent.jpg');
+
+
+    return (
+        <ThemedView style={styles.container}
+                    onTouchEnd={() => runOnJS(handleScreenPress)()}
+        >
+            <ThumbAnimationView
+                thumbnail={thumbnail}
+                size={{width: 250, height: 450}}
+                position={thumbPosition}
+                customThumbView={<SpecieCard specie={specie} style={cardStyle}/>}
+                thumbAnimation={thumbAnimation}
+            />
+            {thumbnail.main ? (
+                <EntranceFlipAnimation content={
+                    <FlipAnimationContainer
+                        ref={thumbRef}
+                        frontContent={
+                            <ThemedView style={[styles.card]}>
+                                <Animated.View style={[styles.imageContainer]}>
+                                    <Ionicons name="help-circle" size={100} color="#242424" style={styles.image}/>
+                                </Animated.View>
+                            </ThemedView>
+                        }
+                        backContent={
+                            <SpecieCard specie={specie} style={{...style, ...cardStyle}}/>}
+                        onFaceChange={(isBackVisible) => {
+                            setIsBackShowing(isBackVisible);
+                        }}
+                    />
+                }
+                                       onAnimationComplete={
+                                           () => {
+                                               thumbRef.current?.measure((x, y, width, height, px, py) => {
+                                                   setThumbPosition({x: px, y: py});
+                                               });
+                                           }
+                                       }
+                />
+            ) : <></>}
+            <Animated.View style={[styles.indicator, indicatorStyle]}>
+                <ThemedView style={styles.indicatorContent}>
+                    <Ionicons name="hand-left" size={30} color="white"/>
+                </ThemedView>
+            </Animated.View>
+            {(isBackShowing && !thumbnail.anim) && (
+                <TouchableOpacity
+                    onPress={onLeave}
+                    style={{
+                        position: 'absolute',
+                        bottom: 20,
+                        left: 20,
+                        backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                        padding: 10,
+                        borderRadius: 25,
+                    }}
+                >
+                    <ThemedText>Add to collection</ThemedText>
+                </TouchableOpacity>
+            )}
+        </ThemedView>
+    );
+}
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    card: {
+        width: 250,
+        height: 450,
+        borderRadius: 25,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderWidth: 8,
+        borderColor: 'white',
+        overflow: 'hidden',
+        color: '#FFD700',
+        backgroundColor: 'purple',
+    },
+    imageContainer: {
+        backfaceVisibility: 'hidden',
+    },
+    iconContainer: {
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    image: {
+        padding: 0,
+        borderRadius: 90,
+        borderWidth: 6,
+        color: '#F0F0F0',
+        borderColor: 'white',
+    },
+    indicator: {
+        position: 'absolute',
+        bottom: 50,
+        right: 50,
+        backgroundColor: 'rgba(0, 0, 0, 0.7)',
+        borderRadius: 25,
+        padding: 10,
+    },
+    indicatorContent: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0)',
+    },
+    overlay: {
+        backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    },
+});
