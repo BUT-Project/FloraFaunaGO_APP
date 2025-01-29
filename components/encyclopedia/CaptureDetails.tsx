@@ -1,4 +1,4 @@
-import {StyleSheet} from 'react-native';
+import {Dimensions, StyleSheet} from 'react-native';
 import {ThemedView} from "@/components/ui/themed/ThemedView";
 import {ThemedText} from "@/components/ui/themed/ThemedText";
 import CaptureDetail from "@/model/CaptureDetail";
@@ -7,7 +7,8 @@ import { ExtendableMap } from '../ui/ExtendableMap';
 type CaptureDetailsProps={
     captureDetail:CaptureDetail
 }
-
+const { width } = Dimensions.get("window");
+const itemWidth = width - 30 //Item margin + Section padding
 export default function CaptureDetails({captureDetail}: CaptureDetailsProps){
     return (
         <ThemedView style={styles.container}>
@@ -29,12 +30,13 @@ export default function CaptureDetails({captureDetail}: CaptureDetailsProps){
 
 const styles = StyleSheet.create({
     container: {
+        margin:5,
         padding:5,
         paddingHorizontal:10,
         borderRadius: 15,
         borderWidth:1,
-        height:"100%",
-        width:"100%",
+        height:itemWidth * 9/16,
+        width:itemWidth,
         overflow: 'hidden',
         alignItems:"flex-start",
         flexDirection:"row",
@@ -44,7 +46,7 @@ const styles = StyleSheet.create({
         gap:3,
     },
     mapContainer:{
-        width:"100%",
+        width:"95%",
         aspectRatio:1,
         borderRadius:15,
         overflow:"hidden",
