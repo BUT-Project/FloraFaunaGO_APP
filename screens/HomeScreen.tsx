@@ -14,6 +14,7 @@ import * as Location from "expo-location";
 import {useRouter} from "expo-router";
 import StubData from "@/dal/StubLib/StubData";
 import Specie from "@/model/domain/Specie";
+import {useSpeciesStore} from "@/context/zustand/strore/useSpeciesStore";
 
 
 const {width: SCREEN_WIDTH} = Dimensions.get('window');
@@ -112,17 +113,13 @@ export default function HomeScreen() {
             </View>
         );
     }
-
+    const { setCurrentImageUri, setCurrentIdentifiedSpecies } = useSpeciesStore();
     useEffect(() => {
         if (capturedImage && !showProgress && !isLoading && identifiedSpecie) {
+            setCurrentIdentifiedSpecies(identifiedSpecie);
+            setCurrentImageUri(capturedImage);
             router.push({
                 pathname: '/capture',
-                params: {
-                    pictureUri: capturedImage,
-                    imageUri: identifiedSpecie.image,
-                    specieId: identifiedSpecie.id,
-                    specieName: identifiedSpecie.name,
-                }
             });
         }
     }, [capturedImage, showProgress, isLoading, identifiedSpecie, router, location, base64Image]);

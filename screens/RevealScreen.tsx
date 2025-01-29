@@ -12,8 +12,6 @@ import Animated, {
 } from 'react-native-reanimated';
 import SpecieCard from "@/components/SpecieCard";
 import Specie from "@/model/domain/Specie";
-import Location from "@/model/domain/Location";
-import Habitat from "@/model/domain/Habitat";
 import {ThemedView} from "@/components/ui/themed/ThemedView";
 import FlipAnimationContainer from "@/components/animation/FlipAnimationContainer";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -21,12 +19,8 @@ import EntranceFlipAnimation from "@/components/animation/EntranceFlipAnimation"
 import {ThemedText} from "@/components/ui/themed/ThemedText";
 import {UploadContext} from "@/context/UploadContext";
 import ThumbAnimationView from "@/components/ThumbAnimationView";
-import {Family} from "@/model/domain/Family";
-import {Kingdom} from "@/model/domain/Kingdom";
-import {Climate} from "@/model/domain/Climate";
-import {Diet} from "@/model/domain/Diet";
-import {Class} from "@/model/domain/Class";
 import {router} from "expo-router";
+import {useSpeciesStore} from "@/context/zustand/strore/useSpeciesStore";
 
 export type ThumbType = {
     main: string | null | undefined;
@@ -108,6 +102,7 @@ export default function RevealScreen({specie}: RevealScreenProps) {
             transform: [{scale: cardHeight.value}],
         };
     });
+    const { resetState } = useSpeciesStore();
 
     function addToCollection() {
         try {
@@ -120,6 +115,7 @@ export default function RevealScreen({specie}: RevealScreenProps) {
                 addingState?.setUploading(false);
             }, 3000);
             router.replace('/(tabs)');
+            resetState();
 
         } catch (error) {
             console.log('Error : addingState', error);
@@ -155,7 +151,7 @@ export default function RevealScreen({specie}: RevealScreenProps) {
             />
             {thumbnail.main ? (
                 <EntranceFlipAnimation content={
-                    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}} ref={thumbRef}>
+                    <Animated.View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}} ref={thumbRef}>
                     <FlipAnimationContainer
                         frontContent={
                             <ThemedView style={[styles.card]}>
@@ -170,7 +166,7 @@ export default function RevealScreen({specie}: RevealScreenProps) {
                             setIsBackShowing(isBackVisible);
                         }}
                     />
-                    </View>
+                    </Animated.View>
                 }
                                        onAnimationComplete={
                                            () => {

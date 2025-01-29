@@ -1,52 +1,48 @@
-import { useEffect, useState } from 'react';
+import {useEffect, useState} from 'react';
 import StubData from "@/dal/StubLib/StubData";
 import RevealScreen from "@/screens/RevealScreen";
-import { useLocalSearchParams } from "expo-router";
 import {ThemedText} from "@/components/ui/themed/ThemedText";
 import CaptureDetail from "@/model/domain/CaptureDetail";
 import Capture from "@/model/domain/Capture";
 import Location from "@/model/domain/Location";
 import * as ExpoLocation from "expo-location";
+import {useSpeciesStore} from "@/context/zustand/strore/useSpeciesStore";
+
+
 export default function Reveal() {
-    const { specieId,imageUri } = useLocalSearchParams<{ specieId: string, imageUri: string }>();
-    const [specie, setSpecie] = useState<any>(null);
     const [isLoading, setIsLoading] = useState(true);
+    const {currentImageUri: capturedImageUri, identifiedSpecies: specie} = useSpeciesStore();
 
     useEffect(() => {
         async function fetchSpecie() {
             try {
-                const { speciesRepository, captureRepository } = StubData.getInstance();
-                if (!specieId || !speciesRepository || !captureRepository) {
+                const {captureRepository} = StubData.getInstance();
+                console.log('fetching specie:', specie);
+                if (!specie || !captureRepository) {
                     throw new Error('Missing required data');
                 }
-                const { status } = await ExpoLocation.requestForegroundPermissionsAsync();
+                const {status} = await ExpoLocation.requestForegroundPermissionsAsync();
                 if (status !== 'granted') {
                     throw new Error('Location permission not granted');
                 }
-                if (specieId && speciesRepository) {
-                    const fetchedSpecie = await speciesRepository.getById(specieId);
-                    console.log('fetchedSpecie', fetchedSpecie);
+                const currentLocation = await getCurrentLocation();
+                const captureDetail = new CaptureDetail(
+                    Date.now(),
+                    new Date(),
+                    false, // Default shiny value [TOTO]
+                    currentLocation
+                );
 
-                    setSpecie(fetchedSpecie);
+                // Create the capture
+                const newCapture = new Capture(
+                    Date.now(),
+                    capturedImageUri,
+                    specie,
+                    [captureDetail]
+                );
+                // Save the capture
+                await captureRepository?.create(newCapture);
 
-                    const currentLocation = await getCurrentLocation(); // You'll need to implement this
-                    const captureDetail = new CaptureDetail(
-                        Date.now(), // Using timestamp as temporary ID
-                        new Date(),
-                        false, // Default shiny value
-                        currentLocation
-                    );
-
-                    // Create the capture
-                    const newCapture = new Capture(
-                        Date.now(), // Using timestamp as temporary ID
-                        imageUri,
-                        fetchedSpecie,
-                        [captureDetail]
-                    );
-                    // Save the capture
-                    await captureRepository?.create(newCapture);
-                }
             } catch (error) {
                 console.error('Error fetching specie:', error);
             } finally {
@@ -56,7 +52,8 @@ export default function Reveal() {
 
 
         fetchSpecie();
-    }, [specieId]);
+    }, [specie]);
+
     async function getCurrentLocation(): Promise<Location> {
         try {
             const location = await ExpoLocation.getCurrentPositionAsync();
@@ -70,8 +67,9 @@ export default function Reveal() {
             );
         } catch (error) {
             console.error('Error getting location:', error);
+            throw new Error('Error getting location');
             // Return a default location if unable to get current location
-            return new Location(0, 0, 0, 20, 0);
+            // return new Location(0, 0, 0, 20, 0);
         }
     }
 
@@ -84,7 +82,5 @@ export default function Reveal() {
         return <ThemedText>Species not found</ThemedText>; // Or your error component
     }
 
-    // here we should make an API call to get add a capture
-
-    return <RevealScreen specie={specie} />;
+    return <RevealScreen specie={specie}/>;
 }

@@ -4,7 +4,8 @@ import {runOnJS, useDerivedValue, useSharedValue, withRepeat, withSequence, with
 import {Alert, Dimensions, TouchableOpacity, View} from "react-native";
 import {Gesture, GestureDetector} from "react-native-gesture-handler";
 import {ThemedText} from "@/components/ui/themed/ThemedText";
-import {useLocalSearchParams, useRouter} from "expo-router";
+import {useRouter} from "expo-router";
+import {useSpeciesStore} from "@/context/zustand/strore/useSpeciesStore";
 
 const {width: screenWidth, height: screenHeight} = Dimensions.get("screen");
 const center = {
@@ -14,22 +15,8 @@ const center = {
 const [upperLimit, lowerLimit] = [center.y - 200, center.y + 100];
 const POKEBALL_BASE_SIZE = 50;
 
-interface CaptureScreenParams extends Record<string, string | string[]> {
-    imageUri: string;
-    specieId: string;
-    specieName: string;
-    pictureUri: string;
-}
-
-export default function PokemonCapture() {
-    const params = useLocalSearchParams<CaptureScreenParams>();
-
-    const {
-        imageUri,
-        specieId,
-        specieName,
-        pictureUri,
-    } = params;
+export default function Capture() {
+    const {currentImageUri: imageUri} = useSpeciesStore();
 
     const router = useRouter();
     const clock = useClock();
@@ -70,12 +57,6 @@ export default function PokemonCapture() {
         );
     }, []);
 
-    const captureRingColor = useDerivedValue(() => {
-        if (captureDifficulty.value < 0.3) return '#00FF00';
-        if (captureDifficulty.value < 0.7) return '#FFFF00';
-        return '#FF0000';
-    });
-
     const checkCollision = () => {
         const pokeballSize = POKEBALL_BASE_SIZE * pokeballScale.value;
         const pokeballCenterX = pokeballX.value + pokeballSize / 2;
@@ -104,10 +85,6 @@ export default function PokemonCapture() {
                     text: 'OK',
                     onPress: () => router.replace({
                         pathname: '/(home)/reveal',
-                        params: {
-                            imageUri: pictureUri,
-                            specieId: specieId // Make sure specieId is available in your component's scope
-                        }
                     })
                 },
             ]);
@@ -163,21 +140,6 @@ export default function PokemonCapture() {
                 runOnJS(resetPokeball)();
             }
         });
-    const cagePulse = useSharedValue(1);
-    const particles = useSharedValue(Array.from({length: 20}, () => ({
-        x: Math.random() * 100 - 50,
-        y: Math.random() * 100 - 200,
-        speed: Math.random() * 0.5 + 0.2,
-        size: Math.random() * 3 + 2
-    })));
-
-    useEffect(() => {
-        // Particle animation
-        particles.value = particles.value.map(p => ({
-            ...p,
-            y: (p.y + p.speed) % 100 - 200
-        }));
-    }, [clock]);
 
     // Add cage opening animation
     const cageOpenProgress = useSharedValue(0);
