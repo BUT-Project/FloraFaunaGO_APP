@@ -12,7 +12,7 @@ export const LoadingImageBackground = ({
     children, 
     width, 
     height, 
-    source, // L'image principale passée en props
+    source, 
     ...props 
 }: LoadingImageBackgroundProps) => {
     const [loading, setLoading] = useState(true);
@@ -25,6 +25,7 @@ export const LoadingImageBackground = ({
                 onLoadEnd={() => setLoading(false)}
                 onError={() => { 
                     setImageSource(defaultImage); // Bascule vers l'image de secours
+                    console.log("error")
                 }}
                 {...props}
             >

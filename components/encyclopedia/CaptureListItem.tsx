@@ -5,6 +5,7 @@ import { ThemedText } from "@/components/ui/themed/ThemedText";
 import Capture from "@/model/Capture";
 import { Link } from "expo-router";
 import { LoadingImageBackground } from '../ui/LoadingImageBackground';
+import { BlurView } from 'expo-blur';
 
 type CaptureListItemProps = {
     capture: Capture;
@@ -29,8 +30,8 @@ export default function CaptureListItem({ capture }: CaptureListItemProps) {
                         width={itemSize}
                         height={itemSize}
                     >
-                        {/* Ajout de la superposition conditionnelle */}
-                        {!isCaptured && <ThemedView style={styles.overlay} />}
+                        {/* Ajout du blur conditionnel */}
+                        {!isCaptured && <BlurView intensity={30} style={styles.blurOverlay} />}
                         
                         <ThemedText style={styles.name}>
                             {capture.specie.name}
@@ -58,11 +59,10 @@ const styles = StyleSheet.create({
         color: 'white',
         backgroundColor: 'rgba(0, 0, 0, 0.35)',
         padding: 2,
-        textAlign:"center",
+        textAlign: "center",
     },
-    overlay: {
-        ...StyleSheet.absoluteFillObject, 
-        backgroundColor: 'rgba(0, 0, 0, 0.75)', 
-        borderRadius: 10, 
+    blurOverlay: {
+        ...StyleSheet.absoluteFillObject,
+        borderRadius: 10, // Garde l'arrondi des bords
     },
 });

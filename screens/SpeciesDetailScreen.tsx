@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useMemo} from "react";
 import {ScrollView, FlatList, StyleSheet, ActivityIndicator, Dimensions} from "react-native";
 import {ThemedText} from "@/components/ui/themed/ThemedText";
 import {ThemedView} from "@/components/ui/themed/ThemedView";
@@ -22,6 +22,8 @@ export default function SpeciesDetailScreen({captureId}: SpeciesDetailScreenProp
 
     const { capture,isLoading,error} = useGetCaptureById(captureId);
     const { captures:family,isLoading:isFamLoading,fetchMoreData,error:errorFam,isListEnd,isLoadingMore} = useGetCaptureByFamily(capture?.specie.family,capture?.id);
+    
+    const isCaptured = useMemo(() => capture && capture.capturesDetails.length > 0, [capture]);
     const oldestCapture = React.useMemo(() =>  {
         if(capture){
             if(capture.capturesDetails?.length > 0 ){
@@ -57,37 +59,44 @@ export default function SpeciesDetailScreen({captureId}: SpeciesDetailScreenProp
         <SafeView>
             <ScrollView>
                 <ThemedView style={styles.container}>
-                    <SpeciesImagePager capture={capture}/>
+                    <SpeciesImagePager capture={capture} isCaptured={isCaptured}/>
                     <ThemedView style={styles.sectionRow}>
                         <ThemedView style={styles.halfVerticalContainer}>
                             <ThemedView style={styles.infoRow}>
                                 <ThemedText>Reigne :</ThemedText>
-                                <ThemedText style={styles.bold}>{capture.specie.kingdom.toString()}</ThemedText>
+                                <ThemedText style={styles.bold}>{ isCaptured ? capture.specie.kingdom.toString() : "?"}</ThemedText>
                             </ThemedView>
                             <ThemedView style={styles.infoRow}>
                                 <ThemedText>Class :</ThemedText>
-                                <ThemedText style={styles.bold}>{capture.specie.class.toString()}</ThemedText>
+                                <ThemedText style={styles.bold}>{ isCaptured ? capture.specie.class.toString() : "?"}</ThemedText>
                             </ThemedView>
                             <ThemedView style={styles.infoRow}>
                                 <ThemedText>Habitat :</ThemedText>
-                                <ThemedText style={styles.bold}>{capture.specie.habitat.climate.toString()}, {capture.specie.habitat.zone}</ThemedText>
+                                <ThemedText style={styles.bold}>
+                                    { isCaptured ? capture.specie.habitat.climate.toString() : "?"},
+                                     { isCaptured ? capture.specie.habitat.zone : "?"}
+                                </ThemedText>
                             </ThemedView>
 
                         </ThemedView>
                         <ThemedView style={styles.halfVerticalContainer}>
                             <ThemedView style={styles.infoRow}>
                                 <ThemedText>Famille :</ThemedText>
-                                <ThemedText style={styles.bold}>{capture.specie.family.toString()}</ThemedText>
+                                <ThemedText style={styles.bold}>{isCaptured ? capture.specie.family.toString() : "?"}</ThemedText>
                             </ThemedView>
                             <ThemedView style={styles.infoRow}>
                                 <ThemedText>Régime :</ThemedText>
-                                <ThemedText style={styles.bold}>{capture.specie.diet.toString()}</ThemedText>
+                                <ThemedText style={styles.bold}>{ isCaptured ? capture.specie.diet.toString() : "?"}</ThemedText>
                             </ThemedView>
                         </ThemedView>
                     </ThemedView>
 
                     <ThemedView style={styles.sectionRow}>
-                        <ExtendableText text={capture.specie.description} style={styles.descContainer} textStyle={styles.description} />
+                        <ExtendableText 
+                            text={isCaptured ? capture.specie.description : "Capturez le pour en apprendre plus ! 🧐"} 
+                            style={styles.descContainer} 
+                            textStyle={styles.description} 
+                        />
                         <ExtendableMap locations={capture.specie.locations} mapStyle={styles.map} style={styles.mapContainer}/>
                     </ThemedView>
                     <ThemedView style={styles.section}>

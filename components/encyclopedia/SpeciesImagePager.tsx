@@ -7,6 +7,7 @@ import { ThemedView } from "@/components/ui/themed/ThemedView";
 import { LoadingImageBackground } from "../ui/LoadingImageBackground";
 import { Colors } from "@/constants/Colors";
 import { useRouter } from "expo-router";
+import { BlurView } from 'expo-blur';
 import Capture from '@/model/Capture';
 
 
@@ -19,22 +20,20 @@ type CarouselItem = {
 
 type SpeciesImageCarouselProps = {
     capture: Capture;
+    isCaptured?:Boolean | null;
 };
 
 const { width } = Dimensions.get("window");
 
-export default function SpeciesImageCarousel({ capture }: SpeciesImageCarouselProps) {
+export default function SpeciesImageCarousel({ capture,isCaptured }: SpeciesImageCarouselProps) {
     const router = useRouter();
     const [activeSlide, setActiveSlide] = useState(0);
     const carouselRef = useRef<Carousel<any>>(null);
-
-    const isCaptured = useMemo(() => capture.capturesDetails.length > 0, [capture]);
-
     const carouselData = useMemo<CarouselItem[]>(() => {
         const items: CarouselItem[] = [
             { key: "1", image: capture.specie.image, label: capture.specie.name, secondLabel: capture.specie.scientificName },
         ];
-        if (capture.photo) {
+        if (capture.photo && isCaptured) {
             items.push({ key: "2", image: capture.photo, label: "Votre photo" });
         }
         return items;
@@ -48,8 +47,8 @@ export default function SpeciesImageCarousel({ capture }: SpeciesImageCarouselPr
             height={width * 9 / 16}
             source={{ uri: item.image }}
         >
-            {!isCaptured && <ThemedView style={styles.overlay} />}
-
+            {!isCaptured && <BlurView intensity={30} style={styles.blurOverlay} />}
+            
             <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
                 <Ionicons name="chevron-back" size={30} color="#fff" />
             </TouchableOpacity>
@@ -129,8 +128,8 @@ const styles = StyleSheet.create({
         bottom: 5,
         alignSelf: "center",
     },
-    overlay: {
-        ...StyleSheet.absoluteFillObject, 
-        backgroundColor: 'rgba(0, 0, 0, 0.75)', 
+    blurOverlay: {
+        ...StyleSheet.absoluteFillObject,
+        borderRadius: 10, // Garde l'arrondi des bords
     },
 });
