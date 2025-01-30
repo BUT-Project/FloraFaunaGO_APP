@@ -4,7 +4,6 @@ import {ThemedText} from "@/components/ui/themed/ThemedText";
 import {ThemedView} from "@/components/ui/themed/ThemedView";
 import CaptureListItem from "@/components/encyclopedia/CaptureListItem";
 import CaptureDetails from "@/components/encyclopedia/CaptureDetails";
-import PagerView from 'react-native-pager-view';
 import SpeciesImagePager from "@/components/encyclopedia/SpeciesImagePager";
 import { useGetCaptureById } from "@/hooks/useGetCaptureById";
 import { SafeView } from "@/components/ui/SafeView";
@@ -54,7 +53,6 @@ export default function SpeciesDetailScreen({captureId}: SpeciesDetailScreenProp
             </ThemedView>
         );
     }
-   
     return (
         <SafeView>
             <ScrollView>
@@ -110,7 +108,7 @@ export default function SpeciesDetailScreen({captureId}: SpeciesDetailScreenProp
                                         <ThemedText>Aucune espèce trouvée</ThemedText>
                                     </ThemedView>
                                 )}
-                                ListFooterComponent={() =>
+                                ListFooterComponent={() => 
                                     family.length > 0 && (
                                         <ThemedView style={styles.footerFam}>
                                             {isListEnd && <ThemedText style={{ textAlign: "center" }}>Pas plus de capture pour le moment.</ThemedText>}
@@ -130,11 +128,17 @@ export default function SpeciesDetailScreen({captureId}: SpeciesDetailScreenProp
                         <>
                             <ThemedView style={styles.section}>
                                 <ThemedText type={"defaultSemiBold"}>Vos captures :</ThemedText>
-                                <PagerView style={styles.capturesList} initialPage={0}>
-                                    {capture.capturesDetails.map((captureDetail) => (
-                                        <CaptureDetails captureDetail={captureDetail} key={`Capture-${captureDetail.id}`}/>
-                                    ))}
-                                </PagerView>
+                                <FlatList 
+                                    data={capture.capturesDetails}
+                                    renderItem={({item}) => (
+                                        <CaptureDetails captureDetail={item} />
+                                    )}
+                                    keyExtractor={(item) => `CaptureDetail-${item.id}`}
+                                    horizontal={true}
+                                    showsHorizontalScrollIndicator={false}
+                                />
+                                    
+                                
                             </ThemedView>
                             { oldestCapture &&
                                 <ThemedText style={styles.captureDate}>Date de capture : {oldestCapture.date.toLocaleDateString()}</ThemedText>
@@ -162,7 +166,6 @@ const styles = StyleSheet.create({
         padding:7,
         paddingHorizontal:10,
         borderBottomWidth:1,
-        maxHeight:500,
     },
     sectionRow:{
         flexDirection:"row",

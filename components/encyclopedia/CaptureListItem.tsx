@@ -18,17 +18,16 @@ export default function CaptureListItem({ capture }: CaptureListItemProps) {
 
     return (
         <Link
-            href={{ params: { id: capture.id.toString() }, pathname: "/(encyclopedia)/[id]" }}
+            href={{ params: { id: capture.id.toString() }, pathname: "/(tabs)/(encyclopedia)/[id]" }}
             asChild
         >
             <TouchableOpacity>
                 <ThemedView style={styles.container}>
                     <LoadingImageBackground
                         source={{ uri: capture.specie.image }}
-                        containerStyle={styles.image}
+                        style={styles.image}
                         width={itemSize}
                         height={itemSize}
-                        imageStyle={styles.image}
                     >
                         {/* Ajout de la superposition conditionnelle */}
                         {!isCaptured && <ThemedView style={styles.overlay} />}
@@ -53,16 +52,13 @@ const styles = StyleSheet.create({
         width: itemSize,
         height: itemSize,
         justifyContent: 'flex-end',
-    },
-    imageStyle: {
         borderRadius: 10,
     },
     name: {
         color: 'white',
         backgroundColor: 'rgba(0, 0, 0, 0.35)',
-        padding: 5,
-        textAlign: 'center',
-        borderRadius: 10,
+        padding: 2,
+        textAlign:"center",
     },
     overlay: {
         ...StyleSheet.absoluteFillObject, 

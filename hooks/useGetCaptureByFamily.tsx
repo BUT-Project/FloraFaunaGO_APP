@@ -15,11 +15,6 @@ export function useGetCaptureByFamily(
     const [page,setPage] = useState(1)
     const [captures, setCaptures] = useState<Capture[]>([]); 
     const [error, setError] = useState<unknown>(null);
-    const [refreshTrigger, setRefreshTrigger] = useState(0);
-
-    const refresh = useCallback(() => {
-        setRefreshTrigger((prev) => prev + 1);
-    }, []);
 
     const fetchMoreData = () => {
         if(!isListEnd && !isLoadingMore){
@@ -35,9 +30,8 @@ export function useGetCaptureByFamily(
             if(captures.length == 0) setIsLoading(true);
             setError(null);
             try {
-                const { captureRepository } = StubData.getInstance();
-                const result = await captureRepository?.getByFamily(family, page, pageSize);
-                if(result != undefined){
+                const { Capture } = StubData.getInstance();
+                const result = await Capture.getByFamily(family, page, pageSize, selfId);
                 setIsListEnd(captures.length >= result.total);
                 setCaptures((prev) => [...prev, ...result.items]);
                 }
@@ -48,9 +42,8 @@ export function useGetCaptureByFamily(
                 setIsLoadingMore(false);
             }
         };
-
         fetchCaptures();
-    }, [family, page, pageSize, refreshTrigger]); 
+    }, [family, page, pageSize]); 
     
     return {
         captures,
@@ -59,6 +52,5 @@ export function useGetCaptureByFamily(
         error,
         isListEnd,
         fetchMoreData,
-        refresh,
     };
 }
