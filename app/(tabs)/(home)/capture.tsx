@@ -84,7 +84,7 @@ export default function Capture() {
                 {
                     text: 'OK',
                     onPress: () => router.replace({
-                        pathname: '/(home)/reveal',
+                        pathname: '/(tabs)/(home)/reveal',
                     })
                 },
             ]);

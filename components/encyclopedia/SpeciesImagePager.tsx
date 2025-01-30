@@ -60,8 +60,30 @@ export default function SpeciesImageCarousel({ capture }: SpeciesImageCarouselPr
             </ThemedView>
         </LoadingImageBackground>
     );
-};
 
+    return (
+        <ThemedView style={styles.container}>
+            <Carousel
+                ref={carouselRef}
+                data={carouselData}
+                renderItem={renderItem}
+                sliderWidth={width}
+                itemWidth={width}
+                onSnapToItem={(index:number) => setActiveSlide(index)}
+                loop={false}
+                vertical={false}
+            />
+            <Pagination
+                dotsLength={carouselData.length}
+                activeDotIndex={activeSlide}
+                containerStyle={styles.dotsContainer}
+                dotStyle={styles.dotStyle}
+                inactiveDotOpacity={0.4}
+                inactiveDotScale={0.6}
+            />
+        </ThemedView>
+    );
+}
 
 const styles = StyleSheet.create({
     container: {

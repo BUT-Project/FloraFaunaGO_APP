@@ -1,8 +1,7 @@
 import {Colors} from "@/constants/Colors";
 import {Tabs} from "expo-router";
 import {TabBarIcon} from "@/components/navigation/TabBarIcon";
-import {StyleSheet, Text, TouchableOpacity} from "react-native";
-import {ThemedText} from "@/components/ui/themed/ThemedText";
+import {StyleSheet, Text} from "react-native";
 import Animated, {useAnimatedStyle, withSpring} from "react-native-reanimated";
 import {useColorScheme} from "@/hooks/useColorScheme";
 import {useContext, useEffect, useState} from "react";
@@ -12,11 +11,6 @@ import {UploadContext} from "@/context/UploadContext";
 export default function RootNavigation() {
 
     const colorScheme = useColorScheme();
-    const [isCapture, setIsCapture] = useState(false);
-
-    const takePhoto = async () => {
-        alert("Prise de la photo");
-    };
     const postState = useContext(UploadContext);
 
     const badgeStyle = useAnimatedStyle(() => {
@@ -38,35 +32,15 @@ export default function RootNavigation() {
                         <TabBarIcon name={focused ? 'person' : 'person-outline'} color={color} />
                     ),
                 }}
-                listeners={{
-                    tabPress: () => setIsCapture(false),
-                }}
+  
             />
             <Tabs.Screen
                 name="(home)"
-                listeners={{
-                    tabPress: () => {
-                        if (!isCapture) {
-                            setIsCapture(true);
-                        } else {
-                            takePhoto();
-                        }
-                    }
-                }}
                 options={{
-                    tabBarButton: (props) => (
-                        <TouchableOpacity {...props} style={[styles.iconContainer, { paddingTop: isCapture ? 3 : 6 }]}>
-                            <TabBarIcon
-                                name={isCapture ? "ellipse-outline" : "home-outline"}
-                                size={isCapture ? 50 : 26}
-                                color={Colors.light.icon}
-                            />
-                            {!isCapture && (
-                                <ThemedText style={styles.captureText}>Capture</ThemedText>
-                            )}
-                        </TouchableOpacity>
+                    title: "Capture",
+                    tabBarIcon: ({ color, focused }) => (
+                        <TabBarIcon name={focused ? 'home' : "home-outline"} color={color} />
                     ),
-                    tabBarStyle: { backgroundColor: 'transparent' },
                 }}
             />
             <Tabs.Screen
@@ -86,9 +60,6 @@ export default function RootNavigation() {
                             </Animated.View>
                         </Animated.View>
                     ),
-                }}
-                listeners={{
-                    tabPress: () => setIsCapture(false),
                 }}
             />
         </Tabs>
