@@ -3,7 +3,7 @@ import HomeScreen from "@/screens/HomeScreen";
 
 export default function Home() {
     return (
-        <HomeScreen/>
-        //<ThemedText>fsdf</ThemedText>
+        // <HomeScreen/>
+        <ThemedText>Home</ThemedText>
     );
 }
