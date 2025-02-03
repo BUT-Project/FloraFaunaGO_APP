@@ -22,6 +22,8 @@ const {width: SCREEN_WIDTH} = Dimensions.get('window');
 export default function HomeScreen() {
     const { speciesRepository } = StubData.getInstance();
     const [location, setLocation] = useState<Location.LocationObject | null>(null);
+    const [unlockedSuccesses, setUnlockedSuccesses] = useState([]);
+
 
     const router = useRouter();
     useEffect(() => {
@@ -47,6 +49,7 @@ export default function HomeScreen() {
     const [isCameraReady, setIsCameraReady] = useState(false);
     const [base64Image, setBase64Image] = useState<string | null>(null);
     const [activeView, setActiveView] = useState('camera');
+    const eventBus = new EventEmitter();
 
     const {isLoading, refetch, data: identifiedSpecie} = useQuery<Specie, Error>({
         queryKey: ['identifySpecie'],
@@ -62,6 +65,36 @@ export default function HomeScreen() {
         setIsCameraReady(true);
     }, []);
 
+
+
+
+    useEffect(() => {
+      const photoSub = eventBus.addListener("photoCaptured", (photo) => {
+        setPhotoCount(prev => {
+          const newCount = prev + 1;
+          // Par exemple, débloquer le succès "Photographe Amateur" dès la première photo
+          if (newCount === 1) {
+            eventBus.emit("unlockPhotographeAmateur");
+          }
+          // Vous pouvez ajouter d'autres seuils ici pour d'autres succès
+          return newCount;
+        });
+      });
+      return () => photoSub.remove();
+    }, []);
+
+    useEffect(() => {
+      const subscriptions = SuccessList.map((success) =>
+        eventBus.addListener(success.eventName, () => {
+          if (!unlockedSuccesses.includes(success.title)) {
+            setUnlockedSuccesses(prev => [...prev, success.title]);
+            Alert.alert("Succès débloqué !", `Vous avez débloqué : ${success.title}`);
+          }
+        })
+      );
+      return () => subscriptions.forEach(sub => sub.remove());
+    }, [unlockedSuccesses]);
+
     const handleCapturePress = async () => {
         if (isLoading || !isCameraReady || !cameraRef.current) return;
 
@@ -70,6 +103,7 @@ export default function HomeScreen() {
             const photo = await cameraRef.current.takePictureAsync({base64: true});
             setCapturedImage(photo?.uri ?? null);
             setBase64Image(photo?.base64 ?? null);  // Store the base64 data
+            eventBus.emit("photoCaptured", photo);
             await refetch();
         } catch (error) {
             console.error('Error capturing image:', error);
