@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import StubData from "@/dal/StubLib/StubData";
-import Capture from "@/model/Capture";
-import { Family } from "@/model/Family";
+import Capture from "@/model/domain/Capture";
+import { Family } from "@/model/domain/Family";
 
 export function useGetCaptureByFamily(
   family: Family | undefined,
@@ -30,8 +30,9 @@ export function useGetCaptureByFamily(
             if(captures.length == 0) setIsLoading(true);
             setError(null);
             try {
-                const { Capture } = StubData.getInstance();
-                const result = await Capture.getByFamily(family, page, pageSize, selfId);
+                const { captureRepository } = StubData.getInstance();
+                const result = await captureRepository?.getByFamily(family, page, pageSize, selfId);
+                if(!result) throw new Error("result undefined")
                 setIsListEnd(captures.length >= result.total);
                 setCaptures((prev) => [...prev, ...result.items]);
             } catch (err) {

@@ -1,4 +1,4 @@
-export class Sucess{
+export class Success {
     private _nom: string
     private _image: string
     private _avancement: number

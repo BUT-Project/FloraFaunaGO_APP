@@ -12,7 +12,7 @@ export default function Layout() {
             <Stack.Screen name="[id]"
                           options={{
                               title: "",
-                              headerBackTitleVisible: true}}
+                              headerBackVisible: true}}
 
             />
             <Stack.Screen name="settings"
@@ -20,7 +20,7 @@ export default function Layout() {
 
                 animation:'slide_from_bottom',
                 presentation: 'modal',
-                headerBackTitleVisible: false,
+                headerBackVisible: false,
                 headerLeft : () =>(
                     <Link href="/(profil)/profil" asChild>
                         <TouchableOpacity>

@@ -1,6 +1,6 @@
 import { ThemedView } from "@/components/ui/themed/ThemedView";
 import { ThemedText } from "@/components/ui/themed/ThemedText";
-import {Sucess} from "@/model/Sucess";
+import {Success} from "@/model/domain/Success";
 import {Modal, StyleSheet, TouchableOpacity} from "react-native";
 import {ScrollView} from "react-native";
 import React from "react";
@@ -9,7 +9,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 interface SucessDetailScreenProps {
     visible: boolean;
     onClose: () => void;
-    sucess: Sucess;
+    sucess: Success;
 
 }
 

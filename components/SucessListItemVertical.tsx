@@ -1,18 +1,15 @@
-import React, {useState} from 'react';
-import {StyleSheet, Dimensions, TouchableOpacity} from 'react-native';
+import {StyleSheet, TouchableOpacity} from 'react-native';
 import {AnimatedCircularProgress} from "react-native-circular-progress";
 import {useThemeColor} from "@/hooks/useThemeColor";
-import {Sucess} from "../model/Sucess"
+import {Success} from "@/model/domain/Success";
 import {TabBarIcon} from "@/components/navigation/TabBarIcon";
 import {ThemedView} from "@/components/ui/themed/ThemedView";
 import {ThemedText} from "@/components/ui/themed/ThemedText";
-import {Link} from "expo-router";
 import SuccessDetailScreen from "@/screens/SuccessDetailScreen";
-
-
+import {useState} from "react";
 
 type SucessListItemsProps = {
-    items : Sucess;
+    items : Success;
 }
 
 export default function SucessListItemVertical(props:SucessListItemsProps){
@@ -23,42 +20,42 @@ export default function SucessListItemVertical(props:SucessListItemsProps){
 
     return(
         <>
-        <SuccessDetailScreen
-            visible={modalVisible}
-            onClose={() => setModalVisible(false)}
-            sucess={props.items}
-        />
+            <SuccessDetailScreen
+                visible={modalVisible}
+                onClose={() => setModalVisible(false)}
+                sucess={props.items}
+            />
             <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.itemsContainer}>
 
-        <ThemedView style={styles.itemsContainer}>
-            <ThemedView style={styles.itemContainer} >
-            <AnimatedCircularProgress
-                size={100}
-                width={10}
-                fill={props.items.avancement}
-                tintColor="#2C9F54"
-                backgroundColor="#DADADA"
-                //padding={15}
+                <ThemedView style={styles.itemsContainer}>
+                    <ThemedView style={styles.itemContainer} >
+                        <AnimatedCircularProgress
+                            size={100}
+                            width={10}
+                            fill={props.items.avancement}
+                            tintColor="#2C9F54"
+                            backgroundColor="#DADADA"
+                            //padding={15}
 
-                //renderCap={({ center }) => <Circle cx={center.x} cy={center.y} r="10" fill="blue" />}
-            >
-                {
-                    (fill) => (
-                        //@ts-ignore
-                        <TabBarIcon size={35} name={props.items.image} style={[styles.image,{color:tintColor}]}  />
-                    )
-                }
-            </AnimatedCircularProgress>
-                {/*
+                            //renderCap={({ center }) => <Circle cx={center.x} cy={center.y} r="10" fill="blue" />}
+                        >
+                            {
+                                (fill) => (
+                                    //@ts-ignore
+                                    <TabBarIcon size={35} name={props.items.image} style={[styles.image,{color:tintColor}]}  />
+                                )
+                            }
+                        </AnimatedCircularProgress>
+                        {/*
             <Text style={{ marginTop: 20, fontSize: 18 }}>
                 {props.items.avancement}% Tache accomplie
             </Text>
                 */}
-            <ThemedText style={[styles.text, {color}]}>{props.items.nom}</ThemedText>
-            </ThemedView>
-        </ThemedView>
+                        <ThemedText style={[styles.text, {color}]}>{props.items.nom}</ThemedText>
+                    </ThemedView>
+                </ThemedView>
             </TouchableOpacity>
-            </>
+        </>
 
     );
 

@@ -1,9 +1,9 @@
-import Habitat from "@/model/Habitat";
-import {Diet} from "@/model/Diet";
-import {Kingdom} from "@/model/Kingdom";
-import {Class} from "@/model/Class";
-import {Family} from "@/model/Family";
-import Location from "@/model/Location";
+import Habitat from "@/model/domain/Habitat";
+import {Diet} from "@/model/domain/Diet";
+import {Kingdom} from "@/model/domain/Kingdom";
+import {Class} from "@/model/domain/Class";
+import {Family} from "@/model/domain/Family";
+import Location from "@/model/domain/Location";
 
 export default class Specie{
     id: number;

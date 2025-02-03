@@ -1,12 +1,12 @@
-import User from "@/model/User";
-import Specie from "@/model/Specie";
-import {FilterPredicate} from "@/dal/StubLib/FilterPredicate";
-import {PagingResult} from "@/dal/StubLib/PagingResult";
-import {GenericRepository} from "@/dal/StubLib/IGenericRepository";
+import {FilterPredicate} from "@/shared/FilterPredicate";
+import {PagingResult} from "@/shared/PagingResult";
+import {IUserRepository} from "@/model/service/IUserRepository";
+import User from "@/model/domain/User";
+import {PagedRequest} from "@/shared/PagedRequest";
 
-export default class StubUsers extends GenericRepository<User> {
+
+export default class StubUsers implements IUserRepository{
     constructor(public Users: User[]) {
-        super();
     }
 
     count(filter: FilterPredicate<User>): Promise<number> {
@@ -32,13 +32,13 @@ export default class StubUsers extends GenericRepository<User> {
         });
     }
 
-    getAll(page: number = 1, pageSize: number = 10): Promise<PagingResult<User>> {
+    getAll(request: PagedRequest): Promise<PagingResult<User>> {
         return new Promise((resolve) => {
-            const startIndex = (page - 1) * pageSize;
-            const endIndex = startIndex + pageSize;
+            const startIndex = (request.index - 1) * request.count;
+            const endIndex = startIndex + request.count;
             const items = this.Users.slice(startIndex, endIndex);
             const total = this.Users.length;
-            const pagingResult = new PagingResult<User>(page, items.length, total, items);
+            const pagingResult = new PagingResult<User>(request.index, items.length, total, items);
             resolve(pagingResult);
         });
     }

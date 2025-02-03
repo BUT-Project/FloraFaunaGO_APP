@@ -1,13 +1,13 @@
-import Capture from "@/model/Capture";
-import {FilterPredicate} from "@/dal/StubLib/FilterPredicate";
-import {GenericRepository} from "@/dal/StubLib/IGenericRepository";
-import {PagingResult} from "@/dal/StubLib/PagingResult";
-import { Family } from "@/model/Family";
+import {FilterPredicate} from "@/shared/FilterPredicate";
+import {PagingResult} from "@/shared/PagingResult";
+import {ICaptureRepository} from "@/model/service/ICaptureRepository";
+import Capture from "@/model/domain/Capture";
+import {PagedRequest} from "@/shared/PagedRequest";
+import {Family} from "@/model/domain/Family";
 
-export default class StubCaptures extends GenericRepository<Capture | null> {
-    constructor(public Captures: Capture[]) {
-        super();
-    }
+export default class StubCaptures implements ICaptureRepository {
+    constructor(public Captures: Capture[]) {}
+
 
     count(filter: FilterPredicate<Capture>): Promise<number> {
         return new Promise((resolve, reject) => {
@@ -27,21 +27,23 @@ export default class StubCaptures extends GenericRepository<Capture | null> {
         });
     }
 
-    getById(id: number): Promise<Capture | null> {
+    getById(id: number): Promise<Capture> {
         return new Promise((resolve) => {
-                
+
             const capture = this.Captures.find(capture => capture.id === id) || null;
-            resolve(capture);
+            if(capture !== null) {
+                resolve(capture)
+            }
         });
     }
 
-    getAll(page: number = 1, pageSize: number = 10): Promise<PagingResult<Capture>> {
+    getAll(request: PagedRequest): Promise<PagingResult<Capture>> {
         return new Promise((resolve) => {
-            const startIndex = (page - 1) * pageSize;
-            const endIndex = startIndex + pageSize;
+            const startIndex = (request.index - 1) * request.count;
+            const endIndex = startIndex + request.count;
             const items = this.Captures.slice(startIndex, endIndex);
             const total = this.Captures.length;
-            const pagingResult = new PagingResult<Capture>(page, items.length, total, items);
+            const pagingResult = new PagingResult<Capture>(request.index, items.length, total, items);
             resolve(pagingResult);
         });
     }

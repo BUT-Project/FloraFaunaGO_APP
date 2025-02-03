@@ -1,13 +1,13 @@
-import {Sucess} from "@/model/Sucess";
-import {GenericRepository} from "@/dal/StubLib/IGenericRepository";
-import {FilterPredicate} from "@/dal/StubLib/FilterPredicate";
-import {PagingResult} from "@/dal/StubLib/PagingResult";
+import {FilterPredicate} from "@/shared/FilterPredicate";
+import {PagingResult} from "@/shared/PagingResult";
+import {ISuccessRepository} from "@/model/service/ISuccessRepository";
+import {Success} from "@/model/domain/Success";
+import {PagedRequest} from "@/shared/PagedRequest";
 
-export default class StubSucess  extends GenericRepository<Sucess> {
-    constructor(public Sucesses: Sucess[]) {
-        super()
+export default class StubSucess  implements ISuccessRepository {
+    constructor(public Sucesses: Success[]) {
     }
-    count(filter: FilterPredicate<Sucess>): Promise<number> {
+    count(filter: FilterPredicate<Success>): Promise<number> {
         return new Promise((resolve, reject) => {
             try {
                 const filteredItems = this.Sucesses.filter(filter);
@@ -18,7 +18,7 @@ export default class StubSucess  extends GenericRepository<Sucess> {
         });
     }
 
-    create(newSuccess: Sucess) : Promise<void> {
+    create(newSuccess: Success) : Promise<void> {
          return new Promise((resolve) => {
              this.Sucesses.push(newSuccess);
              resolve();
@@ -26,7 +26,7 @@ export default class StubSucess  extends GenericRepository<Sucess> {
     }
 
 
-     getById(nom?: string): Promise<Sucess> {
+    getById(nom?: string): Promise<Success> {
         return new Promise((resolve) => {
             const suc = this.Sucesses.find(suc => suc.nom == nom)
             if(suc !== undefined) {
@@ -35,20 +35,19 @@ export default class StubSucess  extends GenericRepository<Sucess> {
         });
 
     }
-
-    public async getAll(page: number = 1, pageSize: number = 9): Promise<PagingResult<Sucess>> {
-        const startIndex = (page - 1) * pageSize;
-        const endIndex = startIndex + pageSize;
+    public async getAll(request: PagedRequest): Promise<PagingResult<Success>> {
+        const startIndex = (request.index - 1) * request.count;
+        const endIndex = startIndex + request.count;
 
         const items = this.Sucesses.slice(startIndex, endIndex);
         const total = this.Sucesses.length;
         return new Promise((resolve) => {
-            const pagingResult = new PagingResult<Sucess>(page, items.length, total, items);
+            const pagingResult = new PagingResult<Success>(request.index, items.length, total, items);
             resolve(pagingResult);
         });
     }
 
-    update(id:string,updatedSuccess: Sucess): Promise<void> {
+    update(id:string,updatedSuccess: Success): Promise<void> {
         return new Promise((resolve, reject) => {
             const index = this.Sucesses.findIndex(sucess => sucess.nom === updatedSuccess.nom);
 
@@ -58,7 +57,7 @@ export default class StubSucess  extends GenericRepository<Sucess> {
             }
 
             // Mise à jour de l'élément à l'index trouvé
-            this.Sucesses[index] = { ...this.Sucesses[index], ...updatedSuccess } as Sucess;
+            this.Sucesses[index] = { ...this.Sucesses[index], ...updatedSuccess } as Success;
 
             resolve();
         });

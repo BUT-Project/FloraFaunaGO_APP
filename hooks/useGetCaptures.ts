@@ -1,6 +1,7 @@
-import { useState, useEffect, useCallback } from "react";
+import {useCallback, useEffect, useState} from "react";
 import StubData from "@/dal/StubLib/StubData";
-import Capture from "@/model/Capture";
+import Capture from "@/model/domain/Capture";
+import {PagedRequest} from "@/shared/PagedRequest";
 
 export function useGetCaptures(
   pageSize: number = 20,
@@ -32,11 +33,17 @@ export function useGetCaptures(
         setIsLoading(true);
       setError(null);
       try {
-        const { Capture } = StubData.getInstance();
-        const result = await Capture.getAll(page, pageSize);
+        const { captureRepository } = StubData.getInstance();
+        const pageRequest: PagedRequest = {
+            index: page,
+            count: pageSize,
+        }
+        const result = await captureRepository?.getAll(pageRequest);
         console.log(result)
-        setIsListEnd(captures.length >= result.total);
-        setCaptures((prev) => [...prev, ...result.items]);
+        if(result != undefined){
+          setIsListEnd(captures.length >= result?.total);
+          setCaptures((prev) => [...prev, ...result.items]);
+        }
       } catch (err) {
         setError(err);
       } finally {

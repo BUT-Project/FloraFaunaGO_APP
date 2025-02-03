@@ -1,8 +1,9 @@
-import { render } from '@testing-library/react-native';
+import {render} from '@testing-library/react-native';
 
 import CaptureDetails from "@/components/encyclopedia/CaptureDetails";
-import CaptureDetail from "@/model/CaptureDetail";
-import Location from "@/model/Location";
+import CaptureDetail from "@/model/domain/CaptureDetail";
+import Location from "@/model/domain/Location";
+
 describe('<CaptureDetails />', () => {
     test('Text renders correctly on CaptureDetails', () => {
         const captureDetails = new CaptureDetail(1,new Date(),false,new Location(77,77,77,77,77));

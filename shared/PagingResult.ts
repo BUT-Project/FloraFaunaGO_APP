@@ -11,3 +11,10 @@ export class PagingResult<T> {
         this.items = items;
     }
 }
+
+export interface PagingResult<T> {
+    count: number;
+    index: number;
+    total: number;
+    items: T[];
+}

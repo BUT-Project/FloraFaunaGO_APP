@@ -1,5 +1,5 @@
 import {StyleSheet, TouchableOpacity} from 'react-native';
-import { ThemedText } from "@/components/ui/themed/ThemedText";
+import {ThemedText} from "@/components/ui/themed/ThemedText";
 
 type FilterChipsProps = {
     item: any;

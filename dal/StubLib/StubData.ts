@@ -1,23 +1,27 @@
-import {CaptureList, SpecieList, SucessList, UserList} from "./Data"
+import {CaptureList, SpecieList, SuccessList, UserList} from "./Data"
 import StubSpecies from "@/dal/StubLib/StubSpecies";
 import StubCaptures from "@/dal/StubLib/StubCaptures";
 import StubUsers from "@/dal/StubLib/StubUsers";
 import StubSucess from "@/dal/StubLib/StubSucess";
 import StubAuth from "@/dal/StubLib/StubAuth";
+import {IDataManager} from "@/dal/IDataManager";
 
-export default class StubData {
+export default class StubData extends IDataManager{
     private static instance: StubData;
 
     private ListUser = UserList
     private ListCapture = CaptureList
     private ListSpecie = SpecieList
-    private ListSucess = SucessList
+    private ListSucess = SuccessList
 
-    public Auth = new StubAuth(this.ListUser)
-    public Species =  new StubSpecies(this.ListSpecie)
-    public Capture = new StubCaptures(this.ListCapture)
-    public Users = new StubUsers(this.ListUser)
-    public Sucess = new StubSucess(this.ListSucess)
+    public constructor() {
+        super();
+        this.successRepository = new StubSucess(this.ListSucess);
+        this.userRepository = new StubUsers(this.ListUser);
+        this.captureRepository = new StubCaptures(this.ListCapture);
+        this.speciesRepository = new StubSpecies(this.ListSpecie);
+        this.authService = new StubAuth(this.ListUser);
+    }
 
     static getInstance():StubData{
         if(!StubData.instance){

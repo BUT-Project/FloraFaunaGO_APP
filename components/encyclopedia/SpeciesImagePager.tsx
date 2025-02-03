@@ -1,179 +1,136 @@
-import React, {useMemo,useState,useRef} from 'react';
-import {Animated, Dimensions, StyleSheet, TouchableOpacity} from 'react-native';
+import React, { useMemo, useRef, useState } from "react";
+import { Dimensions, StyleSheet, TouchableOpacity } from "react-native";
+import Carousel, { Pagination } from "react-native-snap-carousel";
+import { Ionicons } from "@expo/vector-icons";
 import { ThemedText } from "@/components/ui/themed/ThemedText";
-import {ThemedView} from "@/components/ui/themed/ThemedView";
-import PagerView, {
-    PagerViewOnPageScrollEventData,
-} from 'react-native-pager-view';
-import {ExpandingDot} from "react-native-animated-pagination-dots";
-import {Colors} from "@/constants/Colors";
-import { Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
-import { LoadingImageBackground } from '../ui/LoadingImageBackground';
-import Capture from '@/model/Capture';
+import { ThemedView } from "@/components/ui/themed/ThemedView";
+import { LoadingImageBackground } from "../ui/LoadingImageBackground";
+import { Colors } from "@/constants/Colors";
+import { useRouter } from "expo-router";
+import Capture from '@/model/domain/Capture';
 
-type SpeciesImagePagerProps = {
-    capture:Capture
+
+type CarouselItem = {
+    key: string;
+    image: string;
+    label: string;
+    secondLabel?: string;
 };
 
-const width = Dimensions.get('window').width;
+type SpeciesImageCarouselProps = {
+    capture: Capture;
+};
 
+const { width } = Dimensions.get("window");
 
-
-export default function SpeciesImagePager({capture}: SpeciesImagePagerProps) {
-    const paginationData = [
-        { key:"1" },
-        { key:"2" }
-    ]
-    const scrollOffsetAnimatedValue = useRef(new Animated.Value(0)).current;
-    const positionAnimatedValue = useRef(new Animated.Value(0)).current;
-    const inputRange = [0, paginationData.length];
-    const scrollX = Animated.add(
-        scrollOffsetAnimatedValue,
-        positionAnimatedValue
-    ).interpolate({
-        inputRange,
-        outputRange: [0, paginationData.length * width],
-    });
+export default function SpeciesImageCarousel({ capture }: SpeciesImageCarouselProps) {
+    const router = useRouter();
+    const [activeSlide, setActiveSlide] = useState(0);
+    const carouselRef = useRef<Carousel<any>>(null);
 
     const isCaptured = useMemo(() => capture.capturesDetails.length > 0, [capture]);
 
-    const SpecieImage = () => (
-        <LoadingImageBackground 
-            style={styles.image} 
-            containerStyle={styles.imagesContainer} 
-            imageStyle={styles.imagesContainer} 
-            width={width} 
-            height={width*9/16} 
-            source={{uri:capture.specie.image}} 
-            key="1">
+    const carouselData = useMemo<CarouselItem[]>(() => {
+        const items: CarouselItem[] = [
+            { key: "1", image: capture.specie.image, label: capture.specie.name, secondLabel: capture.specie.scientificName },
+        ];
+        if (capture.photo) {
+            items.push({ key: "2", image: capture.photo, label: "Votre photo" });
+        }
+        return items;
+    }, [capture]);
+
+    // RenderItem pour le carousel
+    const renderItem = ({ item }: { item: CarouselItem }) => (
+        <LoadingImageBackground
+            style={styles.image}
+            width={width}
+            height={width * 9 / 16}
+            source={{ uri: item.image }}
+        >
             {!isCaptured && <ThemedView style={styles.overlay} />}
+
             <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-                <Ionicons name={'chevron-back'} size={30} color={'#fff'}/>
+                <Ionicons name="chevron-back" size={30} color="#fff" />
             </TouchableOpacity>
+
             <ThemedView style={styles.infoChip}>
-                <ThemedText style={[styles.text,styles.specieName]}>{capture.specie.name}</ThemedText>
-                <ThemedText style={[styles.text,styles.specieScientificName]}>{capture.specie.scientificName}</ThemedText>
+                <ThemedText type={'subtitle'} style={styles.text}>{item.label}</ThemedText>
+                {item.secondLabel && <ThemedText style={[styles.text, styles.scientificName]}>{item.secondLabel}</ThemedText>}
             </ThemedView>
         </LoadingImageBackground>
     );
 
-    const onPageScroll = useMemo(
-        () =>
-            Animated.event<PagerViewOnPageScrollEventData>(
-                [
-                    {
-                        nativeEvent: {
-                            offset: scrollOffsetAnimatedValue,
-                            position: positionAnimatedValue,
-                        },
-                    },
-                ],
-                {
-                    useNativeDriver: false,
-                }
-            ),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        []
+    return (
+        <ThemedView style={styles.container}>
+            <Carousel
+                ref={carouselRef}
+                data={carouselData}
+                renderItem={renderItem}
+                sliderWidth={width}
+                itemWidth={width}
+                onSnapToItem={(index:number) => setActiveSlide(index)}
+                loop={false}
+                vertical={false}
+            />
+            <Pagination
+                dotsLength={carouselData.length}
+                activeDotIndex={activeSlide}
+                containerStyle={styles.dotsContainer}
+                dotStyle={styles.dotStyle}
+                inactiveDotOpacity={0.4}
+                inactiveDotScale={0.6}
+            />
+        </ThemedView>
     );
-    const router = useRouter();
-
-    if(capture.photo)
-        {
-            return (
-                <ThemedView style={styles.pagerContainer}>
-                    <PagerView style={styles.imagesContainer} initialPage={0} onPageScroll={onPageScroll}>
-                       <SpecieImage key="1"/>
-                        <LoadingImageBackground 
-                            style={styles.image} 
-                            containerStyle={styles.imagesContainer} 
-                            imageStyle={styles.imagesContainer}
-                            width={width} height={width*9/16} 
-                            source={{uri:capture.photo}}
-                            key="2">
-                            <ThemedView style={styles.infoChip}>
-                                <ThemedText style={styles.text}>Votre photo</ThemedText>
-                            </ThemedView>
-                        </LoadingImageBackground>
-                    </PagerView>
-                    <ExpandingDot
-                        data={paginationData}
-                        scrollX={scrollX}
-                        inActiveDotOpacity={0.6}
-                        containerStyle={styles.dotsContainer}
-                        activeDotColor={Colors.light.tint}
-                        dotStyle={styles.dotStyle}/>
-                </ThemedView>
-            )
-        }
-    else {
-        return (
-            <ThemedView style={styles.imagesContainer}>
-               <SpecieImage/>
-            </ThemedView>
-        );
-    };
-};
-
-
+}
 
 const styles = StyleSheet.create({
-    pagerContainer:{
-        flex:1,
+    container: {
+        flex: 1,
     },
-    imagesContainer:{
-        width:width,
-        height:width*9/16,
+    image: {
+        width: width,
+        height: width * 9 / 16,
+        alignItems: "flex-start",
+        justifyContent: "flex-end",
     },
-    image:{
-        width:"100%",
-        height:"100%",
-        resizeMode:"contain",
-        alignItems:"flex-start",
-        justifyContent:"flex-end",
-    },
-    infoChip:{
-        backgroundColor: 'rgba(0, 0, 0, 0.7)',
-        margin:5,
+    infoChip: {
+        backgroundColor: "rgba(0, 0, 0, 0.7)",
+        margin: 5,
         padding: 5,
-        textAlign: 'center',
+        textAlign: "center",
         borderRadius: 10,
     },
-    dotStyle:{
+    text: {
+        color: "#fff",
+    },
+    scientificName: {
+
+        fontStyle: "italic",
+    },
+    backButton: {
+        position: "absolute",
+        top: 5,
+        left: 5,
+        padding: 3,
+        borderRadius: 5,
+        backgroundColor: "rgba(0, 0, 0, 0.5)",
+    },
+    dotStyle: {
         width: 10,
         height: 10,
-        backgroundColor: '#347af0',
         borderRadius: 5,
-        marginHorizontal: 5
+        marginHorizontal: 5,
+        backgroundColor: Colors.light.tint,
     },
-    dotsContainer:{
-        position: 'absolute',
-        bottom: 15,
-        alignSelf: 'center'
-    },
-    text:{
-        color:"#fff"
-    },
-    specieName:{
-        fontSize:18,
-        fontWeight: '600',
-    },
-    specieScientificName:{
-        fontSize:16,
-        fontStyle:"italic",
-    },
-    backButton:{
+    dotsContainer: {
         position: "absolute",
-        top: 0, 
-        left: 0, 
-        margin:5,
-        padding: 1, 
-        borderRadius: 5, 
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        bottom: 5,
+        alignSelf: "center",
     },
     overlay: {
         ...StyleSheet.absoluteFillObject, 
         backgroundColor: 'rgba(0, 0, 0, 0.75)', 
-        borderRadius: 10, 
     },
 });

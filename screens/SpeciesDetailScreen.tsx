@@ -4,7 +4,6 @@ import {ThemedText} from "@/components/ui/themed/ThemedText";
 import {ThemedView} from "@/components/ui/themed/ThemedView";
 import CaptureListItem from "@/components/encyclopedia/CaptureListItem";
 import CaptureDetails from "@/components/encyclopedia/CaptureDetails";
-import PagerView from 'react-native-pager-view';
 import SpeciesImagePager from "@/components/encyclopedia/SpeciesImagePager";
 import { useGetCaptureById } from "@/hooks/useGetCaptureById";
 import { SafeView } from "@/components/ui/SafeView";
@@ -27,11 +26,11 @@ export default function SpeciesDetailScreen({captureId}: SpeciesDetailScreenProp
         if(capture){
             if(capture.capturesDetails?.length > 0 ){
                 return capture.capturesDetails?.reduce((oldest, current) => {
-                   return current.date < oldest.date ? current : oldest;
-               })
-           }
+                    return current.date < oldest.date ? current : oldest;
+                })
+            }
         }
-        else return null;  
+        else return null;
     },[capture?.capturesDetails]);
 
     if(error){
@@ -123,17 +122,23 @@ export default function SpeciesDetailScreen({captureId}: SpeciesDetailScreenProp
                                 horizontal={true}
                             />
                         }
-                        
+
                     </ThemedView>
                     { capture.capturesDetails.length > 0 ?
                         <>
                             <ThemedView style={styles.section}>
                                 <ThemedText type={"defaultSemiBold"}>Vos captures :</ThemedText>
-                                <PagerView style={styles.capturesList} initialPage={0}>
-                                    {capture.capturesDetails.map((captureDetail) => (
-                                        <CaptureDetails captureDetail={captureDetail} key={`Capture-${captureDetail.id}`}/>
-                                    ))}
-                                </PagerView>
+                                <FlatList 
+                                    data={capture.capturesDetails}
+                                    renderItem={({item}) => (
+                                        <CaptureDetails captureDetail={item} />
+                                    )}
+                                    keyExtractor={(item) => `CaptureDetail-${item.id}`}
+                                    horizontal={true}
+                                    showsHorizontalScrollIndicator={false}
+                                />
+                                    
+                                
                             </ThemedView>
                             { oldestCapture &&
                                 <ThemedText style={styles.captureDate}>Date de capture : {oldestCapture.date.toLocaleDateString()}</ThemedText>
@@ -143,11 +148,11 @@ export default function SpeciesDetailScreen({captureId}: SpeciesDetailScreenProp
                         <ThemedView style={styles.section}>
                             <ThemedText style={styles.captureDate}>Vous n'avez pas encore capturé cette espèce. Regardez la carte plus haut pour voir où vous pouvez le trouver !</ThemedText>
                         </ThemedView>
-                }
+                    }
                 </ThemedView>
             </ScrollView>
         </SafeView>
-     
+
     );
 };
 
@@ -161,7 +166,6 @@ const styles = StyleSheet.create({
         padding:7,
         paddingHorizontal:10,
         borderBottomWidth:1,
-        maxHeight:500,
     },
     sectionRow:{
         flexDirection:"row",

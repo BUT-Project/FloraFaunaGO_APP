@@ -4,4 +4,5 @@ export default function Profil() {
     return (
         <ProfilScreen/>
     )
+
 }

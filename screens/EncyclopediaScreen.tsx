@@ -2,13 +2,12 @@
 import {ActivityIndicator, Button, FlatList, StyleSheet, View} from "react-native";
 import SpeciesSearchBar from "../components/encyclopedia/SpeciesSearchBar";
 import CaptureListItem from "@/components/encyclopedia/CaptureListItem";
-import { useState} from "react";
+import {useState} from "react";
 import {ThemedView} from "@/components/ui/themed/ThemedView";
 import {SafeView} from "@/components/ui/SafeView";
 import SpeciesFilterModal from "@/components/encyclopedia/SpeciesFilterModal";
 import {ThemedText} from "@/components/ui/themed/ThemedText";
-import { useGetCaptures } from "@/hooks/useGetCaptures";
-import React from "react";
+import {useGetCaptures} from "@/hooks/useGetCaptures";
 
 export default function EncyclopediaScreen() {
     const [name,setName] = useState("")
@@ -22,7 +21,7 @@ export default function EncyclopediaScreen() {
                 </ThemedView>
                 <SpeciesFilterModal baseSpecies={captures} setFilteredSpecies={()=>{}}/>
             </ThemedView>
-            { isLoading ? 
+            { isLoading ?
                 <ActivityIndicator size={"large"}/>
                 :
                 <FlatList
@@ -83,7 +82,7 @@ const styles = StyleSheet.create({
         alignItems:"center",
     },
     footer:{
-        flex: 1, 
+        flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
         marginVertical: 10

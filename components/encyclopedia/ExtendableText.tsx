@@ -1,8 +1,8 @@
-import React, { useState} from 'react';
-import { StyleSheet, Modal, Dimensions, TouchableOpacity, ScrollView, Pressable } from 'react-native';
-import { ThemedView } from '@/components/ui/themed/ThemedView';
-import { Ionicons } from '@expo/vector-icons';
-import { ThemedText } from '../ui/themed/ThemedText';
+import React, {useState} from 'react';
+import {Dimensions, Modal, Pressable, ScrollView, StyleSheet, TouchableOpacity} from 'react-native';
+import {ThemedView} from '@/components/ui/themed/ThemedView';
+import {Ionicons} from '@expo/vector-icons';
+import {ThemedText} from '../ui/themed/ThemedText';
 
 const { width } = Dimensions.get('window');
 
