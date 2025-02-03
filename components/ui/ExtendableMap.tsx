@@ -5,7 +5,7 @@ import {ThemedView} from '@/components/ui/themed/ThemedView';
 import Location from '@/model/Location';
 import {Ionicons} from '@expo/vector-icons';
 
-const { width, height } = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 
 export type ExtendableMapProps = { 
     locations: Location[],
@@ -37,13 +37,16 @@ export function ExtendableMap({ locations, mapStyle, style }: ExtendableMapProps
     return (
         <>
             <ThemedView style={style}>
-                <MapView
-                    style={mapStyle}
-                    initialRegion={initialRegion}
-                    onLongPress={() => setIsExtended(true)}
-                >
-                    {markers}
-                </MapView>
+                <Pressable onLongPress={() => setIsExtended(true)}>
+                    <MapView
+                        style={mapStyle}
+                        initialRegion={initialRegion}
+                        liteMode={true}
+                    >
+                        {markers}
+                    </MapView>
+                </Pressable>
+             
             </ThemedView>
             <Modal animationType="fade" transparent={true} visible={isExtended}>
                 <ThemedView style={styles.modal}>
@@ -53,6 +56,8 @@ export function ExtendableMap({ locations, mapStyle, style }: ExtendableMapProps
                     <MapView
                         style={styles.modalMap}
                         initialRegion={initialRegion}
+                        showsScale={true}
+                        showsCompass={true}
                     >
                         {markers}
                     </MapView>
@@ -72,7 +77,7 @@ const styles = StyleSheet.create({
     },
     modalMap: {
         width: width - 40, // Réduit la largeur pour laisser une marge
-        aspectRatio:0.9, // Prend 60% de la hauteur de l'écran
+        aspectRatio:0.7, 
         borderRadius: 15,
         overflow: 'hidden',
     },

@@ -1,35 +1,42 @@
 import React, { useState } from "react";
-import { ImageBackground, type ImageBackgroundProps } from "react-native";
+import { ImageBackground, type ImageBackgroundProps, StyleSheet } from "react-native";
 import Skeleton from "./Skeleton";
-
+import CrossPlatformBlur from "../CrossPlatformBlur";
 export type LoadingImageBackgroundProps = ImageBackgroundProps & {
     children: any;
     width: number;
     height: number;
+    isCaptured?:boolean;
 };
 
 export const LoadingImageBackground = ({ 
     children, 
     width, 
     height, 
-    source, // L'image principale passée en props
+    isCaptured,
+    source, 
     ...props 
 }: LoadingImageBackgroundProps) => {
     const [loading, setLoading] = useState(true);
-    const [imageSource, setImageSource] = useState(source); // Stocke l'image actuelle
+    const [imageSource, setImageSource] = useState(source); 
     const defaultImage = require("@/assets/images/AnimalImageNotFound.png");
 
     return (
             <ImageBackground
-                source={imageSource} // Image actuelle (par défaut la source initiale)
+                source={imageSource} 
                 onLoadEnd={() => setLoading(false)}
-                onError={() => { 
-                    setImageSource(defaultImage); // Bascule vers l'image de secours
-                }}
+                onError={() => setImageSource(defaultImage)}
                 {...props}
             >
+                {!loading && !isCaptured && <CrossPlatformBlur intensity={30} style={styles.blurOverlay} />}
                 {loading && <Skeleton width={width} height={height}/>}
                 {children}
             </ImageBackground>
     );
 };
+
+const styles = StyleSheet.create({
+    blurOverlay: {
+        ...StyleSheet.absoluteFillObject,
+    },
+});

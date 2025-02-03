@@ -15,7 +15,6 @@ const itemSize = (width / 3) - 10;
 
 export default function CaptureListItem({ capture }: CaptureListItemProps) {
     const isCaptured = React.useMemo(() => capture.capturesDetails.length > 0, [capture]);
-
     return (
         <Link
             href={{ params: { id: capture.id.toString() }, pathname: "/(tabs)/(encyclopedia)/[id]" }}
@@ -28,10 +27,8 @@ export default function CaptureListItem({ capture }: CaptureListItemProps) {
                         style={styles.image}
                         width={itemSize}
                         height={itemSize}
-                    >
-                        {/* Ajout de la superposition conditionnelle */}
-                        {!isCaptured && <ThemedView style={styles.overlay} />}
-                        
+                        isCaptured={isCaptured}
+                    >                        
                         <ThemedText style={styles.name}>
                             {capture.specie.name}
                         </ThemedText>
@@ -58,11 +55,6 @@ const styles = StyleSheet.create({
         color: 'white',
         backgroundColor: 'rgba(0, 0, 0, 0.35)',
         padding: 2,
-        textAlign:"center",
-    },
-    overlay: {
-        ...StyleSheet.absoluteFillObject, 
-        backgroundColor: 'rgba(0, 0, 0, 0.75)', 
-        borderRadius: 10, 
+        textAlign: "center",
     },
 });
