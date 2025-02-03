@@ -7,7 +7,6 @@ import { ThemedView } from "@/components/ui/themed/ThemedView";
 import { LoadingImageBackground } from "../ui/LoadingImageBackground";
 import { Colors } from "@/constants/Colors";
 import { useRouter } from "expo-router";
-import { BlurView } from 'expo-blur';
 import Capture from '@/model/Capture';
 
 
@@ -46,8 +45,8 @@ export default function SpeciesImageCarousel({ capture,isCaptured }: SpeciesImag
             width={width}
             height={width * 9 / 16}
             source={{ uri: item.image }}
+            isCaptured={!!isCaptured}
         >
-            {!isCaptured && <BlurView intensity={30} style={styles.blurOverlay} />}
             
             <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
                 <Ionicons name="chevron-back" size={30} color="#fff" />
@@ -125,7 +124,7 @@ const styles = StyleSheet.create({
     },
     dotsContainer: {
         position: "absolute",
-        bottom: 5,
+        top: 0,
         alignSelf: "center",
     },
     blurOverlay: {

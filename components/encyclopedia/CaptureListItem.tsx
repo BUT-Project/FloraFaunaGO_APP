@@ -5,7 +5,6 @@ import { ThemedText } from "@/components/ui/themed/ThemedText";
 import Capture from "@/model/Capture";
 import { Link } from "expo-router";
 import { LoadingImageBackground } from '../ui/LoadingImageBackground';
-import { BlurView } from 'expo-blur';
 
 type CaptureListItemProps = {
     capture: Capture;
@@ -16,7 +15,6 @@ const itemSize = (width / 3) - 10;
 
 export default function CaptureListItem({ capture }: CaptureListItemProps) {
     const isCaptured = React.useMemo(() => capture.capturesDetails.length > 0, [capture]);
-
     return (
         <Link
             href={{ params: { id: capture.id.toString() }, pathname: "/(tabs)/(encyclopedia)/[id]" }}
@@ -29,10 +27,8 @@ export default function CaptureListItem({ capture }: CaptureListItemProps) {
                         style={styles.image}
                         width={itemSize}
                         height={itemSize}
-                    >
-                        {/* Ajout du blur conditionnel */}
-                        {!isCaptured && <BlurView intensity={30} style={styles.blurOverlay} />}
-                        
+                        isCaptured={isCaptured}
+                    >                        
                         <ThemedText style={styles.name}>
                             {capture.specie.name}
                         </ThemedText>
@@ -60,9 +56,5 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0, 0, 0, 0.35)',
         padding: 2,
         textAlign: "center",
-    },
-    blurOverlay: {
-        ...StyleSheet.absoluteFillObject,
-        borderRadius: 10, // Garde l'arrondi des bords
     },
 });

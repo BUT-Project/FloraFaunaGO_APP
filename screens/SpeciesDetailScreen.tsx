@@ -44,7 +44,7 @@ export default function SpeciesDetailScreen({captureId}: SpeciesDetailScreenProp
     if(isLoading){
         return(
             <ThemedView style={styles.container}>
-                <ActivityIndicator  size={'large'}/>
+                <ActivityIndicator size={'large'}/>
             </ThemedView>
         );
     }
@@ -60,40 +60,45 @@ export default function SpeciesDetailScreen({captureId}: SpeciesDetailScreenProp
             <ScrollView>
                 <ThemedView style={styles.container}>
                     <SpeciesImagePager capture={capture} isCaptured={isCaptured}/>
-                    <ThemedView style={styles.sectionRow}>
-                        <ThemedView style={styles.halfVerticalContainer}>
-                            <ThemedView style={styles.infoRow}>
-                                <ThemedText>Reigne :</ThemedText>
-                                <ThemedText style={styles.bold}>{ isCaptured ? capture.specie.kingdom.toString() : "?"}</ThemedText>
+                    
+                    <ThemedView style={[styles.section,{gap:5}]}>
+                        <ThemedView style={styles.row}>
+                            <ThemedView style={styles.halfVerticalContainer}>
+                                <ThemedView style={styles.infoRow}>
+                                    <ThemedText>Reigne :</ThemedText>
+                                    <ThemedText style={styles.bold}>{ isCaptured ? capture.specie.kingdom.toString() : "?"}</ThemedText>
+                                </ThemedView>
+                                <ThemedView style={styles.infoRow}>
+                                    <ThemedText>Class :</ThemedText>
+                                    <ThemedText style={styles.bold}>{ isCaptured ? capture.specie.class.toString() : "?"}</ThemedText>
+                                </ThemedView>
+
                             </ThemedView>
-                            <ThemedView style={styles.infoRow}>
-                                <ThemedText>Class :</ThemedText>
-                                <ThemedText style={styles.bold}>{ isCaptured ? capture.specie.class.toString() : "?"}</ThemedText>
+                            <ThemedView style={styles.halfVerticalContainer}>
+                                <ThemedView style={styles.infoRow}>
+                                    <ThemedText>Famille :</ThemedText>
+                                    <ThemedText style={styles.bold}>{isCaptured ? capture.specie.family.toString() : "?"}</ThemedText>
+                                </ThemedView>
+                                <ThemedView style={styles.infoRow}>
+                                    <ThemedText>Régime :</ThemedText>
+                                    <ThemedText style={styles.bold}>{ isCaptured ? capture.specie.diet.toString() : "?"}</ThemedText>
+                                </ThemedView>
                             </ThemedView>
+                        </ThemedView>
+                            
                             <ThemedView style={styles.infoRow}>
                                 <ThemedText>Habitat :</ThemedText>
                                 <ThemedText style={styles.bold}>
                                     { isCaptured ? capture.specie.habitat.climate.toString() : "?"},
-                                     { isCaptured ? capture.specie.habitat.zone : "?"}
+                                    { isCaptured ? capture.specie.habitat.zone : "?"}
                                 </ThemedText>
                             </ThemedView>
 
-                        </ThemedView>
-                        <ThemedView style={styles.halfVerticalContainer}>
-                            <ThemedView style={styles.infoRow}>
-                                <ThemedText>Famille :</ThemedText>
-                                <ThemedText style={styles.bold}>{isCaptured ? capture.specie.family.toString() : "?"}</ThemedText>
-                            </ThemedView>
-                            <ThemedView style={styles.infoRow}>
-                                <ThemedText>Régime :</ThemedText>
-                                <ThemedText style={styles.bold}>{ isCaptured ? capture.specie.diet.toString() : "?"}</ThemedText>
-                            </ThemedView>
-                        </ThemedView>
                     </ThemedView>
 
                     <ThemedView style={styles.sectionRow}>
                         <ExtendableText 
-                            text={isCaptured ? capture.specie.description : "Capturez le pour en apprendre plus ! 🧐"} 
+                            text={isCaptured ? capture.specie.description : "Capturez-le pour en apprendre plus ! 🧐"} 
                             style={styles.descContainer} 
                             textStyle={styles.description} 
                         />
@@ -176,6 +181,10 @@ const styles = StyleSheet.create({
         paddingHorizontal:10,
         borderBottomWidth:1,
     },
+    row:{
+        flexDirection:"row",
+        gap:10,
+    },
     sectionRow:{
         flexDirection:"row",
         gap:10,
@@ -185,6 +194,7 @@ const styles = StyleSheet.create({
     },
     halfVerticalContainer:{
         flexDirection:"column",
+        gap:5,
         justifyContent:"flex-start",
         width:"50%"
     },
@@ -237,7 +247,7 @@ const styles = StyleSheet.create({
         height:itemSize,
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor: "#f9f9f9",
+        borderWidth:1,
         borderRadius: 10,
     },
 });
