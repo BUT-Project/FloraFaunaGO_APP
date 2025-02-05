@@ -1,25 +1,20 @@
 import Specie from "@/model/domain/Specie";
 import {create} from 'zustand';
-import StubData from "@/dal/StubLib/StubData";
 import { devtools } from 'zustand/middleware';
 
 export interface SpeciesState {
-    // State
     currentImageUri: string | null;
     identifiedSpecies: Specie | null;
     isLoading: boolean;
     error: Error | null;
 
-    // Actions
     setCurrentImageUri: (image: string) => void;
     setCurrentIdentifiedSpecies: (species: Specie) => void;
-    captureSpecies: () => void;
     resetState: () => void;
 }
 
-
 const initialState = {
-    currentImage: null,
+    currentImageUri: null,
     identifiedSpecies: null,
     isLoading: false,
     error: null,
@@ -30,38 +25,38 @@ export const useSpeciesStore = create<SpeciesState>()(
         (set, get) => ({
             ...initialState,
 
-            setCurrentImage: (image: string) => {
-                set({
-                    currentImageUri: image,
-                    error: null,
-                });
-            },
-
-            setCurrentIdentifiedSpecies: async (specie : Specie) => {
+            setCurrentIdentifiedSpecies: (specie: Specie) => {
                 const { currentImageUri } = get();
+                
                 if (!currentImageUri) {
-                    set({ error: new Error('Aucune image sélectionnée') });
+                    set((state) => ({
+                        ...state,
+                        error: new Error('Aucune image sélectionnée')
+                    }));
                     return;
                 }
-                set({
+
+                set((state) => ({
+                    ...state,
                     identifiedSpecies: specie,
-                });
+                    error: null
+                }));
+            },
+
+            setCurrentImageUri: (image: string) => {
+                console.log('Setting current image uri:', image);
+                set((state) => ({
+                    ...state,
+                    currentImageUri: image,
+                    error: null
+                }));
+                const { currentImageUri } = get();
+                console.log('Current identified species:', currentImageUri);
             },
 
             resetState: () => {
                 set(initialState);
-            },
-
-            setCurrentImageUri: (image: string) => {
-                set({
-                    currentImageUri: image,
-                    error: null,
-                });
             }
-        }),
-        {
-            name: 'species-store',
-            enabled: process.env.NODE_ENV === 'development',
-        }
+        })
     )
 );

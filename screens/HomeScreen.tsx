@@ -31,7 +31,6 @@ export default function HomeScreen() {
                 console.log('Permission to access location was denied');
                 return;
             }
-
             const location = await Location.getCurrentPositionAsync();
             setLocation(location);
         })();
@@ -114,15 +113,25 @@ export default function HomeScreen() {
     }
     const { setCurrentImageUri, setCurrentIdentifiedSpecies } = useSpeciesStore();
     useEffect(() => {
-        if (capturedImage && !showProgress && !isLoading && identifiedSpecie) {
-            setCurrentIdentifiedSpecies(identifiedSpecie);
-            setCurrentImageUri(capturedImage);
-            router.push({
-                pathname: '/capture',
-            });
+        async function updateStateAndNavigate() {
+            if (capturedImage && !showProgress && !isLoading && identifiedSpecie) {
+                try {
+                    setCurrentIdentifiedSpecies(identifiedSpecie);
+                    setCurrentImageUri(capturedImage);
+                    
+                    // Navigate after state is updated
+                    router.push({
+                        pathname: '/capture',
+                    });
+                } catch (error) {
+                    console.error('Error updating species state:', error);
+                    // Handle error appropriately
+                }
+            }
         }
-    }, [capturedImage, showProgress, isLoading, identifiedSpecie, router, location, base64Image]);
-
+    
+        updateStateAndNavigate();
+    }, [capturedImage, showProgress, isLoading, identifiedSpecie, router,setCurrentIdentifiedSpecies,setCurrentImageUri]);
 
     return (
         <SafeAreaView style={styles.container}>

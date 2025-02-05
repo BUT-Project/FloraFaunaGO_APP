@@ -246,8 +246,9 @@ export default function Capture() {
                     }}
                     onPress={() => {
                         captureDifficulty.value = Math.random();
-                        resetPokeball();
-                        setCaptureSuccess(false);
+                        // resetPokeball();
+                        onCapture();
+                        // setCaptureSuccess(false);
                     }}
                 >
                     <ThemedText>New Chance</ThemedText>
