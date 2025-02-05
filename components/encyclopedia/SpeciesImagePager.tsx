@@ -24,7 +24,7 @@ type SpeciesImageCarouselProps = {
 
 const { width } = Dimensions.get("window");
 
-export default function SpeciesImageCarousel({ capture,isCaptured }: SpeciesImageCarouselProps) {
+const  SpeciesImageCarousel = ({ capture, isCaptured }: SpeciesImageCarouselProps) => {
     const router = useRouter();
     const [activeSlide, setActiveSlide] = useState(0);
     const carouselRef = useRef<Carousel<any>>(null);
@@ -132,3 +132,5 @@ const styles = StyleSheet.create({
         borderRadius: 10, // Garde l'arrondi des bords
     },
 });
+
+export default SpeciesImageCarousel;

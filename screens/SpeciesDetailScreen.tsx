@@ -23,7 +23,7 @@ export default function SpeciesDetailScreen({captureId}: SpeciesDetailScreenProp
     const { capture,isLoading,error} = useGetCaptureById(captureId);
     const { captures:family,isLoading:isFamLoading,fetchMoreData,error:errorFam,isListEnd,isLoadingMore} = useGetCaptureByFamily(capture?.specie.family,capture?.id);
     
-    const isCaptured = useMemo(() => capture && capture.capturesDetails.length > 0, [capture]);
+    const isCaptured = React.useMemo(() => (capture?.capturesDetails ? capture.capturesDetails.length > 0 : false), [capture]);
     const oldestCapture = React.useMemo(() =>  {
         if(capture){
             if(capture.capturesDetails?.length > 0 ){
@@ -44,7 +44,7 @@ export default function SpeciesDetailScreen({captureId}: SpeciesDetailScreenProp
     if(isLoading){
         return(
             <ThemedView style={styles.container}>
-                <ActivityIndicator size={'large'}/>
+                <ActivityIndicator size={'large'} testID="loading-indicator"/>
             </ThemedView>
         );
     }
@@ -60,7 +60,6 @@ export default function SpeciesDetailScreen({captureId}: SpeciesDetailScreenProp
             <ScrollView>
                 <ThemedView style={styles.container}>
                     <SpeciesImagePager capture={capture} isCaptured={isCaptured}/>
-                    
                     <ThemedView style={[styles.section,{gap:5}]}>
                         <ThemedView style={styles.row}>
                             <ThemedView style={styles.halfVerticalContainer}>
