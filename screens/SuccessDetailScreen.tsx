@@ -32,13 +32,13 @@ export default function SuccessDetailScreen( { visible, onClose, sucess }: Suces
 
                         <ThemedView style={styles.progressContainer}>
                             <ThemedText style={styles.progressText}>
-                                Avancement : {sucess.avancement}%
+                                Avancement : {(sucess.actualVal/sucess.objectif * 100)}%
                             </ThemedText>
                             <ThemedView style={styles.progressBar}>
                                 <ThemedView
                                     style={[
                                         styles.progressFill,
-                                        { width: `${sucess.avancement}%` },
+                                        { width: `${(sucess.actualVal/sucess.objectif * 100)}%` },
                                     ]}
                                 />
                             </ThemedView>

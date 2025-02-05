@@ -100,25 +100,26 @@ const capture35 = new Capture(35, null, specie35, []);
 const capture36 = new Capture(36, null, specie36, []);
 
 
-const Success1: Success = new Success("Succès A", "checkmark-circle-outline", "Description du succès A", 25)
-const Success2: Success = new Success("Succès B", "checkmark-circle-outline", "Description du succès B", 50)
+const Success1: Success = new Success("Succès A", "checkmark-circle-outline", "Description du succès A", 25,50,"sucA")
+const Success2: Success = new Success("Succès B", "checkmark-circle-outline", "Description du succès B", 50,50,"sucB")
 
 
 export const SpecieList = [specie1,specie2,specie3,specie4,specie5,specie6];
 
 export const SuccessList = [
-    new Success("Maître des Animaux", "paw", "Débloqué en interagissant avec 50 animaux différents.", 25),
-    new Success("Pêcheur Expert", "fish", "Attrapez 30 poissons lors de vos aventures.", 50),
-    new Success("Chasseur de Trésors", "bug", "Trouvez et collectionnez 20 insectes rares.", 75),
-    new Success("Explorateur des Bois", "leaf", "Visitez 10 forêts ou réserves naturelles.", 90),
-    new Success("Naturaliste Accompli", "planet", "Complétez toutes les quêtes liées à la nature.", 100),
-    new Success("Dompteur d'Oiseaux", "paw", "Interagissez avec 15 espèces d'oiseaux sauvages.", 75),
-    new Success("Voyageur Aventurier", "airplane", "Voyagez dans 5 régions différentes.", 90),
-    new Success("Guide des Montagnes", "leaf", "Randonnez jusqu'au sommet de 3 montagnes.", 100),
-    new Success("Roi de la Forêt", "leaf", "Passez 50 heures à explorer les bois.", 75),
-    new Success("Maitre de l'air", "airplane", "Capturez 5 espèces d'oiseaux", 75),
-    new Success("Maitre de l'eau", "water", "Capturez 5 espèces marines", 75),
-    new Success("Voyageur", "walk", "Parcourez 10km", 75),
+    new Success("Photographe Amateur", "camera", "Capturez votre première photo.", 1,10, "unlockPhotographeAmateur"),
+    new Success("Maître des Animaux", "paw", "Débloqué en interagissant avec 50 animaux différents.", 20,50, "unlockMaîtreDesAnimaux"),
+    new Success("Pêcheur Expert", "fish", "Attrapez 30 poissons lors de vos aventures.", 15,30, "unlockPêcheurExpert"),
+    new Success("Chasseur de Trésors", "bug", "Trouvez et collectionnez 20 insectes rares.", 15,20, "unlockChasseurDeTrésors"),
+    new Success("Explorateur des Bois", "leaf", "Visitez 10 forêts ou réserves naturelles.", 9,10, "unlockExplorateurDesBois"),
+    new Success("Naturaliste Accompli", "planet", "Complétez toutes les quêtes liées à la nature.", 10,10, "unlockNaturalisteAccompli"),
+    new Success("Dompteur d'Oiseaux", "paw", "Interagissez avec 15 espèces d'oiseaux sauvages.", 10,15, "unlockDompteurDOiseaux"),
+    new Success("Voyageur Aventurier", "airplane", "Voyagez dans 5 régions différentes.", 4,5, "unlockVoyageurAventurier"),
+    new Success("Guide des Montagnes", "leaf", "Randonnez jusqu'au sommet de 3 montagnes.", 3,3, "unlockGuideDesMontagnes"),
+    new Success("Roi de la Forêt", "leaf", "Passez 50 heures à explorer les bois.", 40,50, "unlockRoiDeLaForet"),
+    new Success("Maitre de l'air", "airplane", "Capturez 5 espèces d'oiseaux.", 4,5, "unlockMaitreDeLair"),
+    new Success("Maitre de l'eau", "water", "Capturez 5 espèces marines.", 3,5, "unlockMaitreDeLeau"),
+    new Success("Voyageur", "walk", "Parcourez 10km.", 7,10, "unlockVoyageur"),
 ];
 
 export const UserList = [

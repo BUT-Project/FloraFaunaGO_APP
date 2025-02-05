@@ -32,7 +32,7 @@ export default function SucessListItemVertical(props:SucessListItemsProps){
                         <AnimatedCircularProgress
                             size={100}
                             width={10}
-                            fill={props.items.avancement}
+                            fill={((props.items.actualVal/props.items.objectif) * 100)}
                             tintColor="#2C9F54"
                             backgroundColor="#DADADA"
                             //padding={15}

@@ -15,14 +15,18 @@ import {useRouter} from "expo-router";
 import StubData from "@/dal/StubLib/StubData";
 import Specie from "@/model/domain/Specie";
 import {useSpeciesStore} from "@/context/zustand/strore/useSpeciesStore";
+import EventEmitter from "events";
+import {SuccessList} from "@/dal/StubLib/Data";
+import {Kingdom} from "@/model/domain/Kingdom";
 
 
 const {width: SCREEN_WIDTH} = Dimensions.get('window');
-
+const eventBus = new EventEmitter();
 export default function HomeScreen() {
     const { speciesRepository } = StubData.getInstance();
+    const { successRepository } = StubData.getInstance();
     const [location, setLocation] = useState<Location.LocationObject | null>(null);
-    const [unlockedSuccesses, setUnlockedSuccesses] = useState([]);
+    const [updateSuccesses, setUpdateSuccesses] = useState<string[]>([]);
 
 
     const router = useRouter();
@@ -49,14 +53,19 @@ export default function HomeScreen() {
     const [isCameraReady, setIsCameraReady] = useState(false);
     const [base64Image, setBase64Image] = useState<string | null>(null);
     const [activeView, setActiveView] = useState('camera');
-    const eventBus = new EventEmitter();
 
     const {isLoading, refetch, data: identifiedSpecie} = useQuery<Specie, Error>({
         queryKey: ['identifySpecie'],
         queryFn: async (): Promise<Specie> => {
             if (!speciesRepository) throw new Error('No Repository');
             if (!base64Image) throw new Error('No base64 image data');
-            return await speciesRepository.identifySpecies(base64Image);
+            var spec = await speciesRepository.identifySpecies(base64Image);
+            if((await successRepository?.getById("unlockMaîtreDesAnimaux"))?.objectif != (await successRepository?.getById("unlockMaîtreDesAnimaux"))?.actualVal && spec.kingdom == Kingdom.Animal)
+                eventBus.emit("unlockMaîtreDesAnimaux", "");
+            if(spec.habitat){
+
+            }
+            return spec
         },
         enabled: false,
     });
@@ -66,34 +75,32 @@ export default function HomeScreen() {
     }, []);
 
 
-
-
     useEffect(() => {
-      const photoSub = eventBus.addListener("photoCaptured", (photo) => {
-        setPhotoCount(prev => {
-          const newCount = prev + 1;
-          // Par exemple, débloquer le succès "Photographe Amateur" dès la première photo
-          if (newCount === 1) {
-            eventBus.emit("unlockPhotographeAmateur");
-          }
-          // Vous pouvez ajouter d'autres seuils ici pour d'autres succès
-          return newCount;
+        const listeners = SuccessList.map((success) => {
+
+            const callback = () => {
+                // Vérification de l'état de l'événement et mise à jour de `unlockedSuccesses`
+                if (!updateSuccesses.includes(success.event)) {
+                    setUpdateSuccesses(prev => [...prev, success.nom]);
+                    console.log("Succès avancer !", ` : ${success.nom}`);
+                }
+                success.actualVal +=1
+                successRepository?.update(success.nom,success)
+            };
+
+            // Ajout du listener
+            eventBus.addListener(success.event, callback);
+
+            return { event: success.event, callback };
         });
-      });
-      return () => photoSub.remove();
-    }, []);
 
-    useEffect(() => {
-      const subscriptions = SuccessList.map((success) =>
-        eventBus.addListener(success.eventName, () => {
-          if (!unlockedSuccesses.includes(success.title)) {
-            setUnlockedSuccesses(prev => [...prev, success.title]);
-            Alert.alert("Succès débloqué !", `Vous avez débloqué : ${success.title}`);
-          }
-        })
-      );
-      return () => subscriptions.forEach(sub => sub.remove());
-    }, [unlockedSuccesses]);
+        return () => {
+            listeners.forEach(({ event, callback }) => {
+                eventBus.removeListener(event, callback);
+            });
+        };
+    }, [updateSuccesses]); // Dépendance sur `unlockedSuccesses` pour re-exécuter l'effet lorsque l'état change
+
 
     const handleCapturePress = async () => {
         if (isLoading || !isCameraReady || !cameraRef.current) return;
@@ -103,7 +110,9 @@ export default function HomeScreen() {
             const photo = await cameraRef.current.takePictureAsync({base64: true});
             setCapturedImage(photo?.uri ?? null);
             setBase64Image(photo?.base64 ?? null);  // Store the base64 data
-            eventBus.emit("photoCaptured", photo);
+            if((await successRepository?.getById("unlockPhotographeAmateur"))?.objectif != (await successRepository?.getById("unlockPhotographeAmateur"))?.actualVal)
+                eventBus.emit("unlockPhotographeAmateur", photo);
+
             await refetch();
         } catch (error) {
             console.error('Error capturing image:', error);
