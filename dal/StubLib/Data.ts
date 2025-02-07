@@ -110,7 +110,7 @@ export const SuccessList = [
     new Success("Photographe Amateur", "camera", "Capturez votre première photo.", 1,10, "unlockPhotographeAmateur"),
     new Success("Maître des Animaux", "paw", "Débloqué en interagissant avec 50 animaux différents.", 20,50, "unlockMaîtreDesAnimaux"),
     new Success("Pêcheur Expert", "fish", "Attrapez 30 poissons lors de vos aventures.", 15,30, "unlockPêcheurExpert"),
-    new Success("Chasseur de Trésors", "bug", "Trouvez et collectionnez 20 insectes rares.", 15,20, "unlockChasseurDeTrésors"),
+    new Success("Chasseur d'insect", "bug", "Trouvez et collectionnez 20 insectes.", 15,20, "unlockChasseurDinsect"),
     new Success("Explorateur des Bois", "leaf", "Visitez 10 forêts ou réserves naturelles.", 9,10, "unlockExplorateurDesBois"),
     new Success("Naturaliste Accompli", "planet", "Complétez toutes les quêtes liées à la nature.", 10,10, "unlockNaturalisteAccompli"),
     new Success("Dompteur d'Oiseaux", "paw", "Interagissez avec 15 espèces d'oiseaux sauvages.", 10,15, "unlockDompteurDOiseaux"),
