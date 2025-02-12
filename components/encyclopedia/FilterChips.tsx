@@ -26,23 +26,27 @@ export default function FilterChips(props: FilterChipsProps) {
 
 const styles = StyleSheet.create({
     chip: {
-        height:30,
-        backgroundColor: 'white', // Correction de la faute de frappe
-        padding: 5,
-        borderWidth:1,
-        borderColor:"#000",
-        justifyContent:"center",
-        alignItems:"center",
+        height: 30,
+        backgroundColor: 'white',
+        paddingHorizontal: 10, // Utilise uniquement du padding horizontal pour éviter le décalage vertical
+        borderWidth: 1,
+        borderColor: "#000",
+        justifyContent: "center",
+        alignItems: "center",
         borderRadius: 10,
-        margin:2,
+        margin: 2,
     },
     selectedChip: {
         backgroundColor: '#000',
     },
-    name:{
-        color:'#000'
+    name: {
+        color: '#000',
+        textAlignVertical: "center", // Force le centrage vertical
+        lineHeight: 30, // Égale à la hauteur du chip pour un vrai centrage
     },
-    selectedName:{
-        color:'#FFF'
+    selectedName: {
+        color: '#FFF',
+        textAlignVertical: "center",
+        lineHeight: 30,
     }
 });

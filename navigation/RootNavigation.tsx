@@ -22,8 +22,13 @@ export default function RootNavigation() {
         <Tabs
             screenOptions={{
                 tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+                tabBarStyle: {
+                    backgroundColor: Colors[colorScheme ?? 'light'].background, // Adapte le fond en fonction du mode
+                    //borderTopColor: Colors[colorScheme ?? 'light'].vb, // Optionnel, pour éviter un contraste trop fort
+                },
                 headerShown: false,
-            }}>
+            }}
+            >
             <Tabs.Screen
                 name="(profil)"
                 options={{

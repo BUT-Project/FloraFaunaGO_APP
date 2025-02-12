@@ -204,6 +204,7 @@ const styles = StyleSheet.create({
         aspectRatio:1,
         overflow:"hidden",
         backgroundColor:"#000",
+    
     },
     description:{
         color:"#FFF",
