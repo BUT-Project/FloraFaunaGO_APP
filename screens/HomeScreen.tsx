@@ -15,13 +15,23 @@ import {useRouter} from "expo-router";
 import StubData from "@/dal/StubLib/StubData";
 import Specie from "@/model/domain/Specie";
 import {useSpeciesStore} from "@/context/zustand/strore/useSpeciesStore";
+import EventEmitter from "events";
+import {SuccessList} from "@/dal/StubLib/Data";
+import {Kingdom} from "@/model/domain/Kingdom";
+import {Class} from "@/model/domain/Class";
+import {Diet} from "@/model/domain/Diet";
+import {Family} from "@/model/domain/Family";
+import {TestSuccesParams} from "@/hooks/TestSuccesParams";
 
 
 const {width: SCREEN_WIDTH} = Dimensions.get('window');
-
+const eventBus = new EventEmitter();
 export default function HomeScreen() {
     const { speciesRepository } = StubData.getInstance();
+    const { successRepository } = StubData.getInstance();
     const [location, setLocation] = useState<Location.LocationObject | null>(null);
+    const [updateSuccesses, setUpdateSuccesses] = useState<string[]>([]);
+
 
     const router = useRouter();
     useEffect(() => {
@@ -53,14 +63,64 @@ export default function HomeScreen() {
         queryFn: async (): Promise<Specie> => {
             if (!speciesRepository) throw new Error('No Repository');
             if (!base64Image) throw new Error('No base64 image data');
-            return await speciesRepository.identifySpecies(base64Image);
+            var spec = await speciesRepository.identifySpecies(base64Image);
+            await TestSucces({ name: "unlockMaîtreDesAnimaux", spec, kg: Kingdom.Animal });
+            await TestSucces({ name: "unlockPêcheurExpert", spec, cl: Class.Fish });
+            await TestSucces({ name: "unlockMaitreDeLair", spec, kg: Kingdom.Animal,cl:Class.Birds });
+            await TestSucces({ name: "unlockChasseurDinsect", spec,cl:Class.Insects, });
+
+            return spec
         },
         enabled: false,
     });
 
+    const TestSucces = async  ({ name, spec, cl, kg, dt, fm }: TestSuccesParams) => {
+        if (!successRepository || !spec) return;
+        const success = await successRepository.getById(name);
+        if (!success) return;
+        if (
+            (cl && cl !== spec.class) ||
+            (kg && kg !== spec.kingdom) ||
+            (dt && dt !== spec.diet) ||
+            (fm && fm !== spec.family)
+        ) {
+            return; // Si une condition est fausse, on ne déclenche pas l'événement
+        }
+        if (success.objectif !== success.actualVal) {
+            eventBus.emit(name, "");
+        }
+    };
     const handleCameraReady = useCallback(() => {
         setIsCameraReady(true);
     }, []);
+
+
+    useEffect(() => {
+        const listeners = SuccessList.map((success) => {
+
+            const callback = () => {
+                // Vérification de l'état de l'événement et mise à jour de `unlockedSuccesses`
+                if (!updateSuccesses.includes(success.event)) {
+                    setUpdateSuccesses(prev => [...prev, success.nom]);
+                    console.log("Succès avancer !", ` : ${success.nom}`);
+                }
+                success.actualVal +=1
+                successRepository?.update(success.nom,success)
+            };
+
+            // Ajout du listener
+            eventBus.addListener(success.event, callback);
+
+            return { event: success.event, callback };
+        });
+
+        return () => {
+            listeners.forEach(({ event, callback }) => {
+                eventBus.removeListener(event, callback);
+            });
+        };
+    }, [updateSuccesses]); // Dépendance sur `unlockedSuccesses` pour re-exécuter l'effet lorsque l'état change
+
 
     const handleCapturePress = async () => {
         if (isLoading || !isCameraReady || !cameraRef.current) return;
@@ -70,6 +130,8 @@ export default function HomeScreen() {
             const photo = await cameraRef.current.takePictureAsync({base64: true});
             setCapturedImage(photo?.uri ?? null);
             setBase64Image(photo?.base64 ?? null);  // Store the base64 data
+            if((await successRepository?.getById("unlockPhotographeAmateur"))?.objectif != (await successRepository?.getById("unlockPhotographeAmateur"))?.actualVal)
+                eventBus.emit("unlockPhotographeAmateur", photo);
             await refetch();
         } catch (error) {
             console.error('Error capturing image:', error);

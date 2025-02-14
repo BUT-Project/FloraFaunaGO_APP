@@ -26,14 +26,14 @@ export default class StubSucess  implements ISuccessRepository {
     }
 
 
-    getById(nom?: string): Promise<Success> {
+
+    getById(event?: string): Promise<Success> {
         return new Promise((resolve) => {
-            const suc = this.Sucesses.find(suc => suc.nom == nom)
+            const suc = this.Sucesses.find(suc => suc.event == event)
             if(suc !== undefined) {
                 resolve(suc)
             }
         });
-
     }
     public async getAll(request: PagedRequest): Promise<PagingResult<Success>> {
         const startIndex = (request.index - 1) * request.count;
