@@ -13,18 +13,11 @@ import Capture from "@/model/domain/Capture";
 
 export default function EncyclopediaScreen() {
     const [name,setName] = useState("")
-    const [userCaptures, setUserCaptures] = useState<Capture[]>([]);
 
     const {species=[],isLoading,isLoadingMore,error,isListEnd,refresh,fetchMoreData} = useGetSpecies(20,"")
-    const user = useAuthStore((state) => state.user);
-    if(!user) throw new Error("User not found");// [Dave] [TODO] should not do that
+    const userCaptures = useAuthStore((state) => state.user?.captures);
+    //if(!user) throw new Error("User not found");// [Dave] [TODO] should not do that
 
-    useEffect(() => {
-        console.log("===============Changes==============");
-        if (user && user.captures) {
-            setUserCaptures(user.captures);
-        }
-    }, [user.captures]);
 
     return (
         <SafeView>
@@ -45,7 +38,7 @@ export default function EncyclopediaScreen() {
                     data={species}
                     keyExtractor={capture => capture.id?.toString()}
                     renderItem={({item}) =>
-                        <SpecieListItem specie={item} captureId={(userCaptures.find((capture)=> capture.specie == item)?.id) ?? null}/>
+                        <SpecieListItem specie={item} captureId={(userCaptures?.find((capture)=> capture.specie == item)?.id) ?? null}/>
                     }
                     ListEmptyComponent={() => (
                         <View style={styles.empty}>

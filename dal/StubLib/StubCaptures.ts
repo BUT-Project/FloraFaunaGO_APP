@@ -130,6 +130,7 @@ export default class StubCaptures implements ICaptureRepository {
                 console.log("On ajoute une capture des captures", newCapture, user.captures);
 
                 user.captures.push(newCapture);
+                this.Captures.push(newCapture);
             }
 
             resolve();

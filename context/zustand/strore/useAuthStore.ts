@@ -16,7 +16,17 @@ interface AuthState {
 
 const AUTH_TOKEN_KEY = 'auth_token';
 const REMEMBER_ME_KEY = 'remember_me';
-
+const debugUserChanges = (prevState: AuthState, nextState: AuthState) => {
+    if (prevState.user !== nextState.user) {
+        console.group('🔍 User State Change Detected');
+        console.log('Previous User:', prevState.user);
+        console.log('Next User:', nextState.user);
+        console.log('Authentication Status:', nextState.isAuthenticated);
+        console.log('Remember Me:', nextState.rememberMe);
+        console.log('Timestamp:', new Date().toISOString());
+        console.groupEnd();
+    }
+};
 export const useAuthStore = create<AuthState>((set, get) => ({
     user: null,
     isAuthenticated: false,
@@ -94,4 +104,10 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         set({rememberMe: value});
     },
 }));
+
+// Subscribe to state changes
+useAuthStore.subscribe(
+    (state, prevState) => debugUserChanges(prevState as AuthState, state as AuthState)
+);
+
 

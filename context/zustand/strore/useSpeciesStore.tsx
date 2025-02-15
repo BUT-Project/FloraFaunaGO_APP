@@ -4,6 +4,8 @@ import { devtools } from 'zustand/middleware';
 import {useAuthStore} from "@/context/zustand/strore/useAuthStore";
 import StubData from "@/dal/StubLib/StubData";
 import Location from "@/model/domain/Location";
+import CaptureDetail from "@/model/domain/CaptureDetail";
+import Capture from "@/model/domain/Capture";
 export interface SpeciesState {
     currentImageUri: string | null;
     identifiedSpecies: Specie | null;
@@ -86,7 +88,60 @@ export const useSpeciesStore = create<SpeciesState>()(
                     set((state) => ({ ...state, isLoading: true }));
                     console.log("Get started")
                     const { captureRepository } = StubData.getInstance();
+                    // [TODO] BOYYY
                     await captureRepository?.addSpecieToUser(authStore.user.id, specie,currentLocation,currentImageUri);
+
+                    if (!authStore.user.captures) {
+                        authStore.user.captures = [];
+                    }
+
+                    // Check if species is already added
+                    const specieInUserCaptures = authStore.user.captures.find(s => s.id === specie.id);
+
+                    const newCaptureDetail = new CaptureDetail(
+                        Date.now(),
+                        new Date(),
+                        false, // Default shiny value [TODO]
+                        currentLocation
+                    );
+                    if (specieInUserCaptures) {
+                        useAuthStore.setState((state) => {
+                            if (!state.user) return state;
+                            return {
+                                ...state,
+                                user: {
+                                    ...state.user,
+                                    captures: state.user.captures.map(capture =>
+                                        capture.id === specieInUserCaptures.id
+                                            ? {
+                                                ...capture,
+                                                capturesDetails: [...capture.capturesDetails, newCaptureDetail]
+                                            }
+                                            : capture
+                                    )
+                                }
+                            };
+                        });
+                    } else {
+                        const newCapture = new Capture(
+                            Date.now(),
+                            currentImageUri,
+                            specie,
+                            [newCaptureDetail]
+                        );
+                        console.log("On ajoute une capture des captures", newCapture, authStore.user.captures);
+                        useAuthStore.setState((state) => {
+                            if (!state.user) return state;
+                            return {
+                                ...state,
+                                user: {
+                                    ...state.user,
+                                    captures: [...(state.user.captures || []), newCapture]
+                                }
+                            };
+                        });
+                        authStore.user.captures.push(newCapture);
+                    }
                     console.log(`Species ${specie.id} added to user ${authStore.user.id}`);
                 } catch (error) {
                     console.error('Error adding species to user:', error);
