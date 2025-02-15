@@ -16,11 +16,6 @@ const { width } = Dimensions.get('window');
 const itemSize = (width / 3) - 10;
 
 export default function SpecieListItem({ specie, captureId }: CaptureListItemProps) {
-    console.log("==============================");
-    console.log("Specie", specie.id);
-    console.log("capture",captureId);
-    console.log("==============================");
-
     return (
         <Link
             href={{ params: { specieId: specie.id.toString(), capturedId: captureId?.toString() ?? undefined}, pathname: "/(tabs)/(encyclopedia)/[id]" }}

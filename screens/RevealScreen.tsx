@@ -171,7 +171,7 @@ export default function RevealScreen({specie}: RevealScreenProps) {
                                        onAnimationComplete={
                                            () => {
                                                thumbRef.current?.measure((x, y, width, height, px, py) => {
-                                                   setThumbPosition({x: px, y: py});
+                                                   setThumbPosition({x: x, y: y});
                                                });
                                            }
                                        }
