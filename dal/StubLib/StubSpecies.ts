@@ -149,8 +149,29 @@ export default class StubSpecies implements ISpeciesRepository {
     }
     public async identifySpecies(imageBase64: string): Promise<Specie> {
         try {
-            // const response = await this.makeApiRequest(imageBase64);
-            // return await this.processApiResponse(response);
+            const response = await this.makeApiRequest(imageBase64);
+            // ======= API =======
+ /**           const newSpecie = await this.processApiResponse(response);
+
+            // Check if species already exists in the list by scientific name
+            const existingSpecie = this.Species.find(
+                specie => specie.scientificName.toLowerCase() === newSpecie.scientificName.toLowerCase()
+            );
+
+            if (!existingSpecie) {
+                // Generate a new ID (use the maximum existing ID + 1)
+                const maxId = Math.max(...this.Species.map(s => s.id), 0);
+                newSpecie.id = maxId + 1;
+
+                // Add the new species to the list
+                await this.create(newSpecie);
+                return newSpecie;
+            }
+
+            return existingSpecie;
+     **/
+            // ======= Stub sa retourne le lion =======
+
             return this.Species[0];
         } catch (error) {
             console.error('Error identifying species:', error);
