@@ -14,6 +14,7 @@ export type ExtendableTextProps = {
 
 export function ExtendableText({ text, textStyle, style }: ExtendableTextProps) {
     const [isExtended, setIsExtended] = useState(false);
+    
 
     return (
         <>

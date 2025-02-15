@@ -31,7 +31,7 @@ export default function ProfilScreen() {
             }
             const response = await successRepository?.getAll(PageRequest);
             setSuccesses(response?.items ?? []);
-            setTotalPages(Math.ceil(response?.total ?? 1 / 9));
+            setTotalPages(Math.ceil(response!.total/ 9));
         } catch (error) {
             console.error('Erreur lors de la récupération des succès :', error);
         } finally {

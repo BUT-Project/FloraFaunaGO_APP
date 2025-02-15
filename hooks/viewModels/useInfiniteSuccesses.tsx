@@ -60,7 +60,7 @@ export function useInfiniteSuccesses(
     const filterByProgress = useCallback((minProgress: number, maxProgress: number) => {
         setProgressRange({min: minProgress, max: maxProgress});
         queryResult.setFilter((success) =>
-            success.avancement >= minProgress && success.avancement <= maxProgress
+            success.actualVal >= minProgress && success.actualVal <= maxProgress
         );
     }, [queryResult]);
 
@@ -76,7 +76,7 @@ export function useInfiniteSuccesses(
     }, [queryResult]);
 
     const sortByProgress = useCallback((descending: boolean = false) => {
-        queryResult.setOrdering('avancement', descending);
+        queryResult.setOrdering('actualVal', descending);
     }, [queryResult]);
 
     return {
