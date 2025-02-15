@@ -21,7 +21,6 @@ export default class StubAuth implements IAuthService{
         });
     }
     register(email: string, password: string): Promise<User> {
-        console.log(email)
         return new Promise((resolve, reject) => {
             const existingUser = this.Users.find(user => user.email === email);
 

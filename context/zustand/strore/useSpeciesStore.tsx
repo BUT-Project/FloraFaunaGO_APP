@@ -34,10 +34,7 @@ export const useSpeciesStore = create<SpeciesState>()(
 
             setCurrentIdentifiedSpecies: (specie: Specie) => {
                 const { currentImageUri } = get();
-                console.log('Setting current specie:', specie);
-
                 if (!currentImageUri) {
-                    console.log("Current image uri: " + currentImageUri);
                     set((state) => ({
                         ...state,
                         error: new Error('Aucune image sélectionnée')
@@ -53,21 +50,17 @@ export const useSpeciesStore = create<SpeciesState>()(
             },
 
             setCurrentImageUri: (image: string) => {
-                console.log('Setting current image uri:', image);
                 set((state) => ({
                     ...state,
                     currentImageUri: image,
                     error: null
                 }));
-                const { currentImageUri } = get();
-                console.log('Current identified species:', currentImageUri);
             },
             addSpecieToUser: async (specie: Specie, currentLocation : Location) => {
-                console.log('Adding Specie to user:', specie);
                 try {
                     const { currentImageUri } = get();
                     if (!currentImageUri) {
-                        console.log("Current image uri: " + currentImageUri);
+                        console.log("Aucune image sélectionnée pour l\"ajout à utilisateur Current image uri: " + currentImageUri);
                         set((state) => ({
                             ...state,
                             error: new Error('Aucune image sélectionnée pour l"ajout à utilisateur')
@@ -86,7 +79,7 @@ export const useSpeciesStore = create<SpeciesState>()(
                     }
 
                     set((state) => ({ ...state, isLoading: true }));
-                    console.log("Get started")
+
                     const { captureRepository } = StubData.getInstance();
                     // [TODO] BOYYY
                     await captureRepository?.addSpecieToUser(authStore.user.id, specie,currentLocation,currentImageUri);
@@ -129,7 +122,6 @@ export const useSpeciesStore = create<SpeciesState>()(
                             specie,
                             [newCaptureDetail]
                         );
-                        console.log("On ajoute une capture des captures", newCapture, authStore.user.captures);
                         useAuthStore.setState((state) => {
                             if (!state.user) return state;
                             return {

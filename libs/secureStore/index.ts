@@ -25,9 +25,7 @@ export async function setStorageItemAsync(key: string, value: string | null) {
 
 export function useStorageState(key: string): UseStateHook<string> {
     const [state, setState] = useAsyncState<string>();
-console.log("Storage state", state);
     useEffect(() => {
-        console.log('SecureStore useStorageState', state);
         if (Platform.OS === 'web') {
             try {
                 if (typeof localStorage !== 'undefined') {

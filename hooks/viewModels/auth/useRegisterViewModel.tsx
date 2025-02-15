@@ -53,12 +53,11 @@ export const useRegisterViewModel = (
                 password: password,
                 name: username
             };
-            console.log("helllooo")
-            const { register } = useAuthStore();
+            const register = useAuthStore((state) => state.register);
 
             await register(email, password);
             const result = await repository?.register(credentials.email, credentials.password);
-            console.log(result);
+
             if (result) {
                 setFailedSignup(false);
                 router.replace('/(tabs)');

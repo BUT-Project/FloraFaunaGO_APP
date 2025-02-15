@@ -77,7 +77,6 @@ export default function RevealScreen({specie}: RevealScreenProps) {
     const handleScreenPress = () => {
         if (animationCompleted.value) {
             indicatorOpacity.value = withTiming(0, {duration: 300});
-            console.log("Screen clicked and indicator hidden!");
         }
     };
 
