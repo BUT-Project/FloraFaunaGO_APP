@@ -8,8 +8,8 @@ export default class StubAuth implements IAuthService{
 
     constructor(public Users: User[]) {
     }
-    login(username: string, password: string): Promise<User> {
-        const user = this.Users.find(u => u.username.toLocaleLowerCase() == username);
+    login(email: string, password: string): Promise<User> {
+        const user = this.Users.find(u => u.email.toLocaleLowerCase() == email);
         return new Promise((resolve, reject) => {
             if (user !== undefined) {
                 this.currentUser = user;

@@ -3,7 +3,7 @@ import {Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {Link} from "expo-router";
 import normalize from "@/components/ui/responsive/Normalize";
 import {InputWithIcon} from "@/components/ui/InputWithIcon";
-import {useRegisterViewModel} from "@/hooks/viewModels/register/useRegisterViewModel";
+import {useRegisterViewModel} from "@/hooks/viewModels/auth/useRegisterViewModel";
 import StubData from "@/dal/StubLib/StubData";
 import {Entypo} from "@expo/vector-icons";
 

@@ -10,6 +10,7 @@ import {Diet} from "@/model/domain/Diet";
 import {Kingdom} from "@/model/domain/Kingdom";
 import {Class} from "@/model/domain/Class";
 import {Family} from "@/model/domain/Family";
+import Capture from "@/model/domain/Capture";
 
 interface KindWiseResponse {
     result: {
@@ -132,6 +133,20 @@ export default class StubSpecies implements ISpeciesRepository {
         });
     }
 
+    getByFamily(family: Family, page: number = 1, pageSize: number = 10, selfId?: number): Promise<PagingResult<Specie>> {
+        return new Promise((resolve) => {
+            const startIndex = (page - 1) * pageSize;
+            const endIndex = startIndex + pageSize;
+            const items = this.Species.filter((capture) =>
+                capture.family === family &&
+                (selfId === undefined || capture.id !== selfId)
+            );
+            const pageItems = items.slice(startIndex, endIndex);
+            const total = items.length;
+            const pagingResult = new PagingResult<Specie>(page, pageItems.length, total, pageItems);
+            resolve(pagingResult);
+        });
+    }
     public async identifySpecies(imageBase64: string): Promise<Specie> {
         try {
             // const response = await this.makeApiRequest(imageBase64);
@@ -239,8 +254,8 @@ export default class StubSpecies implements ISpeciesRepository {
         };
         return familyMap[familyName] || Family.Scarabaeidae;
     }
-
-    private inferDiet(classification: KindWiseResponse['result'][0]['classification']): Diet {
+    // [TODO] Dave
+/*    private inferDiet(classification: KindWiseResponse['result'][0]['classification']): Diet {
         // This is a simple inference based on order/family
         // You might want to enhance this with more detailed logic
         const orderDietMap: { [key: string]: Diet } = {
@@ -250,5 +265,5 @@ export default class StubSpecies implements ISpeciesRepository {
             'Hymenoptera': Diet.Omnivores
         };
         return orderDietMap[classification.order] || Diet.Omnivores;
-    }
+    }*/
 }

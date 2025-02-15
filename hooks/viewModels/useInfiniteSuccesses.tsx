@@ -2,7 +2,7 @@
 import {Success} from "@/model/domain/Success";
 import {ISuccessRepository, SuccessFilterPredicate} from "@/model/service/ISuccessRepository";
 import {useCallback, useState} from "react";
-import {useInfiniteData} from "@/hooks/useInfiniteData";
+import {useInfiniteData} from "@/hooks/viewModels/useInfiniteData";
 import {BaseInfiniteOptions, BaseInfiniteResult} from "@/hooks/types";
 
 interface SuccessFilterState {

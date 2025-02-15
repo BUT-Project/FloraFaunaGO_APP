@@ -2,20 +2,47 @@ import {ThemedText} from "@/components/ui/themed/ThemedText";
 import {ThemedView} from "@/components/ui/themed/ThemedView";
 import SpeciesDetailScreen from "@/screens/SpeciesDetailScreen";
 import {useLocalSearchParams} from "expo-router";
+import {useGetById} from "@/hooks/viewModels/useGetById";
+import StubData from "@/dal/StubLib/StubData";
+import Capture from "@/model/domain/Capture";
+import Specie from "@/model/domain/Specie";
 
 export default function details() {
-    const {id} = useLocalSearchParams();
-    const captureId = typeof id === 'string' ? parseInt(id) : NaN;
-
+    const {specieId,capturedId} = useLocalSearchParams();
+    const captureId = typeof capturedId === 'string' ? parseInt(capturedId) : NaN;
+    const specieId2 = typeof specieId === 'string' ? parseInt(specieId) : NaN;
+    console.log("77777777777777777",specieId,capturedId);
     // Vérification : Si `id` est absent ou invalide
-    if (isNaN(captureId)) {
+    if (isNaN(specieId2)) {
         return (
             <ThemedView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                 <ThemedText>Paramètre `id` manquant ou invalide !</ThemedText>
             </ThemedView>
         );
     }
+    const { captureRepository , speciesRepository} = StubData.getInstance();
+
+    if(!captureRepository) {
+        throw new Error("captureRepository not found!");
+    }
+    if(!speciesRepository) {
+        throw new Error("speciesRepository not found!");
+    }
+    const { item: capture,isLoading:isCaptureLoading,error:errorCapture} = useGetById<Capture>(captureId,captureRepository);
+    const { item:specie,isLoading: isSpecieLoading,error:errorSpecie} = useGetById<Specie>(specieId2,speciesRepository);
+    console.log("Detail", capture);
+    console.log("Detail", specie);
+
+    if (!specie) {
+        return (
+            <ThemedView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                <ThemedText type={'subtitle'}>Espèce introuvalble...</ThemedText>
+            </ThemedView>
+        );
+    }
+    const isLoading = (specie && isSpecieLoading) || (capture && isCaptureLoading);
+
     return (
-        <SpeciesDetailScreen captureId={captureId} />
+        <SpeciesDetailScreen specie={specie} capture={capture} isLoading={isLoading || isSpecieLoading}/>
     );
 }

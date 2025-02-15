@@ -16,7 +16,7 @@ const [upperLimit, lowerLimit] = [center.y - 200, center.y + 100];
 const POKEBALL_BASE_SIZE = 50;
 
 export default function Capture() {
-    const {currentImageUri: imageUri} = useSpeciesStore();
+    const imageUri = useSpeciesStore((state) => state.currentImageUri);
 
     const router = useRouter();
     const clock = useClock();

@@ -111,14 +111,14 @@ export default function HomeScreen() {
             </View>
         );
     }
-    const { setCurrentImageUri, setCurrentIdentifiedSpecies } = useSpeciesStore();
+    const setCurrentImageUri = useSpeciesStore((state) => state.setCurrentImageUri);
+    const setCurrentIdentifiedSpecies = useSpeciesStore((state) => state.setCurrentIdentifiedSpecies)
     useEffect(() => {
         async function updateStateAndNavigate() {
             if (capturedImage && !showProgress && !isLoading && identifiedSpecie) {
                 try {
-                    setCurrentIdentifiedSpecies(identifiedSpecie);
                     setCurrentImageUri(capturedImage);
-                    
+                    setCurrentIdentifiedSpecies(identifiedSpecie);
                     // Navigate after state is updated
                     router.push({
                         pathname: '/capture',

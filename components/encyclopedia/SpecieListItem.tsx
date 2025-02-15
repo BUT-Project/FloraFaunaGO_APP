@@ -5,32 +5,34 @@ import {ThemedText} from "@/components/ui/themed/ThemedText";
 import Capture from "@/model/domain/Capture";
 import {Link} from "expo-router";
 import {LoadingImageBackground} from '../ui/LoadingImageBackground';
+import Specie from "@/model/domain/Specie";
 
 type CaptureListItemProps = {
-    capture: Capture;
+    specie: Specie;
+    captureId: number|null;
 };
 
 const { width } = Dimensions.get('window');
 const itemSize = (width / 3) - 10;
 
-export default function CaptureListItem({ capture }: CaptureListItemProps) {
-    const isCaptured = React.useMemo(() => capture.capturesDetails.length > 0, [capture]);
+export default function SpecieListItem({ specie, captureId }: CaptureListItemProps) {
+    console.log("))))))))))))))",captureId);
     return (
         <Link
-            href={{ params: { id: capture.id.toString() }, pathname: "/(tabs)/(encyclopedia)/[id]" }}
+            href={{ params: { specieId: specie.id.toString(), capturedId: captureId?.toString() ?? undefined}, pathname: "/(tabs)/(encyclopedia)/[id]" }}
             asChild
         >
             <TouchableOpacity>
                 <ThemedView style={styles.container}>
                     <LoadingImageBackground
-                        source={{ uri: capture.specie.image }}
+                        source={{ uri: specie.image }}
                         style={styles.image}
                         width={itemSize}
                         height={itemSize}
-                        isCaptured={isCaptured}
+                        isCaptured={captureId !== null}
                     >                        
                         <ThemedText style={styles.name}>
-                            {capture.specie.name}
+                            {specie.name}
                         </ThemedText>
                     </LoadingImageBackground>
                 </ThemedView>

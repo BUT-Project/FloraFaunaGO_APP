@@ -1,12 +1,14 @@
 import {useEffect, useState} from "react";
 import StubData from "@/dal/StubLib/StubData";
 import Capture from "@/model/domain/Capture";
+import {GenericRepository} from "@/model/service/IGenericRepository";
 
-export function useGetCaptureById(
+export function useGetById<T>(
   id: number,
+  repository: GenericRepository<T>
 ) {
     const [isLoading, setIsLoading] = useState(false);
-    const [capture, setCapture] = useState<Capture | null>(null); 
+    const [item, setCapture] = useState<T | null>(null);
     const [error, setError] = useState<unknown>(null);
     
     useEffect(() => {
@@ -15,8 +17,7 @@ export function useGetCaptureById(
         setIsLoading(true);
         setError(null);
         try {
-            const { captureRepository } = StubData.getInstance();
-            const result = await captureRepository?.getById(id);
+            const result = await repository?.getById(id);
             if(result != undefined)
             setCapture(result);
         } catch (err) {
@@ -29,8 +30,9 @@ export function useGetCaptureById(
     }, [id]); 
 
     return {
-        capture,
+        item,
         isLoading,
         error,
     };
 }
+

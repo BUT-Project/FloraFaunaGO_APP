@@ -5,7 +5,7 @@ import {StyleSheet, Text} from "react-native";
 import Animated, {useAnimatedStyle, withSpring} from "react-native-reanimated";
 import {useColorScheme} from "@/hooks/useColorScheme";
 import {useContext, useEffect, useState} from "react";
-import {useAuthStore} from "@/context/zustand/strore/AuthStore";
+import {useAuthStore} from "@/context/zustand/strore/useAuthStore";
 import {UploadContext} from "@/context/UploadContext";
 
 export default function RootNavigation() {

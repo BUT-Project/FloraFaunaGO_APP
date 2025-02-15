@@ -10,9 +10,10 @@ import {Class} from "@/model/domain/Class";
 import {Family} from "@/model/domain/Family";
 import {Diet} from "@/model/domain/Diet";
 import {useThemeColor} from "@/hooks/useThemeColor";
+import Specie from "@/model/domain/Specie";
 
 type SpeciesFilterProps={
-    baseSpecies:Capture[],
+    baseSpecies:Specie[],
     setFilteredSpecies:any;
 }
 
@@ -32,7 +33,7 @@ export default function SpeciesFilterModal(props: SpeciesFilterProps){
         }
         else{
             setKingdom(newKingdom);
-            props.setFilteredSpecies(props.baseSpecies.filter((item) => { item.specie.kingdom === newKingdom}))
+            props.setFilteredSpecies(props.baseSpecies.filter((item) => { item.kingdom === newKingdom}))
         }
     }
     const onClassChange = (newClass:Class) => {
@@ -42,7 +43,7 @@ export default function SpeciesFilterModal(props: SpeciesFilterProps){
         }
         else{
             setBioClass(newClass);
-            props.setFilteredSpecies(props.baseSpecies.filter((item) => {return item.specie.class == bioClass;}))
+            props.setFilteredSpecies(props.baseSpecies.filter((item) => {return item.class == bioClass;}))
         }
     }
     const onFamilyChange = (newFamily:Family) => {
@@ -52,7 +53,7 @@ export default function SpeciesFilterModal(props: SpeciesFilterProps){
         }
         else{
             setFamily(newFamily);
-            props.setFilteredSpecies(props.baseSpecies.filter((item) => {return item.specie.family === family;}))
+            props.setFilteredSpecies(props.baseSpecies.filter((item) => {return item.family === family;}))
         }
     }
 
@@ -63,14 +64,14 @@ export default function SpeciesFilterModal(props: SpeciesFilterProps){
         }
         else{
             setDiet(newDiet);
-            props.setFilteredSpecies(props.baseSpecies.filter((item) => {return item.specie.diet === diet;}))
+            props.setFilteredSpecies(props.baseSpecies.filter((item) => {return item.diet === diet;}))
         }
     }
     const sortAscending = () => {
-        props.setFilteredSpecies([...props.baseSpecies].sort((s1, s2) => s1.specie.name.localeCompare(s2.specie.name)));
+        props.setFilteredSpecies([...props.baseSpecies].sort((s1, s2) => s1.name.localeCompare(s2.name)));
     }
     const sortDescending = () => {
-        props.setFilteredSpecies([...props.baseSpecies].sort((s1, s2) => s2.specie.name.localeCompare(s1.specie.name)));
+        props.setFilteredSpecies([...props.baseSpecies].sort((s1, s2) => s2.name.localeCompare(s1.name)));
     }
 
     return (

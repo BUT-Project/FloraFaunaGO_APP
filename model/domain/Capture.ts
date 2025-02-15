@@ -1,6 +1,6 @@
 import CaptureDetail from "@/model/domain/CaptureDetail";
 import Specie from "@/model/domain/Specie";
-
+// [TODO] [Dave] need to change Specie to SpecieDetails
 export default class Capture {
     id: number;
     photo: string | null;

@@ -102,7 +102,7 @@ export default function RevealScreen({specie}: RevealScreenProps) {
             transform: [{scale: cardHeight.value}],
         };
     });
-    const { resetState } = useSpeciesStore();
+    const resetState  = useSpeciesStore((state)=> state.resetState);
 
     function addToCollection() {
         try {

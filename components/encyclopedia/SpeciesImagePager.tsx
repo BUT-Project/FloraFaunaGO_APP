@@ -8,6 +8,7 @@ import { LoadingImageBackground } from "../ui/LoadingImageBackground";
 import { Colors } from "@/constants/Colors";
 import { useRouter } from "expo-router";
 import Capture from '@/model/domain/Capture';
+import Specie from "@/model/domain/Specie";
 
 
 type CarouselItem = {
@@ -18,21 +19,22 @@ type CarouselItem = {
 };
 
 type SpeciesImageCarouselProps = {
-    capture: Capture;
-    isCaptured?:Boolean | null;
+    capture: Capture | null;
+    specie: Specie;
 };
 
 const { width } = Dimensions.get("window");
 
-export default function SpeciesImageCarousel({ capture,isCaptured }: SpeciesImageCarouselProps) {
+export default function SpeciesImageCarousel({ capture ,specie}: SpeciesImageCarouselProps) {
+
     const router = useRouter();
     const [activeSlide, setActiveSlide] = useState(0);
     const carouselRef = useRef<Carousel<any>>(null);
     const carouselData = useMemo<CarouselItem[]>(() => {
         const items: CarouselItem[] = [
-            { key: "1", image: capture.specie.image, label: capture.specie.name, secondLabel: capture.specie.scientificName },
+            { key: "1", image: specie.image, label: specie.name, secondLabel: specie.scientificName },
         ];
-        if (capture.photo && isCaptured) {
+        if (capture?.photo) {
             items.push({ key: "2", image: capture.photo, label: "Votre photo" });
         }
         return items;
@@ -45,7 +47,7 @@ export default function SpeciesImageCarousel({ capture,isCaptured }: SpeciesImag
             width={width}
             height={width * 9 / 16}
             source={{ uri: item.image }}
-            isCaptured={!!isCaptured}
+            isCaptured={capture != null}
         >
             
             <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>

@@ -2,9 +2,8 @@ import React, {useMemo, useState} from 'react';
 import {Dimensions, Modal, Pressable, StyleSheet} from 'react-native';
 import MapView, {Marker} from "react-native-maps";
 import {ThemedView} from '@/components/ui/themed/ThemedView';
-import Location from '@/model/Location';
 import {Ionicons} from '@expo/vector-icons';
-
+import Location from "@/model/domain/Location";
 const { width } = Dimensions.get('window');
 
 export type ExtendableMapProps = { 

@@ -1,5 +1,5 @@
 import {useCallback, useState} from "react";
-import {useInfiniteData} from "@/hooks/useInfiniteData";
+import {useInfiniteData} from "@/hooks/viewModels/useInfiniteData";
 import {BaseInfiniteOptions, BaseInfiniteResult} from "@/hooks/types";
 import Specie from "@/model/domain/Specie";
 import {Diet} from "@/model/domain/Diet";

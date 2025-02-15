@@ -4,7 +4,7 @@ import {registerSchema} from "@/components/form/auth/RegisterForm";
 import {Alert} from "react-native";
 import IAuthService from "@/model/service/IAuthService";
 import {router} from "expo-router";
-import {useAuthStore} from "@/context/zustand/strore/AuthStore";
+import {useAuthStore} from "@/context/zustand/strore/useAuthStore";
 
 export interface RegisterCredentials {
     email: string;

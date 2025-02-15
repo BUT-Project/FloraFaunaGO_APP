@@ -18,7 +18,7 @@ export default class StubData extends IDataManager{
         super();
         this.successRepository = new StubSucess(this.ListSucess);
         this.userRepository = new StubUsers(this.ListUser);
-        this.captureRepository = new StubCaptures(this.ListCapture);
+        this.captureRepository = new StubCaptures(this.ListCapture,this.ListUser);
         this.speciesRepository = new StubSpecies(this.ListSpecie);
         this.authService = new StubAuth(this.ListUser);
     }
@@ -29,4 +29,8 @@ export default class StubData extends IDataManager{
         }
         return StubData.instance;
     }
+
+
+
+
 }

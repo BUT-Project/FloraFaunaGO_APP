@@ -10,12 +10,9 @@ interface SucessDetailScreenProps {
     visible: boolean;
     onClose: () => void;
     sucess: Success;
-
 }
 
 export default function SuccessDetailScreen( { visible, onClose, sucess }: SucessDetailScreenProps) {
-
-
     return (
         <Modal animationType="slide" visible={visible} transparent={true} onRequestClose={onClose}>
             <TouchableOpacity style={styles.overlay} activeOpacity={1} onPress={onClose}>
