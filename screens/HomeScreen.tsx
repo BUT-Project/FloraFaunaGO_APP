@@ -30,6 +30,8 @@ export default function HomeScreen() {
     const [location, setLocation] = useState<Location.LocationObject | null>(null);
     const [updateSuccesses, setUpdateSuccesses] = useState<string[]>([]);
 
+    const setCurrentImageUri = useSpeciesStore((state) => state.setCurrentImageUri);
+    const setCurrentIdentifiedSpecies = useSpeciesStore((state) => state.setCurrentIdentifiedSpecies)
 
     const router = useRouter();
     useEffect(() => {
@@ -171,8 +173,7 @@ export default function HomeScreen() {
             </View>
         );
     }
-    const setCurrentImageUri = useSpeciesStore((state) => state.setCurrentImageUri);
-    const setCurrentIdentifiedSpecies = useSpeciesStore((state) => state.setCurrentIdentifiedSpecies)
+
     useEffect(() => {
         async function updateStateAndNavigate() {
             if (capturedImage && !showProgress && !isLoading && identifiedSpecie) {
