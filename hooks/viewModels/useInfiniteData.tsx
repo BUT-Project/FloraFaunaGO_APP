@@ -151,7 +151,7 @@ export function useInfiniteData<T>(
         isLoading,
         isFetching,
         isError,
-        error: error as Error | null,
+        error: error,
 
         // Pagination controls
         hasNextPage: !!hasNextPage,

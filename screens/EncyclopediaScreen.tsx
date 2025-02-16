@@ -12,7 +12,7 @@ import {useAuthStore} from "@/context/zustand/strore/useAuthStore";
 export default function EncyclopediaScreen() {
     const [name,setName] = useState("")
 
-    const {species=[],isLoading,isLoadingMore,error,isListEnd,refresh,fetchMoreData} = useGetSpecies(20,"")
+    const {species=[],isLoading,isLoadingMore,error,isListEnd,refresh,fetchMoreData} = useGetSpecies("")
     const userCaptures = useAuthStore((state) => state.user?.captures);
     //if(!user) throw new Error("User not found");// [Dave] [TODO] should not do that
 

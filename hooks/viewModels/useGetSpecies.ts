@@ -4,8 +4,8 @@ import Specie from "@/model/domain/Specie";
 import {PagedRequest} from "@/shared/PagedRequest";
 
 export function useGetSpecies(
+    name: string,
     pageSize: number = 20,
-    name: string
 ) {
   const {
     data,

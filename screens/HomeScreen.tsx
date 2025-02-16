@@ -62,7 +62,7 @@ export default function HomeScreen() {
         queryFn: async (): Promise<Specie> => {
             if (!speciesRepository) throw new Error('No Repository');
             if (!base64Image) throw new Error('No base64 image data');
-            var spec = await speciesRepository.identifySpecies(base64Image);
+            const spec = await speciesRepository.identifySpecies(base64Image);
             await TestSucces({ name: "unlockMaîtreDesAnimaux", spec, kg: Kingdom.Animal });
             await TestSucces({ name: "unlockPêcheurExpert", spec, cl: Class.Fish });
             await TestSucces({ name: "unlockMaitreDeLair", spec, kg: Kingdom.Animal,cl:Class.Birds });

@@ -6,7 +6,7 @@ import SpecieListItem from "@/components/encyclopedia/SpecieListItem";
 import CaptureDetails from "@/components/encyclopedia/CaptureDetails";
 import SpeciesImagePager from "@/components/encyclopedia/SpeciesImagePager";
 import {ExtendableMap} from "@/components/ui/ExtendableMap";
-import {useGeSpecieByFamily} from "@/hooks/viewModels/useGetCaptureByFamily";
+import {useGeSpecieByFamily} from "@/hooks/viewModels/useGeSpecieByFamily";
 import {ExtendableText} from "@/components/encyclopedia/ExtendableText";
 import {useAuthStore} from "@/context/zustand/strore/useAuthStore";
 import Capture from "@/model/domain/Capture";
