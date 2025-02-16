@@ -32,7 +32,7 @@ export default function SpeciesFilterModal(props: SpeciesFilterProps){
         }
         else{
             setKingdom(newKingdom);
-            props.setFilteredSpecies(props.baseSpecies.filter((item) => { item.kingdom === newKingdom}))
+            props.setFilteredSpecies(props.baseSpecies.filter((item) => item.kingdom === newKingdom))
         }
     }
     const onClassChange = (newClass:Class) => {
