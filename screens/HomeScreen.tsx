@@ -120,6 +120,26 @@ export default function HomeScreen() {
         };
     }, [updateSuccesses]); // Dépendance sur `unlockedSuccesses` pour re-exécuter l'effet lorsque l'état change
 
+    useEffect(() => {
+        async function updateStateAndNavigate() {
+            if (capturedImage && !showProgress && !isLoading && identifiedSpecie) {
+                try {
+                    setCurrentImageUri(capturedImage);
+                    setCurrentIdentifiedSpecies(identifiedSpecie);
+                    // Navigate after state is updated
+                    router.push({
+                        pathname: '/capture',
+                    });
+                } catch (error) {
+                    console.error('Error updating species state:', error);
+                    // Handle error appropriately
+                }
+            }
+        }
+
+        updateStateAndNavigate();
+    }, [capturedImage, showProgress, isLoading, identifiedSpecie, router,setCurrentIdentifiedSpecies,setCurrentImageUri]);
+
 
     const handleCapturePress = async () => {
         if (isLoading || !isCameraReady || !cameraRef.current) return;
@@ -173,26 +193,6 @@ export default function HomeScreen() {
             </View>
         );
     }
-
-    useEffect(() => {
-        async function updateStateAndNavigate() {
-            if (capturedImage && !showProgress && !isLoading && identifiedSpecie) {
-                try {
-                    setCurrentImageUri(capturedImage);
-                    setCurrentIdentifiedSpecies(identifiedSpecie);
-                    // Navigate after state is updated
-                    router.push({
-                        pathname: '/capture',
-                    });
-                } catch (error) {
-                    console.error('Error updating species state:', error);
-                    // Handle error appropriately
-                }
-            }
-        }
-    
-        updateStateAndNavigate();
-    }, [capturedImage, showProgress, isLoading, identifiedSpecie, router,setCurrentIdentifiedSpecies,setCurrentImageUri]);
 
     return (
         <SafeAreaView style={styles.container}>
