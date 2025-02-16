@@ -77,6 +77,8 @@ export default function Capture() {
     };
 
     const onCapture = () => {
+        // Safe for gameplay mechanics - Math.random() provides sufficient randomness
+        // for capture probability calculations
         const captureChance = Math.random();
         if (captureChance > captureDifficulty.value) {
             setCaptureSuccess(true);
@@ -245,6 +247,8 @@ export default function Capture() {
                         borderRadius: 8,
                     }}
                     onPress={() => {
+                        // Safe for gameplay mechanics - Math.random() provides sufficient randomness
+                        // for capture probability calculations
                         captureDifficulty.value = Math.random();
                         // resetPokeball();
                         onCapture();

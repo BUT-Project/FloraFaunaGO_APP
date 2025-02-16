@@ -1,17 +1,11 @@
 import {useCallback, useState} from "react";
 import {Audio} from "expo-av";
 import {registerSchema} from "@/components/form/auth/RegisterForm";
-import {Alert} from "react-native";
 import IAuthService from "@/model/service/IAuthService";
 import {router} from "expo-router";
 import {useAuthStore} from "@/context/zustand/strore/useAuthStore";
 
-export interface RegisterCredentials {
-    email: string;
-    password: string;
-    name: string;
-}
-
+// [TODO] [Dave] Vous préférer les alert comme ici ou le msg comme dans le register
 export const useRegisterViewModel = (
     repository?: IAuthService
 ) => {
@@ -33,6 +27,8 @@ export const useRegisterViewModel = (
     }, []);
 
     const validateForm = useCallback(() => {
+        setFailedSignup(false);
+
         const result = registerSchema.safeParse({
             name: username,
             email,
@@ -40,8 +36,8 @@ export const useRegisterViewModel = (
         });
 
         if (!result.success) {
+            setFailedSignup(true);
             const firstError = result.error.errors[0];
-            Alert.alert("Erreur inscription", firstError.message);
             setErrorMessage(firstError.message);
             return false;
         }
@@ -50,24 +46,16 @@ export const useRegisterViewModel = (
 
     const submitForm = useCallback(async () => {
         if (validateForm()) {
-            const credentials: RegisterCredentials = {
-                email: email,
-                password: password,
-                name: username
-            };
             try {
-                await register(credentials.email, credentials.password);
+                await register(email,username,password);
                 setFailedSignup(false);
                 await playSound();
-
                 router.replace('/(tabs)');
             } catch (error) {
                 setFailedSignup(true);
                 if (error instanceof Error) {
-                    Alert.alert('Error', error.message);
                     setErrorMessage(error.message);
                 } else {
-                    Alert.alert('Error',"Une erreur s'est produite lors de l'inscription.");
                     setErrorMessage("Une erreur s'est produite lors de l'inscription.");
                 }
             }

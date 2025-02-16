@@ -4,6 +4,7 @@ import {Alert} from "react-native";
 import {router} from "expo-router";
 import {LoginCredentials} from "@/screens/LoginScreen";
 
+// [TODO] [Dave] Vous préférer les alert comme ici ou le msg comme dans le register
 export function useLoginViewModel() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');

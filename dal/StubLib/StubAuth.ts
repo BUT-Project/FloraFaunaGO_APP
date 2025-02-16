@@ -9,7 +9,7 @@ export default class StubAuth implements IAuthService{
     constructor(public Users: User[]) {
     }
     login(email: string, password: string): Promise<User> {
-        const user = this.Users.find(u => u.email.toLocaleLowerCase() == email);
+        const user = this.Users.find(u => u.email.toLocaleLowerCase() == email && u.passwordHash == password);
         return new Promise((resolve, reject) => {
             if (user !== undefined) {
                 this.currentUser = user;
@@ -20,7 +20,8 @@ export default class StubAuth implements IAuthService{
                 }
         });
     }
-    register(email: string, password: string): Promise<User> {
+
+    register(email: string, username: string, password: string): Promise<User> {
         return new Promise((resolve, reject) => {
             const existingUser = this.Users.find(user => user.email === email);
 
@@ -30,7 +31,7 @@ export default class StubAuth implements IAuthService{
             }
             const newUser: User = {
                 id: this.Users.length + 1,
-                username: email.split('@')[0],
+                username: username,
                 email :email,
                 passwordHash: password,
                 inscriptionDate: new Date(),

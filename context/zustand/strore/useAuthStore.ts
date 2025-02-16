@@ -8,7 +8,7 @@ interface AuthState {
     isAuthenticated: boolean;
     rememberMe: boolean;
     login: (username: string, password: string, remember?: boolean) => Promise<void>;
-    register: (email: string, password: string) => Promise<void>;
+    register: (email: string, username: string, password: string) => Promise<void>;
     logout: () => Promise<void>;
     checkAuth: () => Promise<void>;
     setRememberMe: (value: boolean) => void;
@@ -37,10 +37,10 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         set({user, isAuthenticated: true, rememberMe: remember});
     },
 
-    register: async (email: string, password: string) => {
+    register: async (email: string,username :string , password: string) => {
         const {authService} = StubData.getInstance();
         // [TODO] [Dave] add error handling since it can failed (like return true)
-        const user = await authService?.register(email, password);
+        const user = await authService?.register(email,username, password);
         set({user, isAuthenticated: true});
     },
 

@@ -6,6 +6,7 @@ import {InputWithIcon} from "@/components/ui/InputWithIcon";
 import {useRegisterViewModel} from "@/hooks/viewModels/auth/useRegisterViewModel";
 import StubData from "@/dal/StubLib/StubData";
 import {Entypo} from "@expo/vector-icons";
+import {ThemedText} from "@/components/ui/themed/ThemedText";
 
 export default function RegisterScreen() {
     const {authService} = StubData.getInstance();
@@ -26,7 +27,7 @@ export default function RegisterScreen() {
         <View style={styles.content}>
             <Text style={styles.title}>S'INSCRIRE</Text>
             {failedSignup && (
-                <Text style={styles.errorText}>{errorMessage}</Text>
+                <ThemedText style={styles.errorText}>{errorMessage}</ThemedText>
             )}
             <InputWithIcon
                 icon="user"
