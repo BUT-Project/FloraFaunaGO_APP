@@ -1,31 +1,30 @@
-import React, {useState, useRef, useEffect} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
-    View,
-    StyleSheet,
     Dimensions,
-    ScrollView,
-    Text,
-    TouchableOpacity,
-    TextInput,
+    Image,
     Keyboard,
-    Image, ViewStyle
+    ScrollView,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View,
+    ViewStyle
 } from 'react-native';
 import MapView, {Marker} from 'react-native-maps';
 import Animated, {
-    useSharedValue,
-    useAnimatedStyle,
-    withTiming,
     Easing,
+    Extrapolate,
     interpolate,
-    Extrapolate, withSpring, withRepeat, withSequence,
+    useAnimatedStyle,
+    useSharedValue,
+    withRepeat,
+    withSequence,
+    withSpring,
+    withTiming,
 } from 'react-native-reanimated';
 import {Ionicons} from '@expo/vector-icons';
-import {
-    GestureHandlerRootView,
-    TapGestureHandler,
-    State,
-    TapGestureHandlerStateChangeEvent
-} from 'react-native-gesture-handler';
+import {State, TapGestureHandler, TapGestureHandlerStateChangeEvent} from 'react-native-gesture-handler';
 import Svg, {Circle, Defs, RadialGradient, Stop} from 'react-native-svg';
 import * as Location from 'expo-location';
 import {ThemedView} from "@/components/ui/themed/ThemedView";

@@ -1,15 +1,13 @@
-
 import {ActivityIndicator, Button, FlatList, StyleSheet, View} from "react-native";
 import SpeciesSearchBar from "../components/encyclopedia/SpeciesSearchBar";
 import SpecieListItem from "@/components/encyclopedia/SpecieListItem";
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import {ThemedView} from "@/components/ui/themed/ThemedView";
 import {SafeView} from "@/components/ui/SafeView";
 import SpeciesFilterModal from "@/components/encyclopedia/SpeciesFilterModal";
 import {ThemedText} from "@/components/ui/themed/ThemedText";
 import {useGetSpecies} from "@/hooks/viewModels/useGetSpecies";
 import {useAuthStore} from "@/context/zustand/strore/useAuthStore";
-import Capture from "@/model/domain/Capture";
 
 export default function EncyclopediaScreen() {
     const [name,setName] = useState("")
@@ -17,6 +15,22 @@ export default function EncyclopediaScreen() {
     const {species=[],isLoading,isLoadingMore,error,isListEnd,refresh,fetchMoreData} = useGetSpecies(20,"")
     const userCaptures = useAuthStore((state) => state.user?.captures);
     //if(!user) throw new Error("User not found");// [Dave] [TODO] should not do that
+
+    if (error) {
+        return (
+        <View style={styles.errorContainer}>
+            <ThemedText style={styles.errorText} type="subtitle">
+                {error.message || "Impossible de charger les espèces." || "Une erreur s'est produite."}
+            </ThemedText>
+            {refresh && (
+                <Button
+                    title="Réessayer"
+                    onPress={() => refresh()}
+                />
+            )}
+        </View>
+        );
+    }
 
 
     return (
@@ -92,5 +106,16 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         marginVertical: 10
-    }
+    },
+    errorContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 20,
+    },
+    errorText: {
+        color: 'red',
+        marginBottom: 8,
+        textAlign: 'center',
+    },
 });

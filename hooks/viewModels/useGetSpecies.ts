@@ -1,7 +1,7 @@
-import { useInfiniteQuery } from '@tanstack/react-query';
+import {useInfiniteQuery} from '@tanstack/react-query';
 import StubData from "@/dal/StubLib/StubData";
 import Specie from "@/model/domain/Specie";
-import { PagedRequest } from "@/shared/PagedRequest";
+import {PagedRequest} from "@/shared/PagedRequest";
 
 export function useGetSpecies(
     pageSize: number = 20,
@@ -23,8 +23,7 @@ export function useGetSpecies(
         index: pageParam,
         count: pageSize,
       };
-      const result = await speciesRepository?.getAll(pageRequest);
-      return result;
+      return speciesRepository?.getAll(pageRequest);
     },
     getNextPageParam: (lastPage, allPages) => {
       if (!lastPage || lastPage.items.length < pageSize) {

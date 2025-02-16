@@ -3,7 +3,6 @@ import {FlatList, Modal, StyleSheet, TouchableOpacity} from 'react-native';
 import {ThemedView} from "@/components/ui/themed/ThemedView";
 import {ThemedText} from "@/components/ui/themed/ThemedText";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import Capture from "@/model/domain/Capture";
 import {Kingdom} from "@/model/domain/Kingdom";
 import FilterChips from "@/components/encyclopedia/FilterChips";
 import {Class} from "@/model/domain/Class";

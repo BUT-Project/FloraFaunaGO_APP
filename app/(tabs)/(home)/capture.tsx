@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Canvas, Circle, Group, Image, SkImage, useClock, useImage, Rect} from "@shopify/react-native-skia";
+import {Canvas, Circle, Group, Image, Rect, SkImage, useClock, useImage} from "@shopify/react-native-skia";
 import {runOnJS, useDerivedValue, useSharedValue, withRepeat, withSequence, withTiming,} from 'react-native-reanimated';
 import {Alert, Dimensions, TouchableOpacity, View} from "react-native";
 import {Gesture, GestureDetector} from "react-native-gesture-handler";

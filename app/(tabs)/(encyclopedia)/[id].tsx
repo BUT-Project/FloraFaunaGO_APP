@@ -15,30 +15,10 @@ export default function Details() {
     const captureId = typeof capturedId === 'string' ? parseInt(capturedId) : NaN;
     const specieId2 = typeof specieId === 'string' ? parseInt(specieId) : NaN;
 
-    // Vérification des paramètres
-    if (isNaN(specieId2)) {
-        return (
-            <ThemedView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                <ThemedText>Paramètre `id` manquant ou invalide !</ThemedText>
-            </ThemedView>
-        );
-    }
-
-    const { captureRepository, speciesRepository } = StubData.getInstance();
-
-    if (!captureRepository || !speciesRepository) {
-        if(!captureRepository) {
-            throw new Error("captureRepository not found!");
-        }
-        if(!speciesRepository) {
-            throw new Error("speciesRepository not found!");
-        }
-        return (
-            <ThemedView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                <ThemedText>Erreur de configuration des repositories</ThemedText>
-            </ThemedView>
-        );
-    }
+    // Get repositories
+    const stubData = StubData.getInstance();
+    const captureRepository = stubData?.captureRepository ?? null;
+    const speciesRepository = stubData?.speciesRepository ?? null;
 
     const {
         item: capture,
@@ -54,6 +34,26 @@ export default function Details() {
 
     const isLoading = isSpecieLoading || isCaptureLoading;
 
+
+    // Vérification des paramètres
+    if (isNaN(specieId2)) {
+        return (
+            <ThemedView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                <ThemedText>Paramètre `id` manquant ou invalide !</ThemedText>
+            </ThemedView>
+        );
+    }
+
+    if (!captureRepository || !speciesRepository) {
+        return (
+            <ThemedView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                <ThemedText>Erreur de configuration des repositories</ThemedText>
+            </ThemedView>
+        );
+    }
+
+
+
     // Gestion des erreurs
     if (errorSpecie || errorCapture) {
         errorSpecie && alert(errorSpecie)
@@ -61,7 +61,8 @@ export default function Details() {
         return (
             <ThemedView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                 <ThemedText type={'subtitle'}>
-                    Error
+                    {errorSpecie?.message || "Erreur lors de la récupération de l'espèce"}
+                    {errorCapture?.message || "Erreur lors de la récupération de la capture"}
                 </ThemedText>
             </ThemedView>
         );

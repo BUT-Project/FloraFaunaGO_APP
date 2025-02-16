@@ -10,7 +10,6 @@ import {Diet} from "@/model/domain/Diet";
 import {Kingdom} from "@/model/domain/Kingdom";
 import {Class} from "@/model/domain/Class";
 import {Family} from "@/model/domain/Family";
-import Capture from "@/model/domain/Capture";
 
 interface KindWiseResponse {
     result: {
@@ -149,9 +148,11 @@ export default class StubSpecies implements ISpeciesRepository {
     }
     public async identifySpecies(imageBase64: string): Promise<Specie> {
         try {
-            const response = await this.makeApiRequest(imageBase64);
             // ======= API =======
- /**           const newSpecie = await this.processApiResponse(response);
+ /**
+  const response = await this.makeApiRequest(imageBase64);
+
+  const newSpecie = await this.processApiResponse(response);
 
             // Check if species already exists in the list by scientific name
             const existingSpecie = this.Species.find(
@@ -209,9 +210,6 @@ export default class StubSpecies implements ISpeciesRepository {
         const bestMatch = response.result.classification.suggestions[0];
         const details = bestMatch.details;
 
-        // Extract the genus and species from the scientific name
-        const [genus, species] = bestMatch.name.split(' ');
-
         // Create a default habitat
         const habitat = new Habitat(
             "Unknown",
@@ -239,52 +237,4 @@ export default class StubSpecies implements ISpeciesRepository {
             details.image?.value || ''
         );
     }
-
-    private mapKingdom(kingdom: string): Kingdom {
-        const kingdomMap: { [key: string]: Kingdom } = {
-            'Animalia': Kingdom.Animal,
-            'Fungi': Kingdom.Fungi,
-            'Plantae': Kingdom.Plant,
-            'Protista': Kingdom.Protista
-        };
-        return kingdomMap[kingdom] || Kingdom.Animal;
-    }
-
-    private mapClass(className: string): Class {
-        const classMap: { [key: string]: Class } = {
-            'Mammalia': Class.Mammals,
-            'Aves': Class.Birds,
-            'Reptilia': Class.Reptiles,
-            'Amphibia': Class.Amphibians,
-            'Actinopterygii': Class.Fish,
-            'Insecta': Class.Insects,
-            'Magnoliopsida': Class.Angiosperms
-        };
-        return classMap[className] || Class.Insects;
-    }
-
-    private mapFamily(familyName: string): Family {
-        const familyMap: { [key: string]: Family } = {
-            'Canidae': Family.Canid,
-            'Bovidae': Family.Bovids,
-            'Leporidae': Family.Leporids,
-            'Hominidae': Family.Hominids,
-            'Coccinellidae': Family.Coccinellidae,
-            'Sciuridae': Family.Sciuridae,
-            // Add more family mappings as needed
-        };
-        return familyMap[familyName] || Family.Scarabaeidae;
-    }
-    // [TODO] Dave
-/*    private inferDiet(classification: KindWiseResponse['result'][0]['classification']): Diet {
-        // This is a simple inference based on order/family
-        // You might want to enhance this with more detailed logic
-        const orderDietMap: { [key: string]: Diet } = {
-            'Carnivora': Diet.Carnivores,
-            'Herbivora': Diet.Herbivores,
-            'Lepidoptera': Diet.Nectarivores,
-            'Hymenoptera': Diet.Omnivores
-        };
-        return orderDietMap[classification.order] || Diet.Omnivores;
-    }*/
 }

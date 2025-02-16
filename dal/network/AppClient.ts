@@ -1,9 +1,5 @@
 import {IDataManager} from "@/dal/IDataManager";
 
-import https, { RequestOptions } from 'https';
-import type { ClientRequest, IncomingMessage } from 'http';
-import StubAuth from "@/dal/StubLib/StubAuth";
-
 export default class AppClient extends IDataManager{
 
     private static instance: IDataManager;

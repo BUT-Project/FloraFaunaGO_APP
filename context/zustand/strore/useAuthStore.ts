@@ -33,12 +33,13 @@ export const useAuthStore = create<AuthState>((set, get) => ({
             }));
             await setStorageItemAsync(REMEMBER_ME_KEY, 'true');
         }
-
+        // [TODO] [Dave] add error handling since it can failed (like return true or use throw error from inner)
         set({user, isAuthenticated: true, rememberMe: remember});
     },
 
     register: async (email: string, password: string) => {
         const {authService} = StubData.getInstance();
+        // [TODO] [Dave] add error handling since it can failed (like return true)
         const user = await authService?.register(email, password);
         set({user, isAuthenticated: true});
     },

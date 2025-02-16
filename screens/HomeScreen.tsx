@@ -19,8 +19,6 @@ import EventEmitter from "events";
 import {SuccessList} from "@/dal/StubLib/Data";
 import {Kingdom} from "@/model/domain/Kingdom";
 import {Class} from "@/model/domain/Class";
-import {Diet} from "@/model/domain/Diet";
-import {Family} from "@/model/domain/Family";
 import {TestSuccesParams} from "@/hooks/TestSuccesParams";
 
 

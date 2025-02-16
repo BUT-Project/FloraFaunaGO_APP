@@ -1,6 +1,6 @@
-import {View, type ViewProps} from 'react-native';
+import {type ViewProps} from 'react-native';
 import {useSafeAreaInsets} from "react-native-safe-area-context";
-import { ThemedView } from './themed/ThemedView';
+import {ThemedView} from './themed/ThemedView';
 
 export type SafeViewProps= ViewProps & {
 

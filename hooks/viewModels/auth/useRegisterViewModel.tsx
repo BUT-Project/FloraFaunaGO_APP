@@ -15,14 +15,15 @@ export interface RegisterCredentials {
 export const useRegisterViewModel = (
     repository?: IAuthService
 ) => {
-
-    if (!repository) throw new Error('No Auth Repository provided');
-
+    const register = useAuthStore((state) => state.register);
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [failedSignup, setFailedSignup] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
+
+    if (!repository) throw new Error('No Auth Repository provided');
+
 
     const playSound = useCallback(async () => {
         const {sound} = await Audio.Sound.createAsync(
@@ -41,6 +42,7 @@ export const useRegisterViewModel = (
         if (!result.success) {
             const firstError = result.error.errors[0];
             Alert.alert("Erreur inscription", firstError.message);
+            setErrorMessage(firstError.message);
             return false;
         }
         return true;
@@ -53,21 +55,23 @@ export const useRegisterViewModel = (
                 password: password,
                 name: username
             };
-            const register = useAuthStore((state) => state.register);
-
-            await register(email, password);
-            const result = await repository?.register(credentials.email, credentials.password);
-
-            if (result) {
+            try {
+                await register(credentials.email, credentials.password);
                 setFailedSignup(false);
-                router.replace('/(tabs)');
+                await playSound();
 
-            } else {
+                router.replace('/(tabs)');
+            } catch (error) {
                 setFailedSignup(true);
-                setErrorMessage("Une erreur s'est produite lors de l'inscription.");
+                if (error instanceof Error) {
+                    Alert.alert('Error', error.message);
+                    setErrorMessage(error.message);
+                } else {
+                    Alert.alert('Error',"Une erreur s'est produite lors de l'inscription.");
+                    setErrorMessage("Une erreur s'est produite lors de l'inscription.");
+                }
             }
 
-            await playSound();
         }
     }, [validateForm, email, password, username, playSound]);
 

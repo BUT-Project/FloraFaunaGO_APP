@@ -3,21 +3,23 @@ import {GenericRepository} from "@/model/service/IGenericRepository";
 
 export function useGetById<T>(
     id: number | undefined,
-    repository: GenericRepository<T>
+    repository: GenericRepository<T> | null
 ) {
     const [isLoading, setIsLoading] = useState(false);
     const [item, setItem] = useState<T | null>(null);
-    const [error, setError] = useState<unknown>(null);
+    const [error, setError] = useState<Error|null>(null);
 
     useEffect(() => {
-        // Réinitialiser l'état quand l'ID change ou est invalide
-        if (!id || isNaN(id)) {
+        // Reset state if ID is invalid or repository is null
+        if (!id || isNaN(id) || !repository) {
             setItem(null);
             setError(null);
+            setIsLoading(false);
             return;
         }
 
         const fetchItem = async () => {
+            // Prevent concurrent fetches
             if (isLoading) return;
 
             setIsLoading(true);
@@ -25,18 +27,19 @@ export function useGetById<T>(
 
             try {
                 const result = await repository?.getById(id);
-                // Explicitement mettre à null si aucun résultat
+                // Using nullish coalescing for explicit null check
                 setItem(result || null);
             } catch (err) {
+                // @ts-ignore
                 setError(err);
-                setItem(null);  // Réinitialiser l'item en cas d'erreur
+                setItem(null);
             } finally {
                 setIsLoading(false);
             }
         };
 
         fetchItem();
-    }, [id, repository]); // Ajouter repository dans les dépendances
+    }, [id, repository]);
 
     return {
         item,
