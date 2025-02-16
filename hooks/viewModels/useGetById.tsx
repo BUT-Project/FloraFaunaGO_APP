@@ -1,33 +1,42 @@
 import {useEffect, useState} from "react";
-import StubData from "@/dal/StubLib/StubData";
-import Capture from "@/model/domain/Capture";
 import {GenericRepository} from "@/model/service/IGenericRepository";
 
 export function useGetById<T>(
-  id: number,
-  repository: GenericRepository<T>
+    id: number | undefined,
+    repository: GenericRepository<T>
 ) {
     const [isLoading, setIsLoading] = useState(false);
-    const [item, setCapture] = useState<T | null>(null);
+    const [item, setItem] = useState<T | null>(null);
     const [error, setError] = useState<unknown>(null);
-    
+
     useEffect(() => {
-        const fetchCapture = async () => {
-        if (isLoading) return; 
-        setIsLoading(true);
-        setError(null);
-        try {
-            const result = await repository?.getById(id);
-            if(result != undefined)
-            setCapture(result);
-        } catch (err) {
-            setError(err);
-        } finally {
-            setIsLoading(false);
+        // Réinitialiser l'état quand l'ID change ou est invalide
+        if (!id || isNaN(id)) {
+            setItem(null);
+            setError(null);
+            return;
         }
+
+        const fetchItem = async () => {
+            if (isLoading) return;
+
+            setIsLoading(true);
+            setError(null);
+
+            try {
+                const result = await repository?.getById(id);
+                // Explicitement mettre à null si aucun résultat
+                setItem(result || null);
+            } catch (err) {
+                setError(err);
+                setItem(null);  // Réinitialiser l'item en cas d'erreur
+            } finally {
+                setIsLoading(false);
+            }
         };
-        fetchCapture();
-    }, [id]); 
+
+        fetchItem();
+    }, [id, repository]); // Ajouter repository dans les dépendances
 
     return {
         item,
@@ -35,4 +44,3 @@ export function useGetById<T>(
         error,
     };
 }
-

@@ -6,10 +6,9 @@ import {PagedRequest} from "@/shared/PagedRequest";
 import {Family} from "@/model/domain/Family";
 import Specie from "@/model/domain/Specie";
 import CaptureDetail from "@/model/domain/CaptureDetail";
-import StubData from "@/dal/StubLib/StubData";
-import {CaptureList} from "@/dal/StubLib/Data";
 import User from "@/model/domain/User";
 import Location from "@/model/domain/Location";
+
 export default class StubCaptures implements ICaptureRepository {
     constructor(public Captures: Capture[],
                 public Users: User[]
@@ -119,7 +118,10 @@ export default class StubCaptures implements ICaptureRepository {
                 userLocation
             );
             if (specieInUserCaptures) {
-                specieInUserCaptures.capturesDetails.push(newCaptureDetail)
+                specieInUserCaptures.capturesDetails = [
+                    ...specieInUserCaptures.capturesDetails,
+                    newCaptureDetail
+                ];
             } else {
                 const newCapture = new Capture(
                     Date.now(),
@@ -128,8 +130,8 @@ export default class StubCaptures implements ICaptureRepository {
                     [newCaptureDetail]
                 );
 
-                user.captures.push(newCapture);
-                this.Captures.push(newCapture);
+                user.captures = [...user.captures, newCapture];
+                this.Captures = [...this.Captures, newCapture];
             }
 
             resolve();

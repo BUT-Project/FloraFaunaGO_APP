@@ -1,13 +1,12 @@
 import React, {useMemo} from "react";
-import {ScrollView, FlatList, StyleSheet, ActivityIndicator, Dimensions} from "react-native";
+import {ActivityIndicator, Dimensions, FlatList, ScrollView, StyleSheet} from "react-native";
 import {ThemedText} from "@/components/ui/themed/ThemedText";
 import {ThemedView} from "@/components/ui/themed/ThemedView";
 import SpecieListItem from "@/components/encyclopedia/SpecieListItem";
 import CaptureDetails from "@/components/encyclopedia/CaptureDetails";
 import SpeciesImagePager from "@/components/encyclopedia/SpeciesImagePager";
-import {SafeView} from "@/components/ui/SafeView";
 import {ExtendableMap} from "@/components/ui/ExtendableMap";
-import {useGeSpecieByFamily, useGetCaptureByFamily} from "@/hooks/viewModels/useGetCaptureByFamily";
+import {useGeSpecieByFamily} from "@/hooks/viewModels/useGetCaptureByFamily";
 import {ExtendableText} from "@/components/encyclopedia/ExtendableText";
 import {useAuthStore} from "@/context/zustand/strore/useAuthStore";
 import Capture from "@/model/domain/Capture";
@@ -16,14 +15,12 @@ import Specie from "@/model/domain/Specie";
 interface SpeciesDetailScreenProps {
     capture: Capture | null;
     specie: Specie;
-    isLoading: boolean;
-
 }
 
 const {width} = Dimensions.get('window');
 const itemSize = (width / 3) - 10;
 
-export default function SpeciesDetailScreen({specie,capture,isLoading}: SpeciesDetailScreenProps) {
+export default function SpeciesDetailScreen({specie,capture}: SpeciesDetailScreenProps) {
 
     const {
         captures: family,
@@ -36,7 +33,7 @@ export default function SpeciesDetailScreen({specie,capture,isLoading}: SpeciesD
     const user = useAuthStore((state) => state.user);
     if (!user) {
         throw new Error("User not found")
-    };
+    }
     // [Dave] [TODO] should not do that
 
     const capturedSpecie = user.captures;
@@ -56,16 +53,7 @@ export default function SpeciesDetailScreen({specie,capture,isLoading}: SpeciesD
     if (errorFam) {
         console.error(errorFam);
     }
-
-    if (isLoading) {
-        return (
-            <ThemedView style={styles.container}>
-                <ActivityIndicator size={'large'}/>
-            </ThemedView>
-        );
-    }
     return (
-        <SafeView>
             <ScrollView>
                 <ThemedView style={styles.container}>
                     <SpeciesImagePager capture={capture} specie={specie}/>
@@ -128,9 +116,10 @@ export default function SpeciesDetailScreen({specie,capture,isLoading}: SpeciesD
                                 data={family}
                                 keyExtractor={(item) => `FamilyMember-${item.id}`}
                                 renderItem={(specie) => (
-                                    <SpecieListItem specie={specie.item}
-                                                    captureId={capturedSpecie.find(captureIn => captureIn.specie.id === specie.item.id)?.id ?? null} />
-                                )}
+                                        <SpecieListItem specie={specie.item}
+                                                        captureId={capturedSpecie.find(captureIn => captureIn.specie.id === specie.item.id)?.id ?? null} />
+                                    )
+                                }
                                 ListEmptyComponent={() => (
                                     <ThemedView style={styles.emptyFam}>
                                         <ThemedText>Aucune espèce trouvée</ThemedText>
@@ -184,8 +173,6 @@ export default function SpeciesDetailScreen({specie,capture,isLoading}: SpeciesD
                 </ThemedView>
 
             </ScrollView>
-        </SafeView>
-
     );
 };
 

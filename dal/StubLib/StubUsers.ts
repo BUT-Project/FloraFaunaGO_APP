@@ -3,14 +3,6 @@ import {PagingResult} from "@/shared/PagingResult";
 import {IUserRepository} from "@/model/service/IUserRepository";
 import User from "@/model/domain/User";
 import {PagedRequest} from "@/shared/PagedRequest";
-import {filter} from "domutils";
-import id from "ajv/lib/vocabularies/core/id";
-import items from "ajv/lib/vocabularies/applicator/items";
-import {index} from "@zxing/text-encoding/es2015/encoding/indexes";
-import Specie from "@/model/domain/Specie";
-import {undefined} from "zod";
-import CaptureDetail from "@/model/domain/CaptureDetail";
-import Capture from "@/model/domain/Capture";
 
 
 export default class StubUsers implements IUserRepository{
@@ -35,8 +27,13 @@ export default class StubUsers implements IUserRepository{
     }
 
     getById(id: number): Promise<User> {
-        return new Promise((resolve) => {
-            const user = this.Users.find(u => u.id === id) || null; // Recherche de l'utilisateur par nom
+        return new Promise((resolve, reject) => {
+            const user = this.Users.find(u => u.id === id);
+            if (user == null) {
+                reject(new Error('User not found'));
+                return;
+            }
+            resolve(user);
         });
     }
 
