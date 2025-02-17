@@ -1,7 +1,8 @@
 import User from "@/model/domain/User";
 import IAuthService from "@/model/service/IAuthService";
 
-
+// should need private val userRepository: IUserService,private val keyManager: AbstractKeyManager.
+// le stubData doit pas avoir le auth service  :: https://codefirst.iut.uca.fr/git/HeartDev/Android_APP/src/branch/main/HeartTrack/app/src/main/java/com/hearttrack/application/network/service/AuthService.kt
 export default class StubAuth implements IAuthService{
 
     private currentUser: User | null = null;
@@ -11,6 +12,8 @@ export default class StubAuth implements IAuthService{
     login(email: string, password: string): Promise<User> {
         const user = this.Users.find(u => u.email.toLocaleLowerCase() == email && u.passwordHash == password);
         return new Promise((resolve, reject) => {
+            // keyManager.putToken(response.accessToken)
+            // currentUser = userRepository.getById(response.accessToken, response.accessToken.decodeJwt().second.nameid)
             if (user !== undefined) {
                 this.currentUser = user;
                     resolve(user);
@@ -38,8 +41,9 @@ export default class StubAuth implements IAuthService{
                 _success:[],
                 captures:[]
             };
-
+// same should be userRepo.add(newUser)
             this.Users.push(newUser);
+            //  this.currentUser = userRepo.getById(response.accessToken.decodeJwt().second.id)
             this.currentUser = newUser;
             resolve(newUser);
         });
@@ -50,6 +54,7 @@ export default class StubAuth implements IAuthService{
     }
 
     getUser(): Promise<User | null> {
+        // api.getUserById(keyManager.getToken()!!, keyManager.getToken()!!.decodeJwt().second.nameid).toModel()
         return Promise.resolve(this.currentUser);
     }
 

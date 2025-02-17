@@ -7,7 +7,7 @@ export default class User {
     email: string
     passwordHash: string
     inscriptionDate: Date
-    captures:Capture[]
+    captures:Capture[] // [DAVE] [TODO] les amis on va supprimer sa sert à rienn
     _success:Success[]
 
     constructor(id: number, username: string, email: string, passwordHash: string, inscriptionDate: Date,captures:Capture[],success:Success[]) {

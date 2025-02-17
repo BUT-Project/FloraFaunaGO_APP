@@ -11,6 +11,7 @@ import {AntDesign, FontAwesome5, FontAwesome6} from "@expo/vector-icons";
 import {Success} from "@/model/domain/Success";
 import StubData from "@/dal/StubLib/StubData";
 import {PagedRequest} from "@/shared/PagedRequest";
+import {useAuthStore} from "@/context/zustand/strore/useAuthStore";
 
 let ProfileImage: {};
 ProfileImage = require("../assets/images/ProfileImage.jpeg");
@@ -21,6 +22,9 @@ export default function ProfilScreen() {
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(false);
     const [totalPages, setTotalPages] = useState(1);
+
+    const user = useAuthStore((state)=>state.user);
+
 
     const fetchSuccesses = async (currentPage: number) => {
         setLoading(true);
@@ -55,6 +59,11 @@ export default function ProfilScreen() {
             </Link>
 
             <Image source={ProfileImage} style={styles.profile}/>
+            <ThemedView style={styles.userInfoContainer}>
+                <ThemedText style={styles.username}>{user?.username || 'Username not available'}</ThemedText>
+                <ThemedText style={styles.email}>{user?.email || 'Email not available'}</ThemedText>
+            </ThemedView>
+
             <ThemedView style={styles.lineContainer}>
                 <ThemedView style={styles.line} />
                 <ThemedText type={"title"} style={styles.title} >Statistiques</ThemedText><ThemedView style={styles.line} />
@@ -168,5 +177,18 @@ const styles = StyleSheet.create({
         height: width* 0.4,
         margin: "10%",
         borderRadius: 500,
+    },
+    userInfoContainer: {
+        alignItems: 'center',
+        marginBottom: 20,
+    },
+    username: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        marginBottom: 5,
+    },
+    email: {
+        fontSize: 16,
+        color: '#666',
     },
 });

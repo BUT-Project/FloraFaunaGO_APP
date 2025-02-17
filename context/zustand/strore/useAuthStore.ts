@@ -1,7 +1,7 @@
 import {create} from 'zustand';
 import StubData from "@/dal/StubLib/StubData";
 import User from "@/model/domain/User";
-import {setStorageItemAsync, useStorageState} from "@/libs/secureStore";
+import {getStorageItemAsync, setStorageItemAsync} from "@/libs/secureStore";
 
 interface AuthState {
     user: User | null;
@@ -22,13 +22,13 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     isAuthenticated: false,
     rememberMe: false,
 
-
     login: async (username: string, password: string, remember: boolean = false) => {
         const {authService} = StubData.getInstance();
         const user = await authService?.login(username, password);
-        if (remember) {
+        if (remember && user) {
+            console.log(user);
             await setStorageItemAsync(AUTH_TOKEN_KEY, JSON.stringify({
-                user,
+                user: user?.id,
                 timestamp: new Date().getTime()
             }));
             await setStorageItemAsync(REMEMBER_ME_KEY, 'true');
@@ -54,26 +54,27 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         set({user: null, isAuthenticated: false, rememberMe: false});
     },
     checkAuth: async () => {
-        const {authService} = StubData.getInstance();
+        const {authService, userRepository} = StubData.getInstance();
         const isAuthenticated = await authService?.isAuthenticated();
         if (isAuthenticated) {
             const user = await authService?.getUser();
             set({user, isAuthenticated});
         } else {
-            const [[isStoredAuthLoading, storedAuth],se] = useStorageState(REMEMBER_ME_KEY);
 
-            const [[isRememberedLoginLoading, rememberedLogin],se2] = useStorageState(REMEMBER_ME_KEY);
-            if (rememberedLogin === 'true' && storedAuth) {
+            const storedAuth = await getStorageItemAsync(AUTH_TOKEN_KEY);
+            const rememberedLogin = await getStorageItemAsync(REMEMBER_ME_KEY);
+
+            if (rememberedLogin === 'true' && storedAuth !== null) {
                 try {
                     const parsedAuth = JSON.parse(storedAuth);
                     const timestamp = parsedAuth.timestamp;
 
                     // Check if stored auth is not expired (e.g., 30 days)
                     const isValid = (new Date().getTime() - timestamp) < (30 * 24 * 60 * 60 * 1000);
-
-                    if (isValid) {
+                    const user = await userRepository?.getById(parsedAuth.user);
+                    if (isValid && user) {
                         set({
-                            user: parsedAuth.user,
+                            user: user,
                             isAuthenticated: true,
                             rememberMe: true
                         });
