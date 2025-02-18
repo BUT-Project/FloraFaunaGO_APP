@@ -86,8 +86,8 @@ export default function ThumbAnimationView({
                 {
                     width: size.width,
                     height: size.height,
-                    left: position.x - (size.width / 2) - 10,
-                    top: position.y - (size.height / 2) - 10,
+                    left: position.x,
+                    top: position.y,
                     opacity: thumbnail?.anim ? 1 : 0,
                 },
                 thumbStyle,
