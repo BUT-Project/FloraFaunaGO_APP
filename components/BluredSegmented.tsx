@@ -1,5 +1,5 @@
 import {BlurView} from 'expo-blur';
-import {useMemo, useState} from 'react';
+import {ReactNode, useMemo, useState} from 'react';
 import {
     LayoutChangeEvent,
     LayoutRectangle,
@@ -18,41 +18,61 @@ const TRANSITION_DURATION_MS = 600;
 
 const IS_IOS = Platform.OS === 'ios';
 
+
+interface TabBarProps {
+    tabs: string[];
+    onTabPress: (index: number) => void;
+    withBlurryBG?: boolean;
+    onLayout?: (event: LayoutChangeEvent) => void;
+    children?: ReactNode;
+}
 const TabBar = ({
                     tabs,
                     onTabPress,
                     onLayout,
                     children,
-                    withBlurryBG,
-                }: {
-    tabs: string[];
-    onTabPress: (value: number) => void;
-    withBlurryBG?: boolean;
-    onLayout?: (event: LayoutChangeEvent) => void;
-    children?: React.ReactElement;
-}) => {
+                    withBlurryBG = false,
+                }: TabBarProps) => {
+    const [visibleTab, setVisibleTab] = useState<number>(0);
+
+    const handleTabPress = (index: number) => {
+        onTabPress(index);
+        if (!IS_IOS) {
+            setVisibleTab(index);
+        }
+    };
+
+    const renderTabLabel = (label: string, index: number) => {
+        if (IS_IOS) return label;
+        return visibleTab !== index ? label : '';
+    };
+
     return (
         <View
             onLayout={onLayout}
-            style={[
-                styles.tabBarCommon,
-                styles.tabBar,
-                styles.shadow,
-            ]}>
-         <BlurView intensity={100} style={styles.absolute}/>
-            {tabs.map((label, index) => {
-                return (
-                    <TouchableOpacity
-                        key={index}
-                        hitSlop={{top: 15, bottom: 15, left: 15, right: 15}}
-                        style={styles.tab}
-                        onPress={() => onTabPress(index)}>
-                        <Text numberOfLines={1} ellipsizeMode='tail' style={styles.tabText}>
-                            {label}
-                        </Text>
-                    </TouchableOpacity>
-                );
-            })}
+            style={[styles.tabBarCommon, styles.tabBar, styles.shadow]}
+        >
+            {withBlurryBG && IS_IOS && (
+                <BlurView intensity={100} style={styles.absolute} />
+            )}
+
+            {tabs.map((label, index) => (
+                <TouchableOpacity
+                    key={`tab-${index}`}
+                    hitSlop={{ top: 15, bottom: 15, left: 15, right: 15 }}
+                    style={styles.tab}
+                    onPress={() => handleTabPress(index)}
+                >
+                    <Text
+                        numberOfLines={1}
+                        ellipsizeMode="tail"
+                        style={styles.tabText}
+                    >
+                        {renderTabLabel(label, index)}
+                    </Text>
+                </TouchableOpacity>
+            ))}
+
             {children}
         </View>
     );
@@ -64,7 +84,7 @@ const Magnifier = ({
                        offsetX,
                        tabWidth,
                        barWidth,
-                       withBlurryBG,
+                       withBlurryBG = true,
                    }: {
     tabs: string[];
     zoomLevel: number;
