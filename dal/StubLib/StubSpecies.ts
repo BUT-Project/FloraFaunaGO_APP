@@ -149,7 +149,7 @@ export default class StubSpecies implements ISpeciesRepository {
     }
     public async identifySpecies(imageBase64: string): Promise<Specie> {
         try {
-            const response = await this.makeApiRequest(imageBase64);
+            //const response = await this.makeApiRequest(imageBase64);
             // ======= API =======
  /**           const newSpecie = await this.processApiResponse(response);
 

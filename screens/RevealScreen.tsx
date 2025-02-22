@@ -21,6 +21,8 @@ import {UploadContext} from "@/context/UploadContext";
 import ThumbAnimationView from "@/components/ThumbAnimationView";
 import {router} from "expo-router";
 import {useSpeciesStore} from "@/context/zustand/strore/useSpeciesStore";
+import SuccessPopup from '@/components/animation/sucess/SucessPopup';
+import { SuccessStore } from '@/context/zustand/strore/useSuccessStore';
 
 export type ThumbType = {
     main: string | null | undefined;
@@ -33,7 +35,7 @@ interface RevealScreenProps {
 
 export default function RevealScreen({specie}: RevealScreenProps) {
     const addingState = useContext(UploadContext);
-
+    const { setisVisible, setMessage, isVisibile, message } = SuccessStore();
     const [thumbnail, setThumbnail] = useState<ThumbType>({
         main: null,
         anim: null,
@@ -91,6 +93,7 @@ export default function RevealScreen({specie}: RevealScreenProps) {
                 -1,
                 true
             );
+       
         }, 3000);
 
         return () => clearTimeout(timeout);
@@ -141,6 +144,7 @@ export default function RevealScreen({specie}: RevealScreenProps) {
         <ThemedView style={styles.container}
                     onTouchEnd={() => runOnJS(handleScreenPress)()}
         >
+        <SuccessPopup message={"Success Unlocked!"} visible={isVisibile}/>
             <ThumbAnimationView
                 thumbnail={thumbnail}
                 size={{width: 250, height: 450}}

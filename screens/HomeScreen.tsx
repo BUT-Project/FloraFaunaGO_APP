@@ -22,13 +22,14 @@ import {Diet} from "@/model/domain/Diet";
 import {Family} from "@/model/domain/Family";
 import {TestSuccesParams} from "@/hooks/TestSuccesParams";
 import {SuccessStore} from "@/context/zustand/strore/useSuccessStore";
+import SuccessPopup from "@/components/animation/sucess/SucessPopup";
 
 const {width: SCREEN_WIDTH} = Dimensions.get('window');
 export default function HomeScreen() {
     const { speciesRepository } = StubData.getInstance();
     const { successRepository } = StubData.getInstance();
     const [location, setLocation] = useState<Location.LocationObject | null>(null);
-    const [updateSuccesses, setUpdateSuccesses] = useState<string[]>([]);
+    const { setisVisible, setMessage, isVisibile, message } = SuccessStore();
 
 
     const router = useRouter();
@@ -44,6 +45,7 @@ export default function HomeScreen() {
             setLocation(location);
         })();
     }, []);
+
 
     const slideAnim = useSharedValue(0);
 
@@ -87,6 +89,9 @@ export default function HomeScreen() {
         }
         if (success.objectif !== success.actualVal) {
             await SuccessStore.getState().updateSuccess(name);
+            setisVisible(true);
+            setMessage(success.nom+ " completed ! 🏆");
+
         }
     };
     const handleCameraReady = useCallback(() => {
@@ -102,8 +107,12 @@ export default function HomeScreen() {
             const photo = await cameraRef.current.takePictureAsync({base64: true});
             setCapturedImage(photo?.uri ?? null);
             setBase64Image(photo?.base64 ?? null);  // Store the base64 data
-            if((await successRepository?.getById("unlockPhotographeAmateur"))?.objectif != (await successRepository?.getById("unlockPhotographeAmateur"))?.actualVal)
+            var success = await successRepository?.getById("unlockPhotographeAmateur")
+            if(success && success?.objectif != success?.actualVal){
                 await SuccessStore.getState().updateSuccess("unlockPhotographeAmateur");
+                setisVisible(true);
+                setMessage(success.nom+ " completed ! 🏆");
+            }
 
             await refetch();
         } catch (error) {
@@ -161,11 +170,15 @@ export default function HomeScreen() {
 
     return (
         <SafeAreaView style={styles.container}>
+
             <ThemedView style={styles.content}>
+
                 <View style={styles.segmentedControl}>
                     <BlurSegmented tabsName={['Camera', 'Map']} onTabChange={switchView}/>
                 </View>
+                
                 <Animated.View style={[styles.viewContainer, animatedStyle]}>
+                    
                     <CameraView style={styles.camera} facing={facing} ref={cameraRef} onCameraReady={handleCameraReady}>
                         <CameraControls
                             facing={facing}
@@ -176,11 +189,14 @@ export default function HomeScreen() {
                     </CameraView>
                     {showProgress && (
                         <View style={styles.progressOverlay}>
+                           <SuccessPopup message={message} visible={isVisibile} />
                             <ARProgressIndicator width={SCREEN_WIDTH} height={SCREEN_WIDTH}/>
                         </View>
                     )}
                     <MainMapView location={location}  style={styles.map}/>
+
                 </Animated.View>
+
             </ThemedView>
         </SafeAreaView>
     );
@@ -191,7 +207,6 @@ const styles = StyleSheet.create({
         flex: 1,
         borderTopLeftRadius: 30,
         borderTopRightRadius: 30,
-        overflow: 'hidden'
     },
     progressOverlay: {
         flex: 1,
