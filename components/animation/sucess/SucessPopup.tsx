@@ -1,6 +1,6 @@
 import { SuccessStore } from '@/context/zustand/strore/useSuccessStore';
 import React, { useEffect, useRef } from 'react';
-import { View, Text, Modal, StyleSheet, TouchableOpacity, Animated, useAnimatedValue } from 'react-native';
+import { View, Text, Modal, StyleSheet, Animated, Pressable } from 'react-native';
 
 interface SuccessPopupProps {
     message: String;
@@ -31,22 +31,29 @@ export default function SuccessPopup({ message, visible }: SuccessPopupProps) {
     useEffect(() => {
         setTimeout(() => {
             setisVisible(false);
-        }, 7000);
+        }, 4000);
         return; 
     }, [isVisibile]);
 
     return (
-        <Modal transparent animationType="none" visible={visible}>
-                <Animated.View style={[styles.container, { transform: [{ translateY }] }]}>                
+        <Modal pointerEvents="box-none" transparent animationType="none" visible={visible}>
+            <Pressable onPress={() => setisVisible(false)} style={styles.press}>
+                <Animated.View 
+                pointerEvents="box-none"          
+                style={[styles.container, { transform: [{ translateY }] }]}>                
                     <View style={styles.popup}>
                     <Text style={styles.message}>{message}</Text>
                 </View>
             </Animated.View>
+            </Pressable>
         </Modal>
     );
 }
 
 const styles = StyleSheet.create({
+    press: {
+        flex: 1,
+    },
     container: {
         flex: 1,
         alignSelf: 'center',

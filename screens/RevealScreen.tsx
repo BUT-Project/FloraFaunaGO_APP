@@ -1,5 +1,5 @@
-import React, {useContext, useEffect, useRef, useState} from 'react';
-import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import Animated, {
     Easing,
     runOnJS,
@@ -12,17 +12,19 @@ import Animated, {
 } from 'react-native-reanimated';
 import SpecieCard from "@/components/SpecieCard";
 import Specie from "@/model/domain/Specie";
-import {ThemedView} from "@/components/ui/themed/ThemedView";
+import { ThemedView } from "@/components/ui/themed/ThemedView";
 import FlipAnimationContainer from "@/components/animation/FlipAnimationContainer";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import EntranceFlipAnimation from "@/components/animation/EntranceFlipAnimation";
-import {ThemedText} from "@/components/ui/themed/ThemedText";
-import {UploadContext} from "@/context/UploadContext";
+import { ThemedText } from "@/components/ui/themed/ThemedText";
+import { UploadContext } from "@/context/UploadContext";
 import ThumbAnimationView from "@/components/ThumbAnimationView";
-import {router} from "expo-router";
-import {useSpeciesStore} from "@/context/zustand/strore/useSpeciesStore";
+import { router } from "expo-router";
+import { useSpeciesStore } from "@/context/zustand/strore/useSpeciesStore";
 import SuccessPopup from '@/components/animation/sucess/SucessPopup';
 import { SuccessStore } from '@/context/zustand/strore/useSuccessStore';
+import { SuccessType } from '@/model/domain/SuccessType';
+import { processSuccessByType } from '@/shared/successHelper';
 
 export type ThumbType = {
     main: string | null | undefined;
@@ -33,15 +35,15 @@ interface RevealScreenProps {
     specie: Specie;
 }
 
-export default function RevealScreen({specie}: RevealScreenProps) {
+export default function RevealScreen({ specie }: RevealScreenProps) {
     const addingState = useContext(UploadContext);
-    const { setisVisible, setMessage, isVisibile, message } = SuccessStore();
+    const { message, isVisibile } = SuccessStore();
     const [thumbnail, setThumbnail] = useState<ThumbType>({
         main: null,
         anim: null,
     });
 
-    const [thumbPosition, setThumbPosition] = useState({x: 0, y: 0});
+    const [thumbPosition, setThumbPosition] = useState({ x: 0, y: 0 });
 
     const thumbRef = useRef<View>(null);
 
@@ -57,7 +59,7 @@ export default function RevealScreen({specie}: RevealScreenProps) {
     const [isBackShowing, setIsBackShowing] = useState(false);
 
     const style = useAnimatedStyle(() => {
-        const {pitch, yaw, qy} = animatedSensor.sensor.value;
+        const { pitch, yaw, qy } = animatedSensor.sensor.value;
 
         let num = qy > 0 ? 30 : 50;
 
@@ -65,52 +67,51 @@ export default function RevealScreen({specie}: RevealScreenProps) {
         let pitchValue = 26 * parseFloat(pitch.toFixed(2));
 
         return {
-            transform: [{translateX: yawValue}, {translateY: pitchValue}],
+            transform: [{ translateX: yawValue }, { translateY: pitchValue }],
         };
     });
 
     const indicatorStyle = useAnimatedStyle(() => {
         return {
             opacity: indicatorOpacity.value,
-            transform: [{scale: indicatorScale.value}],
+            transform: [{ scale: indicatorScale.value }],
         };
     });
 
     const handleScreenPress = () => {
         if (animationCompleted.value) {
-            indicatorOpacity.value = withTiming(0, {duration: 300});
+            indicatorOpacity.value = withTiming(0, { duration: 300 });
         }
     };
 
     useEffect(() => {
-        setThumbnail({main: specie.image, anim: null});
+        setThumbnail({ main: specie.image, anim: null });
         // Simulate animation completion after 3 seconds
         const timeout = setTimeout(() => {
             animationCompleted.value = true;
-            indicatorOpacity.value = withTiming(1, {duration: 500});
+            indicatorOpacity.value = withTiming(1, { duration: 500 });
             indicatorScale.value = withRepeat(
-                withTiming(1.2, {duration: 1000, easing: Easing.inOut(Easing.ease)}),
+                withTiming(1.2, { duration: 1000, easing: Easing.inOut(Easing.ease) }),
                 -1,
                 true
             );
-       
-        }, 3000);
 
+        }, 3000);
+        processSuccessByType(SuccessType.CAPTURE, specie);
         return () => clearTimeout(timeout);
     }, []);
 
     const cardStyle = useAnimatedStyle(() => {
         return {
-            transform: [{scale: cardHeight.value}],
+            transform: [{ scale: cardHeight.value }],
         };
     });
-    const resetState  = useSpeciesStore((state)=> state.resetState);
-
+    const resetState = useSpeciesStore((state) => state.resetState);
     function addToCollection() {
         try {
             // logic to create post
             if (isBackShowing) {
-                cardHeight.value = withTiming(0.4, {duration: 300});
+                cardHeight.value = withTiming(0.4, { duration: 300 });
             }
             addingState?.setUploading(true);
             setTimeout(() => {
@@ -126,14 +127,14 @@ export default function RevealScreen({specie}: RevealScreenProps) {
     }
 
     const onLeave = async () => {
-        setThumbnail({main: null, anim: specie.image});
+        setThumbnail({ main: null, anim: specie.image });
 
         thumbAnimation.value = withTiming(
             1,
-            {duration: 800, easing: Easing.bezier(0.12, 0, 0.39, 0)},
+            { duration: 800, easing: Easing.bezier(0.12, 0, 0.39, 0) },
             finished => {
                 if (finished) {
-                    runOnJS(setThumbnail)({main: null, anim: null});
+                    runOnJS(setThumbnail)({ main: null, anim: null });
                     runOnJS(addToCollection)();
                 }
             },
@@ -142,47 +143,48 @@ export default function RevealScreen({specie}: RevealScreenProps) {
 
     return (
         <ThemedView style={styles.container}
-                    onTouchEnd={() => runOnJS(handleScreenPress)()}
+            onTouchEnd={() => runOnJS(handleScreenPress)()}
         >
-        <SuccessPopup message={"Success Unlocked!"} visible={isVisibile}/>
             <ThumbAnimationView
                 thumbnail={thumbnail}
-                size={{width: 250, height: 450}}
+                size={{ width: 250, height: 450 }}
                 position={thumbPosition}
-                customThumbView={<SpecieCard specie={specie} style={cardStyle}/>}
+                customThumbView={<SpecieCard specie={specie} style={cardStyle} />}
                 thumbAnimation={thumbAnimation}
             />
             {thumbnail.main ? (
                 <EntranceFlipAnimation content={
-                    <Animated.View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}} ref={thumbRef}>
-                    <FlipAnimationContainer
-                        frontContent={
-                            <ThemedView style={[styles.card]}>
-                                <Animated.View style={[styles.imageContainer]}>
-                                    <Ionicons name="help-circle" size={100} color="#242424" style={styles.image}/>
-                                </Animated.View>
-                            </ThemedView>
-                        }
-                        backContent={
-                            <SpecieCard specie={specie} style={{...style, ...cardStyle}}/>}
-                        onFaceChange={(isBackVisible) => {
-                            setIsBackShowing(isBackVisible);
-                        }}
-                    />
+                    <Animated.View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }} ref={thumbRef}>
+                        <FlipAnimationContainer
+                            frontContent={
+                                
+                                <ThemedView style={[styles.card]}>
+                                                            <SuccessPopup message={message} visible={isVisibile} />
+                                    <Animated.View style={[styles.imageContainer]}>
+                                        <Ionicons name="help-circle" size={100} color="#242424" style={styles.image} />
+                                    </Animated.View>
+                                </ThemedView>
+                            }
+                            backContent={
+                                <SpecieCard specie={specie} style={{ ...style, ...cardStyle }} />}
+                            onFaceChange={(isBackVisible) => {
+                                setIsBackShowing(isBackVisible);
+                            }}
+                        />
                     </Animated.View>
                 }
-                                       onAnimationComplete={
-                                           () => {
-                                               thumbRef.current?.measure((x, y, width, height, px, py) => {
-                                                   setThumbPosition({x: x, y: y});
-                                               });
-                                           }
-                                       }
+                    onAnimationComplete={
+                        () => {
+                            thumbRef.current?.measure((x, y, width, height, px, py) => {
+                                setThumbPosition({ x: x, y: y });
+                            });
+                        }
+                    }
                 />
             ) : <></>}
             <Animated.View style={[styles.indicator, indicatorStyle]}>
                 <ThemedView style={styles.indicatorContent}>
-                    <Ionicons name="hand-left" size={30} color="white"/>
+                    <Ionicons name="hand-left" size={30} color="white" />
                 </ThemedView>
             </Animated.View>
             {(isBackShowing && !thumbnail.anim) && (

@@ -107,7 +107,7 @@ export default function ProfilScreen() {
                     renderItem={({item}) => <SucessListItemVertical items={item}/>}
                     numColumns={3}
                     ListHeaderComponent={renderHeader}
-                    columnWrapperStyle={{ justifyContent: "space-between", marginBottom: 10 }}
+                    columnWrapperStyle={{ justifyContent: "center", marginBottom: 10 }}
                 />
             </SafeAreaView>
         </ThemedView>
@@ -126,6 +126,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#ccc',
     },
     list: {
+        width: '100%',
         alignSelf : "center",
     },
     pagination: {

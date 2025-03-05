@@ -15,21 +15,21 @@ import {useRouter} from "expo-router";
 import StubData from "@/dal/StubLib/StubData";
 import Specie from "@/model/domain/Specie";
 import {useSpeciesStore} from "@/context/zustand/strore/useSpeciesStore";
-import {SuccessList} from "@/dal/StubLib/Data";
 import {Kingdom} from "@/model/domain/Kingdom";
 import {Class} from "@/model/domain/Class";
 import {Diet} from "@/model/domain/Diet";
 import {Family} from "@/model/domain/Family";
-import {TestSuccesParams} from "@/hooks/TestSuccesParams";
 import {SuccessStore} from "@/context/zustand/strore/useSuccessStore";
 import SuccessPopup from "@/components/animation/sucess/SucessPopup";
+import { SuccessType } from "@/model/domain/SuccessType";
+import { processSuccessByType } from "@/shared/successHelper";
 
 const {width: SCREEN_WIDTH} = Dimensions.get('window');
 export default function HomeScreen() {
     const { speciesRepository } = StubData.getInstance();
     const { successRepository } = StubData.getInstance();
     const [location, setLocation] = useState<Location.LocationObject | null>(null);
-    const { setisVisible, setMessage, isVisibile, message } = SuccessStore();
+    const { isVisibile, message } = SuccessStore();
 
 
     const router = useRouter();
@@ -64,36 +64,12 @@ export default function HomeScreen() {
             if (!speciesRepository) throw new Error('No Repository');
             if (!base64Image) throw new Error('No base64 image data');
             var spec = await speciesRepository.identifySpecies(base64Image);
-            await SuccessStore.getState().updateSuccess("unlockPhotographeAmateur");
-            await TestSucces({ name: "unlockMaîtreDesAnimaux", spec, kg: Kingdom.Animal });
-            await TestSucces({ name: "unlockPêcheurExpert", spec, cl: Class.Fish });
-            await TestSucces({ name: "unlockMaitreDeLair", spec, kg: Kingdom.Animal,cl:Class.Birds });
-            await TestSucces({ name: "unlockChasseurDinsect", spec,cl:Class.Insects, });
 
-            return spec
-        },
-        enabled: false,
-    });
+            await processSuccessByType(SuccessType.PHOTO, spec);
+            return spec;
+    }});
 
-    const TestSucces = async  ({ name, spec, cl, kg, dt, fm }: TestSuccesParams) => {
-        if (!successRepository || !spec) return;
-        const success = await successRepository.getById(name);
-        if (!success) return;
-        if (
-            (cl && cl !== spec.class) ||
-            (kg && kg !== spec.kingdom) ||
-            (dt && dt !== spec.diet) ||
-            (fm && fm !== spec.family)
-        ) {
-            return; // Si une condition est fausse, on ne déclenche pas l'événement
-        }
-        if (success.objectif !== success.actualVal) {
-            await SuccessStore.getState().updateSuccess(name);
-            setisVisible(true);
-            setMessage(success.nom+ " completed ! 🏆");
-
-        }
-    };
+   
     const handleCameraReady = useCallback(() => {
         setIsCameraReady(true);
     }, []);
@@ -107,13 +83,6 @@ export default function HomeScreen() {
             const photo = await cameraRef.current.takePictureAsync({base64: true});
             setCapturedImage(photo?.uri ?? null);
             setBase64Image(photo?.base64 ?? null);  // Store the base64 data
-            var success = await successRepository?.getById("unlockPhotographeAmateur")
-            if(success && success?.objectif != success?.actualVal){
-                await SuccessStore.getState().updateSuccess("unlockPhotographeAmateur");
-                setisVisible(true);
-                setMessage(success.nom+ " completed ! 🏆");
-            }
-
             await refetch();
         } catch (error) {
             console.error('Error capturing image:', error);

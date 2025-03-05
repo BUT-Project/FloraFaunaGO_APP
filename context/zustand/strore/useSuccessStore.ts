@@ -31,20 +31,23 @@ export const SuccessStore = create<SuccessState>()(
             },
 
             setMessage: (message: string) => {
-                set({message:message })
+                    set({ message: message });
     },
     
     updateSuccess: async (successId: string) => {
-        var sucess = await StubData.getInstance().successRepository?.getById(successId)
-        var stub = StubData.getInstance()
-        if(sucess !== undefined) {
-            sucess.actualVal += 1
-        stub.successRepository?.update(successId,sucess);
-        
+        try {
+            var sucess = await StubData.getInstance().successRepository?.getById(successId)
+            var stub = StubData.getInstance()
+            if(sucess !== undefined) {
+                sucess.actualVal += 1
+            stub.successRepository?.update(successId,sucess);
+            get().setMessage(sucess.nom+ " completed ! 🏆")
+            get().setisVisible(true)
+            } 
+        }
+        catch (error) {
+            console.error(error)
+        }
  }
-    },
+    
 })));
-
-function setisVisible(arg0: boolean) {
-    throw new Error('Function not implemented.');
-}

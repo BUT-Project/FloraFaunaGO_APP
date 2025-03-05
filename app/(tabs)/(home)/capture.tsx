@@ -19,7 +19,7 @@ const POKEBALL_BASE_SIZE = 50;
 
 export default function Capture() {
     const imageUri = useSpeciesStore((state) => state.currentImageUri);
-    const { setisVisible, setMessage, isVisibile, message } = SuccessStore();
+    const { isVisibile, message } = SuccessStore();
     const router = useRouter();
     const clock = useClock();
     const [captureSuccess, setCaptureSuccess] = useState(false);
@@ -153,7 +153,7 @@ export default function Capture() {
     return (
         <GestureDetector gesture={throwGesture}>
             <View style={{flex: 1}}>
-            <SuccessPopup message={message} visible={isVisibile} />
+            <SuccessPopup visible={isVisibile} message={message} />
                 <Canvas style={{flex: 1}}>
                     {background && (
                         <Image
