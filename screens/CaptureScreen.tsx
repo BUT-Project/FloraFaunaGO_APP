@@ -26,7 +26,7 @@ class AnimalActionData {
     constructor(
       public type: AnimalActionType,
       public label: string,
-      public icon: string,
+      public icon: keyof typeof Ionicons.glyphMap,
       public correctResponses: PlayerActionType[]
     ) {}
   
@@ -39,7 +39,7 @@ class PlayerActionData {
     constructor(
         public type: PlayerActionType,
         public label: string,
-        public icon: string,
+        public icon: keyof typeof Ionicons.glyphMap,
         public color: string,
         public successMessage: string,
         public failureMessage: string
@@ -62,7 +62,7 @@ const AnimalActions: Record<AnimalActionType, AnimalActionData> = {
     [AnimalActionType.Flee]: new AnimalActionData(
       AnimalActionType.Flee,
       "tente de s’enfuir !",
-      "run",
+      "exit-outline",
       [PlayerActionType.TakePhoto]
     ),
 };
@@ -162,7 +162,6 @@ export default function CaptureScreen({ animalPhoto, onResult, onCancel }: Props
                     ))}
                 </ThemedView>
             </View>
-
             </ThemedView>
         </ImageBackground>
     );
@@ -172,7 +171,7 @@ export default function CaptureScreen({ animalPhoto, onResult, onCancel }: Props
     container: { flex: 1 },
     overlay: {
       flex: 1,
-      backgroundColor: "'rgba(0,0,0,0.0)'",
+      backgroundColor: "rgba(0,0,0,0.3)",
     },
     topBar: {
       width: '100%',
