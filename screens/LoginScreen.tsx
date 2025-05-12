@@ -37,6 +37,9 @@ export default function LoginScreen() {
                 value={username}
                 onChangeText={setUsername}
                 keyboardType="email-address"
+                autoCapitalize="none"
+                autoComplete="email"
+                autoCorrect={false}
             />
             <InputWithIcon
                 icon="lock"
@@ -44,6 +47,8 @@ export default function LoginScreen() {
                 value={password}
                 onChangeText={setPassword}
                 secureTextEntry
+                autoCapitalize="none"
+                autoCorrect={false}
             />
             <View style={styles.rememberMeContainer}>
                 <TouchableOpacity
