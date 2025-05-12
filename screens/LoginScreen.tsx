@@ -1,7 +1,7 @@
-import React, {useCallback, useState} from 'react';
-import {Alert, Platform, StyleSheet, Text, TouchableOpacity, View,} from 'react-native';
+import React from 'react';
+import {Platform, StyleSheet, Text, TouchableOpacity, View,} from 'react-native';
 import normalize from '@/components/ui/responsive/Normalize';
-import {Link, router} from "expo-router";
+import {Link} from "expo-router";
 import {Entypo, FontAwesome} from "@expo/vector-icons";
 import {InputWithIcon} from "@/components/ui/InputWithIcon";
 import {useLoginViewModel} from "@/hooks/viewModels/auth/useLoginViewModel";

@@ -4,6 +4,7 @@ import MapView, {Marker} from "react-native-maps";
 import {ThemedView} from '@/components/ui/themed/ThemedView';
 import {Ionicons} from '@expo/vector-icons';
 import Location from "@/model/domain/Location";
+
 const { width } = Dimensions.get('window');
 
 export type ExtendableMapProps = { 

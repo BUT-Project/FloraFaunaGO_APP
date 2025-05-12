@@ -1,10 +1,8 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import React, {useContext, useEffect, useRef, useState} from 'react';
+import {StyleSheet, TouchableOpacity} from 'react-native';
 import Animated, {
     Easing,
     runOnJS,
-    SensorType,
-    useAnimatedSensor,
     useAnimatedStyle,
     useSharedValue,
     withRepeat,
@@ -43,13 +41,12 @@ export default function RevealScreen({ specie }: RevealScreenProps) {
         anim: null,
     });
 
-    const [thumbPosition, setThumbPosition] = useState({ x: 0, y: 0 });
+    const [thumbPosition, setThumbPosition] = useState<{x: number, y: number}>({x: 0, y: 0});
 
-    const thumbRef = useRef<View>(null);
+    const thumbRef = useRef<Animated.View>(null);
 
     const thumbAnimation = useSharedValue(0);
 
-    const animatedSensor = useAnimatedSensor(SensorType.ROTATION);
     const animationCompleted = useSharedValue(false);
     const indicatorOpacity = useSharedValue(0);
     const indicatorScale = useSharedValue(1);
@@ -57,19 +54,6 @@ export default function RevealScreen({ specie }: RevealScreenProps) {
     const cardHeight = useSharedValue(1);
 
     const [isBackShowing, setIsBackShowing] = useState(false);
-
-    const style = useAnimatedStyle(() => {
-        const { pitch, yaw, qy } = animatedSensor.sensor.value;
-
-        let num = qy > 0 ? 30 : 50;
-
-        let yawValue = qy > 0 ? num * 2.5 * parseFloat(qy.toFixed(2)) : num * parseFloat(qy.toFixed(2));
-        let pitchValue = 26 * parseFloat(pitch.toFixed(2));
-
-        return {
-            transform: [{ translateX: yawValue }, { translateY: pitchValue }],
-        };
-    });
 
     const indicatorStyle = useAnimatedStyle(() => {
         return {
@@ -127,7 +111,10 @@ export default function RevealScreen({ specie }: RevealScreenProps) {
     }
 
     const onLeave = async () => {
-        setThumbnail({ main: null, anim: specie.image });
+        thumbRef.current?.measure((x, y, width, height, px, py) => {
+            setThumbPosition({x: px, y: py});
+        });
+        setThumbnail({main: null, anim: specie.image});
 
         thumbAnimation.value = withTiming(
             1,
@@ -154,32 +141,23 @@ export default function RevealScreen({ specie }: RevealScreenProps) {
             />
             {thumbnail.main ? (
                 <EntranceFlipAnimation content={
-                    <Animated.View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }} ref={thumbRef}>
-                        <FlipAnimationContainer
-                            frontContent={
-                                
-                                <ThemedView style={[styles.card]}>
-                                                            <SuccessPopup message={message} visible={isVisibile} />
-                                    <Animated.View style={[styles.imageContainer]}>
-                                        <Ionicons name="help-circle" size={100} color="#242424" style={styles.image} />
-                                    </Animated.View>
-                                </ThemedView>
-                            }
-                            backContent={
-                                <SpecieCard specie={specie} style={{ ...style, ...cardStyle }} />}
-                            onFaceChange={(isBackVisible) => {
-                                setIsBackShowing(isBackVisible);
-                            }}
-                        />
+                    <Animated.View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                    <FlipAnimationContainer
+                        frontContent={
+                            <ThemedView style={[styles.card]}>
+                                <Animated.View style={[styles.imageContainer]}>
+                                    <Ionicons name="help-circle" size={100} color="#242424" style={styles.image}/>
+                                </Animated.View>
+                            </ThemedView>
+                        }
+                        backContent={
+                            <SpecieCard ref={thumbRef} specie={specie}/>}
+                        onFaceChange={(isBackVisible) => {
+                            setIsBackShowing(isBackVisible);
+                        }}
+                    />
                     </Animated.View>
                 }
-                    onAnimationComplete={
-                        () => {
-                            thumbRef.current?.measure((x, y, width, height, px, py) => {
-                                setThumbPosition({ x: x, y: y });
-                            });
-                        }
-                    }
                 />
             ) : <></>}
             <Animated.View style={[styles.indicator, indicatorStyle]}>

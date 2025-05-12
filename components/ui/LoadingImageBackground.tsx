@@ -1,7 +1,8 @@
-import React, { useState } from "react";
-import { ImageBackground, type ImageBackgroundProps, StyleSheet } from "react-native";
+import React, {useState} from "react";
+import {ImageBackground, type ImageBackgroundProps, StyleSheet} from "react-native";
 import Skeleton from "./Skeleton";
 import CrossPlatformBlur from "../CrossPlatformBlur";
+
 export type LoadingImageBackgroundProps = ImageBackgroundProps & {
     children: any;
     width: number;

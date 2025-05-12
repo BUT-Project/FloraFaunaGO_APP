@@ -4,11 +4,11 @@ import SpeciesImagePager from "@/components/encyclopedia/SpeciesImagePager";
 import Capture from '@/model/domain/Capture';
 import Specie from '@/model/domain/Specie';
 import Habitat from '@/model/domain/Habitat';
-import { Climate } from '@/model/domain/Climate';
-import { Diet } from '@/model/domain/Diet';
-import { Class } from '@/model/domain/Class';
-import { Family } from '@/model/domain/Family';
-import { Kingdom } from '@/model/domain/Kingdom';
+import {Climate} from '@/model/domain/Climate';
+import {Diet} from '@/model/domain/Diet';
+import {Class} from '@/model/domain/Class';
+import {Family} from '@/model/domain/Family';
+import {Kingdom} from '@/model/domain/Kingdom';
 
 describe('<SpeciesImagePager />', () => {
     test('Text renders correctly on SpeciesImagePager', () => {

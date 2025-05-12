@@ -4,6 +4,7 @@ import {ThemedText} from "@/components/ui/themed/ThemedText";
 import React, {useEffect, useState} from "react";
 import {SafeAreaView} from "react-native-safe-area-context";
 import {LinearGradient} from 'expo-linear-gradient';
+import {useAuthStore} from "@/context/zustand/strore/useAuthStore";
 
 
 const { width,height } = Dimensions.get('window');
@@ -14,6 +15,8 @@ export default function SettingsScreen() {
     const switchThemes = () => {
         setSwitchTheme(previousState => !previousState);
     }; 
+
+    const logout = useAuthStore((state)=>state.logout);
 
     useEffect(() => {
         Appearance.setColorScheme(theme); // Appliquer le schéma de couleurs actuel
@@ -59,7 +62,7 @@ export default function SettingsScreen() {
                      <ThemedText type={"subtitle"} style={styles.buttonText}>Activer l'économie de batterie</ThemedText>
                  </TouchableOpacity>
 
-                 <TouchableOpacity style={styles.button}>
+                 <TouchableOpacity style={styles.button} onPress={logout}>
                      <ThemedText type={"subtitle"} style={styles.buttonText}>Deconnexion</ThemedText>
                  </TouchableOpacity>
 

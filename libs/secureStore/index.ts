@@ -3,6 +3,24 @@ import * as SecureStore from 'expo-secure-store';
 import {useAsyncState, UseStateHook} from "@/shared/utils";
 import {useCallback, useEffect} from "react";
 
+export async function getStorageItemAsync(key: string): Promise<string | null> {
+    if (Platform.OS === 'web') {
+        try {
+            return localStorage.getItem(key);
+        } catch (e) {
+            console.error('Local storage is unavailable:', e);
+            return null;
+        }
+    } else {
+        try {
+            return await SecureStore.getItemAsync(key);
+        } catch (e) {
+            console.error('SecureStore is unavailable:', e);
+            return null;
+        }
+    }
+}
+
 export async function setStorageItemAsync(key: string, value: string | null) {
     if (Platform.OS === 'web') {
         try {

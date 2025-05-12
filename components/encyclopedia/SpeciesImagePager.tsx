@@ -1,12 +1,12 @@
-import React, { useMemo, useRef, useState } from "react";
-import { Dimensions, StyleSheet, TouchableOpacity } from "react-native";
-import Carousel, { Pagination } from "react-native-snap-carousel";
-import { Ionicons } from "@expo/vector-icons";
-import { ThemedText } from "@/components/ui/themed/ThemedText";
-import { ThemedView } from "@/components/ui/themed/ThemedView";
-import { LoadingImageBackground } from "../ui/LoadingImageBackground";
-import { Colors } from "@/constants/Colors";
-import { useRouter } from "expo-router";
+import React, {useMemo, useRef, useState} from "react";
+import {Dimensions, StyleSheet, TouchableOpacity} from "react-native";
+import Carousel, {Pagination} from "react-native-snap-carousel";
+import {Ionicons} from "@expo/vector-icons";
+import {ThemedText} from "@/components/ui/themed/ThemedText";
+import {ThemedView} from "@/components/ui/themed/ThemedView";
+import {LoadingImageBackground} from "../ui/LoadingImageBackground";
+import {Colors} from "@/constants/Colors";
+import {useRouter} from "expo-router";
 import Capture from '@/model/domain/Capture';
 import Specie from "@/model/domain/Specie";
 

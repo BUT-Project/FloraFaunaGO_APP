@@ -1,12 +1,11 @@
 import Animated, {useAnimatedStyle, useSharedValue, withSpring} from "react-native-reanimated";
-import {Image, Pressable, StyleSheet, View, ViewStyle} from "react-native";
+import {Image, Pressable, StyleSheet, View, ViewProps} from "react-native";
 import {ThemedText} from "@/components/ui/themed/ThemedText";
-import React, {useState} from "react";
+import React, {forwardRef, useState} from "react";
 import Specie from "@/model/domain/Specie";
 
-interface SpecieCardProps {
-    specie: Specie,
-    style?: ViewStyle
+interface SpecieCardProps extends ViewProps {
+    specie: Specie;
 }
 
 const BORDER_RADIUS = 20;
@@ -15,8 +14,8 @@ const COLLAPSED_HEIGHT = 450;
 const EXPANDED_HEIGHT = 550;
 const MAX_COLLAPSED_LINES = 2;
 
-export default function SpecieCard(props: SpecieCardProps) {
-    const { id, name, image, description, family } = props.specie;
+const SpecieCard = forwardRef<Animated.View, SpecieCardProps>(({specie, ...props}, ref) => {
+    const { id, name, image, description, family } = specie;
     const formattedId = `#${id.toString().padStart(3, '0')}`;
 
     // State for tracking if description is expanded
@@ -59,7 +58,7 @@ export default function SpecieCard(props: SpecieCardProps) {
     };
 
     return (
-        <Animated.View style={[styles.container, animatedCardStyle, props.style]}>
+        <Animated.View {...props} ref={ref} style={[styles.container, animatedCardStyle, props.style]} >
             <View style={styles.cardContent}>
                 <View style={styles.header}>
                     <ThemedText style={styles.name}>{name || 'Unknown'}</ThemedText>
@@ -93,8 +92,7 @@ export default function SpecieCard(props: SpecieCardProps) {
             </View>
         </Animated.View>
     );
-}
-
+})
 const styles = StyleSheet.create({
     container: {
         width: CARD_WIDTH + 20,
@@ -180,3 +178,5 @@ const styles = StyleSheet.create({
         textAlign: 'right',
     },
 });
+
+export default SpecieCard

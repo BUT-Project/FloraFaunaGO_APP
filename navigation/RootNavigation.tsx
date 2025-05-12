@@ -4,8 +4,7 @@ import {TabBarIcon} from "@/components/navigation/TabBarIcon";
 import {StyleSheet, Text} from "react-native";
 import Animated, {useAnimatedStyle, withSpring} from "react-native-reanimated";
 import {useColorScheme} from "@/hooks/useColorScheme";
-import {useContext, useEffect, useState} from "react";
-import {useAuthStore} from "@/context/zustand/strore/useAuthStore";
+import {useContext} from "react";
 import {UploadContext} from "@/context/UploadContext";
 
 export default function RootNavigation() {

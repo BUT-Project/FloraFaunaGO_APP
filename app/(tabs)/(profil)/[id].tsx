@@ -7,7 +7,7 @@ import {ActivityIndicator} from "react-native";
 import {Success} from "@/model/domain/Success";
 import {ThemedText} from "@/components/ui/themed/ThemedText";
 
-export default  function details() {
+export default  function Details() {
     const {id} = useLocalSearchParams();
     const [sucess, setSucess] = useState<Success | null>(null); // État pour stocker les données
     const [loading, setLoading] = useState(true); // État de chargement

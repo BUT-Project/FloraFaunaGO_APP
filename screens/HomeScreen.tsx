@@ -24,13 +24,13 @@ import SuccessPopup from "@/components/animation/sucess/SucessPopup";
 import { SuccessType } from "@/model/domain/SuccessType";
 import { processSuccessByType } from "@/shared/successHelper";
 
+
 const {width: SCREEN_WIDTH} = Dimensions.get('window');
 export default function HomeScreen() {
     const { speciesRepository } = StubData.getInstance();
     const { successRepository } = StubData.getInstance();
     const [location, setLocation] = useState<Location.LocationObject | null>(null);
     const { isVisibile, message } = SuccessStore();
-
 
     const router = useRouter();
     useEffect(() => {

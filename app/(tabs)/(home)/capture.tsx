@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Canvas, Circle, Group, Image, SkImage, useClock, useImage, Rect} from "@shopify/react-native-skia";
+import {Canvas, Group, Image, Rect, SkImage, useClock, useImage} from "@shopify/react-native-skia";
 import {runOnJS, useDerivedValue, useSharedValue, withRepeat, withSequence, withTiming,} from 'react-native-reanimated';
 import {Alert, Dimensions, TouchableOpacity, View} from "react-native";
 import {Gesture, GestureDetector} from "react-native-gesture-handler";
@@ -14,7 +14,7 @@ const center = {
     x: screenWidth / 2,
     y: screenHeight / 2,
 };
-const [upperLimit, lowerLimit] = [center.y - 200, center.y + 100];
+const upperLimit = center.y + 50;
 const POKEBALL_BASE_SIZE = 50;
 
 export default function Capture() {
@@ -99,7 +99,7 @@ export default function Capture() {
     const resetPokeball = () => {
         pokeballX.value = withTiming(center.x - 20);
         pokeballY.value = withTiming(screenHeight - 200);
-        pokeballScale.value = withTiming(50);
+        pokeballScale.value = withTiming(POKEBALL_BASE_SIZE);
     };
 
     const handleThrowEnd = () => {
@@ -120,9 +120,9 @@ export default function Capture() {
             pokeballX.value = e.x;
             pokeballY.value = e.y;
         })
-        .onEnd((e) => {
+        .onEnd((_) => {
             isDragging.value = false;
-            if (pokeballY.value < 700) {
+            if (pokeballY.value < upperLimit) {
                 pokeballY.value = withTiming(300, {duration: 250});
 
                 const diff = Math.abs(center.x - pokeballX.value);
@@ -145,11 +145,13 @@ export default function Capture() {
 
     // Add cage opening animation
     const cageOpenProgress = useSharedValue(0);
+
     useEffect(() => {
         if (captureSuccess) {
             cageOpenProgress.value = withTiming(1, {duration: 800});
         }
     }, [captureSuccess]);
+
     return (
         <GestureDetector gesture={throwGesture}>
             <View style={{flex: 1}}>
@@ -170,8 +172,8 @@ export default function Capture() {
                             <Image
                                 image={specieImage}
                                 fit="contain"
-                                x={-50} // Adjusted to center the image
-                                y={-50} // Adjusted to center the image
+                                x={-50}
+                                y={-50}
                                 width={100}
                                 height={100}
                             />
@@ -181,7 +183,7 @@ export default function Capture() {
                                 {/* Cage Structure */}
                                 {/* Vertical Bars */}
                                 {Array.from({length: 8}).map((_, i) => {
-                                    const xPos = -60 + (i * 15);
+                                    const xPos = -52 + (i * 15);
                                     return (
                                         <Rect
                                             key={`vertical-${i}`}
@@ -214,15 +216,6 @@ export default function Capture() {
                                     style="stroke"
                                     strokeWidth={2}
                                 />
-                                {/* Decorative Top Ring */}
-                                <Circle
-                                    cx={0}
-                                    cy={-50} // Adjusted to center the cage
-                                    r={40}
-                                    color="#888"
-                                    style="stroke"
-                                    strokeWidth={4}
-                                />
                             </>
                         )}
                     </Group>
@@ -249,14 +242,12 @@ export default function Capture() {
                     }}
                     onPress={() => {
                         captureDifficulty.value = Math.random();
-                        // resetPokeball();
                         onCapture();
-                        // setCaptureSuccess(false);
                     }}
                 >
                     <ThemedText>New Chance</ThemedText>
                 </TouchableOpacity>
             </View>
         </GestureDetector>
-    );
+            );
 }

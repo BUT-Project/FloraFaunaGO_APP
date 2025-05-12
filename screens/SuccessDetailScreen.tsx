@@ -1,10 +1,8 @@
-import { ThemedView } from "@/components/ui/themed/ThemedView";
-import { ThemedText } from "@/components/ui/themed/ThemedText";
+import {ThemedView} from "@/components/ui/themed/ThemedView";
+import {ThemedText} from "@/components/ui/themed/ThemedText";
 import {Success} from "@/model/domain/Success";
-import {Modal, StyleSheet, TouchableOpacity} from "react-native";
-import {ScrollView} from "react-native";
+import {Modal, ScrollView, StyleSheet, TouchableOpacity} from "react-native";
 import React from "react";
-import Ionicons from "@expo/vector-icons/Ionicons";
 
 interface SucessDetailScreenProps {
     visible: boolean;

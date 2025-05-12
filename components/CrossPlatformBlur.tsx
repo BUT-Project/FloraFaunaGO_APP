@@ -1,6 +1,6 @@
 import React from "react";
-import { View, Platform, StyleSheet } from "react-native";
-import { BlurView } from "expo-blur";
+import {Platform, View} from "react-native";
+import {BlurView} from "expo-blur";
 
 type CrossPlatformBlurProps = {
   intensity?: number; // Permet d'ajuster le blur sur iOS

@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react';
-import { Alert } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {useEffect, useState} from 'react';
+import {Alert} from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import * as ExpoLocation from 'expo-location';
 import RevealScreen from '@/screens/RevealScreen';
-import { ThemedText } from '@/components/ui/themed/ThemedText';
+import {ThemedText} from '@/components/ui/themed/ThemedText';
 
-import { useSpeciesStore } from '@/context/zustand/strore/useSpeciesStore';
+import {useSpeciesStore} from '@/context/zustand/strore/useSpeciesStore';
 import {ThemedView} from "@/components/ui/themed/ThemedView";
 import getCurrentLocation from "@/libs/expo-location/index.ts";
 

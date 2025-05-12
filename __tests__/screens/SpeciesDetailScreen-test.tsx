@@ -1,15 +1,15 @@
-import { render,waitFor } from '@testing-library/react-native';
+import {render, waitFor} from '@testing-library/react-native';
 import Capture from "@/model/domain/Capture";
 import Specie from "@/model/domain/Specie";
 import Habitat from "@/model/domain/Habitat";
-import { Climate } from "@/model/domain/Climate";
-import { Diet } from "@/model/domain/Diet";
-import { Kingdom } from "@/model/domain/Kingdom";
-import { Class } from "@/model/domain/Class";
-import { Family } from "@/model/domain/Family";
+import {Climate} from "@/model/domain/Climate";
+import {Diet} from "@/model/domain/Diet";
+import {Kingdom} from "@/model/domain/Kingdom";
+import {Class} from "@/model/domain/Class";
+import {Family} from "@/model/domain/Family";
 import SpeciesDetailScreen from "@/screens/SpeciesDetailScreen";
-import { useGetCaptureById } from "@/hooks/useGetCaptureById";
-import { useGetCaptureByFamily } from "@/hooks/useGetCaptureByFamily";
+import {useGetCaptureById} from "@/hooks/useGetCaptureById";
+import {useGetCaptureByFamily} from "@/hooks/useGetCaptureByFamily";
 import CaptureDetail from '@/model/domain/CaptureDetail';
 import Location from '@/model/domain/Location';
 

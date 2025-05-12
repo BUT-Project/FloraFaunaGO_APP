@@ -10,77 +10,73 @@ import {SafeView} from "@/components/ui/SafeView";
 import React from "react";
 import {ActivityIndicator} from "react-native";
 
+const CenteredMessage = ({ children }: { children: React.ReactNode }) => (
+    <ThemedView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        {children}
+    </ThemedView>
+);
+
+const LoadingView = () => (
+    <CenteredMessage>
+        <ActivityIndicator size={'large'}/>
+    </CenteredMessage>
+);
+
+const ErrorView = ({ message }: { message: string }) => (
+    <CenteredMessage>
+        <ThemedText type={'subtitle'}>{message}</ThemedText>
+    </CenteredMessage>
+);
+
 export default function Details() {
     const {specieId, capturedId} = useLocalSearchParams();
     const captureId = typeof capturedId === 'string' ? parseInt(capturedId) : NaN;
     const specieId2 = typeof specieId === 'string' ? parseInt(specieId) : NaN;
 
-    // Vérification des paramètres
-    if (isNaN(specieId2)) {
-        return (
-            <ThemedView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                <ThemedText>Paramètre `id` manquant ou invalide !</ThemedText>
-            </ThemedView>
-        );
-    }
-
-    const { captureRepository, speciesRepository } = StubData.getInstance();
-
-    if (!captureRepository || !speciesRepository) {
-        if(!captureRepository) {
-            throw new Error("captureRepository not found!");
-        }
-        if(!speciesRepository) {
-            throw new Error("speciesRepository not found!");
-        }
-        return (
-            <ThemedView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                <ThemedText>Erreur de configuration des repositories</ThemedText>
-            </ThemedView>
-        );
-    }
+    const stubData = StubData.getInstance();
+    const repositories = {
+        capture: stubData?.captureRepository ?? null,
+        species: stubData?.speciesRepository ?? null
+    };
 
     const {
         item: capture,
         isLoading: isCaptureLoading,
         error: errorCapture
-    } = useGetById<Capture>(captureId, captureRepository);
+    } = useGetById<Capture>(captureId, repositories.capture);
 
     const {
         item: specie,
         isLoading: isSpecieLoading,
         error: errorSpecie
-    } = useGetById<Specie>(specieId2, speciesRepository);
+    } = useGetById<Specie>(specieId2, repositories.species);
 
-    const isLoading = isSpecieLoading || isCaptureLoading;
-
-    // Gestion des erreurs
-    if (errorSpecie || errorCapture) {
-        errorSpecie && alert(errorSpecie)
-        errorCapture && alert(errorCapture)
-        return (
-            <ThemedView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                <ThemedText type={'subtitle'}>
-                    Error
-                </ThemedText>
-            </ThemedView>
-        );
+    if (isNaN(specieId2)) {
+        return <ErrorView message="Paramètre `id` manquant ou invalide !" />;
     }
 
-    if (isLoading) {
-        return (
-            <ThemedView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                <ActivityIndicator size={'large'}/>
-            </ThemedView>
-        );
+    if (!repositories.capture || !repositories.species) {
+        return <ErrorView message="Erreur de configuration des repositories" />;
+    }
+
+    if (errorSpecie || errorCapture) {
+        const errorMessage = [
+            errorSpecie?.message || "Erreur lors de la récupération de l'espèce",
+            errorCapture?.message || "Erreur lors de la récupération de la capture"
+        ].join(' ');
+
+        errorSpecie && alert(errorSpecie);
+        errorCapture && alert(errorCapture);
+
+        return <ErrorView message={errorMessage} />;
+    }
+
+    if (isSpecieLoading || isCaptureLoading) {
+        return <LoadingView />;
     }
 
     if (!specie) {
-        return (
-            <ThemedView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                <ThemedText type={'subtitle'}>Espèce introuvable...</ThemedText>
-            </ThemedView>
-        );
+        return <ErrorView message="Espèce introuvable..." />;
     }
 
     return (
