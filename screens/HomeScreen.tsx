@@ -15,23 +15,22 @@ import {useRouter} from "expo-router";
 import StubData from "@/dal/StubLib/StubData";
 import Specie from "@/model/domain/Specie";
 import {useSpeciesStore} from "@/context/zustand/strore/useSpeciesStore";
-import EventEmitter from "events";
-import {SuccessList} from "@/dal/StubLib/Data";
 import {Kingdom} from "@/model/domain/Kingdom";
 import {Class} from "@/model/domain/Class";
-import {TestSuccesParams} from "@/hooks/TestSuccesParams";
+import {Diet} from "@/model/domain/Diet";
+import {Family} from "@/model/domain/Family";
+import {SuccessStore} from "@/context/zustand/strore/useSuccessStore";
+import SuccessPopup from "@/components/animation/sucess/SucessPopup";
+import { SuccessType } from "@/model/domain/SuccessType";
+import { processSuccessByType } from "@/shared/successHelper";
 
 
 const {width: SCREEN_WIDTH} = Dimensions.get('window');
-const eventBus = new EventEmitter();
 export default function HomeScreen() {
     const { speciesRepository } = StubData.getInstance();
     const { successRepository } = StubData.getInstance();
     const [location, setLocation] = useState<Location.LocationObject | null>(null);
-    const [updateSuccesses, setUpdateSuccesses] = useState<string[]>([]);
-
-    const setCurrentImageUri = useSpeciesStore((state) => state.setCurrentImageUri);
-    const setCurrentIdentifiedSpecies = useSpeciesStore((state) => state.setCurrentIdentifiedSpecies)
+    const { isVisibile, message } = SuccessStore();
 
     const router = useRouter();
     useEffect(() => {
@@ -41,10 +40,12 @@ export default function HomeScreen() {
                 console.log('Permission to access location was denied');
                 return;
             }
+
             const location = await Location.getCurrentPositionAsync();
             setLocation(location);
         })();
     }, []);
+
 
     const slideAnim = useSharedValue(0);
 
@@ -62,83 +63,16 @@ export default function HomeScreen() {
         queryFn: async (): Promise<Specie> => {
             if (!speciesRepository) throw new Error('No Repository');
             if (!base64Image) throw new Error('No base64 image data');
-            const spec = await speciesRepository.identifySpecies(base64Image);
-            await TestSucces({ name: "unlockMaîtreDesAnimaux", spec, kg: Kingdom.Animal });
-            await TestSucces({ name: "unlockPêcheurExpert", spec, cl: Class.Fish });
-            await TestSucces({ name: "unlockMaitreDeLair", spec, kg: Kingdom.Animal,cl:Class.Birds });
-            await TestSucces({ name: "unlockChasseurDinsect", spec,cl:Class.Insects, });
+            var spec = await speciesRepository.identifySpecies(base64Image);
 
-            return spec
-        },
-        enabled: false,
-    });
+            await processSuccessByType(SuccessType.PHOTO, spec);
+            return spec;
+    }});
 
-    const TestSucces = async  ({ name, spec, cl, kg, dt, fm }: TestSuccesParams) => {
-        if (!successRepository || !spec) return;
-        const success = await successRepository.getById(name);
-        if (!success) return;
-        if (
-            (cl && cl !== spec.class) ||
-            (kg && kg !== spec.kingdom) ||
-            (dt && dt !== spec.diet) ||
-            (fm && fm !== spec.family)
-        ) {
-            return; // Si une condition est fausse, on ne déclenche pas l'événement
-        }
-        if (success.objectif !== success.actualVal) {
-            eventBus.emit(name, "");
-        }
-    };
+   
     const handleCameraReady = useCallback(() => {
         setIsCameraReady(true);
     }, []);
-
-
-    useEffect(() => {
-        const listeners = SuccessList.map((success) => {
-
-            const callback = () => {
-                // Vérification de l'état de l'événement et mise à jour de `unlockedSuccesses`
-                if (!updateSuccesses.includes(success.event)) {
-                    setUpdateSuccesses(prev => [...prev, success.nom]);
-                    console.log("Succès avancer !", ` : ${success.nom}`);
-                }
-                success.actualVal +=1
-                successRepository?.update(success.nom,success)
-            };
-
-            // Ajout du listener
-            eventBus.addListener(success.event, callback);
-
-            return { event: success.event, callback };
-        });
-
-        return () => {
-            listeners.forEach(({ event, callback }) => {
-                eventBus.removeListener(event, callback);
-            });
-        };
-    }, [updateSuccesses]); // Dépendance sur `unlockedSuccesses` pour re-exécuter l'effet lorsque l'état change
-
-    useEffect(() => {
-        async function updateStateAndNavigate() {
-            if (capturedImage && !showProgress && !isLoading && identifiedSpecie) {
-                try {
-                    setCurrentImageUri(capturedImage);
-                    setCurrentIdentifiedSpecies(identifiedSpecie);
-                    // Navigate after state is updated
-                    router.push({
-                        pathname: '/capture',
-                    });
-                } catch (error) {
-                    console.error('Error updating species state:', error);
-                    // Handle error appropriately
-                }
-            }
-        }
-
-        updateStateAndNavigate();
-    }, [capturedImage, showProgress, isLoading, identifiedSpecie, router,setCurrentIdentifiedSpecies,setCurrentImageUri]);
 
 
     const handleCapturePress = async () => {
@@ -149,8 +83,6 @@ export default function HomeScreen() {
             const photo = await cameraRef.current.takePictureAsync({base64: true});
             setCapturedImage(photo?.uri ?? null);
             setBase64Image(photo?.base64 ?? null);  // Store the base64 data
-            if((await successRepository?.getById("unlockPhotographeAmateur"))?.objectif != (await successRepository?.getById("unlockPhotographeAmateur"))?.actualVal)
-                eventBus.emit("unlockPhotographeAmateur", photo);
             await refetch();
         } catch (error) {
             console.error('Error capturing image:', error);
@@ -193,14 +125,29 @@ export default function HomeScreen() {
             </View>
         );
     }
+    const { setCurrentImageUri, setCurrentIdentifiedSpecies } = useSpeciesStore();
+    useEffect(() => {
+        if (capturedImage && !showProgress && !isLoading && identifiedSpecie) {
+            setCurrentIdentifiedSpecies(identifiedSpecie);
+            setCurrentImageUri(capturedImage);
+            router.push({
+                pathname: '/capture',
+            });
+        }
+    }, [capturedImage, showProgress, isLoading, identifiedSpecie, router, location, base64Image]);
+
 
     return (
         <SafeAreaView style={styles.container}>
+
             <ThemedView style={styles.content}>
+
                 <View style={styles.segmentedControl}>
                     <BlurSegmented tabsName={['Camera', 'Map']} onTabChange={switchView}/>
                 </View>
+                
                 <Animated.View style={[styles.viewContainer, animatedStyle]}>
+                    
                     <CameraView style={styles.camera} facing={facing} ref={cameraRef} onCameraReady={handleCameraReady}>
                         <CameraControls
                             facing={facing}
@@ -211,11 +158,14 @@ export default function HomeScreen() {
                     </CameraView>
                     {showProgress && (
                         <View style={styles.progressOverlay}>
+                           <SuccessPopup message={message} visible={isVisibile} />
                             <ARProgressIndicator width={SCREEN_WIDTH} height={SCREEN_WIDTH}/>
                         </View>
                     )}
                     <MainMapView location={location}  style={styles.map}/>
+
                 </Animated.View>
+
             </ThemedView>
         </SafeAreaView>
     );
@@ -226,7 +176,6 @@ const styles = StyleSheet.create({
         flex: 1,
         borderTopLeftRadius: 30,
         borderTopRightRadius: 30,
-        overflow: 'hidden'
     },
     progressOverlay: {
         flex: 1,

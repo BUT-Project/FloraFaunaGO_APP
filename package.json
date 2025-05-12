@@ -13,14 +13,15 @@
   },
   "jest": {
     "preset": "jest-expo",
-    "setupFiles": ["<rootDir>/jest.setup.js"]
+    "setupFiles": [
+      "<rootDir>/jest.setup.js"
+    ]
   },
   "dependencies": {
     "@expo/vector-icons": "^14.0.2",
     "@react-navigation/native": "^6.0.2",
     "@shopify/react-native-skia": "1.5.0",
     "@tanstack/react-query": "^5.64.1",
-    "events": "^3.3.0",
     "expo": "^52.0.25",
     "expo-av": "~15.0.2",
     "expo-blur": "~14.0.3",
