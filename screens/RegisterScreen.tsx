@@ -34,6 +34,7 @@ export default function RegisterScreen() {
                 placeholder="Username"
                 value={username}
                 onChangeText={setUsername}
+                autoCorrect={false}
             />
             <InputWithIcon
                 icon="envelope"
@@ -41,6 +42,8 @@ export default function RegisterScreen() {
                 value={email}
                 onChangeText={setEmail}
                 keyboardType="email-address"
+                autoCapitalize='none'
+                autoCorrect={false}
             />
             <InputWithIcon
                 icon="lock"
@@ -48,6 +51,8 @@ export default function RegisterScreen() {
                 value={password}
                 onChangeText={setPassword}
                 secureTextEntry
+                autoCapitalize='none'
+                autoCorrect={false}
             />
             <TouchableOpacity style={styles.button} onPress={submitForm}>
                 <Entypo name="check" size={40} color="#AFEDEC"/>

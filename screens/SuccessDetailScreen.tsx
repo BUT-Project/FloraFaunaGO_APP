@@ -13,7 +13,7 @@ interface SucessDetailScreenProps {
 export default function SuccessDetailScreen( { visible, onClose, sucess }: SucessDetailScreenProps) {
     return (
         <Modal animationType="slide" visible={visible} transparent={true} onRequestClose={onClose}>
-            <TouchableOpacity style={styles.overlay} activeOpacity={1} onPress={onClose}>
+            <TouchableOpacity style={styles.overlay} onPress={onClose}>
                 <ThemedView style={styles.container}>
 
                     <ScrollView>
@@ -27,14 +27,13 @@ export default function SuccessDetailScreen( { visible, onClose, sucess }: Suces
 
                         <ThemedView style={styles.progressContainer}>
                             <ThemedText style={styles.progressText}>
-                                Avancement : {(sucess.actualVal/sucess.objectif * 100)}%
+                                Avancement : {Number((sucess.actualVal/sucess.objectif * 100).toFixed(2))}%
                             </ThemedText>
                             <ThemedView style={styles.progressBar}>
                                 <ThemedView
                                     style={[
                                         styles.progressFill,
-                                        { width: `${(sucess.actualVal/sucess.objectif * 100)}%` },
-                                    ]}
+                                        { width: `${Number((sucess.actualVal/sucess.objectif * 100).toFixed(2))}%` }                                    ]}
                                 />
                             </ThemedView>
                         </ThemedView>
@@ -48,17 +47,16 @@ export default function SuccessDetailScreen( { visible, onClose, sucess }: Suces
 const styles = StyleSheet.create({
     overlay: {
         flex: 1,
-        backgroundColor: "rgba(0, 0, 0, 0.5)",
-        justifyContent: "center",
-        alignItems: "center",
+        backgroundColor: "rgba(0, 0, 0, 0)",
+        justifyContent: "flex-end",
+        alignItems: "flex-end",
     },
     container: {
-        width: "90%",
+        width: "100%",
         borderRadius: 12,
         padding: 16,
         shadowColor: "#000",
         shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.25,
         shadowRadius: 3.84,
         elevation: 5,
     },

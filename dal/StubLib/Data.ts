@@ -10,6 +10,7 @@ import User from "@/model/domain/User";
 import Capture from "@/model/domain/Capture";
 import CaptureDetail from "@/model/domain/CaptureDetail";
 import {Success} from "@/model/domain/Success";
+import { SuccessType } from "@/model/domain/SuccessType";
 
 const location1: Location = new Location(13.33,19.09,3, 5, 1); // Desert Tchad
 const location2: Location = new Location(-2.97,38.92,3, 5, 1);   //Savane Kenya
@@ -100,26 +101,24 @@ const capture35 = new Capture(35, null, specie35, []);
 const capture36 = new Capture(36, null, specie36, []);
 
 
-const Success1: Success = new Success("Succès A", "checkmark-circle-outline", "Description du succès A", 25,50,"sucA")
-const Success2: Success = new Success("Succès B", "checkmark-circle-outline", "Description du succès B", 50,50,"sucB")
+const Success1: Success = new Success("Succès A", "checkmark-circle-outline", "Description du succès A", 25,50,SuccessType.CAPTURE,"sucA")
+const Success2: Success = new Success("Succès B", "checkmark-circle-outline", "Description du succès B", 50,50,SuccessType.DISTANCE,"sucB")
 
 
 export const SpecieList = [specie1,specie2,specie3,specie4,specie5,specie6];
 
 export const SuccessList = [
-    new Success("Photographe Amateur", "camera", "Capturez votre première photo.", 1,10, "unlockPhotographeAmateur"),
-    new Success("Maître des Animaux", "paw", "Débloqué en interagissant avec 50 animaux différents.", 20,50, "unlockMaîtreDesAnimaux"),
-    new Success("Pêcheur Expert", "fish", "Attrapez 30 poissons lors de vos aventures.", 15,30, "unlockPêcheurExpert"),
-    new Success("Chasseur d'insect", "bug", "Trouvez et collectionnez 20 insectes.", 15,20, "unlockChasseurDinsect"),
-    new Success("Explorateur des Bois", "leaf", "Visitez 10 forêts ou réserves naturelles.", 9,10, "unlockExplorateurDesBois"),
-    new Success("Naturaliste Accompli", "planet", "Complétez toutes les quêtes liées à la nature.", 10,10, "unlockNaturalisteAccompli"),
-    new Success("Dompteur d'Oiseaux", "paw", "Interagissez avec 15 espèces d'oiseaux sauvages.", 10,15, "unlockDompteurDOiseaux"),
-    new Success("Voyageur Aventurier", "airplane", "Voyagez dans 5 régions différentes.", 4,5, "unlockVoyageurAventurier"),
-    new Success("Guide des Montagnes", "leaf", "Randonnez jusqu'au sommet de 3 montagnes.", 3,3, "unlockGuideDesMontagnes"),
-    new Success("Roi de la Forêt", "leaf", "Passez 50 heures à explorer les bois.", 40,50, "unlockRoiDeLaForet"),
-    new Success("Maitre de l'air", "airplane", "Capturez 5 espèces d'oiseaux.", 4,5, "unlockMaitreDeLair"),
-    new Success("Maitre de l'eau", "water", "Capturez 5 espèces marines.", 3,5, "unlockMaitreDeLeau"),
-    new Success("Voyageur", "walk", "Parcourez 10km.", 7,10, "unlockVoyageur"),
+    new Success("Photographe Amateur", "camera", "Capturez votre première photo.", 1,10,SuccessType.PHOTO, "PhotographeAmateur"),
+    new Success("Maître des Animaux", "paw", "Débloqué en interagissant avec 50 animaux différents.", 20,50,SuccessType.PHOTO, "Animal"),
+    new Success("Pêcheur Expert", "fish", "Attrapez 30 poissons lors de vos aventures.", 15,30,SuccessType.CAPTURE, "Fish"),
+    new Success("Chasseur d'insect", "bug", "Trouvez et collectionnez 20 insectes.", 15,20,SuccessType.CAPTURE, "Insect"),
+    new Success("Explorateur des Bois", "leaf", "Visitez 10 forêts ou réserves naturelles.", 9,10,SuccessType.LIEUX, "ExplorateurDesBois"),
+    new Success("Dompteur d'Oiseaux", "paw", "Interagissez avec 15 espèces d'oiseaux sauvages.", 10,15,SuccessType.PHOTO, "dompBirds"),
+    new Success("Voyageur Aventurier", "airplane", "Voyagez dans 5 régions différentes.", 4,5,SuccessType.LIEUX, "unlockVoyageurAventurier"),
+    new Success("Guide des Montagnes", "leaf", "Randonnez jusqu'au sommet de 3 montagnes.", 3,3,SuccessType.LIEUX, "unlockGuideDesMontagnes"),
+    new Success("Maitre de l'air", "airplane", "Capturez 5 espèces d'oiseaux.", 4,5,SuccessType.CAPTURE, "Birds"),
+    new Success("Maitre de l'eau", "water", "Capturez 5 espèces marines.", 3,5,SuccessType.CAPTURE, "FishAmhibians"),
+    new Success("Voyageur", "walk", "Parcourez 10km.", 7,10,SuccessType.DISTANCE, "unlockVoyageur"),
 ];
 
 export const UserList = [
