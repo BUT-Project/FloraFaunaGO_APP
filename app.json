@@ -22,7 +22,7 @@
         "foregroundImage": "./assets/images/logo_FFGO.png",
         "backgroundColor": "#ffffff"
       },
-      "newArchEnabled":true
+      "newArchEnabled": true
     },
     "web": {
       "bundler": "metro",
@@ -32,7 +32,8 @@
     "plugins": [
       "expo-router",
       "expo-font",
-      "expo-secure-store",[
+      "expo-secure-store",
+      [
         "expo-camera",
         {
           "cameraPermission": "Allow FFGO to access your camera",
@@ -45,7 +46,8 @@
         {
           "locationAlwaysAndWhenInUsePermission": "Allow FFGO to use your location."
         }
-      ]
+      ],
+      "expo-audio"
     ],
     "experiments": {
       "typedRoutes": true

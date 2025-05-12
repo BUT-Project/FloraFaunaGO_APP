@@ -1,5 +1,5 @@
 import {useCallback, useState} from "react";
-import {Audio} from "expo-av";
+import {useAudioPlayer} from "expo-audio";
 import {registerSchema} from "@/components/form/auth/RegisterForm";
 import IAuthService from "@/model/service/IAuthService";
 import {router} from "expo-router";
@@ -19,12 +19,12 @@ export const useRegisterViewModel = (
     if (!repository) throw new Error('No Auth Repository provided');
 
 
+    const clickSound = useAudioPlayer(require('@/assets/sounds/click.mp3'));
+
+    // Simple function to play the sound
     const playSound = useCallback(async () => {
-        const {sound} = await Audio.Sound.createAsync(
-            require('@/assets/sounds/click.mp3')
-        );
-        await sound.playAsync();
-    }, []);
+        clickSound.play();
+    }, [clickSound]);
 
     const validateForm = useCallback(() => {
         setFailedSignup(false);
