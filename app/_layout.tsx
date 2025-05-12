@@ -36,6 +36,7 @@ export default function RootLayout() {
             >
                 <Stack.Screen name="(tabs)" options={{headerShown: false}}/>
                 <Stack.Screen name="(auth)" options={{headerShown: false}}/>
+                <Stack.Screen name="capture" options={{headerShown : false, presentation:"modal", animation:"fade"}}/>
                 <Stack.Screen name="+not-found"/>
             </Stack>
                 </GestureHandlerRootView>

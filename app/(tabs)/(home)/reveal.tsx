@@ -3,10 +3,8 @@ import {Alert} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import * as ExpoLocation from 'expo-location';
 import RevealScreen from '@/screens/RevealScreen';
-import {ThemedText} from '@/components/ui/themed/ThemedText';
-
+import {ThemedText, ThemedView} from '@/components/ui/themed';
 import {useSpeciesStore} from '@/context/zustand/strore/useSpeciesStore';
-import {ThemedView} from "@/components/ui/themed/ThemedView";
 import getCurrentLocation from "@/libs/expo-location/index.ts";
 
 export default function Reveal() {

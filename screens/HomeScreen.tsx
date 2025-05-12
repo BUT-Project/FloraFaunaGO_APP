@@ -28,7 +28,6 @@ import { processSuccessByType } from "@/shared/successHelper";
 const {width: SCREEN_WIDTH} = Dimensions.get('window');
 export default function HomeScreen() {
     const { speciesRepository } = StubData.getInstance();
-    const { successRepository } = StubData.getInstance();
     const [location, setLocation] = useState<Location.LocationObject | null>(null);
     const { isVisibile, message } = SuccessStore();
 
@@ -130,11 +129,9 @@ export default function HomeScreen() {
         if (capturedImage && !showProgress && !isLoading && identifiedSpecie) {
             setCurrentIdentifiedSpecies(identifiedSpecie);
             setCurrentImageUri(capturedImage);
-            router.push({
-                pathname: '/capture',
-            });
+            router.push('/capture');
         }
-    }, [capturedImage, showProgress, isLoading, identifiedSpecie, router, location, base64Image]);
+    }, [capturedImage, showProgress, isLoading, identifiedSpecie, router ]);
 
 
     return (
@@ -148,7 +145,7 @@ export default function HomeScreen() {
                 
                 <Animated.View style={[styles.viewContainer, animatedStyle]}>
                     
-                    <CameraView style={styles.camera} facing={facing} ref={cameraRef} onCameraReady={handleCameraReady}>
+                    <CameraView style={styles.camera} facing={facing} ref={cameraRef}  onCameraReady={handleCameraReady}>
                         <CameraControls
                             facing={facing}
                             toggleCameraFacing={toggleCameraFacing}
