@@ -1,5 +1,5 @@
-import React, {useContext, useEffect, useRef, useState} from 'react';
-import {StyleSheet, TouchableOpacity} from 'react-native';
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import Animated, {
     Easing,
     runOnJS,

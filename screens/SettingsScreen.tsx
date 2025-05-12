@@ -11,12 +11,12 @@ const { width,height } = Dimensions.get('window');
 export default function SettingsScreen() {
     const systemTheme = Appearance.getColorScheme();
     const [theme, setTheme] = useState(systemTheme || 'light'); // État du thème
+
+    const logout = useAuthStore((state)=>state.logout);
     const [switchTheme, setSwitchTheme] = useState(false);
     const switchThemes = () => {
         setSwitchTheme(previousState => !previousState);
     }; 
-
-    const logout = useAuthStore((state)=>state.logout);
 
     useEffect(() => {
         Appearance.setColorScheme(theme); // Appliquer le schéma de couleurs actuel
