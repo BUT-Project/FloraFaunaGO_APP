@@ -19,7 +19,7 @@ export default function Layout() {
             options={{
 
                 animation:'slide_from_bottom',
-                //presentation: 'modal',
+                presentation: 'modal',
                 headerBackVisible: false,
                 headerLeft : () =>(
                     <Link href="/(profil)/profil" asChild>
