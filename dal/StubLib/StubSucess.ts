@@ -1,6 +1,6 @@
 import {FilterPredicate} from "@/shared/FilterPredicate";
 import {PagingResult} from "@/shared/PagingResult";
-import {ISuccessRepository} from "@/model/service/ISuccessRepository";
+import {ISuccessRepository} from "@/dal/repository/ISuccessRepository";
 import {Success} from "@/model/domain/Success";
 import {PagedRequest} from "@/shared/PagedRequest";
 

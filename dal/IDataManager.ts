@@ -1,7 +1,7 @@
-import {ISpeciesRepository} from "@/model/service/ISpeciesRepository";
-import {IUserRepository} from "@/model/service/IUserRepository";
-import {ISuccessRepository} from "@/model/service/ISuccessRepository";
-import {ICaptureRepository} from "@/model/service/ICaptureRepository";
+import {ISpeciesRepository} from "@/dal/repository/ISpeciesRepository";
+import {IUserRepository} from "@/dal/repository/IUserRepository";
+import {ISuccessRepository} from "@/dal/repository/ISuccessRepository";
+import {ICaptureRepository} from "@/dal/repository/ICaptureRepository";
 import IAuthService from "@/model/service/IAuthService";
 
 export abstract class IDataManager {

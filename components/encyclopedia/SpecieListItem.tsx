@@ -1,7 +1,6 @@
 import React from 'react';
 import {Dimensions, StyleSheet, TouchableOpacity} from 'react-native';
-import {ThemedView} from "@/components/ui/themed/ThemedView";
-import {ThemedText} from "@/components/ui/themed/ThemedText";
+import {ThemedView,ThemedText} from "@/components/ui/themed";
 import {Link} from "expo-router";
 import {LoadingImageBackground} from '../ui/LoadingImageBackground';
 import Specie from "@/model/domain/Specie";
@@ -17,7 +16,7 @@ const itemSize = (width / 3) - 10;
 export default function SpecieListItem({ specie, captureId }: CaptureListItemProps) {
     return (
         <Link
-            href={{ params: { specieId: specie.id.toString(), capturedId: captureId?.toString() ?? undefined}, pathname: "/(tabs)/(encyclopedia)/[id]" }}
+            href={{ params: { id: specie.id.toString(), specieId: specie.id.toString(), capturedId: captureId?.toString() ?? undefined }, pathname: "/(tabs)/(encyclopedia)/[id]" }}
             asChild
         >
             <TouchableOpacity>

@@ -7,7 +7,7 @@ import {Kingdom} from "@/model/domain/Kingdom";
 import {Class} from "@/model/domain/Class";
 import {Family} from "@/model/domain/Family";
 import Habitat from "@/model/domain/Habitat";
-import {ISpeciesRepository} from "@/model/service/ISpeciesRepository";
+import {ISpeciesRepository} from "@/dal/repository/ISpeciesRepository";
 
 interface SpecieFilterState {
     currentNameFilter: string | null;

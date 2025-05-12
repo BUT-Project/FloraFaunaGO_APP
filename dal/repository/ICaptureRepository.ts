@@ -1,4 +1,4 @@
-import {GenericRepository} from "@/model/service/IGenericRepository";
+import {GenericRepository} from "@/dal/repository/IGenericRepository";
 import Capture from "@/model/domain/Capture";
 import {Family} from "@/model/domain/Family";
 import {PagingResult} from "@/shared/PagingResult";

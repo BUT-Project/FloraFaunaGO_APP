@@ -1,8 +1,7 @@
 import React, {useState} from 'react';
 import {Dimensions, Modal, Pressable, ScrollView, StyleSheet, TouchableOpacity} from 'react-native';
-import {ThemedView} from '@/components/ui/themed/ThemedView';
+import {ThemedView,ThemedText} from '@/components/ui/themed';
 import {Ionicons} from '@expo/vector-icons';
-import {ThemedText} from '../ui/themed/ThemedText';
 
 const { width } = Dimensions.get('window');
 

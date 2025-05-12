@@ -1,6 +1,6 @@
 import {FilterPredicate} from "@/shared/FilterPredicate";
 import {PagingResult} from "@/shared/PagingResult";
-import {IUserRepository} from "@/model/service/IUserRepository";
+import {IUserRepository} from "@/dal/repository/IUserRepository";
 import User from "@/model/domain/User";
 import {PagedRequest} from "@/shared/PagedRequest";
 

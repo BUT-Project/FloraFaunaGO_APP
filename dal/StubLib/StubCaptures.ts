@@ -1,6 +1,6 @@
 import {FilterPredicate} from "@/shared/FilterPredicate";
 import {PagingResult} from "@/shared/PagingResult";
-import {ICaptureRepository} from "@/model/service/ICaptureRepository";
+import {ICaptureRepository} from "@/dal/repository/ICaptureRepository";
 import Capture from "@/model/domain/Capture";
 import {PagedRequest} from "@/shared/PagedRequest";
 import {Family} from "@/model/domain/Family";

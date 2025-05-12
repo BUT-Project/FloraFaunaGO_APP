@@ -1,6 +1,5 @@
 import {Dimensions, StyleSheet} from 'react-native';
-import {ThemedView} from "@/components/ui/themed/ThemedView";
-import {ThemedText} from "@/components/ui/themed/ThemedText";
+import {ThemedView,ThemedText} from "@/components/ui/themed";
 import CaptureDetail from "@/model/domain/CaptureDetail";
 import {ExtendableMap} from '../ui/ExtendableMap';
 

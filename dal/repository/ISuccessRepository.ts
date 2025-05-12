@@ -1,4 +1,4 @@
-import {GenericRepository} from "@/model/service/IGenericRepository";
+import {GenericRepository} from "@/dal/repository/IGenericRepository";
 import {Success} from "@/model/domain/Success";
 
 export interface ISuccessRepository extends GenericRepository<Success> {

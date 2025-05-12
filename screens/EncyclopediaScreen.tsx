@@ -1,17 +1,13 @@
 import {ActivityIndicator, Button, FlatList, StyleSheet, View} from "react-native";
-import SpeciesSearchBar from "../components/encyclopedia/SpeciesSearchBar";
-import SpecieListItem from "@/components/encyclopedia/SpecieListItem";
+import {SpecieListItem,SearchBar,FilterModal} from "@/components/encyclopedia";
 import {useState} from "react";
-import {ThemedView} from "@/components/ui/themed/ThemedView";
+import {ThemedView, ThemedText} from "@/components/ui/themed";
 import {SafeView} from "@/components/ui/SafeView";
-import SpeciesFilterModal from "@/components/encyclopedia/SpeciesFilterModal";
-import {ThemedText} from "@/components/ui/themed/ThemedText";
 import {useGetSpecies} from "@/hooks/viewModels/useGetSpecies";
 import {useAuthStore} from "@/context/zustand/strore/useAuthStore";
 
 export default function EncyclopediaScreen() {
     const [name,setName] = useState("")
-
     const {species=[],isLoading,isLoadingMore,error,isListEnd,refresh,fetchMoreData} = useGetSpecies("")
     const userCaptures = useAuthStore((state) => state.user?.captures);
     //if(!user) throw new Error("User not found");// [Dave] [TODO] should not do that
@@ -31,15 +27,13 @@ export default function EncyclopediaScreen() {
         </View>
         );
     }
-
-
     return (
         <SafeView>
             <ThemedView style={styles.header}>
                 <ThemedView style={styles.searchBar}>
-                    <SpeciesSearchBar search={name} setSearch={setName} placeholder={"Rechercher..."}/>
+                    <SearchBar search={name} setSearch={setName} placeholder={"Rechercher..."}/>
                 </ThemedView>
-                <SpeciesFilterModal baseSpecies={species} setFilteredSpecies={()=>{}}/>
+                <FilterModal baseSpecies={species} setFilteredSpecies={()=>{}}/>
             </ThemedView>
             { isLoading ?
                 <ActivityIndicator size={"large"}/>
@@ -50,6 +44,8 @@ export default function EncyclopediaScreen() {
                     columnWrapperStyle={styles.columnWrapper}
                     contentContainerStyle={styles.listContent}
                     data={species}
+                    onRefresh={() => refresh}
+                    refreshing={isLoadingMore}
                     keyExtractor={capture => capture.id?.toString()}
                     renderItem={({item}) =>
                         <SpecieListItem specie={item} captureId={(userCaptures?.find((capture)=> capture.specie == item)?.id) ?? null}/>

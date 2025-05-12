@@ -1,7 +1,7 @@
 import {useInfiniteQuery} from '@tanstack/react-query';
 import {useCallback, useMemo, useState} from 'react';
 import {FilterPredicate} from "@/shared/FilterPredicate";
-import {GenericRepository} from "@/model/service/IGenericRepository";
+import {GenericRepository} from "@/dal/repository/IGenericRepository";
 import {PagedRequest} from "@/shared/PagedRequest";
 import {PagingResult} from "@/shared/PagingResult";
 

@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {GenericRepository} from "@/model/service/IGenericRepository";
+import {GenericRepository} from "@/dal/repository/IGenericRepository";
 
 export function useGetById<T>(
     id: number | undefined,

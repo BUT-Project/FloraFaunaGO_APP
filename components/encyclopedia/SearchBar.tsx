@@ -9,18 +9,22 @@ type SearchBarProps={
     placeholder:string,
 }
 
-export default function SpeciesSearchBar(props: SearchBarProps){
+export default function SpeciesSearchBar({search,setSearch,placeholder}: SearchBarProps){
     const color = useThemeColor({ light: "#000", dark: "#fff" }, 'text');
    
     return (
         <ThemedView style={styles.searchBarContainer}>
             <TextInput
                 style={[styles.searchBar,{color:color}]}
-                value={props.search}
-                placeholder={props.placeholder}
-                onChangeText={(text) => props.setSearch(text)}
+                value={search}
+                placeholder={placeholder}
+                onChangeText={(text) => setSearch(text)}
             />
-            <Ionicons name={"search"} color={color} size={20}/>
+            {search ? 
+                <Ionicons name={"close"} color={color} size={20} onPress={() => setSearch("")}/>
+                :
+                <Ionicons name={"search"} color={color} size={20}/>
+            }
         </ThemedView>
     );
 };
