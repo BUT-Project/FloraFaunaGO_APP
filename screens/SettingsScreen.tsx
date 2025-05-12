@@ -10,7 +10,10 @@ const { width,height } = Dimensions.get('window');
 export default function SettingsScreen() {
     const systemTheme = Appearance.getColorScheme();
     const [theme, setTheme] = useState(systemTheme || 'light'); // État du thème
-
+    const [switchTheme, setSwitchTheme] = useState(false);
+    const switchThemes = () => {
+        setSwitchTheme(previousState => !previousState);
+    }; 
 
     useEffect(() => {
         Appearance.setColorScheme(theme); // Appliquer le schéma de couleurs actuel
@@ -47,7 +50,9 @@ export default function SettingsScreen() {
                  </TouchableOpacity>
 
                  <TouchableOpacity onPress={toggleTheme} style={styles.button}>
-                     <ThemedText type={"subtitle"} style={styles.buttonText}>Changer le thème</ThemedText>
+                     <ThemedText type={"subtitle"} style={styles.buttonText}>Changer le thème ☀️</ThemedText>
+                     <Switch value={switchTheme} trackColor={{false: "#767577", true: "#90EE90"}} style={styles.switch}  />
+                     <ThemedText type={"subtitle"} style={styles.buttonText}>🌑</ThemedText>
                  </TouchableOpacity>
 
                  <TouchableOpacity style={styles.button}>

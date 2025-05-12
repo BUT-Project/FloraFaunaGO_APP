@@ -1,6 +1,8 @@
 import { SuccessStore } from '@/context/zustand/strore/useSuccessStore';
 import React, { useEffect, useRef } from 'react';
-import { View, Text, Modal, StyleSheet, Animated, Pressable } from 'react-native';
+import { View, Modal, StyleSheet, Animated, Pressable } from 'react-native';
+import { ThemedText } from '@/components/ui/themed/ThemedText';
+import { ThemedView } from '@/components/ui/themed/ThemedView';
 
 interface SuccessPopupProps {
     message: String;
@@ -31,7 +33,7 @@ export default function SuccessPopup({ message, visible }: SuccessPopupProps) {
     useEffect(() => {
         setTimeout(() => {
             setisVisible(false);
-        }, 4000);
+        }, 40000);
         return; 
     }, [isVisibile]);
 
@@ -41,9 +43,9 @@ export default function SuccessPopup({ message, visible }: SuccessPopupProps) {
                 <Animated.View 
                 pointerEvents="box-none"          
                 style={[styles.container, { transform: [{ translateY }] }]}>                
-                    <View style={styles.popup}>
-                    <Text style={styles.message}>{message}</Text>
-                </View>
+                    <ThemedView style={styles.popup}>
+                        <ThemedText style={styles.message}>{message}</ThemedText>
+                    </ThemedView>
             </Animated.View>
             </Pressable>
         </Modal>
@@ -56,16 +58,15 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
+        width: '100%',
         alignSelf: 'center',
         alignItems: 'center',
     },
     popup: {
-        backgroundColor: 'whitesmoke',
-        width: '80%',
+        width: '100%',
         padding: 20,
-        borderWidth: 8,
-        borderColor: 'rgb(125, 255, 125)',
-        borderRadius: 15,
+        borderBottomWidth: 2,
+  
         alignItems: 'center',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.8,
@@ -73,10 +74,8 @@ const styles = StyleSheet.create({
         elevation: 5
     },
     message: {
-        color: 'rgb(141, 228, 255)',
         fontWeight: 'bold',
         fontSize: 18,
-        marginBottom: 20,
         textAlign: 'center',
     },
 });
