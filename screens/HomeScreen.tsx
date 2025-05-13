@@ -11,31 +11,39 @@ import BlurSegmented from "@/components/BluredSegmented";
 import {ThemedText} from "@/components/ui/themed/ThemedText";
 import {useQuery} from "@tanstack/react-query";
 import * as Location from "expo-location";
-import {useRouter} from "expo-router";
+import {useRouter, useFocusEffect} from "expo-router";
 import StubData from "@/dal/StubLib/StubData";
 import Specie from "@/model/domain/Specie";
 import {useSpeciesStore} from "@/context/zustand/strore/useSpeciesStore";
-import {Kingdom} from "@/model/domain/Kingdom";
-import {Class} from "@/model/domain/Class";
-import {Diet} from "@/model/domain/Diet";
-import {Family} from "@/model/domain/Family";
 import {SuccessStore} from "@/context/zustand/strore/useSuccessStore";
 import SuccessPopup from "@/components/animation/sucess/SucessPopup";
-import { SuccessType } from "@/model/domain/SuccessType";
-import { processSuccessByType } from "@/shared/successHelper";
-
+import {SuccessType} from "@/model/domain/SuccessType";
+import {processSuccessByType} from "@/shared/successHelper";
 
 const {width: SCREEN_WIDTH} = Dimensions.get('window');
 export default function HomeScreen() {
-    const { speciesRepository } = StubData.getInstance();
-    const { successRepository } = StubData.getInstance();
+    const {speciesRepository} = StubData.getInstance();
     const [location, setLocation] = useState<Location.LocationObject | null>(null);
-    const { isVisibile, message } = SuccessStore();
+    const {isVisibile, message} = SuccessStore();
+
+    const [isScreenFocused, setIsScreenFocused] = useState(false);
 
     const router = useRouter();
+
+    useFocusEffect(
+        useCallback(() => {
+            setIsScreenFocused(true);
+            console.log("HomeScreen focused, activating camera if tab selected.");
+            return () => {
+                setIsScreenFocused(false);
+                console.log("HomeScreen unfocused, deactivating camera.");
+            };
+        }, [])
+    );
+
     useEffect(() => {
         (async () => {
-            const { status } = await Location.requestForegroundPermissionsAsync();
+            const {status} = await Location.requestForegroundPermissionsAsync();
             if (status !== 'granted') {
                 console.log('Permission to access location was denied');
                 return;
@@ -45,7 +53,6 @@ export default function HomeScreen() {
             setLocation(location);
         })();
     }, []);
-
 
     const slideAnim = useSharedValue(0);
 
@@ -67,13 +74,12 @@ export default function HomeScreen() {
 
             await processSuccessByType(SuccessType.PHOTO, spec);
             return spec;
-    }});
+        }
+    });
 
-   
     const handleCameraReady = useCallback(() => {
         setIsCameraReady(true);
     }, []);
-
 
     const handleCapturePress = async () => {
         if (isLoading || !isCameraReady || !cameraRef.current) return;
@@ -91,7 +97,6 @@ export default function HomeScreen() {
             setShowProgress(false);
         }
     };
-
 
     const switchView = (tabName: string) => {
         const view = tabName.toLowerCase();
@@ -114,17 +119,6 @@ export default function HomeScreen() {
         transform: [{translateX: slideAnim.value}],
     }));
 
-
-    if (permission && !permission.granted) {
-        return (
-            <View style={styles.container}>
-                <ThemedText style={styles.message}>We need your permission to show the camera</ThemedText>
-                <TouchableOpacity style={styles.permissionButton} onPress={requestPerm}>
-                    <ThemedText style={styles.permissionButtonText}>Grant Permission</ThemedText>
-                </TouchableOpacity>
-            </View>
-        );
-    }
     const { setCurrentImageUri, setCurrentIdentifiedSpecies } = useSpeciesStore();
     useEffect(() => {
         if (capturedImage && !showProgress && !isLoading && identifiedSpecie) {
@@ -136,6 +130,16 @@ export default function HomeScreen() {
         }
     }, [capturedImage, showProgress, isLoading, identifiedSpecie, router, location, base64Image]);
 
+    if (permission && !permission.granted) {
+        return (
+            <View style={styles.container}>
+                <ThemedText style={styles.message}>We need your permission to show the camera</ThemedText>
+                <TouchableOpacity style={styles.permissionButton} onPress={requestPerm}>
+                    <ThemedText style={styles.permissionButtonText}>Grant Permission</ThemedText>
+                </TouchableOpacity>
+            </View>
+        );
+    }
 
     return (
         <SafeAreaView style={styles.container}>
@@ -147,15 +151,15 @@ export default function HomeScreen() {
                 </View>
                 
                 <Animated.View style={[styles.viewContainer, animatedStyle]}>
-                    
-                    <CameraView style={styles.camera} facing={facing} ref={cameraRef} onCameraReady={handleCameraReady}>
+                    <>
+                        <CameraView style={styles.camera} facing={facing} ref={cameraRef} onCameraReady={handleCameraReady} />
                         <CameraControls
                             facing={facing}
                             toggleCameraFacing={toggleCameraFacing}
                             handleCapturePress={handleCapturePress}
                             handleCaptureRelease={handleCaptureRelease}
                         />
-                    </CameraView>
+                    </>
                     {showProgress && (
                         <View style={styles.progressOverlay}>
                            <SuccessPopup message={message} visible={isVisibile} />
@@ -224,6 +228,11 @@ const styles = StyleSheet.create({
     camera: {
         flex: 1,
         width: '50%',
+    },
+    cameraContainer: {
+        position: 'relative',
+        width: '50%',
+        height: '100%',
     },
     map: {
         width: '50%',

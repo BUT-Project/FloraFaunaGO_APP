@@ -1,15 +1,19 @@
 import React from 'react';
-import {Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Platform, StyleSheet, TouchableOpacity} from 'react-native';
 import {Link} from "expo-router";
 import normalize from "@/components/ui/responsive/Normalize";
 import {InputWithIcon} from "@/components/ui/InputWithIcon";
 import {useRegisterViewModel} from "@/hooks/viewModels/auth/useRegisterViewModel";
 import StubData from "@/dal/StubLib/StubData";
 import {Entypo} from "@expo/vector-icons";
-import {ThemedText} from "@/components/ui/themed/ThemedText";
+import {ThemedText, ThemedView} from "@/components/ui/themed";
+import {useThemeColor} from "@/hooks/useThemeColor";
 
 export default function RegisterScreen() {
     const {authService} = StubData.getInstance();
+
+    const textColor = useThemeColor({}, 'text');
+    const tintColor = useThemeColor({}, 'tint');
 
     const {
         username,
@@ -24,8 +28,8 @@ export default function RegisterScreen() {
     } = useRegisterViewModel(authService);
 
     return (
-        <View style={styles.content}>
-            <Text style={styles.title}>S'INSCRIRE</Text>
+        <ThemedView style={styles.content}>
+            <ThemedText style={[styles.title, {color: textColor}]}>S'INSCRIRE</ThemedText>
             {failedSignup && (
                 <ThemedText style={styles.errorText}>{errorMessage}</ThemedText>
             )}
@@ -54,16 +58,19 @@ export default function RegisterScreen() {
                 autoCapitalize='none'
                 autoCorrect={false}
             />
-            <TouchableOpacity style={styles.button} onPress={submitForm}>
-                <Entypo name="check" size={40} color="#AFEDEC"/>
+            <TouchableOpacity 
+                style={[styles.button, {backgroundColor: textColor}]} 
+                onPress={submitForm}
+            >
+                <Entypo name="check" size={40} color={tintColor}/>
             </TouchableOpacity>
-            <View style={styles.footer}>
-                <Text style={styles.footerText}>Tu as déjà un compte? </Text>
+            <ThemedView style={styles.footer}>
+                <ThemedText style={styles.footerText}>Tu as déjà un compte? </ThemedText>
                 <Link href="/login" replace>
-                    <Text style={styles.linkText}>Se connecter</Text>
+                    <ThemedText style={[styles.linkText, {color: tintColor}]}>Se connecter</ThemedText>
                 </Link>
-            </View>
-        </View>)
+            </ThemedView>
+        </ThemedView>)
 }
 
 const styles = StyleSheet.create({
@@ -74,7 +81,6 @@ const styles = StyleSheet.create({
     title: {
         fontWeight: 'bold',
         fontSize: normalize(29),
-        color: 'white',
         marginBottom: normalize(20),
     },
     errorText: {
@@ -84,7 +90,6 @@ const styles = StyleSheet.create({
         marginBottom: normalize(10),
     },
     button: {
-        backgroundColor: 'white',
         width: normalize(100),
         height: normalize(100),
         borderRadius: 50,
@@ -109,11 +114,9 @@ const styles = StyleSheet.create({
     },
     footerText: {
         fontSize: normalize(18),
-        color: 'white',
     },
     linkText: {
         fontSize: normalize(18),
-        color: '#AFEDEC',
         textDecorationLine: 'underline',
     },
 });

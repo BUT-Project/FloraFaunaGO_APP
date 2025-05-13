@@ -29,10 +29,12 @@ export default class StubSucess  implements ISuccessRepository {
 
 
     getById(event?: string): Promise<Success> {
-        return new Promise((resolve) => {
+        return new Promise((resolve, reject) => {
             const suc = this.Sucesses.find(suc => suc.event == event)
             if(suc !== undefined) {
                 resolve(suc)
+            } else {
+                reject(new Error(`Success with event '${event}' not found`));
             }
         });
     }
@@ -50,15 +52,15 @@ export default class StubSucess  implements ISuccessRepository {
 
     update(id:string,updatedSuccess: Success): Promise<void> {
         return new Promise((resolve, reject) => {
-            const index = this.Sucesses.findIndex(sucess => sucess.nom === updatedSuccess.nom);
+            const index = this.Sucesses.findIndex(sucess => sucess.event === id);
 
             if (index === -1) {
-                reject(new Error('Success not found'));
+                reject(new Error(`Success with event '${id}' not found for update`));
                 return;
             }
 
             // Mise à jour de l'élément à l'index trouvé
-            this.Sucesses[index] = { ...this.Sucesses[index], ...updatedSuccess } as Success;
+            this.Sucesses[index] = { ...this.Sucesses[index], ...updatedSuccess, event: id } as Success;
 
             resolve();
         });
@@ -70,7 +72,7 @@ export default class StubSucess  implements ISuccessRepository {
             this.Sucesses = this.Sucesses.filter(sucess => sucess.nom !== nom);
 
             if (this.Sucesses.length === initialLength) {
-                reject(new Error('Success not found'));
+                reject(new Error(`Success with nom '${nom}' not found for delete`));
                 return;
             }
 
