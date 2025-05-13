@@ -1,14 +1,13 @@
+import { Alert } from "react-native";
 import {useCamera} from "@/components/camera/hooks";
 import {useCallback, useEffect, useRef, useState} from "react";
 import Animated, {useAnimatedStyle, useSharedValue, withSpring} from "react-native-reanimated";
-import {ThemedView} from "@/components/ui/themed/ThemedView";
+import {ThemedView,ThemedText} from "@/components/ui/themed";
 import {Dimensions, SafeAreaView, StyleSheet, TouchableOpacity, View} from "react-native";
-import {CameraView} from "expo-camera";
-import CameraControls from "@/components/camera/CameraControls";
+import { CameraView } from "@/components/camera";
 import ARProgressIndicator from "@/components/ARProgressIndicator";
 import MainMapView from "@/components/MainMapView";
 import BlurSegmented from "@/components/BluredSegmented";
-import {ThemedText} from "@/components/ui/themed/ThemedText";
 import {useQuery} from "@tanstack/react-query";
 import * as Location from "expo-location";
 import {useRouter} from "expo-router";
@@ -19,8 +18,7 @@ import {Kingdom} from "@/model/domain/Kingdom";
 import {Class} from "@/model/domain/Class";
 import {Diet} from "@/model/domain/Diet";
 import {Family} from "@/model/domain/Family";
-import {SuccessStore} from "@/context/zustand/strore/useSuccessStore";
-import SuccessPopup from "@/components/animation/sucess/SucessPopup";
+
 import { SuccessType } from "@/model/domain/SuccessType";
 import { processSuccessByType } from "@/shared/successHelper";
 
@@ -29,7 +27,6 @@ const {width: SCREEN_WIDTH} = Dimensions.get('window');
 export default function HomeScreen() {
     const { speciesRepository } = StubData.getInstance();
     const [location, setLocation] = useState<Location.LocationObject | null>(null);
-    const { isVisibile, message } = SuccessStore();
 
     const router = useRouter();
     useEffect(() => {
@@ -45,52 +42,23 @@ export default function HomeScreen() {
         })();
     }, []);
 
-
     const slideAnim = useSharedValue(0);
-
-    const {facing, toggleCameraFacing, permission, requestPerm} = useCamera();
-    const cameraRef = useRef<CameraView>(null);
-
     const [capturedImage, setCapturedImage] = useState<string | null>(null);
     const [showProgress, setShowProgress] = useState(false);
-    const [isCameraReady, setIsCameraReady] = useState(false);
     const [base64Image, setBase64Image] = useState<string | null>(null);
     const [activeView, setActiveView] = useState('camera');
 
-    const {isLoading, refetch, data: identifiedSpecie} = useQuery<Specie, Error>({
-        queryKey: ['identifySpecie'],
+    const {isLoading, data: identifiedSpecie} = useQuery<Specie, Error>({
+        queryKey: ['identifySpecie',base64Image,speciesRepository],
         queryFn: async (): Promise<Specie> => {
             if (!speciesRepository) throw new Error('No Repository');
             if (!base64Image) throw new Error('No base64 image data');
             var spec = await speciesRepository.identifySpecies(base64Image);
-
             await processSuccessByType(SuccessType.PHOTO, spec);
             return spec;
-    }});
-
-   
-    const handleCameraReady = useCallback(() => {
-        setIsCameraReady(true);
-    }, []);
-
-
-    const handleCapturePress = async () => {
-        if (isLoading || !isCameraReady || !cameraRef.current) return;
-
-        setShowProgress(true);
-        try {
-            const photo = await cameraRef.current.takePictureAsync({base64: true});
-            setCapturedImage(photo?.uri ?? null);
-            setBase64Image(photo?.base64 ?? null);  // Store the base64 data
-            await refetch();
-        } catch (error) {
-            console.error('Error capturing image:', error);
-        }
-        finally {
-            setShowProgress(false);
-        }
-    };
-
+        },
+        enabled:!!base64Image && !!speciesRepository
+    });
 
     const switchView = (tabName: string) => {
         const view = tabName.toLowerCase();
@@ -102,29 +70,12 @@ export default function HomeScreen() {
             });
         }
     }
-
-    function handleCaptureRelease() {
-        if (!isLoading) {
-            setShowProgress(false);
-        }
-    }
-
     const animatedStyle = useAnimatedStyle(() => ({
         transform: [{translateX: slideAnim.value}],
     }));
 
-
-    if (permission && !permission.granted) {
-        return (
-            <View style={styles.container}>
-                <ThemedText style={styles.message}>We need your permission to show the camera</ThemedText>
-                <TouchableOpacity style={styles.permissionButton} onPress={requestPerm}>
-                    <ThemedText style={styles.permissionButtonText}>Grant Permission</ThemedText>
-                </TouchableOpacity>
-            </View>
-        );
-    }
     const { setCurrentImageUri, setCurrentIdentifiedSpecies } = useSpeciesStore();
+    
     useEffect(() => {
         if (capturedImage && !showProgress && !isLoading && identifiedSpecie) {
             setCurrentIdentifiedSpecies(identifiedSpecie);
@@ -136,31 +87,20 @@ export default function HomeScreen() {
 
     return (
         <SafeAreaView style={styles.container}>
-
             <ThemedView style={styles.content}>
 
                 <View style={styles.segmentedControl}>
                     <BlurSegmented tabsName={['Camera', 'Map']} onTabChange={switchView}/>
                 </View>
-                
+
                 <Animated.View style={[styles.viewContainer, animatedStyle]}>
-                    
-                    <CameraView style={styles.camera} facing={facing} ref={cameraRef}  onCameraReady={handleCameraReady}>
-                        <CameraControls
-                            facing={facing}
-                            toggleCameraFacing={toggleCameraFacing}
-                            handleCapturePress={handleCapturePress}
-                            handleCaptureRelease={handleCaptureRelease}
-                        />
-                    </CameraView>
+                    <CameraView setBase64Image={setBase64Image} setCapturedImage={setCapturedImage} style={styles.camera}/>
                     {showProgress && (
                         <View style={styles.progressOverlay}>
-                           <SuccessPopup message={message} visible={isVisibile} />
                             <ARProgressIndicator width={SCREEN_WIDTH} height={SCREEN_WIDTH}/>
                         </View>
                     )}
                     <MainMapView location={location}  style={styles.map}/>
-
                 </Animated.View>
 
             </ThemedView>
@@ -191,18 +131,6 @@ const styles = StyleSheet.create({
         color: '#fff',
         fontSize: 18,
         marginBottom: 20,
-    },
-    permissionButton: {
-        backgroundColor: '#4CAF50',
-        paddingVertical: 12,
-        paddingHorizontal: 24,
-        borderRadius: 8,
-        alignSelf: 'center',
-    },
-    permissionButtonText: {
-        color: '#fff',
-        fontSize: 16,
-        fontWeight: 'bold',
     },
     segmentedControl: {
         flexDirection: 'row',

@@ -1,4 +1,4 @@
-import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import {ActivityIndicator, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {Ionicons} from '@expo/vector-icons';
 import {CameraType} from "expo-camera";
 
@@ -7,20 +7,26 @@ export interface CameraControlsProps {
     toggleCameraFacing: () => void;
     handleCapturePress: () => void;
     handleCaptureRelease: () => void;
-}
+    isLoading?: boolean;
+};
 
 export default function CameraControls(props: CameraControlsProps) {
-    const {facing, toggleCameraFacing, handleCapturePress, handleCaptureRelease} = props;
+    const {facing, toggleCameraFacing, handleCapturePress, handleCaptureRelease, isLoading} = props;
     return (
         <View style={styles.cameraControls}>
-            <TouchableOpacity style={styles.flipButton} onPress={toggleCameraFacing}>
+            <TouchableOpacity style={styles.flipButton} disabled={isLoading} onPress={toggleCameraFacing}>
                 <Ionicons name={facing === 'back' ? 'camera-reverse' : 'camera'} size={30} color="#fff"/>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.captureButton} onPress={handleCapturePress}
+            <TouchableOpacity style={styles.captureButton} disabled={isLoading} onPress={handleCapturePress}
                               onPressOut={handleCaptureRelease}>
-                <View style={styles.captureButtonInner}/>
+                {isLoading ?  
+                    <ActivityIndicator size="large" color="#fff"/> 
+                    :
+                    <View style={styles.captureButtonInner}/>
+                }
             </TouchableOpacity>
-        </View>);
+        </View>
+    );
 }
 const styles = StyleSheet.create({
     cameraControls: {
