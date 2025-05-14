@@ -15,12 +15,6 @@ import {useRouter} from "expo-router";
 import StubData from "@/dal/StubLib/StubData";
 import Specie from "@/model/domain/Specie";
 import {useSpeciesStore} from "@/context/zustand/strore/useSpeciesStore";
-import {Kingdom} from "@/model/domain/Kingdom";
-import {Class} from "@/model/domain/Class";
-import {Diet} from "@/model/domain/Diet";
-import {Family} from "@/model/domain/Family";
-import {SuccessStore} from "@/context/zustand/strore/useSuccessStore";
-import SuccessPopup from "@/components/animation/sucess/SucessPopup";
 import { SuccessType } from "@/model/domain/SuccessType";
 import { processSuccessByType } from "@/shared/successHelper";
 
@@ -28,9 +22,7 @@ import { processSuccessByType } from "@/shared/successHelper";
 const {width: SCREEN_WIDTH} = Dimensions.get('window');
 export default function HomeScreen() {
     const { speciesRepository } = StubData.getInstance();
-    const { successRepository } = StubData.getInstance();
     const [location, setLocation] = useState<Location.LocationObject | null>(null);
-    const { isVisibile, message } = SuccessStore();
 
     const router = useRouter();
     useEffect(() => {
@@ -158,7 +150,6 @@ export default function HomeScreen() {
                     </CameraView>
                     {showProgress && (
                         <View style={styles.progressOverlay}>
-                           <SuccessPopup message={message} visible={isVisibile} />
                             <ARProgressIndicator width={SCREEN_WIDTH} height={SCREEN_WIDTH}/>
                         </View>
                     )}

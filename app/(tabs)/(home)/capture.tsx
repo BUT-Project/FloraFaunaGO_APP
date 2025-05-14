@@ -6,8 +6,6 @@ import {Gesture, GestureDetector} from "react-native-gesture-handler";
 import {ThemedText} from "@/components/ui/themed/ThemedText";
 import {useRouter} from "expo-router";
 import {useSpeciesStore} from "@/context/zustand/strore/useSpeciesStore";
-import { SuccessStore } from '@/context/zustand/strore/useSuccessStore';
-import SuccessPopup from '@/components/animation/sucess/SucessPopup';
 
 const {width: screenWidth, height: screenHeight} = Dimensions.get("screen");
 const center = {
@@ -19,7 +17,6 @@ const POKEBALL_BASE_SIZE = 50;
 
 export default function Capture() {
     const imageUri = useSpeciesStore((state) => state.currentImageUri);
-    const { isVisibile, message } = SuccessStore();
     const router = useRouter();
     const clock = useClock();
     const [captureSuccess, setCaptureSuccess] = useState(false);
@@ -155,7 +152,6 @@ export default function Capture() {
     return (
         <GestureDetector gesture={throwGesture}>
             <View style={{flex: 1}}>
-            <SuccessPopup visible={isVisibile} message={message} />
                 <Canvas style={{flex: 1}}>
                     {background && (
                         <Image

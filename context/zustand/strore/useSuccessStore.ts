@@ -1,9 +1,6 @@
 import {create} from 'zustand';
 import StubData from "@/dal/StubLib/StubData";
 import { devtools } from 'zustand/middleware';
-import { Success } from '@/model/domain/Success';
-import SuccessPopup from '@/components/animation/sucess/SucessPopup';
-import { useEffect } from 'react';
 export interface SuccessState {
     updateSuccess(successId: string): void
     isVisibile: boolean
@@ -41,9 +38,9 @@ export const SuccessStore = create<SuccessState>()(
             if(sucess !== undefined) {
                 sucess.actualVal += 1
             stub.successRepository?.update(successId,sucess);
-            get().setMessage(sucess.nom+ " completed ! 🏆")
-            get().setisVisible(true)
-            } 
+            get().setMessage(`${String(sucess.nom)} completed ! 🏆`);
+            get().setisVisible(true)            
+        } 
         }
         catch (error) {
             console.error(error)

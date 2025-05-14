@@ -43,7 +43,7 @@ export default  function Details() {
         );
     }
     return (
-        <SuccessDetailScreen sucess={sucess}/>
+        <SuccessDetailScreen sucess={sucess} visible={true}/>
     )
 
 }
