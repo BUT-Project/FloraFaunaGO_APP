@@ -1,10 +1,9 @@
 import {Link, Stack} from "expo-router";
-import {TouchableOpacity} from "react-native";
-import Ionicons from "@expo/vector-icons/Ionicons";
+import { useTheme } from '@react-navigation/native';
 
 
 export default function Layout() {
-
+  const { colors } = useTheme();
     return (
         <Stack>
             <Stack.Screen name="profil" options={{
@@ -20,16 +19,14 @@ export default function Layout() {
 
                 animation:'slide_from_bottom',
                 presentation: 'modal',
-                headerBackVisible: false,
+                headerBackVisible: true,
+                headerStyle: {
+                    backgroundColor: colors.background, // change selon thème
+                },
+                 headerTintColor: colors.text,
+
                 headerLeft : () =>(
                     <Link href="/(profil)/profil" asChild>
-                        <TouchableOpacity>
-                            <Ionicons
-                                name="close"
-                                size={25}
-                                style={{ color:"#808080", marginRight:15 }}
-                            />
-                        </TouchableOpacity>
                     </Link>)
 
             }}

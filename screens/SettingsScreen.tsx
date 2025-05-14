@@ -13,7 +13,7 @@ export default function SettingsScreen() {
     const [theme, setTheme] = useState(systemTheme || 'light'); // État du thème
 
     const logout = useAuthStore((state)=>state.logout);
-    const [switchTheme, setSwitchTheme] = useState(false);
+    const [switchTheme, setSwitchTheme] = useState((theme === 'dark') ? true : false);
     const switchThemes = () => {
         setSwitchTheme(previousState => !previousState);
     }; 
@@ -45,18 +45,22 @@ export default function SettingsScreen() {
                  <ThemedText type={"title"} style={styles.title}>Settings</ThemedText>
                  <Pressable onPress={switchChange} style={styles.button}>
                      <ThemedText type={"subtitle"} style={styles.buttonText}>Mode offline</ThemedText>
-                     <Switch value={switchBut} trackColor={{false: "#767577", true: "#90EE90"}} style={styles.switch}  />
+                     <Switch value={switchBut} trackColor={{false: "#767577", true: "#90EE90"}}  />
                  </Pressable>
 
                  <TouchableOpacity style={styles.button}>
                      <ThemedText type={"subtitle"} style={styles.buttonText}>Modifier l'adresse mail</ThemedText>
                  </TouchableOpacity>
+                <TouchableOpacity onPress={() => { toggleTheme(); switchThemes(); }} style={styles.button}>
+                <ThemedText type={"subtitle"} style={styles.buttonText}>Changer le thème</ThemedText>
 
-                 <TouchableOpacity onPress={toggleTheme} style={styles.button}>
-                     <ThemedText type={"subtitle"} style={styles.buttonText}>Changer le thème ☀️</ThemedText>
-                     <Switch value={switchTheme} trackColor={{false: "#767577", true: "#90EE90"}} style={styles.switch}  />
-                     <ThemedText type={"subtitle"} style={styles.buttonText}>🌑</ThemedText>
-                 </TouchableOpacity>
+                <Switch
+                    value={switchTheme}
+                />
+                <ThemedText type={"subtitle"} style={styles.buttonText}>
+                    {switchTheme ? '🌑' : '☀️'}
+                </ThemedText>
+                </TouchableOpacity>
 
                  <TouchableOpacity style={styles.button}>
                      <ThemedText type={"subtitle"} style={styles.buttonText}>Activer l'économie de batterie</ThemedText>
@@ -77,6 +81,7 @@ export default function SettingsScreen() {
     );
 }
 const styles = StyleSheet.create({
+
     scrollContainer: {
         display:"flex",
         flex:1,
@@ -92,14 +97,11 @@ const styles = StyleSheet.create({
         alignSelf: "center",
         color: "#FFFFFF",
     },
-    switch: {
-
-    },
     button: {
         alignSelf: "center",
         flexDirection: "row",
         justifyContent: "center",
-        padding: 10,
+        alignItems: "center",
         minWidth: "80%",
         borderRadius: 10,
         height:50,

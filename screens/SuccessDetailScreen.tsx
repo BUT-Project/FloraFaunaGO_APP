@@ -1,7 +1,7 @@
 import {ThemedView} from "@/components/ui/themed/ThemedView";
 import {ThemedText} from "@/components/ui/themed/ThemedText";
 import {Success} from "@/model/domain/Success";
-import {Modal, ScrollView, StyleSheet, TouchableOpacity} from "react-native";
+import {Modal, Pressable, ScrollView, StyleSheet, TouchableWithoutFeedback } from "react-native";
 import React from "react";
 
 interface SucessDetailScreenProps {
@@ -10,10 +10,13 @@ interface SucessDetailScreenProps {
     sucess: Success;
 }
 
+
+
 export default function SuccessDetailScreen( { visible, onClose, sucess }: SucessDetailScreenProps) {
+
     return (
-        <Modal animationType="slide" visible={visible} transparent={true} onRequestClose={onClose}>
-            <TouchableOpacity style={styles.overlay} onPress={onClose}>
+        <Modal visible={visible} transparent={true}  onRequestClose={onClose}>
+            <Pressable  style={styles.overlay} onPress={onClose}>
                 <ThemedView style={styles.container}>
 
                     <ScrollView>
@@ -39,7 +42,7 @@ export default function SuccessDetailScreen( { visible, onClose, sucess }: Suces
                         </ThemedView>
                     </ScrollView>
                 </ThemedView>
-            </TouchableOpacity>
+            </Pressable >
         </Modal>
     );
 }
