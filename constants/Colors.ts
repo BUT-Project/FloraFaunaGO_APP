@@ -3,6 +3,8 @@
  * There are many other ways to style your app. For example, [Nativewind](https://www.nativewind.dev/), [Tamagui](https://tamagui.dev/), [unistyles](https://reactnativeunistyles.vercel.app), etc.
  */
 
+import { Success } from "@/model/domain/Success";
+
 const tintColorLight = '#0a7ea4';
 const tintColorDark = '#fff';
 
@@ -14,6 +16,9 @@ export const Colors = {
     icon: '#687076',
     tabIconDefault: '#687076',
     tabIconSelected: tintColorLight,
+    error: '#e74c3c',
+    warning: '#f1c40f',
+    success: '#2ecc7',
   },
   dark: {
     text: '#ECEDEE',
@@ -22,5 +27,8 @@ export const Colors = {
     icon: '#9BA1A6',
     tabIconDefault: '#9BA1A6',
     tabIconSelected: tintColorDark,
+    error:"#c0392b",
+    warning:"#f39c12",
+    success:"#27ae60"
   },
 };

@@ -15,8 +15,6 @@ import StubData from "@/dal/StubLib/StubData";
 import Specie from "@/model/domain/Specie";
 import {useSpeciesStore} from "@/context/zustand/strore/useSpeciesStore";
 import { useFocusEffect } from '@react-navigation/native';
-
-
 import { SuccessType } from "@/model/domain/SuccessType";
 import { processSuccessByType } from "@/shared/successHelper";
 import { SafeView } from "@/components/ui/SafeView";
@@ -82,7 +80,6 @@ export default function HomeScreen() {
 
     const { setCurrentImageUri, setCurrentIdentifiedSpecies } = useSpeciesStore();
     
-
     console.log('Identified Specie:', identifiedSpecie);
     console.log('Captured Image:', capturedImage);
     useEffect(() => {
@@ -94,11 +91,9 @@ export default function HomeScreen() {
         }
     }, [capturedImage, isFetching, isLoading, identifiedSpecie, router ]);
 
-
     return (
         <SafeView style={styles.container} disableBottomInset>
-            <ThemedView style={styles.content}>
-
+            <ThemedView style={styles.content}>     
                 <View style={styles.segmentedControl}>
                     <BlurSegmented tabsName={['Camera', 'Map']} onTabChange={switchView}/>
                 </View>

@@ -4,6 +4,7 @@ import {useCamera} from "@/components/camera/hooks";
 import {ThemedView,ThemedText} from "@/components/ui/themed";
 import {CameraView} from "expo-camera";
 import CameraControls from "@/components/camera/CameraControls";
+import { useIsFocused } from '@react-navigation/native';
 
 export interface CustomCameraViewProps {
     setBase64Image: (base64: string | null) => void;    
@@ -12,6 +13,7 @@ export interface CustomCameraViewProps {
 };
 
 const CustomCameraView = ({setBase64Image,setCapturedImage,style}:CustomCameraViewProps) => {
+    const isFocused = useIsFocused();
 
     const {facing, toggleCameraFacing, permission, requestPerm} = useCamera();
     const cameraRef = useRef<CameraView>(null);
@@ -50,6 +52,13 @@ const CustomCameraView = ({setBase64Image,setCapturedImage,style}:CustomCameraVi
         }
     };
 
+    if(!permission){
+        return (
+            <ThemedView style={[styles.container,style]}>
+                <ThemedText>Récupération des permissions</ThemedText>
+            </ThemedView>
+        );
+    }
     if (permission && !permission.granted) {
         return (
             <ThemedView style={[styles.container,style]}>
@@ -59,18 +68,21 @@ const CustomCameraView = ({setBase64Image,setCapturedImage,style}:CustomCameraVi
                 </TouchableOpacity>
             </ThemedView>
         );
-    }
+    };
+    
     return (
         <ThemedView style={[styles.container,style]}>
-            <CameraView style={styles.camera} facing={facing} ref={cameraRef}  onCameraReady={handleCameraReady}>
-                <CameraControls
-                    facing={facing}
-                    handleCapturePress={handleCapturePress}
-                    toggleCameraFacing={toggleCameraFacing}
-                    handleCaptureRelease={()=>{}}
-                    isLoading={isLoading}
-                />
-            </CameraView> 
+             {isFocused && (
+                <CameraView style={styles.camera} facing={facing} ref={cameraRef}  onCameraReady={handleCameraReady}>
+                    <CameraControls
+                        facing={facing}
+                        handleCapturePress={handleCapturePress}
+                        toggleCameraFacing={toggleCameraFacing}
+                        handleCaptureRelease={()=>{}}
+                        isLoading={isLoading}
+                    />
+                </CameraView> 
+            )}
         </ThemedView>       
     );
 }
@@ -78,6 +90,8 @@ const CustomCameraView = ({setBase64Image,setCapturedImage,style}:CustomCameraVi
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     message: {
         textAlign: 'center',
@@ -99,6 +113,7 @@ const styles = StyleSheet.create({
     },
     camera: {
         flex: 1,
+        width: '100%',
     },
 });
 

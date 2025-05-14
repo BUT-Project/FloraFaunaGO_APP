@@ -1,6 +1,7 @@
 import {useEffect, useState} from 'react';
 import {Alert} from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import { Link } from 'expo-router';
+import { SafeView } from '@/components/ui/SafeView';
 import * as ExpoLocation from 'expo-location';
 import RevealScreen from '@/screens/RevealScreen';
 import {ThemedText, ThemedView} from '@/components/ui/themed';
@@ -59,32 +60,34 @@ export default function Reveal() {
 
     if (isLoading) {
         return (
-            <SafeAreaView>
-                <ThemedView>
+            <SafeView disableBottomInset>
                     <ThemedText>Saving your capture...</ThemedText>
-                </ThemedView>
-            </SafeAreaView>
+            </SafeView>
         );
     }
 
     if (error) {
         return (
-            <SafeAreaView>
+            <SafeView disableBottomInset>
                 <ThemedText>Error: {error}</ThemedText>
-            </SafeAreaView>
+            </SafeView>
         );
     }
     console.log('specie', specie);
     console.log('capturedImageUri', capturedImageUri);
     if (!specie || !capturedImageUri) {
         return (
-            <SafeAreaView>
+            <SafeView disableBottomInset>
                 <ThemedView>
                     <ThemedText>No species or image selected</ThemedText>
+                    <Link href="/(home)" asChild>
+                        <ThemedText>Go back</ThemedText>  
+                    </Link>
                 </ThemedView>
-            </SafeAreaView>
+            </SafeView>
         );
     }
 
     return <RevealScreen specie={specie} />;
 }
+

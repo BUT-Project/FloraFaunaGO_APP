@@ -1,12 +1,21 @@
 // FaceOffGame.tsx
-import React, { useState, useEffect } from 'react';
-import { ImageBackground,View, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { ImageBackground, TouchableOpacity, StyleSheet } from 'react-native';
 import { ThemedView,ThemedText } from '@/components/ui/themed';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeView } from '@/components/ui/SafeView';
+import { 
+  Tutorial,
+  ProgressBar,
+  ErrorBar,
+  TimeBar,
+  GameOver,
+  FeedbackMessageToast,
+  FeedbackMessage
+} from '@/components/capture';
 
 interface Props {
-  animalPhoto: string; // URI de la photo
+  animalPhoto: string; 
   onResult: (success: boolean) => void;
   onCancel: () => void;
 };
@@ -94,10 +103,12 @@ const PlayerActions: Record<PlayerActionType, PlayerActionData> = {
       "L’esquive n’était pas nécessaire, dommage."
     ),
   
-  };
+};
 
 const NB_LIVES = 3;
-const NB_ROUNDS = 3;
+const NB_STEPS = 3;
+const MAX_RESPONSE_TIME = 5000;
+const DELAY_BETWEEN_ROUNDS = 2500;
 
 const getRandomAnimalAction = (): AnimalActionData => {
     const values = Object.values(AnimalActions);
@@ -105,70 +116,122 @@ const getRandomAnimalAction = (): AnimalActionData => {
     return values[index];
 };
 export default function CaptureScreen({ animalPhoto, onResult, onCancel }: Props) {
-    const [currentRound, setCurrentRound] = useState(0);
-    const [lives, setLives] = useState(NB_LIVES);
-    const [animalAction, setAnimalAction] = useState<AnimalActionData>();
-  
-    useEffect(() => {
-      if (currentRound < NB_ROUNDS && lives > 0) {
-        setAnimalAction(getRandomAnimalAction());
-      } else {
-        onResult(lives > 0);
+  const [step, setStep] = useState(0);
+  const [lives, setLives] = useState(NB_LIVES);
+  const [animalAction, setAnimalAction] = useState<AnimalActionData | null>();
+  const [timeLeft, setTimeLeft] = useState(MAX_RESPONSE_TIME);
+  const [feedbackMessage, setFeedbackMessage] = useState<FeedbackMessage | null>(null);
+
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  useEffect(() => {
+    if(step >= NB_STEPS) {
+      onResult(true);
+    }
+  }, [step]);
+
+  useEffect(() => {
+    if (animalAction) {
+      setTimeLeft(MAX_RESPONSE_TIME);
+      // Start a new interval for the TimeBar
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
       }
-    }, [currentRound, lives]);
-  
-    const handleChoice = (choice: PlayerActionType) => {
-      const isCorrect = animalAction?.isCorrect(choice);
-      if (!isCorrect) {
-        setLives(prevLives => {
-          const updatedLives = prevLives - 1;
-          if (updatedLives <= 0) {
-            onResult(false);
+      intervalRef.current = setInterval(() => {
+        setTimeLeft((prev) => {
+          if (prev <= 0) {
+            handleTimeout();
+            return 0;
           }
-          return updatedLives;
+          return prev - 100;
         });
+      }, 100);
+    }
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
       }
-      setCurrentRound(prev => prev + 1);
     };
+  }, [animalAction]);
+
+
+  const handleTimeout = () => {
+    setAnimalAction(null);
+    setFeedbackMessage({text:"Trop tard ! Vous avez hésité...", type: 'error'});
+    setLives((prev) => prev - 1);
+    startNextRoundDelay();
+  };
+
+  const handleChoice = (choice: PlayerActionType) => {
+    if (!animalAction) return;
+
+    const isCorrect = animalAction.isCorrect(choice);
+    const text = isCorrect
+      ? PlayerActions[choice].successMessage
+      : PlayerActions[choice].failureMessage;
+    const type = isCorrect ? 'success' : 'error';
+
+    setAnimalAction(null);
+    setFeedbackMessage({text, type});
+    
+    if (isCorrect) {
+      setStep((prev) => prev + 1);
+      setTimeout(() => {
+       startNextRoundDelay();
+      }, DELAY_BETWEEN_ROUNDS); 
+    } else {
+      setLives((prev) => prev - 1);
+      startNextRoundDelay();
+    }
+  };
   
-    return (
+  const onClose = () => {
+    setAnimalAction(getRandomAnimalAction());
+  };
+
+  const startNextRoundDelay = () => {
+    if(lives <= 0) return;
+    setTimeout(() => {
+      setFeedbackMessage(null);
+      setAnimalAction(getRandomAnimalAction());
+    }, DELAY_BETWEEN_ROUNDS); 
+  };
+  return (
       <SafeView disableTopInset>
-           <ImageBackground source={{ uri: animalPhoto }} style={styles.container}>
+          <GameOver visible={lives <= 0} onClose={() => onResult(false)} />
+          <Tutorial nbStepsToWin={NB_STEPS} onClose={() => onClose()}/>
+          <ImageBackground source={{ uri: animalPhoto }} style={styles.container}>
             <ThemedView style={styles.overlay}>
-            <View style={styles.topBar}>
+            <ThemedView style={styles.topBar}>
                 <TouchableOpacity style={styles.fleeButton} onPress={onCancel}>
                     <Ionicons name="chevron-back" size={30} color="#fff" />
                     <ThemedText style={styles.topText}>Fuir</ThemedText>
                 </TouchableOpacity>
-                <ThemedText style={styles.topText}>Tour {currentRound + 1}/{NB_ROUNDS}</ThemedText>
-                <View style={styles.livesContainer}>
-                    {[...Array(NB_LIVES)].map((_, index) => (
-                    <Ionicons
-                        key={index}
-                        name={index < lives ? 'heart' : 'heart-outline'}
-                        size={24}
-                        color="red"
-                    />
-                    ))}
-                </View>
-            </View>
-            <View style={styles.bottom}>
-                <ThemedText style={styles.animalAction}>L’animal {animalAction?.label}...</ThemedText>
+                <ProgressBar currentStep={step} maxSteps={NB_STEPS}/>
+                <ErrorBar lives={lives} totalLives={NB_LIVES} style={styles.errorBar}/>
+            </ThemedView>
+            <ThemedView style={styles.bottom}>
+                {feedbackMessage && (
+                    <FeedbackMessageToast message={feedbackMessage}/>
+                )}
+                {animalAction && (
+                  <ThemedText style={styles.animalAction}>L’animal {animalAction?.label}... </ThemedText> 
+                )}
+                <TimeBar timeLeft={timeLeft} maxTime={MAX_RESPONSE_TIME} />
                 <ThemedView style={styles.buttons}>
                     {Object.values(PlayerActions).map((action) => (
                     <TouchableOpacity key={action.type} onPress={() => handleChoice(action.type)}>
                         <ThemedView style={styles.button}>
-                        <ThemedText>{action.label}</ThemedText>
+                        <ThemedText style={{color:action.color}}>{action.label}</ThemedText>
                         <Ionicons name={action.icon} color={action.color} size={30} />
                         </ThemedView>
                     </TouchableOpacity>
                     ))}
                 </ThemedView>
-            </View>
+            </ThemedView>
             </ThemedView>
         </ImageBackground>
-      </SafeView>
-     
+      </SafeView>  
     );
   }
   
@@ -179,33 +242,31 @@ export default function CaptureScreen({ animalPhoto, onResult, onCancel }: Props
       backgroundColor: "rgba(0,0,0,0.3)",
     },
     topBar: {
+      backgroundColor:"transparent",
       width: '100%',
       position: 'absolute',
       top: 20,
       paddingHorizontal: 10,
       flexDirection: 'row',
-      justifyContent: 'space-between',
+      justifyContent:"center",
       alignItems: 'center',
     },
     topText: {
       fontSize: 22,
       color: '#fff',
     },
-    livesContainer: {
-      flexDirection: 'row',
-      gap: 5,
-    },
     animalAction: {
       fontSize: 20,
       fontStyle: 'italic',
       color: '#fff',
       textAlign: 'center',
+      marginBottom: 10,
     },
     bottom:{
-        width: '100%',
-        position: 'absolute',
-        bottom: 0,
-        gap: 10,
+      backgroundColor:"transparent",
+      width: '100%',
+      position: 'absolute',
+      bottom: 0,
     },
     buttons: {
         flexDirection: 'row',
@@ -222,5 +283,11 @@ export default function CaptureScreen({ animalPhoto, onResult, onCancel }: Props
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
+        position: 'absolute',
+        left: 0,
+    },
+    errorBar:{
+      position: 'absolute',
+      right: 0,
     }
   });
