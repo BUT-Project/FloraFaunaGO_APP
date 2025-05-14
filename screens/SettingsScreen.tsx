@@ -36,44 +36,43 @@ export default function SettingsScreen() {
     };
 
     return (
-<ScrollView style={{flex:1}} contentContainerStyle={{flexGrow: 1}} >
-        <ThemedView  style={{flex: 1}}>
+        <ScrollView style={{flex:1}} contentContainerStyle={{flexGrow: 1}} >
+                <ThemedView  style={{flex: 1}}>
 
-            <LinearGradient style={{flex:1}}  colors={["#90EE90","#0D98BA"]}>
-             <SafeAreaView>
+                    <LinearGradient style={{flex:1}}  colors={["#90EE90","#0D98BA"]}>
+                    <SafeAreaView>
 
-                 <ThemedText type={"title"} style={styles.title}>Settings</ThemedText>
-                 <Pressable onPress={switchChange} style={styles.button}>
-                     <ThemedText type={"subtitle"} style={styles.buttonText}>Mode offline</ThemedText>
-                     <Switch value={switchBut} trackColor={{false: "#767577", true: "#90EE90"}} style={styles.switch}  />
-                 </Pressable>
+                        <ThemedText type={"title"} style={styles.title}>Settings</ThemedText>
+                        <Pressable onPress={switchChange} style={styles.button}>
+                            <ThemedText type={"subtitle"} style={styles.buttonText}>Mode offline</ThemedText>
+                            <Switch value={switchBut} trackColor={{false: "#767577", true: "#90EE90"}} style={styles.switch}  />
+                        </Pressable>
 
-                 <TouchableOpacity style={styles.button}>
-                     <ThemedText type={"subtitle"} style={styles.buttonText}>Modifier l'adresse mail</ThemedText>
-                 </TouchableOpacity>
+                        <TouchableOpacity style={styles.button}>
+                            <ThemedText type={"subtitle"} style={styles.buttonText}>Modifier l'adresse mail</ThemedText>
+                        </TouchableOpacity>
 
-                 <TouchableOpacity onPress={toggleTheme} style={styles.button}>
-                     <ThemedText type={"subtitle"} style={styles.buttonText}>Changer le thème ☀️</ThemedText>
-                     <Switch value={switchTheme} trackColor={{false: "#767577", true: "#90EE90"}} style={styles.switch}  />
-                     <ThemedText type={"subtitle"} style={styles.buttonText}>🌑</ThemedText>
-                 </TouchableOpacity>
+                        <TouchableOpacity onPress={toggleTheme} style={styles.button}>
+                            <ThemedText type={"subtitle"} style={styles.buttonText}>Changer le thème ☀️</ThemedText>
+                            <Switch value={switchTheme} trackColor={{false: "#767577", true: "#90EE90"}} style={styles.switch}  />
+                            <ThemedText type={"subtitle"} style={styles.buttonText}>🌑</ThemedText>
+                        </TouchableOpacity>
 
-                 <TouchableOpacity style={styles.button}>
-                     <ThemedText type={"subtitle"} style={styles.buttonText}>Activer l'économie de batterie</ThemedText>
-                 </TouchableOpacity>
+                        <TouchableOpacity style={styles.button}>
+                            <ThemedText type={"subtitle"} style={styles.buttonText}>Activer l'économie de batterie</ThemedText>
+                        </TouchableOpacity>
 
-                 <TouchableOpacity style={styles.button} onPress={logout}>
-                     <ThemedText type={"subtitle"} style={styles.buttonText}>Deconnexion</ThemedText>
-                 </TouchableOpacity>
+                        <TouchableOpacity style={styles.button} onPress={logout}>
+                            <ThemedText type={"subtitle"} style={styles.buttonText}>Deconnexion</ThemedText>
+                        </TouchableOpacity>
 
-                 <TouchableOpacity style={styles.button}>
-                     <ThemedText type={"subtitle"} style={[styles.deleteText]}>Supprimer le compte</ThemedText>
-                 </TouchableOpacity>
-             </SafeAreaView>
-            </LinearGradient>
-        </ThemedView>
-</ScrollView>
-
+                        <TouchableOpacity style={styles.button}>
+                            <ThemedText type={"subtitle"} style={[styles.deleteText]}>Supprimer le compte</ThemedText>
+                        </TouchableOpacity>
+                    </SafeAreaView>
+                    </LinearGradient>
+                </ThemedView>
+        </ScrollView>
     );
 }
 const styles = StyleSheet.create({

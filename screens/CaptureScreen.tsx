@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { ImageBackground,View, TouchableOpacity, StyleSheet } from 'react-native';
 import { ThemedView,ThemedText } from '@/components/ui/themed';
 import { Ionicons } from '@expo/vector-icons';
+import { SafeView } from '@/components/ui/SafeView';
 
 interface Props {
   animalPhoto: string; // URI de la photo
@@ -76,14 +77,6 @@ const PlayerActions: Record<PlayerActionType, PlayerActionData> = {
       "Vous avez attendu calmement. Bonne décision.",
       "Vous avez attendu, mais ce n’était pas la bonne réaction."
     ),
-    [PlayerActionType.Dodge]: new PlayerActionData(
-      PlayerActionType.Dodge,
-      "Esquiver",
-      "accessibility-outline",
-      "#e67e22",
-      "Belle esquive ! Vous évitez l’animal.",
-      "L’esquive n’était pas nécessaire, dommage."
-    ),
     [PlayerActionType.TakePhoto]: new PlayerActionData(
       PlayerActionType.TakePhoto,
       "Prendre une photo",
@@ -92,6 +85,15 @@ const PlayerActions: Record<PlayerActionType, PlayerActionData> = {
       "Photo prise au bon moment !",
       "Trop tard ou mal choisi, pas de photo..."
     ),
+    [PlayerActionType.Dodge]: new PlayerActionData(
+      PlayerActionType.Dodge,
+      "Esquiver",
+      "accessibility-outline",
+      "#e67e22",
+      "Belle esquive ! Vous évitez l’animal.",
+      "L’esquive n’était pas nécessaire, dommage."
+    ),
+  
   };
 
 const NB_LIVES = 3;
@@ -130,7 +132,8 @@ export default function CaptureScreen({ animalPhoto, onResult, onCancel }: Props
     };
   
     return (
-        <ImageBackground source={{ uri: animalPhoto }} style={styles.container}>
+      <SafeView disableTopInset>
+           <ImageBackground source={{ uri: animalPhoto }} style={styles.container}>
             <ThemedView style={styles.overlay}>
             <View style={styles.topBar}>
                 <TouchableOpacity style={styles.fleeButton} onPress={onCancel}>
@@ -164,6 +167,8 @@ export default function CaptureScreen({ animalPhoto, onResult, onCancel }: Props
             </View>
             </ThemedView>
         </ImageBackground>
+      </SafeView>
+     
     );
   }
   

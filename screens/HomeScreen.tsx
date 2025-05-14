@@ -14,13 +14,12 @@ import {useRouter} from "expo-router";
 import StubData from "@/dal/StubLib/StubData";
 import Specie from "@/model/domain/Specie";
 import {useSpeciesStore} from "@/context/zustand/strore/useSpeciesStore";
-import {Kingdom} from "@/model/domain/Kingdom";
-import {Class} from "@/model/domain/Class";
-import {Diet} from "@/model/domain/Diet";
-import {Family} from "@/model/domain/Family";
+import { useFocusEffect } from '@react-navigation/native';
+
 
 import { SuccessType } from "@/model/domain/SuccessType";
 import { processSuccessByType } from "@/shared/successHelper";
+import { SafeView } from "@/components/ui/SafeView";
 
 
 const {width: SCREEN_WIDTH} = Dimensions.get('window');
@@ -44,11 +43,17 @@ export default function HomeScreen() {
 
     const slideAnim = useSharedValue(0);
     const [capturedImage, setCapturedImage] = useState<string | null>(null);
-    const [showProgress, setShowProgress] = useState(false);
     const [base64Image, setBase64Image] = useState<string | null>(null);
     const [activeView, setActiveView] = useState('camera');
-
-    const {isLoading, data: identifiedSpecie} = useQuery<Specie, Error>({
+    useFocusEffect(
+        useCallback(() => {
+            setCapturedImage(null);
+            setBase64Image(null);
+             return () => {
+            };
+        }, [])
+    );
+    const {isLoading,isFetching, data: identifiedSpecie} = useQuery<Specie, Error>({
         queryKey: ['identifySpecie',base64Image,speciesRepository],
         queryFn: async (): Promise<Specie> => {
             if (!speciesRepository) throw new Error('No Repository');
@@ -69,33 +74,37 @@ export default function HomeScreen() {
                 stiffness: 90,
             });
         }
-    }
+    };
+
     const animatedStyle = useAnimatedStyle(() => ({
         transform: [{translateX: slideAnim.value}],
     }));
 
     const { setCurrentImageUri, setCurrentIdentifiedSpecies } = useSpeciesStore();
     
+
+    console.log('Identified Specie:', identifiedSpecie);
+    console.log('Captured Image:', capturedImage);
     useEffect(() => {
-        if (capturedImage && !showProgress && !isLoading && identifiedSpecie) {
+        if (capturedImage && !isFetching && !isLoading && identifiedSpecie) {
+            console.log('Identified Specie:', identifiedSpecie);
             setCurrentIdentifiedSpecies(identifiedSpecie);
-            setCurrentImageUri(capturedImage);
+            setCurrentImageUri(capturedImage); 
             router.push('/capture');
         }
-    }, [capturedImage, showProgress, isLoading, identifiedSpecie, router ]);
+    }, [capturedImage, isFetching, isLoading, identifiedSpecie, router ]);
 
 
     return (
-        <SafeAreaView style={styles.container}>
+        <SafeView style={styles.container} disableBottomInset>
             <ThemedView style={styles.content}>
 
                 <View style={styles.segmentedControl}>
                     <BlurSegmented tabsName={['Camera', 'Map']} onTabChange={switchView}/>
                 </View>
-
                 <Animated.View style={[styles.viewContainer, animatedStyle]}>
                     <CameraView setBase64Image={setBase64Image} setCapturedImage={setCapturedImage} style={styles.camera}/>
-                    {showProgress && (
+                    {isFetching && (
                         <View style={styles.progressOverlay}>
                             <ARProgressIndicator width={SCREEN_WIDTH} height={SCREEN_WIDTH}/>
                         </View>
@@ -104,7 +113,7 @@ export default function HomeScreen() {
                 </Animated.View>
 
             </ThemedView>
-        </SafeAreaView>
+        </SafeView>
     );
 }
 

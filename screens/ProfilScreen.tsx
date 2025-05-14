@@ -12,6 +12,7 @@ import {Success} from "@/model/domain/Success";
 import StubData from "@/dal/StubLib/StubData";
 import {PagedRequest} from "@/shared/PagedRequest";
 import {useAuthStore} from "@/context/zustand/strore/useAuthStore";
+import { SafeView } from "@/components/ui/SafeView";
 
 let ProfileImage: {};
 ProfileImage = require("../assets/images/ProfileImage.jpeg");
@@ -107,8 +108,7 @@ export default function ProfilScreen() {
     );
 
     return (
-        <ThemedView>
-            <SafeAreaView>
+        <SafeView disableBottomInset>
                 <FlatList
                     style={styles.list}
                     data={Successes?? []}
@@ -118,8 +118,7 @@ export default function ProfilScreen() {
                     ListHeaderComponent={renderHeader}
                     columnWrapperStyle={{ justifyContent: "center", marginBottom: 10 }}
                 />
-            </SafeAreaView>
-        </ThemedView>
+        </SafeView>
     );
 }
 

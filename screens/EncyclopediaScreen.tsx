@@ -2,9 +2,9 @@ import {ActivityIndicator, Button, FlatList, StyleSheet, View} from "react-nativ
 import {SpecieListItem,SearchBar,FilterModal} from "@/components/encyclopedia";
 import {useState} from "react";
 import {ThemedView, ThemedText} from "@/components/ui/themed";
-import {SafeView} from "@/components/ui/SafeView";
 import {useGetSpecies} from "@/hooks/viewModels/useGetSpecies";
 import {useAuthStore} from "@/context/zustand/strore/useAuthStore";
+import { SafeView } from "@/components/ui/SafeView";
 
 export default function EncyclopediaScreen() {
     const [name,setName] = useState("")
@@ -28,7 +28,7 @@ export default function EncyclopediaScreen() {
         );
     }
     return (
-        <SafeView>
+        <SafeView disableBottomInset> 
             <ThemedView style={styles.header}>
                 <ThemedView style={styles.searchBar}>
                     <SearchBar search={name} setSearch={setName} placeholder={"Rechercher..."}/>
@@ -67,8 +67,6 @@ export default function EncyclopediaScreen() {
                     numColumns={3}
                 />
             }
-
-
         </SafeView>
     )
 }

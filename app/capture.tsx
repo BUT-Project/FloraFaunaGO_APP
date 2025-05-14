@@ -6,12 +6,13 @@ import {Gesture, GestureDetector} from "react-native-gesture-handler";
 import {ThemedText} from "@/components/ui/themed/ThemedText";
 import {useRouter} from "expo-router";
 import {useSpeciesStore} from "@/context/zustand/strore/useSpeciesStore";
-import { SuccessStore } from '@/context/zustand/strore/useSuccessStore';
-import SuccessPopup from '@/components/animation/sucess/SucessPopup';
 import CaptureScreen from '@/screens/CaptureScreen';
-import { useNavigationState } from '@react-navigation/native';
+import { SafeView } from '@/components/ui/SafeView';
+
 export default function Capture() {
     const imageUri = useSpeciesStore((state) => state.currentImageUri);
+    const { resetState } = useSpeciesStore();
+
     const router = useRouter();
 
     const onResult = (Success:Boolean) => {
@@ -19,16 +20,26 @@ export default function Capture() {
             router.replace({pathname: '/(tabs)/(home)/reveal',})
         } else {
             Alert.alert('Failure', 'The Pokémon broke free!');
+            resetState();
+            router.back();
         }
     }
 
-    const onCancel = () => router.back();
+    const onCancel = () => {
+        try{
+            resetState();
+            router.back();
+        }
+        catch(error){
+            console.error('Error resetting state:', error);
+        }   
+    }
 
     if(!imageUri) {
         return (
-            <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+            <SafeView style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                 <ThemedText>No image captured</ThemedText>
-            </View>
+            </SafeView>
         );
     }
     return (<CaptureScreen animalPhoto={imageUri} onResult={onResult} onCancel={onCancel}/>)

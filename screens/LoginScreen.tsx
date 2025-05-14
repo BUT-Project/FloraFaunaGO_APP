@@ -5,6 +5,7 @@ import {Link} from "expo-router";
 import {Entypo, FontAwesome} from "@expo/vector-icons";
 import {InputWithIcon} from "@/components/ui/InputWithIcon";
 import {useLoginViewModel} from "@/hooks/viewModels/auth/useLoginViewModel";
+import { SafeView } from '@/components/ui/SafeView';
 
 export interface LoginCredentials {
     email: string;
@@ -25,8 +26,7 @@ export default function LoginScreen() {
     } = useLoginViewModel();
 
     return (
-        <View style={styles.content}>
-
+        <SafeView style={styles.content}>
             <Text style={styles.title}>SE CONNECTER</Text>
             {failedLogin && (
                 <Text style={styles.errorText}>Email ou mot de passe incorrect!</Text>
@@ -70,7 +70,7 @@ export default function LoginScreen() {
                         <Text style={styles.linkText}>S'inscrire</Text>
                 </Link>
             </View>
-        </View>
+        </SafeView>
     );
 }
 

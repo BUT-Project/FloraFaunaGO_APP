@@ -74,7 +74,8 @@ export default function Reveal() {
             </SafeAreaView>
         );
     }
-
+    console.log('specie', specie);
+    console.log('capturedImageUri', capturedImageUri);
     if (!specie || !capturedImageUri) {
         return (
             <SafeAreaView>
