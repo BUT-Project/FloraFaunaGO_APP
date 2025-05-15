@@ -34,6 +34,7 @@ export const useSpeciesStore = create<SpeciesState>()(
             setCurrentIdentifiedSpecies: (specie: Specie) => {
                 const { currentImageUri } = get();
                 if (!currentImageUri) {
+                    console.warn("AUCUNE IMAGE SÉLECTIONNÉE");
                     set((state) => ({
                         ...state,
                         error: new Error('Aucune image sélectionnée')

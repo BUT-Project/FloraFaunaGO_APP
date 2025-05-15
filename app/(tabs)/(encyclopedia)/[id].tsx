@@ -6,7 +6,7 @@ import {useGetById} from "@/hooks/viewModels/useGetById";
 import StubData from "@/dal/StubLib/StubData";
 import Capture from "@/model/domain/Capture";
 import Specie from "@/model/domain/Specie";
-import {ActivityIndicator} from "react-native";
+import Loading from "@/components/ui/Loading";
 
 const CenteredMessage = ({ children }: { children: React.ReactNode }) => (
     <ThemedView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -14,11 +14,6 @@ const CenteredMessage = ({ children }: { children: React.ReactNode }) => (
     </ThemedView>
 );
 
-const LoadingView = () => (
-    <CenteredMessage>
-        <ActivityIndicator size={'large'}/>
-    </CenteredMessage>
-);
 
 const ErrorView = ({ message }: { message: string }) => (
     <CenteredMessage>
@@ -70,7 +65,7 @@ export default function Details() {
     }
 
     if (isSpecieLoading || isCaptureLoading) {
-        return <LoadingView />;
+        return <Loading text="Chargement des données..." />;
     }
 
     if (!specie) {

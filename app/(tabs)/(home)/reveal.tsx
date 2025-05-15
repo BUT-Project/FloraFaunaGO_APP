@@ -1,12 +1,13 @@
 import {useEffect, useState} from 'react';
-import {Alert} from 'react-native';
+import {Alert, StyleSheet, TouchableOpacity} from 'react-native';
 import { Link } from 'expo-router';
-import { SafeView } from '@/components/ui/SafeView';
 import * as ExpoLocation from 'expo-location';
-import RevealScreen from '@/screens/RevealScreen';
-import {ThemedText, ThemedView} from '@/components/ui/themed';
 import {useSpeciesStore} from '@/context/zustand/strore/useSpeciesStore';
 import getCurrentLocation from "@/libs/expo-location/index.ts";
+import { SafeView } from '@/components/ui/SafeView';
+import Loading from '@/components/ui/Loading';
+import RevealScreen from '@/screens/RevealScreen';
+import {ThemedText, ThemedView} from '@/components/ui/themed';
 
 export default function Reveal() {
     const specie = useSpeciesStore((state) => state.identifiedSpecies);
@@ -59,35 +60,56 @@ export default function Reveal() {
     }, [specie, capturedImageUri]);
 
     if (isLoading) {
-        return (
-            <SafeView disableBottomInset>
-                    <ThemedText>Saving your capture...</ThemedText>
-            </SafeView>
-        );
+        return (<Loading disableBottomInset text="Sauvegarde de votre photo..."/>);
     }
 
     if (error) {
         return (
-            <SafeView disableBottomInset>
-                <ThemedText>Error: {error}</ThemedText>
+            <SafeView disableBottomInset style={styles.container}>
+                <ThemedText style={styles.message}>Error: {error}</ThemedText>
+                <Link href="/(home)" asChild>
+                    <TouchableOpacity style={styles.button}>
+                        <ThemedText style={styles.buttonText}>Retour</ThemedText>  
+                    </TouchableOpacity>
+                </Link>
             </SafeView>
         );
     }
-    console.log('specie', specie);
-    console.log('capturedImageUri', capturedImageUri);
     if (!specie || !capturedImageUri) {
         return (
-            <SafeView disableBottomInset>
+            <SafeView disableBottomInset style={styles.container}>
                 <ThemedView>
-                    <ThemedText>No species or image selected</ThemedText>
+                    <ThemedText style={styles.message}>No species or image selected</ThemedText>
                     <Link href="/(home)" asChild>
-                        <ThemedText>Go back</ThemedText>  
+                        <TouchableOpacity style={styles.button}>
+                            <ThemedText style={styles.buttonText}>Retour</ThemedText>  
+                        </TouchableOpacity>
                     </Link>
                 </ThemedView>
             </SafeView>
         );
     }
-
     return <RevealScreen specie={specie} />;
 }
 
+const styles =  StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    message: {
+        textAlign: 'center',
+        marginBottom: 20,
+    },
+    button: {
+        marginTop: 20,
+        padding: 10,
+        backgroundColor: '#007BFF',
+        borderRadius: 5,
+    },
+    buttonText: {
+        color: '#fff',
+        fontSize: 16,
+    },
+});

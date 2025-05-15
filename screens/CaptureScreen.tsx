@@ -107,7 +107,7 @@ const PlayerActions: Record<PlayerActionType, PlayerActionData> = {
 
 const NB_LIVES = 3;
 const NB_STEPS = 3;
-const MAX_RESPONSE_TIME = 5000;
+const MAX_RESPONSE_TIME = 4500;
 const DELAY_BETWEEN_ROUNDS = 2500;
 
 const getRandomAnimalAction = (): AnimalActionData => {
@@ -123,6 +123,7 @@ export default function CaptureScreen({ animalPhoto, onResult, onCancel }: Props
   const [feedbackMessage, setFeedbackMessage] = useState<FeedbackMessage | null>(null);
 
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const nextRoundTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     if(step >= NB_STEPS) {
@@ -191,11 +192,33 @@ export default function CaptureScreen({ animalPhoto, onResult, onCancel }: Props
 
   const startNextRoundDelay = () => {
     if(lives <= 0) return;
-    setTimeout(() => {
+    if (nextRoundTimeoutRef.current) {
+      clearTimeout(nextRoundTimeoutRef.current);
+    }
+    nextRoundTimeoutRef.current = setTimeout(() => {
       setFeedbackMessage(null);
       setAnimalAction(getRandomAnimalAction());
     }, DELAY_BETWEEN_ROUNDS); 
   };
+
+  // Permet de reprendre le round suivant immédiatement si l'utilisateur ferme le toast
+  const handleFeedbackToastPress = () => {
+    if (nextRoundTimeoutRef.current) {
+      clearTimeout(nextRoundTimeoutRef.current);
+      nextRoundTimeoutRef.current = null;
+    }
+    setFeedbackMessage(null);
+    setAnimalAction(getRandomAnimalAction());
+  };
+
+  useEffect(() => {
+    return () => {
+      if (nextRoundTimeoutRef.current) {
+        clearTimeout(nextRoundTimeoutRef.current);
+      }
+    };
+  }, []);
+
   return (
       <SafeView disableTopInset>
           <GameOver visible={lives <= 0} onClose={() => onResult(false)} />
@@ -212,10 +235,10 @@ export default function CaptureScreen({ animalPhoto, onResult, onCancel }: Props
             </ThemedView>
             <ThemedView style={styles.bottom}>
                 {feedbackMessage && (
-                    <FeedbackMessageToast message={feedbackMessage}/>
+                    <FeedbackMessageToast message={feedbackMessage} onPress={handleFeedbackToastPress}/>
                 )}
                 {animalAction && (
-                  <ThemedText style={styles.animalAction}>L’animal {animalAction?.label}... </ThemedText> 
+                    <FeedbackMessageToast message={{text:`L’animal ${animalAction.label}`, type: 'info'}}/>
                 )}
                 <TimeBar timeLeft={timeLeft} maxTime={MAX_RESPONSE_TIME} />
                 <ThemedView style={styles.buttons}>
@@ -233,7 +256,7 @@ export default function CaptureScreen({ animalPhoto, onResult, onCancel }: Props
         </ImageBackground>
       </SafeView>  
     );
-  }
+}
   
   const styles = StyleSheet.create({
     container: { flex: 1 },
@@ -254,13 +277,6 @@ export default function CaptureScreen({ animalPhoto, onResult, onCancel }: Props
     topText: {
       fontSize: 22,
       color: '#fff',
-    },
-    animalAction: {
-      fontSize: 20,
-      fontStyle: 'italic',
-      color: '#fff',
-      textAlign: 'center',
-      marginBottom: 10,
     },
     bottom:{
       backgroundColor:"transparent",

@@ -7,8 +7,10 @@ import { SafeView } from '@/components/ui/SafeView';
 
 export default function Capture() {
     const imageUri = useSpeciesStore((state) => state.currentImageUri);
+    const identifiedSpecies = useSpeciesStore((state) => state.identifiedSpecies);
     const { resetState } = useSpeciesStore();
 
+    console.log("specie",identifiedSpecies)
     const router = useRouter();
 
     const onResult = (Success:Boolean) => {
@@ -37,5 +39,6 @@ export default function Capture() {
             </SafeView>
         );
     }
+    
     return (<CaptureScreen animalPhoto={imageUri} onResult={onResult} onCancel={onCancel}/>)
 };

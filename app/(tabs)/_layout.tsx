@@ -5,6 +5,7 @@ import {UploadContext} from "@/context/UploadContext";
 import RootNavigation from "@/navigation/RootNavigation";
 import {ThemedView} from "@/components/ui/themed/ThemedView";
 import {ActivityIndicator} from "react-native";
+import Loading from '@/components/ui/Loading';
 
 export default function TabLayout() {
     const [uploading, setUploading] = useState<boolean>(false);
@@ -25,11 +26,7 @@ export default function TabLayout() {
     }, [checkAuth]);
 
     if (isLoading) {
-        return (
-            <ThemedView style={{ flex: 1 }} >
-                <ActivityIndicator size="large" />
-            </ThemedView>
-        );
+        return (<Loading text='Connexion...'/>);
     }
 
     if (!isAuthenticated) {

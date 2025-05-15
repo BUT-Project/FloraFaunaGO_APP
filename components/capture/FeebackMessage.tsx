@@ -1,22 +1,35 @@
 import React, { useEffect } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, TouchableHighlight } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withTiming,
 } from 'react-native-reanimated';
 import { ThemedText } from '@/components/ui/themed';
+import { Colors } from '@/constants/Colors';
 
 export interface FeedbackMessage {
     text: string;
-    type: 'success' | 'error';
+    type: 'success' | 'error' | 'info';
 };
 
+const backgroundColors = {
+    success: Colors.light.success,
+    error: Colors.light.error,
+    info: 'rgba(56, 56, 56, 0.3)',
+};
+
+const underlayColors ={
+  success: Colors.dark.success,
+  error: Colors.dark.error,
+  info: 'rgba(119, 119, 119, 0.3)',
+}
 interface Props {
     message: FeedbackMessage;
+    onPress?: () => void;
 };
 
-const FeedbackMessageToast = ({ message }: Props) => {
+const FeedbackMessageToast = ({ message, onPress }: Props) => {
   const translateY = useSharedValue(-30); // start slightly above
 
   useEffect(() => {
@@ -27,12 +40,15 @@ const FeedbackMessageToast = ({ message }: Props) => {
     transform: [{ translateY: translateY.value }],
   }));
 
-  const backgroundColor = message.type === 'success' ? '#2ecc71' : '#e74c3c';
+  const backgroundColor = backgroundColors[message.type] || backgroundColors.info;
+  const underlayColor = underlayColors[message.type] || underlayColors.info;
 
   return (
-    <Animated.View style={[styles.container, { backgroundColor }, animatedStyle]}>
-      <ThemedText style={styles.text}>{message.text}</ThemedText>
-    </Animated.View>
+    <TouchableHighlight onPress={onPress} underlayColor={underlayColor}>
+      <Animated.View style={[styles.container, { backgroundColor }, animatedStyle]}>
+        <ThemedText style={styles.text}>{message.text}</ThemedText>
+      </Animated.View>
+    </TouchableHighlight>
   );
 };
 

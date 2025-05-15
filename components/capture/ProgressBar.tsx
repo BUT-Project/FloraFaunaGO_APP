@@ -1,3 +1,4 @@
+import { Colors } from '@/constants/Colors';
 import React from 'react';
 import { View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
 import Animated, {
@@ -25,7 +26,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ maxSteps, currentStep,style }
                 const animatedStyle = useAnimatedStyle(() => ({
                     backgroundColor:
                         index < progress.value
-                            ? 'rgb(92, 175, 76)' // Green for completed steps
+                            ? Colors.light.success // Green for completed steps
                             : 'rgba(224, 224, 224, 1)', // Gray for incomplete steps
                 }));
                 return (
