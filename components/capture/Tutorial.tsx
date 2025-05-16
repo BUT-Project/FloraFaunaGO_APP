@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Modal, View, StyleSheet, TouchableOpacity } from 'react-native';
 import { ThemedText, ThemedView } from '@/components/ui/themed';
 import {getStorageItemAsync, setStorageItemAsync} from "@/libs/secureStore";
+import ProgressBar from './ProgressBar';
+import ErrorBar from './ErrorBar';
+import { Colors } from '@/constants/Colors';
 
 interface Props {
   onClose?: () => void; // facultatif, au cas où tu veux réagir à la fermeture
@@ -36,13 +39,15 @@ export default function TutorialModal({ onClose, nbStepsToWin=1 }: Props) {
   if (!visible) return null;
 
   return (
-    <Modal transparent animationType="fade" visible={visible}>
+    <Modal transparent animationType="slide" visible={visible}>
       <View style={styles.modalOverlay}>
         <ThemedView style={styles.modalContent}>
           <ThemedText style={styles.title}>Comment capturer l’animal ?</ThemedText>
+          <ProgressBar currentStep={1} maxSteps={nbStepsToWin}/>
           <ThemedText style={styles.text}>
             Choisissez l’action correcte en fonction du comportement de l’animal dans le temps imparti. Réagissez bien {nbStepsToWin} fois pour gagner !
           </ThemedText>
+          <ErrorBar lives={2} totalLives={3}/>
           <ThemedText style={styles.text}>
             Attention ! Si vous ne réagissez pas correctement, vous perdez une vie. Si vous n'en avez plus, l'animal s’enfuit.
           </ThemedText>
@@ -68,29 +73,28 @@ const styles = StyleSheet.create({
   modalContent: {
     padding: 20,
     borderRadius: 20,
-    backgroundColor: '#fff',
-    width: '80%',
+    width: '85%',
     alignItems: 'center',
-    gap: 10,
+    gap: 15,
   },
   title: {
     fontSize: 20,
     fontWeight: 'bold',
+    textAlign: 'center',
   },
   text: {
     fontSize: 16,
-    textAlign: 'center',
+    textAlign: "justify",
   },
   button: {
-    marginTop: 10,
     padding: 12,
     borderRadius: 10,
-    backgroundColor: '#2ecc71',
+    backgroundColor: Colors.light.success,
     width: '100%',
     alignItems: 'center',
   },
   disableButton: {
-    backgroundColor: '#e74c3c',
+    backgroundColor: Colors.light.error,
   },
   buttonText: {
     color: '#fff',

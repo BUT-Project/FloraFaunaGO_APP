@@ -51,8 +51,7 @@ export default function SpeciesDetailScreen({specie,capture}: SpeciesDetailScree
         console.error(errorFam);
     }
     return (
-        <SafeView>
-
+        <SafeView disableBottomInset>
             <ScrollView>
                 <ThemedView style={styles.container}>
                     <SpeciesImagePager capture={capture} specie={specie}/>
