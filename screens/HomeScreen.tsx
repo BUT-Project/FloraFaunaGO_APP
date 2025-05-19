@@ -1,8 +1,8 @@
 
-import {useCallback, useEffect, useRef, useState} from "react";
+import {useCallback, useEffect, useState} from "react";
 import Animated, {useAnimatedStyle, useSharedValue, withSpring} from "react-native-reanimated";
-import {ThemedView,ThemedText} from "@/components/ui/themed";
-import {Dimensions, SafeAreaView, StyleSheet, TouchableOpacity, View} from "react-native";
+import {ThemedView} from "@/components/ui/themed";
+import {Dimensions, StyleSheet, View} from "react-native";
 import { CameraView } from "@/components/camera";
 import ARProgressIndicator from "@/components/ARProgressIndicator";
 import MainMapView from "@/components/MainMapView";
@@ -103,7 +103,6 @@ export default function HomeScreen() {
                     )}
                     <MainMapView location={location}  style={styles.map}/>
                 </Animated.View>
-
             </ThemedView>
         </SafeView>
     );
