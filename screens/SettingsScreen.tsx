@@ -5,13 +5,13 @@ import React, {useEffect, useState} from "react";
 import {SafeAreaView} from "react-native-safe-area-context";
 import {LinearGradient} from 'expo-linear-gradient';
 import {useAuthStore} from "@/context/zustand/strore/useAuthStore";
+import {Colors} from "@/constants/Colors";  
+import {useColorScheme} from "@/hooks/useColorScheme";
 
-
-const { width,height } = Dimensions.get('window');
 export default function SettingsScreen() {
+    const colorScheme = useColorScheme();
     const systemTheme = Appearance.getColorScheme();
     const [theme, setTheme] = useState(systemTheme || 'light'); // État du thème
-
     const logout = useAuthStore((state)=>state.logout);
     const [switchTheme, setSwitchTheme] = useState((theme === 'dark') ? true : false);
     const switchThemes = () => {
@@ -38,8 +38,11 @@ export default function SettingsScreen() {
     return (
 <ScrollView style={{flex:1}} contentContainerStyle={{flexGrow: 1}} >
         <ThemedView  style={{flex: 1}}>
-
-            <LinearGradient style={{flex:1}}  colors={["#90EE90","#0D98BA"]}>
+        <LinearGradient
+            style={{ flex: 1 }}
+            colors={[ Colors[(colorScheme ?? 'light') as 'light' | 'dark'].card, 
+            Colors[(colorScheme ?? 'light') as 'light' | 'dark'].background]}
+            >
              <SafeAreaView>
 
                  <ThemedText type={"title"} style={styles.title}>Settings</ThemedText>

@@ -5,8 +5,12 @@ import {ThemedView, ThemedText} from "@/components/ui/themed";
 import {SafeView} from "@/components/ui/SafeView";
 import {useGetSpecies} from "@/hooks/viewModels/useGetSpecies";
 import {useAuthStore} from "@/context/zustand/strore/useAuthStore";
+import { LinearGradient } from "expo-linear-gradient";
+import { Colors } from "@/constants/Colors";
+import {useColorScheme} from "@/hooks/useColorScheme";
 
 export default function EncyclopediaScreen() {
+    const colorScheme = useColorScheme();
     const [name,setName] = useState("")
     const {species=[],isLoading,isLoadingMore,error,isListEnd,refresh,fetchMoreData} = useGetSpecies("")
     const userCaptures = useAuthStore((state) => state.user?.captures);
@@ -14,6 +18,7 @@ export default function EncyclopediaScreen() {
 
     if (error) {
         return (
+            
         <View style={styles.errorContainer}>
             <ThemedText style={styles.errorText} type="subtitle">
                 {error.message || "Impossible de charger les espèces." || "Une erreur s'est produite."}
@@ -29,10 +34,18 @@ export default function EncyclopediaScreen() {
     }
     return (
         <SafeView>
+        <LinearGradient
+            style={{ flex: 1 }}
+            start={{x: 0, y: 0.5}}
+            end={{x: 1, y: 1}}
+            colors={[ Colors[(colorScheme ?? 'light') as 'light' | 'dark'].background, 
+            Colors[(colorScheme ?? 'light') as 'light' | 'dark'].card]}
+            >
             <ThemedView style={styles.header}>
                 <ThemedView style={styles.searchBar}>
                     <SearchBar search={name} setSearch={setName} placeholder={"Rechercher..."}/>
                 </ThemedView>
+
                 <FilterModal baseSpecies={species} setFilteredSpecies={()=>{}}/>
             </ThemedView>
             { isLoading ?
@@ -68,7 +81,7 @@ export default function EncyclopediaScreen() {
                 />
             }
 
-
+</LinearGradient>
         </SafeView>
     )
 }

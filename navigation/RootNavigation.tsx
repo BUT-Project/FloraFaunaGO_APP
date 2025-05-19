@@ -43,7 +43,7 @@ export default function RootNavigation() {
                 options={{
                     title: "Capture",
                     tabBarIcon: ({ color, focused }) => (
-                        <TabBarIcon name={focused ? 'home' : "home-outline"} color={color} />
+                        <TabBarIcon name={focused ? 'camera' : "camera-outline"} color={color} />
                     ),
                 }}
             />
