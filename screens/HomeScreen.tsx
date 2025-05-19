@@ -1,5 +1,4 @@
-import { Alert } from "react-native";
-import {useCamera} from "@/components/camera/hooks";
+
 import {useCallback, useEffect, useRef, useState} from "react";
 import Animated, {useAnimatedStyle, useSharedValue, withSpring} from "react-native-reanimated";
 import {ThemedView,ThemedText} from "@/components/ui/themed";
@@ -13,7 +12,7 @@ import * as Location from "expo-location";
 import {useRouter} from "expo-router";
 import StubData from "@/dal/StubLib/StubData";
 import Specie from "@/model/domain/Specie";
-import {useSpeciesStore} from "@/context/zustand/strore/useSpeciesStore";
+import {useSpeciesStore} from "@/context/zustand/store/useSpeciesStore";
 import { useFocusEffect } from '@react-navigation/native';
 import { SuccessType } from "@/model/domain/SuccessType";
 import { processSuccessByType } from "@/shared/successHelper";

@@ -1,13 +1,14 @@
 import {Redirect} from 'expo-router';
 import {useEffect, useState} from 'react';
-import {useAuthStore} from "@/context/zustand/strore/useAuthStore";
+import {useAuthStore} from "@/context/zustand/store/useAuthStore";
 import {UploadContext} from "@/context/UploadContext";
 import RootNavigation from "@/navigation/RootNavigation";
-import {ThemedView} from "@/components/ui/themed/ThemedView";
-import {ActivityIndicator} from "react-native";
 import Loading from '@/components/ui/Loading';
+import SuccessWrapper from '@/components/animation/sucess/SuccessWrapper';
+import { Toasts } from '@backpackapp-io/react-native-toast';
 
 export default function TabLayout() {
+    //créer un wrapper pour l'appelle des popup success
     const [uploading, setUploading] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const checkAuth = useAuthStore((state) => state.checkAuth);
@@ -35,8 +36,10 @@ export default function TabLayout() {
 
     return (
         <UploadContext.Provider value={{ uploading, setUploading }}>
-            <RootNavigation />
+            <SuccessWrapper>     
+                    <RootNavigation />
+                    <Toasts />
+            </SuccessWrapper>
         </UploadContext.Provider>
     );
 }
-

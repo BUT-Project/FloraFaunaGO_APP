@@ -1,7 +1,7 @@
 import React from 'react';
 import {ThemedText} from "@/components/ui/themed/ThemedText";
 import {useRouter} from "expo-router";
-import {useSpeciesStore} from "@/context/zustand/strore/useSpeciesStore";
+import {useSpeciesStore} from "@/context/zustand/store/useSpeciesStore";
 import CaptureScreen from '@/screens/CaptureScreen';
 import { SafeView } from '@/components/ui/SafeView';
 

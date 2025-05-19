@@ -13,8 +13,6 @@ export type ExtendableTextProps = {
 
 export function ExtendableText({ text, textStyle, style }: ExtendableTextProps) {
     const [isExtended, setIsExtended] = useState(false);
-    
-
     return (
         <>
             <TouchableOpacity style={style} onPress={() => setIsExtended(true)}>
@@ -43,10 +41,10 @@ export function ExtendableText({ text, textStyle, style }: ExtendableTextProps) 
 const styles = StyleSheet.create({
     icon:{
         position:"absolute",
+        backgroundColor:"transparent",
         bottom:0,
         right:0,
         padding:5,
-        backgroundColor:'rgba(0, 0, 0, 0.5)',
     },
     modal: {
         flex:1,

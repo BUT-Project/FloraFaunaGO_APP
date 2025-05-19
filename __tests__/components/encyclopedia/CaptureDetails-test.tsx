@@ -1,5 +1,4 @@
 import {render} from '@testing-library/react-native';
-
 import CaptureDetails from "@/components/encyclopedia/CaptureDetails";
 import CaptureDetail from "@/model/domain/CaptureDetail";
 import Location from "@/model/domain/Location";

@@ -1,19 +1,16 @@
-import {Appearance, Dimensions, Pressable, ScrollView, StyleSheet, Switch, TouchableOpacity} from "react-native";
-import {ThemedView} from "@/components/ui/themed/ThemedView";
-import {ThemedText} from "@/components/ui/themed/ThemedText";
+import {Appearance, Pressable, StyleSheet, Switch, TouchableOpacity} from "react-native";
+import {ThemedText} from "@/components/ui/themed";
 import React, {useEffect, useState} from "react";
-import {SafeAreaView} from "react-native-safe-area-context";
 import {LinearGradient} from 'expo-linear-gradient';
-import {useAuthStore} from "@/context/zustand/strore/useAuthStore";
+import {useAuthStore} from "@/context/zustand/store/useAuthStore";
+import { SafeView } from "@/components/ui/SafeView";
 
-
-const { width,height } = Dimensions.get('window');
 export default function SettingsScreen() {
     const systemTheme = Appearance.getColorScheme();
     const [theme, setTheme] = useState(systemTheme || 'light'); // État du thème
 
     const logout = useAuthStore((state)=>state.logout);
-    const [switchTheme, setSwitchTheme] = useState(false);
+    const [switchTheme, setSwitchTheme] = useState((theme === 'dark') ? true : false);
     const switchThemes = () => {
         setSwitchTheme(previousState => !previousState);
     }; 
@@ -36,54 +33,47 @@ export default function SettingsScreen() {
     };
 
     return (
-        <ScrollView style={{flex:1}} contentContainerStyle={{flexGrow: 1}} >
-                <ThemedView  style={{flex: 1}}>
+        <SafeView style={styles.container} disableTopInset>
+            <LinearGradient style={{flex:1}}  colors={["#90EE90","#0D98BA"]}>
+                <ThemedText type={"title"} style={styles.title}>Settings</ThemedText>
+                <Pressable onPress={switchChange} style={styles.button}>
+                    <ThemedText type={"subtitle"} style={styles.buttonText}>Mode offline</ThemedText>
+                    <Switch value={switchBut} trackColor={{false: "#767577", true: "#90EE90"}}  />
+                </Pressable>
 
-                    <LinearGradient style={{flex:1}}  colors={["#90EE90","#0D98BA"]}>
-                    <SafeAreaView>
+                <TouchableOpacity style={styles.button}>
+                    <ThemedText type={"subtitle"} style={styles.buttonText}>Modifier l'adresse mail</ThemedText>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => { toggleTheme(); switchThemes(); }} style={styles.button}>
+                <ThemedText type={"subtitle"} style={styles.buttonText}>Changer le thème</ThemedText>
 
-                        <ThemedText type={"title"} style={styles.title}>Settings</ThemedText>
-                        <Pressable onPress={switchChange} style={styles.button}>
-                            <ThemedText type={"subtitle"} style={styles.buttonText}>Mode offline</ThemedText>
-                            <Switch value={switchBut} trackColor={{false: "#767577", true: "#90EE90"}} style={styles.switch}  />
-                        </Pressable>
+                <Switch
+                    value={switchTheme}
+                />
+                <ThemedText type={"subtitle"} style={styles.buttonText}>
+                    {switchTheme ? '🌑' : '☀️'}
+                </ThemedText>
+                </TouchableOpacity>
 
-                        <TouchableOpacity style={styles.button}>
-                            <ThemedText type={"subtitle"} style={styles.buttonText}>Modifier l'adresse mail</ThemedText>
-                        </TouchableOpacity>
+                <TouchableOpacity style={styles.button}>
+                    <ThemedText type={"subtitle"} style={styles.buttonText}>Activer l'économie de batterie</ThemedText>
+                </TouchableOpacity>
 
-                        <TouchableOpacity onPress={toggleTheme} style={styles.button}>
-                            <ThemedText type={"subtitle"} style={styles.buttonText}>Changer le thème ☀️</ThemedText>
-                            <Switch value={switchTheme} trackColor={{false: "#767577", true: "#90EE90"}} style={styles.switch}  />
-                            <ThemedText type={"subtitle"} style={styles.buttonText}>🌑</ThemedText>
-                        </TouchableOpacity>
+                <TouchableOpacity style={styles.button} onPress={logout}>
+                    <ThemedText type={"subtitle"} style={styles.buttonText}>Deconnexion</ThemedText>
+                </TouchableOpacity>
 
-                        <TouchableOpacity style={styles.button}>
-                            <ThemedText type={"subtitle"} style={styles.buttonText}>Activer l'économie de batterie</ThemedText>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity style={styles.button} onPress={logout}>
-                            <ThemedText type={"subtitle"} style={styles.buttonText}>Deconnexion</ThemedText>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity style={styles.button}>
-                            <ThemedText type={"subtitle"} style={[styles.deleteText]}>Supprimer le compte</ThemedText>
-                        </TouchableOpacity>
-                    </SafeAreaView>
-                    </LinearGradient>
-                </ThemedView>
-        </ScrollView>
+                <TouchableOpacity style={styles.button}>
+                    <ThemedText type={"subtitle"} style={[styles.deleteText]}>Supprimer le compte</ThemedText>
+                </TouchableOpacity>
+            </LinearGradient>
+        </SafeView>
     );
 }
 const styles = StyleSheet.create({
-    scrollContainer: {
+    container: {
         display:"flex",
         flex:1,
-
-    },
-    safeArea: {
-        flex: 1,
-        paddingHorizontal: '5%',
     },
     title: {
         fontWeight: "bold",
@@ -91,14 +81,11 @@ const styles = StyleSheet.create({
         alignSelf: "center",
         color: "#FFFFFF",
     },
-    switch: {
-
-    },
     button: {
         alignSelf: "center",
         flexDirection: "row",
         justifyContent: "center",
-        padding: 10,
+        alignItems: "center",
         minWidth: "80%",
         borderRadius: 10,
         height:50,

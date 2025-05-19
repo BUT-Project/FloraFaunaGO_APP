@@ -1,7 +1,7 @@
 import Specie from "@/model/domain/Specie";
 import {create} from 'zustand';
 import {devtools} from 'zustand/middleware';
-import {useAuthStore} from "@/context/zustand/strore/useAuthStore";
+import {useAuthStore} from "@/context/zustand/store/useAuthStore";
 import StubData from "@/dal/StubLib/StubData";
 import Location from "@/model/domain/Location";
 

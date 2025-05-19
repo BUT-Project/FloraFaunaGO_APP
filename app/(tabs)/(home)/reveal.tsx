@@ -2,7 +2,7 @@ import {useEffect, useState} from 'react';
 import {Alert, StyleSheet, TouchableOpacity} from 'react-native';
 import { Link } from 'expo-router';
 import * as ExpoLocation from 'expo-location';
-import {useSpeciesStore} from '@/context/zustand/strore/useSpeciesStore';
+import {useSpeciesStore} from '@/context/zustand/store/useSpeciesStore';
 import getCurrentLocation from "@/libs/expo-location/index.ts";
 import { SafeView } from '@/components/ui/SafeView';
 import Loading from '@/components/ui/Loading';

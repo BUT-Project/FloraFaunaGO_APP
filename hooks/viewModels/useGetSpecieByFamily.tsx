@@ -3,7 +3,7 @@ import StubData from "@/dal/StubLib/StubData";
 import {Family} from "@/model/domain/Family";
 import Specie from "@/model/domain/Specie";
 
-export function useGeSpecieByFamily(
+export function useGetSpecieByFamily(
     family: Family | undefined,
     selfId?: number,
     pageSize: number = 10,

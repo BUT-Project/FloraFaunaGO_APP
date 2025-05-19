@@ -1,6 +1,5 @@
 import {ThemedText} from "@/components/ui/themed/ThemedText";
 import {Button, Dimensions, FlatList, Image, StyleSheet, TouchableOpacity} from "react-native";
-import {SafeAreaView} from "react-native-safe-area-context";
 import {useThemeColor} from "@/hooks/useThemeColor";
 import React, {useEffect, useState} from "react";
 import SucessListItemVertical from "@/components/SucessListItemVertical";
@@ -11,7 +10,7 @@ import {AntDesign, FontAwesome5, FontAwesome6} from "@expo/vector-icons";
 import {Success} from "@/model/domain/Success";
 import StubData from "@/dal/StubLib/StubData";
 import {PagedRequest} from "@/shared/PagedRequest";
-import {useAuthStore} from "@/context/zustand/strore/useAuthStore";
+import {useAuthStore} from "@/context/zustand/store/useAuthStore";
 import { SafeView } from "@/components/ui/SafeView";
 
 let ProfileImage: {};

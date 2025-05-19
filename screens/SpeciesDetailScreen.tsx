@@ -3,11 +3,12 @@ import {ActivityIndicator, Dimensions, FlatList, ScrollView, StyleSheet} from "r
 import {ThemedText,ThemedView} from "@/components/ui/themed";
 import {SpecieListItem, CaptureDetails, ExtendableText,SpeciesImagePager } from "@/components/encyclopedia";
 import {ExtendableMap} from "@/components/ui/ExtendableMap";
-import {useGeSpecieByFamily} from "@/hooks/viewModels/useGeSpecieByFamily";
-import {useAuthStore} from "@/context/zustand/strore/useAuthStore";
+import {useGetSpecieByFamily} from "@/hooks/viewModels/useGetSpecieByFamily";
+import {useAuthStore} from "@/context/zustand/store/useAuthStore";
 import Capture from "@/model/domain/Capture";
 import Specie from "@/model/domain/Specie";
 import { SafeView } from "@/components/ui/SafeView";
+import { Colors } from "@/constants/Colors";
 
 interface SpeciesDetailScreenProps {
     capture: Capture | null;
@@ -18,7 +19,6 @@ const {width} = Dimensions.get('window');
 const itemSize = (width / 3) - 10;
 
 export default function SpeciesDetailScreen({specie,capture}: SpeciesDetailScreenProps) {
-
     const {
         captures: family,
         isLoading: isFamLoading,
@@ -26,7 +26,7 @@ export default function SpeciesDetailScreen({specie,capture}: SpeciesDetailScree
         error: errorFam,
         isListEnd,
         isLoadingMore
-    } = useGeSpecieByFamily(specie.family, capture?.id);
+    } = useGetSpecieByFamily(specie.family, capture?.id);
     const user = useAuthStore((state) => state.user);
     if (!user) {
         throw new Error("User not found")
@@ -115,7 +115,7 @@ export default function SpeciesDetailScreen({specie,capture}: SpeciesDetailScree
                                 keyExtractor={(item) => `FamilyMember-${item.id}`}
                                 renderItem={(specie) => (
                                         <SpecieListItem specie={specie.item}
-                                                        captureId={capturedSpecie.find(captureIn => captureIn.specie.id === specie.item.id)?.id ?? null} />
+                                                        captureId={capturedSpecie?.find(captureIn => captureIn.specie.id === specie.item.id)?.id ?? null} />
                                     )
                                 }
                                 ListEmptyComponent={() => (
@@ -208,7 +208,7 @@ const styles = StyleSheet.create({
         borderRadius: 15,
         aspectRatio: 1,
         overflow: "hidden",
-        backgroundColor: "#000",
+        backgroundColor: Colors.light.tint,
     },
     description: {
         color: "#FFF",

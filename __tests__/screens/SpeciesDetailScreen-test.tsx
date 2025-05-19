@@ -1,62 +1,50 @@
-import {render, waitFor} from '@testing-library/react-native';
-import Capture from "@/model/domain/Capture";
-import Specie from "@/model/domain/Specie";
-import Habitat from "@/model/domain/Habitat";
-import {Climate} from "@/model/domain/Climate";
-import {Diet} from "@/model/domain/Diet";
-import {Kingdom} from "@/model/domain/Kingdom";
-import {Class} from "@/model/domain/Class";
-import {Family} from "@/model/domain/Family";
-import SpeciesDetailScreen from "@/screens/SpeciesDetailScreen";
-import {useGetCaptureById} from "@/hooks/useGetCaptureById";
-import {useGetCaptureByFamily} from "@/hooks/useGetCaptureByFamily";
-import CaptureDetail from '@/model/domain/CaptureDetail';
-import Location from '@/model/domain/Location';
+import {render} from '@testing-library/react-native';
+import SpeciesDetailScreen from '@/screens/SpeciesDetailScreen';
+import { 
+    Capture,
+    CaptureDetail,
+    Location,
+    Specie,
+    Habitat,
+    Climate,
+    Diet,
+    Kingdom,
+    Class,
+    Family
+} from '@/model/domain';
 
-// Mock les hooks en utilisant jest.Mock pour donner le bon type à leur signature
-jest.mock("@/hooks/useGetCaptureById", () => ({
-    __esModule: true,
-    useGetCaptureById: jest.fn() as jest.Mock<typeof useGetCaptureById>,
+import { useGetSpecieByFamily } from '@/hooks/viewModels/useGetSpecieByFamily';
+
+jest.mock('@/context/zustand/store/useAuthStore', () => ({
+  useAuthStore: jest.fn().mockImplementation((selector) =>
+    selector({ user: { id: '1', name: 'Test User' } })
+  ),
 }));
-jest.mock("@/hooks/useGetCaptureByFamily", () => ({
-    __esModule: true,
-    useGetCaptureByFamily: jest.fn() as jest.Mock<typeof useGetCaptureByFamily>,
+
+jest.mock('@/hooks/viewModels/useGetSpecieByFamily', () => ({
+  useGetSpecieByFamily: jest.fn(),
 }));
 
 describe('<SpeciesDetailScreen />', () => {
-    const specie = new Specie(1, "Lion", "Panthera leo", "Le roi des animaux", new Habitat('savanna', Climate.Tropical), Diet.Carnivores, Kingdom.Animal, Class.Mammals, Family.Felidae, [], '');
-    const mockCapture = new Capture(1, "", specie, []);
-
+    const mockSpecie = new Specie(1, "Lion", "Panthera leo", "Le roi des animaux", new Habitat('savanna', Climate.Tropical), Diet.Carnivores, Kingdom.Animal, Class.Mammals, Family.Felidae, [], '');
+    const mockCapture = new Capture(1, "", mockSpecie, []);
+    const captureDetails = [new CaptureDetail(1,new Date(),false, new Location(10,10,10,10,1))];
+    const mockCaptureWithDetails = new Capture(1, "", mockSpecie, captureDetails);
+        
     beforeEach(() => {
         jest.clearAllMocks();
     });
 
-    test('renders loading indicator when data is loading', () => {
-        (useGetCaptureById as jest.Mock).mockReturnValue({ capture: null, isLoading: true, error: null });
-        (useGetCaptureByFamily as jest.Mock).mockReturnValue({ captures: [], isLoading: false, fetchMoreData: jest.fn(), error: null, isListEnd: false, isLoadingMore: false });
-        const { debug } = render(<SpeciesDetailScreen captureId={1} />);
-        debug();
-        const { getByTestId } = render(<SpeciesDetailScreen captureId={1} />);
-        const loadingIndicator = getByTestId('loading-indicator');
-        expect(loadingIndicator).toBeTruthy();
-    });
-
-    test('renders error message when there is an error', async () => {
-        useGetCaptureById.mockReturnValue({ capture: null, isLoading: false, error: 'Error fetching capture' });
-        useGetCaptureByFamily.mockReturnValue({ captures: [], isFamLoading: false, fetchMoreData: jest.fn(), errorFam: null, isListEnd: false, isLoadingMore: false });
-        (useGetCaptureById as jest.Mock).mockReturnValue({ capture: mockCapture, isLoading: false, error: null });
-        const { getByText } = render(<SpeciesDetailScreen captureId={1} />);
-
-        await waitFor(() => getByText('Error fetching capture'));
-        expect(getByText('Error fetching capture')).toBeTruthy();
-    });
-
     test('renders ? as specie info because its not captured', async () => {
-        (useGetCaptureById as jest.Mock).mockReturnValue({ capture: mockCapture, isLoading: false, error: null });
-        (useGetCaptureByFamily as jest.Mock).mockReturnValue({ captures: [], isLoading: false, fetchMoreData: jest.fn(), error: null, isListEnd: false, isLoadingMore: false });
-
-        const { getByText,queryByText, queryAllByText } = render(<SpeciesDetailScreen captureId={1} />);
-        
+         (useGetSpecieByFamily as jest.Mock).mockReturnValue({
+            captures: [],
+            isLoading: false,
+            fetchMoreData: jest.fn(),
+            error: null,
+            isListEnd: false,
+            isLoadingMore: false,
+        });
+        const { getByText,queryByText, queryAllByText } = render(<SpeciesDetailScreen specie={mockSpecie} capture={null} />);
         // Vérification des données du `specie`
         expect(getByText(mockCapture.specie.name)).toBeTruthy();
         expect(getByText(mockCapture.specie.scientificName)).toBeTruthy();
@@ -68,49 +56,43 @@ describe('<SpeciesDetailScreen />', () => {
         expect(queryByText(mockCapture.specie.description)).toBeFalsy(); 
     });
 
-    test('displays "Espèce introuvable" when no capture is found', () => {
-        useGetCaptureById.mockReturnValue({ capture: null, isLoading: false, error: null });
-        useGetCaptureByFamily.mockReturnValue({ captures: [], isFamLoading: false, fetchMoreData: jest.fn(), errorFam: null, isListEnd: false, isLoadingMore: false });
-
-        const { getByText } = render(<SpeciesDetailScreen captureId={1} />);
-        expect(getByText('Espèce introuvalble...')).toBeTruthy();
-    });
-
     test('renders capture details when captures are available', async () => {
-        const captureDetails = [new CaptureDetail(1,new Date(),false, new Location(10,10,10,10,1))];
-        const mockCaptureWithDetails = new Capture(1, "", specie, captureDetails);
-        
-        useGetCaptureById.mockReturnValue({ capture: mockCaptureWithDetails, isLoading: false, error: null });
-        useGetCaptureByFamily.mockReturnValue({ captures: [], isFamLoading: false, fetchMoreData: jest.fn(), errorFam: null, isListEnd: false, isLoadingMore: false });
-
-        const { getByText } = render(<SpeciesDetailScreen captureId={1} />);
-        await waitFor(() => getByText('Vos captures :'));
+         (useGetSpecieByFamily as jest.Mock).mockReturnValue({
+            captures: [],
+            isLoading: false,
+            fetchMoreData: jest.fn(),
+            error: null,
+            isListEnd: false,
+            isLoadingMore: false,
+        });
+        const { getByText } = render(<SpeciesDetailScreen  specie={mockSpecie} capture={mockCaptureWithDetails} />);
 
         expect(getByText(`Date de capture : ${captureDetails[0].date.toLocaleDateString()}`)).toBeTruthy();
     });
 
     test('renders "Aucune espèce trouvée" when no family captures are available', async () => {
-        useGetCaptureById.mockReturnValue({ capture: mockCapture, isLoading: false, error: null });
-        useGetCaptureByFamily.mockReturnValue({ captures: [], isFamLoading: false, fetchMoreData: jest.fn(), errorFam: null, isListEnd: false, isLoadingMore: false });
-
-        const { getByText } = render(<SpeciesDetailScreen captureId={1} />);
-        await waitFor(() => getByText('Aucune espèce trouvée'));
+         (useGetSpecieByFamily as jest.Mock).mockReturnValue({
+            captures: [],
+            isLoading: false,
+            fetchMoreData: jest.fn(),
+            error: null,
+            isListEnd: false,
+            isLoadingMore: false,
+        });
+        const { getByText } = render(<SpeciesDetailScreen specie={mockSpecie} capture={mockCapture} />);
         expect(getByText('Aucune espèce trouvée')).toBeTruthy();
     });
 
     test('renders the "Pas plus de capture pour le moment" message in family section when no more captures are available', async () => {
-        useGetCaptureById.mockReturnValue({ capture: mockCapture, isLoading: false, error: null });
-        useGetCaptureByFamily.mockReturnValue({
+        (useGetSpecieByFamily as jest.Mock).mockReturnValue({
             captures: [mockCapture],
-            isFamLoading: false,
+            isLoading: false,
             fetchMoreData: jest.fn(),
-            errorFam: null,
+            error: null,
             isListEnd: true,
-            isLoadingMore: false
+            isLoadingMore: false,
         });
-
-        const { getByText } = render(<SpeciesDetailScreen captureId={1} />);
-        await waitFor(() => getByText('Pas plus de capture pour le moment.'));
+        const { getByText } = render(<SpeciesDetailScreen specie={mockSpecie} capture={mockCapture}/>);
         expect(getByText('Pas plus de capture pour le moment.')).toBeTruthy();
     });
 });

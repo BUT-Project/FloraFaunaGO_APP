@@ -3,7 +3,7 @@ import {useAudioPlayer} from "expo-audio";
 import {registerSchema} from "@/components/form/auth/RegisterForm";
 import IAuthService from "@/model/service/IAuthService";
 import {router} from "expo-router";
-import {useAuthStore} from "@/context/zustand/strore/useAuthStore";
+import {useAuthStore} from "@/context/zustand/store/useAuthStore";
 
 // [TODO] [Dave] Vous préférer les alert comme ici ou le msg comme dans le register
 export const useRegisterViewModel = (

@@ -1,5 +1,4 @@
-// FaceOffGame.tsx
-import React, { useState, useEffect, useRef } from 'react';
+import React from 'react';
 import { SafeView } from '@/components/ui/SafeView';
 import { FaceOffGame} from '@/components/faceOffGame';
 
