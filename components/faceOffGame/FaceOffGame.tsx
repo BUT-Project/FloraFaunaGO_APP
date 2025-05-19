@@ -10,7 +10,7 @@ import ErrorBar from './ErrorBar';
 import TimeBar from './TimeBar';
 import FeedbackMessageToast from './FeebackMessage';
 import { AnimalActionData, PlayerActionType, FeedbackMessage } from './game/types';
-import { AnimalActions, PlayerActions,getRandomAnimalAction } from './game/actions';
+import { PlayerActions,getRandomAnimalAction } from './game/actions';
 
 interface Props {
   animalPhoto: string; 
@@ -29,7 +29,8 @@ const FaceOffGame = ({ animalPhoto, onResult, onCancel }: Props) => {
   const [animalAction, setAnimalAction] = useState<AnimalActionData | null>();
   const [timeLeft, setTimeLeft] = useState(MAX_RESPONSE_TIME);
   const [feedbackMessage, setFeedbackMessage] = useState<FeedbackMessage | null>(null);
-
+    
+  const [isWaitingForNextRound, setIsWaitingForNextRound] = useState(false);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const nextRoundTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -84,43 +85,44 @@ const FaceOffGame = ({ animalPhoto, onResult, onCancel }: Props) => {
     setFeedbackMessage({text, type});
     
     if (isCorrect) {
-      setStep((prev) => prev + 1);
-      setTimeout(() => {
-       startNextRoundDelay();
-      }, DELAY_BETWEEN_ROUNDS); 
+        setStep((prev) => prev + 1);
+        startNextRoundDelay();
     } else {
-      setLives((prev) => prev - 1);
-      startNextRoundDelay();
+        setLives((prev) => prev - 1);
+        startNextRoundDelay();
     }
   };
   
-  const onClose = () => {
-    setAnimalAction(getRandomAnimalAction());
-  };
+  const onClose = () => setAnimalAction(getRandomAnimalAction());
 
-  const startNextRoundDelay = () => {
-    if(lives <= 0) return;
-    if (nextRoundTimeoutRef.current) {
-      clearTimeout(nextRoundTimeoutRef.current);
-    }
-    nextRoundTimeoutRef.current = setTimeout(() => {
-      setFeedbackMessage(null);
-      setAnimalAction(getRandomAnimalAction());
-    }, DELAY_BETWEEN_ROUNDS); 
-  };
 
-  // Permet de reprendre le round suivant immédiatement
-  const handleResumeTimeBetweenRound = () => {
-    console.log("handleResumeTimeBetweenRound");
-    if(feedbackMessage){
-      if (nextRoundTimeoutRef.current) {
-        clearTimeout(nextRoundTimeoutRef.current);
-        nextRoundTimeoutRef.current = null;
-      }
-      setFeedbackMessage(null);
-      setAnimalAction(getRandomAnimalAction());
-    }
-  };
+    const startNextRoundDelay = () => {
+        if (lives <= 0) return;
+
+        setIsWaitingForNextRound(true); 
+
+        if (nextRoundTimeoutRef.current) {
+            clearTimeout(nextRoundTimeoutRef.current);
+        }
+        nextRoundTimeoutRef.current = setTimeout(() => {
+            setFeedbackMessage(null);
+            setAnimalAction(getRandomAnimalAction());
+            setIsWaitingForNextRound(false); 
+        }, DELAY_BETWEEN_ROUNDS);
+    };
+
+    // Permet de reprendre le round suivant immédiatement
+    const handleResumeTimeBetweenRound = () => {
+        console.log("handleResumeTimeBetweenRound", isWaitingForNextRound);
+        if (!isWaitingForNextRound) return; 
+        if (nextRoundTimeoutRef.current) {
+            clearTimeout(nextRoundTimeoutRef.current);
+            nextRoundTimeoutRef.current = null;
+        }
+        setFeedbackMessage(null);
+        setAnimalAction(getRandomAnimalAction());
+        setIsWaitingForNextRound(false); 
+    };
 
   useEffect(() => {
     return () => {
@@ -150,7 +152,7 @@ const FaceOffGame = ({ animalPhoto, onResult, onCancel }: Props) => {
                             <FeedbackMessageToast message={feedbackMessage}/>
                         )}
                         {animalAction && (
-                            <FeedbackMessageToast message={{text:`L’animal ${animalAction.label}`, type: 'info'}}/>
+                            <FeedbackMessageToast message={{text:`L’animal ${animalAction.label}`, icon:animalAction.icon, type: 'info'}}/>
                         )}
                         <TimeBar timeLeft={timeLeft} maxTime={MAX_RESPONSE_TIME} />
                     </ThemedView>
@@ -175,20 +177,21 @@ const styles = StyleSheet.create({
     container: { flex: 1 },
     overlay: {
       flex: 1,
-      backgroundColor: "rgba(0,0,0,0.2)",
+      backgroundColor: "transparent",
     },
     topBar: {
       backgroundColor:"transparent",
       width: '100%',
       position: 'absolute',
-      top: 20,
-      paddingHorizontal: 10,
+      top: 15,
+      paddingHorizontal: 15,
       flexDirection: 'row',
       justifyContent:"center",
       alignItems: 'center',
+      
     },
     topText: {
-      fontSize: 22,
+      fontSize: 20,
       color: '#fff',
     },
     bottom:{
@@ -213,11 +216,13 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
+        alignSelf:"center",
         position: 'absolute',
         left: 0,
     },
     errorBar:{
       position: 'absolute',
+      alignSelf: 'center',
       right: 0,
     }
 });

@@ -28,7 +28,7 @@ const TimeBar: React.FC<TimeBarProps> = ({ timeLeft, maxTime }) => {
         );
 
         return {
-            width: `${progress.value * 100}%`,
+            width: `${progress.get() * 100}%`,
             backgroundColor,
         };
     });

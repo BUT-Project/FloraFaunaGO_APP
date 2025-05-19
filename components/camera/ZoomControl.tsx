@@ -43,6 +43,9 @@ const ZoomControl: React.FC<ZoomControlProps> = ({ zoom, setZoom }) => {
                     <TouchableOpacity
                         onPress={() => setZoom(Math.max(0, zoom - 0.1))}
                         onLongPress={() => setZoom(0)}
+                        disabled={zoom <= 0}
+                        style={({ opacity: zoom <= 0 ? 0.5 : 1 })}
+
                     >
                         <Ionicons name="remove" size={30} color="#fff" />
                     </TouchableOpacity>
@@ -50,6 +53,8 @@ const ZoomControl: React.FC<ZoomControlProps> = ({ zoom, setZoom }) => {
                     <TouchableOpacity
                         onPress={() => setZoom(Math.min(1, zoom + 0.1))}
                         onLongPress={() => setZoom(1)}
+                        disabled={zoom >= 1}
+                        style={({ opacity: zoom >= 1 ? 0.5 : 1 })}
                     >
                         <Ionicons name="add" size={30} color="#fff" />
                     </TouchableOpacity>
@@ -80,6 +85,7 @@ const styles = StyleSheet.create({
     zoomText: {
         color: '#fff',
         fontSize: 16,
+        marginTop: 3,
         marginHorizontal: 10,
     }
 });

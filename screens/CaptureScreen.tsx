@@ -11,7 +11,7 @@ interface Props {
 
 export default function CaptureScreen({ animalPhoto, onResult, onCancel }: Props) {
   return (
-      <SafeView>
+      <SafeView style={{flex: 1}}>
           <FaceOffGame
               animalPhoto={animalPhoto}
               onResult={onResult}

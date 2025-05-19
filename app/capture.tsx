@@ -16,21 +16,13 @@ export default function Capture() {
     const onResult = (Success:Boolean) => {
         if (Success) {
             router.replace({pathname: '/(tabs)/(home)/reveal',})
-        } else {
-            resetState();
-            router.back();
-        };
+        } else 
+            onCancel();
     };
 
     const onCancel = () => {
-        try{
-            resetState();
-            router.replace({pathname: '/(tabs)/(home)',})
-
-        }
-        catch(error){
-            console.error('Error resetting state:', error);
-        }   
+        resetState();
+        router.replace({pathname: '/(tabs)/(home)',})  
     }
 
     if(!imageUri) {

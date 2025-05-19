@@ -7,16 +7,19 @@ export enum PlayerActionType {
 };
 
 export enum AnimalActionType {
-  Observe = 'observe',
-  Charge = 'charge',
-  Flee = 'flee',
-};
-
+  Observe = 'Observe',
+  Charge = 'Charge',
+  Flee = 'Flee',
+  Growl = 'Growl',
+  Hide = 'Hide',
+  Approach = 'Approach',
+  Attack = 'Attack'
+}
 export class AnimalActionData {
   constructor(
     public type: AnimalActionType,
     public label: string,
-    public icon: string,
+    public icon: keyof typeof Ionicons.glyphMap,
     public correctResponses: PlayerActionType[]
   ) {}
 
@@ -38,5 +41,6 @@ export class PlayerActionData {
 
 export interface FeedbackMessage {
   text: string;
+  icon?: keyof typeof Ionicons.glyphMap;
   type: 'success' | 'error' | 'info';
 }

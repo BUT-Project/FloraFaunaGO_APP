@@ -20,6 +20,30 @@ export const AnimalActions: Record<AnimalActionType, AnimalActionData> = {
     "exit-outline",
     [PlayerActionType.TakePhoto]
   ),
+  [AnimalActionType.Growl]: new AnimalActionData(
+    AnimalActionType.Growl,
+    "grogne d’un air menaçant…",
+    "volume-high",
+    [PlayerActionType.Wait]
+  ),
+  [AnimalActionType.Hide]: new AnimalActionData(
+    AnimalActionType.Hide,
+    "essaie de se cacher dans les buissons",
+    "leaf",
+    [ PlayerActionType.Wait]
+  ),
+  [AnimalActionType.Approach]: new AnimalActionData(
+    AnimalActionType.Approach,
+    "s’approche prudemment de vous",
+    "walk",
+    [PlayerActionType.Wait, PlayerActionType.TakePhoto]
+  ),
+  [AnimalActionType.Attack]: new AnimalActionData(
+  AnimalActionType.Attack,
+  "tente de vous attaquer !",
+  "warning-outline", 
+  [PlayerActionType.Dodge]
+),
 };
 
 export const PlayerActions: Record<PlayerActionType, PlayerActionData> = {

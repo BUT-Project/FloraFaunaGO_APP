@@ -1,4 +1,3 @@
-// components/capture/GameOverModal.tsx
 import React from 'react';
 import { Modal, StyleSheet, TouchableOpacity } from 'react-native';
 import { ThemedText, ThemedView } from '@/components/ui/themed';
@@ -41,7 +40,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    fontSize: 28,
+    fontSize: 26,
   },
   subtitle: {
     fontSize: 18,
