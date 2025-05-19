@@ -19,13 +19,13 @@ export default function Capture() {
         } else {
             resetState();
             router.back();
-        };
+        }
     };
 
     const onCancel = () => {
         try{
             resetState();
-            router.replace({pathname: '/(tabs)/(home)',})
+            router.back()
 
         }
         catch(error){
