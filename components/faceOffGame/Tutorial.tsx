@@ -7,11 +7,11 @@ import ErrorBar from './ErrorBar';
 import { Colors } from '@/constants/Colors';
 
 interface Props {
-  onClose?: () => void; // facultatif, au cas où tu veux réagir à la fermeture
-  nbStepsToWin?: number; // nombre d'étapes pour gagner
+  onClose?: () => void; 
+  nbStepsToWin?: number; 
 }
 
-export default function TutorialModal({ onClose, nbStepsToWin=1 }: Props) {
+const TutorialModal = ({ onClose, nbStepsToWin=1 }: Props) => {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -101,3 +101,5 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
+
+export default TutorialModal;

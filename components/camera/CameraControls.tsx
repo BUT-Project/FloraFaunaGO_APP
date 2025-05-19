@@ -2,7 +2,7 @@ import React from 'react';
 import {ActivityIndicator, StyleSheet, TouchableOpacity, Text, View} from 'react-native';
 import {Ionicons} from '@expo/vector-icons';
 import {CameraType} from "expo-camera";
-import Animated from 'react-native-reanimated';
+import ZoomControl from './ZoomControl';
 
 export interface CameraControlsProps {
     facing: CameraType;
@@ -16,8 +16,6 @@ export interface CameraControlsProps {
 
 export default function CameraControls(props: CameraControlsProps) {
     const {facing, toggleCameraFacing, handleCapturePress, handleCaptureRelease, isLoading, zoom, setZoom} = props;
-
-    const [isZoom,setIsZoom] = React.useState(false);
     return (
             <View style={styles.container}>
                 <View style={styles.part}>
@@ -36,22 +34,7 @@ export default function CameraControls(props: CameraControlsProps) {
                     </TouchableOpacity>
                </View>
                <View style={styles.part}>
-                    <View>
-                        <TouchableOpacity style={styles.zoomButton} onPress={() => setIsZoom(!isZoom)}>
-                            <Ionicons name={ isZoom ? "close" : "search"} size={30} color="#fff" />
-                        </TouchableOpacity>
-                         {isZoom && (
-                             <View style={styles.zoomControls}>
-                                <TouchableOpacity onPress={() => setZoom(Math.max(0, zoom - 0.1))}>
-                                    <Ionicons name="remove" size={30} color="#fff" />
-                                </TouchableOpacity>
-                                <Text style={styles.zoomText}>{zoom?.toFixed(1) ?? 0}</Text>
-                                <TouchableOpacity onPress={() => setZoom(Math.min(1, zoom + 0.1))}>
-                                    <Ionicons name="add" size={30} color="#fff" />
-                                </TouchableOpacity>
-                            </View>
-                        )}
-                    </View>
+                  <ZoomControl zoom={zoom} setZoom={setZoom}/>
                </View>
             </View>
     );

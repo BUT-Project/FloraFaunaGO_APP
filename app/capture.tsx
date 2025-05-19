@@ -25,7 +25,8 @@ export default function Capture() {
     const onCancel = () => {
         try{
             resetState();
-            router.back();
+            router.replace({pathname: '/(tabs)/(home)',})
+
         }
         catch(error){
             console.error('Error resetting state:', error);

@@ -71,7 +71,13 @@ const CustomCameraView = ({setBase64Image,setCapturedImage,style}:CustomCameraVi
     return (
         <ThemedView style={[styles.container,style]}>
              {isFocused && (
-                <CameraView style={styles.camera} facing={facing} ref={cameraRef} zoom={zoom} onCameraReady={handleCameraReady}/>
+                <CameraView 
+                    style={styles.camera}
+                    facing={facing}
+                    ref={cameraRef}
+                    zoom={zoom}
+                    onCameraReady={handleCameraReady}
+                />
             )}
             <CameraControls
                 facing={facing}
