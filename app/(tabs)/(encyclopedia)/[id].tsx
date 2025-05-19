@@ -1,14 +1,12 @@
-import {ThemedText} from "@/components/ui/themed/ThemedText";
-import {ThemedView} from "@/components/ui/themed/ThemedView";
+import React from "react";
+import {ThemedText,ThemedView} from "@/components/ui/themed";
 import SpeciesDetailScreen from "@/screens/SpeciesDetailScreen";
 import {useLocalSearchParams} from "expo-router";
 import {useGetById} from "@/hooks/viewModels/useGetById";
 import StubData from "@/dal/StubLib/StubData";
 import Capture from "@/model/domain/Capture";
 import Specie from "@/model/domain/Specie";
-import {SafeView} from "@/components/ui/SafeView";
-import React from "react";
-import {ActivityIndicator} from "react-native";
+import Loading from "@/components/ui/Loading";
 
 const CenteredMessage = ({ children }: { children: React.ReactNode }) => (
     <ThemedView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -16,11 +14,6 @@ const CenteredMessage = ({ children }: { children: React.ReactNode }) => (
     </ThemedView>
 );
 
-const LoadingView = () => (
-    <CenteredMessage>
-        <ActivityIndicator size={'large'}/>
-    </CenteredMessage>
-);
 
 const ErrorView = ({ message }: { message: string }) => (
     <CenteredMessage>
@@ -72,7 +65,7 @@ export default function Details() {
     }
 
     if (isSpecieLoading || isCaptureLoading) {
-        return <LoadingView />;
+        return <Loading text="Chargement des données..." />;
     }
 
     if (!specie) {
@@ -80,11 +73,9 @@ export default function Details() {
     }
 
     return (
-        <SafeView>
             <SpeciesDetailScreen
                 specie={specie}
                 capture={capture}
             />
-        </SafeView>
     );
 }

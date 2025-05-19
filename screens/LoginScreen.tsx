@@ -66,9 +66,9 @@ export default function LoginScreen() {
                 </TouchableOpacity>
                 <ThemedText style={styles.rememberMeText}>SE SOUVENIR DE MOI</ThemedText>
             </ThemedView>
-            <TouchableOpacity 
-                style={[styles.button, {backgroundColor: textColor}]} 
-                onPress={submitForm} 
+            <TouchableOpacity
+                style={[styles.button, {backgroundColor: textColor}]}
+                onPress={submitForm}
                 disabled={isLoading}
             >
                 <Entypo name="check" size={40} color={tintColor}/>
@@ -76,7 +76,7 @@ export default function LoginScreen() {
             <ThemedView style={styles.footer}>
                 <ThemedText style={styles.footerText}>Tu n'as pas de compte? </ThemedText>
                 <Link href="/register" replace>
-                        <ThemedText style={[styles.linkText, {color: tintColor}]}>S'inscrire</ThemedText>
+                    <ThemedText style={[styles.linkText, {color: tintColor}]}>S'inscrire</ThemedText>
                 </Link>
             </ThemedView>
         </ThemedView>

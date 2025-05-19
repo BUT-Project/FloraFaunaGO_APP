@@ -1,0 +1,1 @@
+export {default as FaceOffGame} from './FaceOffGame';

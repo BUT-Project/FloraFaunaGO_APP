@@ -19,14 +19,15 @@ export default function RootNavigation() {
     }, [postState?.uploading]);
     return (
         <Tabs
-            screenOptions={{
+            screenOptions={({route}) => ({
                 tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
                 tabBarStyle: {
                     backgroundColor: Colors[colorScheme ?? 'light'].background, // Adapte le fond en fonction du mode
                     //borderTopColor: Colors[colorScheme ?? 'light'].vb, // Optionnel, pour éviter un contraste trop fort
+                    display: route.name?.includes("capture") ? 'none' : 'flex',
                 },
                 headerShown: false,
-            }}
+            })}
             >
             <Tabs.Screen
                 name="(profil)"
@@ -36,7 +37,6 @@ export default function RootNavigation() {
                         <TabBarIcon name={focused ? 'person' : 'person-outline'} color={color} />
                     ),
                 }}
-  
             />
             <Tabs.Screen
                 name="(home)"
