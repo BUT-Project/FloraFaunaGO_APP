@@ -16,7 +16,7 @@ type SpeciesFilterProps={
 }
 
 export default function SpeciesFilterModal(props: SpeciesFilterProps){
-    const color = useThemeColor({ light: "#000", dark: "#fff" }, 'text');
+    const color = useThemeColor({},'text');
 
     const [visible,setVisible] = useState(false);
     const [kingdom,setKingdom] = useState<Kingdom | null>();
@@ -77,16 +77,14 @@ export default function SpeciesFilterModal(props: SpeciesFilterProps){
             <TouchableOpacity style={styles.filterButton} onPress={()=>setVisible(true)}>
                 <Ionicons name={"filter"} color={color}  size={24}/>
             </TouchableOpacity>
-            <Modal animationType={"slide"} transparent={true} visible={visible} onRequestClose={() =>setVisible(false)  }>
-               
+            <Modal animationType="slide" transparent={true} visible={visible} onRequestClose={() =>setVisible(false)}>
                 <TouchableOpacity style={styles.dismissButton} onPress={() => setVisible(false)}/>
                 <ThemedView style={styles.modalContent}>
-                    <ThemedView style={styles.titleContainer}>
-                        <ThemedText>Filter and sort the encyclopedia :</ThemedText>
-                        <TouchableOpacity>
-                            <Ionicons name={"close"} color={color} size={25} onPress={()=>setVisible(false)}/>
-                        </TouchableOpacity>
-                    </ThemedView>
+                   
+                    <TouchableOpacity  style={styles.closeButton} onPress={()=>setVisible(false)}>
+                        <Ionicons name={"close"} color={color} size={25}/>
+                    </TouchableOpacity>
+                    
                     <ThemedView style={styles.sortContainer}>
                         <ThemedText>Sort :</ThemedText>
                         <TouchableOpacity onPress={sortAscending}>
@@ -98,11 +96,21 @@ export default function SpeciesFilterModal(props: SpeciesFilterProps){
                     </ThemedView>
                     <ThemedView style={styles.filteringOptions}>
                         <ThemedText>Kingdom :</ThemedText>
-                        <FlatList data={Object.values(Kingdom)} renderItem={(item) => (<FilterChips item={item.item} onFilterChange={onKingdomChange} selectedFilter={kingdom}/>)} horizontal={true}/>
+                        <FlatList 
+                            data={Object.values(Kingdom)} 
+                            renderItem={(item) => (<FilterChips item={item.item} onFilterChange={onKingdomChange} selectedFilter={kingdom}/>)}
+                            horizontal={true}
+                            showsHorizontalScrollIndicator={false}
+                        />
                     </ThemedView>
                     <ThemedView style={styles.filteringOptions}>
                         <ThemedText>Class :</ThemedText>
-                        <FlatList data={Object.values(Class)} renderItem={(item) => (<FilterChips item={item.item} onFilterChange={onClassChange} selectedFilter={bioClass}/>)} horizontal={true}/>
+                        <FlatList 
+                            data={Object.values(Class)} 
+                            renderItem={(item) => (<FilterChips item={item.item} onFilterChange={onClassChange} selectedFilter={bioClass}/>)} 
+                            showsHorizontalScrollIndicator={false}
+                            horizontal={true}
+                        />
                     </ThemedView>
                     <ThemedView style={styles.filteringOptions}>
                         <ThemedText>Family :</ThemedText>
@@ -113,10 +121,7 @@ export default function SpeciesFilterModal(props: SpeciesFilterProps){
                         <FlatList data={Object.values(Diet)} renderItem={(item) => (<FilterChips item={item.item} onFilterChange={onDietChange} selectedFilter={diet}/>)} horizontal={true}/>
                     </ThemedView>
                 </ThemedView>
-
             </Modal>
-
-
         </>
 
     )
@@ -135,24 +140,29 @@ const styles = StyleSheet.create({
     modalContent: {
         height: '35%',
         width: '100%',
-        borderTopRightRadius: 15,
-        borderTopLeftRadius: 15,
-        paddingHorizontal: 10,
-        paddingBottom:10,
+        borderTopRightRadius: 20,
+        borderTopLeftRadius: 20,
+        paddingVertical:20,
+        padding: 10,
+        paddingBottom:0,
         position: 'absolute',
         alignItems:"center",
         bottom: 0,
         gap:5,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.5,
+        shadowRadius: 4,
+        elevation: 5,
     },
-    titleContainer: {
-        height: '20%',
-        width:"100%",
-        borderTopRightRadius: 10,
-        borderTopLeftRadius: 10,
-        paddingHorizontal: 20,
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
+    closeButton: {
+        position: 'absolute',
+        top: 10,
+        right: 10,
+        borderRadius: 30,
     },
     sortContainer:{
         flexDirection:"row",

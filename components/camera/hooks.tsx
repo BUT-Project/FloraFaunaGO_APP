@@ -5,9 +5,9 @@ export function useCamera() {
     const [facing, setFacing] = useState<CameraType>('back');
     const [permission, requestPermission] = useCameraPermissions();
 
-    useEffect(() => {
-        requestPermission();
-    }, [requestPermission]);
+    //useEffect(() => {
+    //    requestPermission();
+   // }, [requestPermission]);
 
     async function requestPerm(){
         await requestPermission()

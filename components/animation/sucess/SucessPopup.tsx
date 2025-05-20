@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { toast } from '@backpackapp-io/react-native-toast';
-import { SuccessStore } from '@/context/zustand/strore/useSuccessStore';
+import { SuccessStore } from '@/context/zustand/store/useSuccessStore';
 
 interface SuccessPopupProps {
   message: string;

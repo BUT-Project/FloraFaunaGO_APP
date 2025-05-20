@@ -1,7 +1,6 @@
 import { ReactNode } from "react";
-import { StyleSheet } from "react-native";
 import SuccessPopup from "./SucessPopup";
-import { SuccessStore } from "@/context/zustand/strore/useSuccessStore";
+import { SuccessStore } from "@/context/zustand/store/useSuccessStore";
 import { ThemedView } from "@/components/ui/themed/ThemedView";
 type Props = {
     children: ReactNode;

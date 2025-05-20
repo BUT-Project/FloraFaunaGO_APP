@@ -9,7 +9,6 @@ import {useRouter} from "expo-router";
 import Capture from '@/model/domain/Capture';
 import Specie from "@/model/domain/Specie";
 
-
 type CarouselItem = {
     key: string;
     image: string;
@@ -48,11 +47,6 @@ export default function SpeciesImageCarousel({ capture ,specie}: SpeciesImageCar
             source={{ uri: item.image }}
             isCaptured={capture != null}
         >
-            
-            <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-                <Ionicons name="chevron-back" size={30} color="#fff" />
-            </TouchableOpacity>
-
             <ThemedView style={styles.infoChip}>
                 <ThemedText type={'subtitle'} style={styles.text}>{item.label}</ThemedText>
                 {item.secondLabel && <ThemedText style={[styles.text, styles.scientificName]}>{item.secondLabel}</ThemedText>}
@@ -80,6 +74,9 @@ export default function SpeciesImageCarousel({ capture ,specie}: SpeciesImageCar
                 inactiveDotOpacity={0.4}
                 inactiveDotScale={0.6}
             />
+            <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+                <Ionicons name="chevron-back" size={30} color="#fff" />
+            </TouchableOpacity>
         </ThemedView>
     );
 }
@@ -112,7 +109,7 @@ const styles = StyleSheet.create({
         position: "absolute",
         top: 5,
         left: 5,
-        padding: 3,
+        padding:2,
         borderRadius: 5,
         backgroundColor: "rgba(0, 0, 0, 0.5)",
     },

@@ -3,9 +3,9 @@ import SuccessDetailScreen from "@/screens/SuccessDetailScreen";
 import StubData from "@/dal/StubLib/StubData";
 import {ThemedView} from "@/components/ui/themed/ThemedView";
 import React, {useEffect, useState} from "react";
-import {ActivityIndicator} from "react-native";
 import {Success} from "@/model/domain/Success";
 import {ThemedText} from "@/components/ui/themed/ThemedText";
+import Loading from "@/components/ui/Loading";
 
 export default  function Details() {
     const {id} = useLocalSearchParams();
@@ -29,9 +29,7 @@ export default  function Details() {
 
     if (loading) {
         return (
-            <ThemedView style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-                <ActivityIndicator size="large" color="#0000ff" />
-            </ThemedView>
+            <Loading text="Chargement du succès..." />
         );
     }
 

@@ -4,16 +4,19 @@ import {Image, StyleSheet} from "react-native";
 import DismissKeyboard from "@/components/ui/DismissKeyboard";
 import {ThemedView} from "@/components/ui/themed/ThemedView";
 import {ThemedText} from "@/components/ui/themed/ThemedText";
+import { SafeView } from "@/components/ui/SafeView";
 
 export default function AuthLayout() {
     return (
-        <DismissKeyboard>
-            <ThemedView style={commonAuthStyles.container}>
-                <ThemedText style={commonAuthStyles.versionText}>v0.2</ThemedText>
-                <Image source={require("@/assets/images/logo_FFGO.png")} style={commonAuthStyles.imageLogo}/>
-                <Slot initialRouteName="login"/>
-            </ThemedView>
-        </DismissKeyboard>
+        <SafeView>
+            <DismissKeyboard>
+                <ThemedView style={commonAuthStyles.container}>
+                    <ThemedText style={commonAuthStyles.versionText}>v0.2</ThemedText>
+                    <Image source={require("@/assets/images/logo_FFGO.png")} style={commonAuthStyles.imageLogo}/>
+                    <Slot initialRouteName="login"/>
+                </ThemedView>
+            </DismissKeyboard>
+        </SafeView>
     );
 }
 

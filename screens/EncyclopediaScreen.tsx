@@ -1,20 +1,18 @@
-import {ActivityIndicator, Button, FlatList, StyleSheet, View} from "react-native";
+import {ActivityIndicator, Button, FlatList, StyleSheet, useColorScheme, View} from "react-native";
 import {SpecieListItem,SearchBar,FilterModal} from "@/components/encyclopedia";
 import {useState} from "react";
 import {ThemedView, ThemedText} from "@/components/ui/themed";
-import {SafeView} from "@/components/ui/SafeView";
 import {useGetSpecies} from "@/hooks/viewModels/useGetSpecies";
-import {useAuthStore} from "@/context/zustand/strore/useAuthStore";
+import {useAuthStore} from "@/context/zustand/store/useAuthStore";
+import { SafeView } from "@/components/ui/SafeView";
 import { LinearGradient } from "expo-linear-gradient";
 import { Colors } from "@/constants/Colors";
-import {useColorScheme} from "@/hooks/useColorScheme";
 
 export default function EncyclopediaScreen() {
     const colorScheme = useColorScheme();
     const [name,setName] = useState("")
     const {species=[],isLoading,isLoadingMore,error,isListEnd,refresh,fetchMoreData} = useGetSpecies("")
     const userCaptures = useAuthStore((state) => state.user?.captures);
-    //if(!user) throw new Error("User not found");// [Dave] [TODO] should not do that
 
     if (error) {
         return (
@@ -33,7 +31,7 @@ export default function EncyclopediaScreen() {
         );
     }
     return (
-        <SafeView>
+        <SafeView disableBottomInset>
         <LinearGradient
             style={{ flex: 1 }}
             start={{x: 0, y: 0.5}}

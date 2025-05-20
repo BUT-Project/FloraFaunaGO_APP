@@ -1,5 +1,5 @@
 import {useCallback, useState} from "react";
-import {useAuthStore} from "@/context/zustand/strore/useAuthStore";
+import {useAuthStore} from "@/context/zustand/store/useAuthStore";
 import {Alert} from "react-native";
 import {router} from "expo-router";
 import {LoginCredentials} from "@/screens/LoginScreen";

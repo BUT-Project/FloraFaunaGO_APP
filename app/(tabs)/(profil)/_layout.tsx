@@ -1,5 +1,6 @@
 import {Link, Stack} from "expo-router";
 import { useTheme } from '@react-navigation/native';
+import { Ionicons } from "@expo/vector-icons";
 
 
 export default function Layout() {
@@ -16,9 +17,8 @@ export default function Layout() {
             />
             <Stack.Screen name="settings"
             options={{
-
                 animation:'slide_from_bottom',
-                presentation: 'modal',
+                presentation: "modal",
                 headerBackVisible: true,
                 headerStyle: {
                     backgroundColor: colors.background, // change selon thème

@@ -1,7 +1,7 @@
 import Specie from "@/model/domain/Specie";
 import {create} from 'zustand';
 import {devtools} from 'zustand/middleware';
-import {useAuthStore} from "@/context/zustand/strore/useAuthStore";
+import {useAuthStore} from "@/context/zustand/store/useAuthStore";
 import StubData from "@/dal/StubLib/StubData";
 import Location from "@/model/domain/Location";
 
@@ -34,6 +34,7 @@ export const useSpeciesStore = create<SpeciesState>()(
             setCurrentIdentifiedSpecies: (specie: Specie) => {
                 const { currentImageUri } = get();
                 if (!currentImageUri) {
+                    console.warn("AUCUNE IMAGE SÉLECTIONNÉE");
                     set((state) => ({
                         ...state,
                         error: new Error('Aucune image sélectionnée')

@@ -1,12 +1,11 @@
-import {Appearance, Dimensions, Pressable, ScrollView, StyleSheet, Switch, TouchableOpacity} from "react-native";
-import {ThemedView} from "@/components/ui/themed/ThemedView";
-import {ThemedText} from "@/components/ui/themed/ThemedText";
+import {Appearance, Pressable, SafeAreaView, StyleSheet, Switch, TouchableOpacity} from "react-native";
+import {ThemedText, ThemedView} from "@/components/ui/themed";
 import React, {useEffect, useState} from "react";
-import {SafeAreaView} from "react-native-safe-area-context";
 import {LinearGradient} from 'expo-linear-gradient';
-import {useAuthStore} from "@/context/zustand/strore/useAuthStore";
 import {Colors} from "@/constants/Colors";  
 import {useColorScheme} from "@/hooks/useColorScheme";
+import {useAuthStore} from "@/context/zustand/store/useAuthStore";
+import { SafeView } from "@/components/ui/SafeView";
 
 export default function SettingsScreen() {
     const colorScheme = useColorScheme();
@@ -36,24 +35,23 @@ export default function SettingsScreen() {
     };
 
     return (
-<ScrollView style={{flex:1}} contentContainerStyle={{flexGrow: 1}} >
+             <SafeAreaView>
+        <SafeView style={styles.container} disableTopInset>
         <ThemedView  style={{flex: 1}}>
         <LinearGradient
             style={{ flex: 1 }}
             colors={[ Colors[(colorScheme ?? 'light') as 'light' | 'dark'].card, 
             Colors[(colorScheme ?? 'light') as 'light' | 'dark'].background]}
             >
-             <SafeAreaView>
+                <ThemedText type={"title"} style={styles.title}>Settings</ThemedText>
+                <Pressable onPress={switchChange} style={styles.button}>
+                    <ThemedText type={"subtitle"} style={styles.buttonText}>Mode offline</ThemedText>
+                    <Switch value={switchBut} trackColor={{false: "#767577", true: "#90EE90"}}  />
+                </Pressable>
 
-                 <ThemedText type={"title"} style={styles.title}>Settings</ThemedText>
-                 <Pressable onPress={switchChange} style={styles.button}>
-                     <ThemedText type={"subtitle"} style={styles.buttonText}>Mode offline</ThemedText>
-                     <Switch value={switchBut} trackColor={{false: "#767577", true: "#90EE90"}}  />
-                 </Pressable>
-
-                 <TouchableOpacity style={styles.button}>
-                     <ThemedText type={"subtitle"} style={styles.buttonText}>Modifier l'adresse mail</ThemedText>
-                 </TouchableOpacity>
+                <TouchableOpacity style={styles.button}>
+                    <ThemedText type={"subtitle"} style={styles.buttonText}>Modifier l'adresse mail</ThemedText>
+                </TouchableOpacity>
                 <TouchableOpacity onPress={() => { toggleTheme(); switchThemes(); }} style={styles.button}>
                 <ThemedText type={"subtitle"} style={styles.buttonText}>Changer le thème</ThemedText>
 
@@ -65,34 +63,26 @@ export default function SettingsScreen() {
                 </ThemedText>
                 </TouchableOpacity>
 
-                 <TouchableOpacity style={styles.button}>
-                     <ThemedText type={"subtitle"} style={styles.buttonText}>Activer l'économie de batterie</ThemedText>
-                 </TouchableOpacity>
+                <TouchableOpacity style={styles.button}>
+                    <ThemedText type={"subtitle"} style={styles.buttonText}>Activer l'économie de batterie</ThemedText>
+                </TouchableOpacity>
 
-                 <TouchableOpacity style={styles.button} onPress={logout}>
-                     <ThemedText type={"subtitle"} style={styles.buttonText}>Deconnexion</ThemedText>
-                 </TouchableOpacity>
+                <TouchableOpacity style={styles.button} onPress={logout}>
+                    <ThemedText type={"subtitle"} style={styles.buttonText}>Deconnexion</ThemedText>
+                </TouchableOpacity>
 
-                 <TouchableOpacity style={styles.button}>
-                     <ThemedText type={"subtitle"} style={[styles.deleteText]}>Supprimer le compte</ThemedText>
-                 </TouchableOpacity>
-             </SafeAreaView>
+                <TouchableOpacity style={styles.button}>
+                    <ThemedText type={"subtitle"} style={[styles.deleteText]}>Supprimer le compte</ThemedText>
+                </TouchableOpacity>
             </LinearGradient>
-        </ThemedView>
-</ScrollView>
-
-    );
-}
+            </ThemedView>
+        </SafeView>
+        </SafeAreaView>
+)}
 const styles = StyleSheet.create({
-
-    scrollContainer: {
+    container: {
         display:"flex",
         flex:1,
-
-    },
-    safeArea: {
-        flex: 1,
-        paddingHorizontal: '5%',
     },
     title: {
         fontWeight: "bold",

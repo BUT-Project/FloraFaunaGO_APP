@@ -1,12 +1,14 @@
 import {useCallback, useState} from "react";
 import {useInfiniteData} from "@/hooks/viewModels/useInfiniteData";
 import {BaseInfiniteOptions, BaseInfiniteResult} from "@/hooks/types";
-import Specie from "@/model/domain/Specie";
-import {Diet} from "@/model/domain/Diet";
-import {Kingdom} from "@/model/domain/Kingdom";
-import {Class} from "@/model/domain/Class";
-import {Family} from "@/model/domain/Family";
-import Habitat from "@/model/domain/Habitat";
+import { 
+    Specie,
+    Habitat,
+    Diet,
+    Kingdom,
+    Class,
+    Family
+} from "@/model/domain";
 import {ISpeciesRepository} from "@/dal/repository/ISpeciesRepository";
 
 interface SpecieFilterState {

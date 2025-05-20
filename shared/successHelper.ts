@@ -1,6 +1,6 @@
 
 
-import { SuccessStore } from '@/context/zustand/strore/useSuccessStore';
+import { SuccessStore } from '@/context/zustand/store/useSuccessStore';
 import StubData from '@/dal/StubLib/StubData';
 import { Class } from '@/model/domain/Class';
 import { Diet } from '@/model/domain/Diet';
@@ -8,9 +8,7 @@ import { Family } from '@/model/domain/Family';
 import { Kingdom } from '@/model/domain/Kingdom';
 import { SuccessType } from '@/model/domain/SuccessType';
 
-
 const { successRepository } = StubData.getInstance();
-
 
 export interface TestSuccessParams {
     name: string;

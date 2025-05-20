@@ -1,9 +1,7 @@
 import {create} from 'zustand';
 import StubData from "@/dal/StubLib/StubData";
 import { devtools } from 'zustand/middleware';
-import { Success } from '@/model/domain/Success';
-import SuccessPopup from '@/components/animation/sucess/SucessPopup';
-import { useEffect } from 'react';
+
 export interface SuccessState {
     updateSuccess(successId: string): void
     isVisibile: boolean
