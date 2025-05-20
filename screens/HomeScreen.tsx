@@ -95,15 +95,17 @@ export default function HomeScreen() {
                 </View>
                 <Animated.View style={[styles.viewContainer, animatedStyle]}>
                     {isCameraActive
-                        && <CameraView setBase64Image={setBase64Image} setCapturedImage={setCapturedImage}
-                                       style={styles.camera}/>
-                    }
-                    {isFetching && (
-                        <View style={styles.progressOverlay}>
-                            <ARProgressIndicator width={SCREEN_WIDTH} height={SCREEN_WIDTH}/>
-                        </View>
-                    )}
-                    <MainMapView location={location} style={styles.map}/>
+                        &&
+                        <>
+                            <CameraView setBase64Image={setBase64Image} setCapturedImage={setCapturedImage}
+                                        style={styles.camera}/>
+                            {isFetching && (
+                                <View style={styles.progressOverlay}>
+                                    <ARProgressIndicator width={SCREEN_WIDTH} height={SCREEN_WIDTH}/>
+                                </View>
+                            )}
+                            <MainMapView location={location} style={styles.map}/>
+                        </>}
                 </Animated.View>
             </ThemedView>
         </SafeView>

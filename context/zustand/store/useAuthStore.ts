@@ -12,6 +12,7 @@ interface AuthState {
     logout: () => Promise<void>;
     checkAuth: () => Promise<void>;
     setRememberMe: (value: boolean) => void;
+    isAuthCheckCompleted: boolean;
 }
 
 const AUTH_TOKEN_KEY = 'auth_token';
@@ -21,6 +22,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     user: null,
     isAuthenticated: false,
     rememberMe: false,
+    isAuthCheckCompleted:false,
 
     login: async (email: string, password: string, remember: boolean = false) => {
         const {authService} = StubData.getInstance();
@@ -59,6 +61,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         if (isAuthenticated) {
             const user = await authService?.getUser();
             set({user, isAuthenticated});
+            set({isAuthCheckCompleted:true});
         } else {
 
             const storedAuth = await getStorageItemAsync(AUTH_TOKEN_KEY);
@@ -78,13 +81,16 @@ export const useAuthStore = create<AuthState>((set, get) => ({
                             isAuthenticated: true,
                             rememberMe: true
                         });
+                        set({isAuthCheckCompleted:true});
                         return;
                     }
                 } catch (e) {
                     console.error('Error parsing stored auth:', e);
                 }
             }
+            // If not authenticated or no valid stored auth, set user to null
             set({user: null, isAuthenticated: false});
+            set({isAuthCheckCompleted:true});
         }
     },
     setRememberMe: async (value: boolean) => {
