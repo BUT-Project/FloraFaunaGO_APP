@@ -37,7 +37,7 @@ export default function SucessListItemVertical(props:SucessListItemsProps){
                             backgroundColor="#DADADA">
                             {
                                 
-                                (fill) => (
+                                () => (
                                     //@ts-ignore
                                     <TabBarIcon size={35} name={props.items.image} style={[styles.image,{color:tintColor}]}  />
                                 )

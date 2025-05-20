@@ -9,7 +9,7 @@ export default function Capture() {
     const identifiedSpecies = useSpeciesStore((state) => state.identifiedSpecies);
     const { resetState } = useSpeciesStore();
 
-    console.log("specie",identifiedSpecies)
+    //console.log("specie",identifiedSpecies)
     const router = useRouter();
 
     const onResult = (Success:Boolean) => {
