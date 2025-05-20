@@ -1,6 +1,6 @@
 import React from 'react';
 import { useRouter } from "expo-router";
-import { useSpeciesStore } from "@/context/zustand/strore/useSpeciesStore";
+import { useSpeciesStore } from "@/context/zustand/store/useSpeciesStore";
 import CaptureScreen from '@/screens/CaptureScreen';
 
 export default function Capture() {
@@ -19,7 +19,7 @@ export default function Capture() {
 
     const onCancel = () => {
         resetState();
-        router.back();
+        router.replace("/");
     }
     
     return (<CaptureScreen animalPhoto={imageUri} onResult={onResult} onCancel={onCancel}/>)
