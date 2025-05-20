@@ -20,6 +20,7 @@ export default function LoginScreen() {
     const {
         username,
         setUsername,
+        errorMessage,
         isLoading,
         password,
         setPassword,
@@ -34,7 +35,7 @@ export default function LoginScreen() {
 
             <ThemedText style={[styles.title, {color: textColor}]}>SE CONNECTER</ThemedText>
             {failedLogin && (
-                <ThemedText style={styles.errorText}>Email ou mot de passe incorrect!</ThemedText>
+                <ThemedText style={styles.errorText}>{errorMessage}</ThemedText>
             )}
             <InputWithIcon
                 icon="user"

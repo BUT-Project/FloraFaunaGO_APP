@@ -60,7 +60,7 @@ export function useLoginViewModel() {
                 if (error instanceof Error) {
                     setErrorMessage(error.message);
                 } else {
-                    setErrorMessage('An unexpected error occurred. Please try again.');
+                    setErrorMessage("Une erreur s'est produite lors de la connexion.");
                 }
             } finally {
                 setIsLoading(false);
