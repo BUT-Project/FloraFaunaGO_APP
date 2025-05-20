@@ -14,9 +14,6 @@ export default class AppClient extends IDataManager{
         }
         return AppClient.instance;
     }
-
-
-
 }
 /*
 interface HttpClientResponse {
