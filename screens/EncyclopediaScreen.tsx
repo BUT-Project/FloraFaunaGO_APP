@@ -1,10 +1,10 @@
 import {ActivityIndicator, Button, FlatList, StyleSheet, View} from "react-native";
-import {SpecieListItem,SearchBar,FilterModal} from "@/components/encyclopedia";
+import {FilterModal, SearchBar, SpecieListItem} from "@/components/encyclopedia";
 import {useState} from "react";
-import {ThemedView, ThemedText} from "@/components/ui/themed";
+import {ThemedText, ThemedView} from "@/components/ui/themed";
 import {useGetSpecies} from "@/hooks/viewModels/useGetSpecies";
 import {useAuthStore} from "@/context/zustand/store/useAuthStore";
-import { SafeView } from "@/components/ui/SafeView";
+import {SafeView} from "@/components/ui/SafeView";
 
 export default function EncyclopediaScreen() {
     const [name,setName] = useState("")

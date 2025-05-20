@@ -14,6 +14,7 @@ export const useRegisterViewModel = (
     const [password, setPassword] = useState('');
     const [failedSignup, setFailedSignup] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
 
     if (!repository) throw new Error('No Auth Repository provided');
 
@@ -44,6 +45,7 @@ export const useRegisterViewModel = (
 
     const submitForm = useCallback(async () => {
         if (validateForm()) {
+            setIsLoading(true);
             try {
                 await register(email,password);
                 setFailedSignup(false);
@@ -57,6 +59,9 @@ export const useRegisterViewModel = (
                     setErrorMessage("Une erreur s'est produite lors de l'inscription.");
                 }
             }
+            finally {
+                setIsLoading(false);
+            }
 
         }
     }, [validateForm, email, password, playSound]);
@@ -68,6 +73,7 @@ export const useRegisterViewModel = (
         password,
         setPassword,
         failedSignup,
+        isLoading,
         errorMessage,
         submitForm,
     };

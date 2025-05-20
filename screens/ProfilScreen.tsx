@@ -1,5 +1,5 @@
 import {ThemedText} from "@/components/ui/themed/ThemedText";
-import {Button, Dimensions, FlatList, Image, StyleSheet, TouchableOpacity} from "react-native";
+import {ActivityIndicator, Button, Dimensions, FlatList, Image, StyleSheet, TouchableOpacity} from "react-native";
 import {useThemeColor} from "@/hooks/useThemeColor";
 import React, {useEffect, useState} from "react";
 import SucessListItemVertical from "@/components/SucessListItemVertical";
@@ -11,7 +11,7 @@ import {Success} from "@/model/domain/Success";
 import StubData from "@/dal/StubLib/StubData";
 import {PagedRequest} from "@/shared/PagedRequest";
 import {useAuthStore} from "@/context/zustand/store/useAuthStore";
-import { SafeView } from "@/components/ui/SafeView";
+import {SafeView} from "@/components/ui/SafeView";
 
 let ProfileImage: {};
 ProfileImage = require("../assets/images/ProfileImage.jpeg");
@@ -20,14 +20,14 @@ export default function ProfilScreen() {
     const [Successes, setSuccesses] = useState<Success[]>([]);
     const {successRepository} = StubData.getInstance()
     const [page, setPage] = useState(1);
-    const [loading, setLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const [totalPages, setTotalPages] = useState(1);
 
     const user = useAuthStore((state)=>state.user);
 
 
     const fetchSuccesses = async (currentPage: number) => {
-        setLoading(true);
+        setIsLoading(true);
         try {
             const PageRequest : PagedRequest = {
                 index: currentPage,
@@ -39,7 +39,7 @@ export default function ProfilScreen() {
         } catch (error) {
             console.error('Erreur lors de la récupération des succès :', error);
         } finally {
-            setLoading(false);
+            setIsLoading(false);
         }
     };
 
@@ -108,6 +108,9 @@ export default function ProfilScreen() {
 
     return (
         <SafeView disableBottomInset>
+            { isLoading ?
+                <ActivityIndicator size={"large"}/>
+                :
                 <FlatList
                     style={styles.list}
                     data={Successes?? []}
@@ -117,6 +120,7 @@ export default function ProfilScreen() {
                     ListHeaderComponent={renderHeader}
                     columnWrapperStyle={{ justifyContent: "center", marginBottom: 10 }}
                 />
+            }
         </SafeView>
     );
 }

@@ -1,5 +1,5 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import React, {useContext, useEffect, useRef, useState} from 'react';
+import {StyleSheet, TouchableOpacity} from 'react-native';
 import Animated, {
     Easing,
     runOnJS,
@@ -10,18 +10,17 @@ import Animated, {
 } from 'react-native-reanimated';
 import SpecieCard from "@/components/SpecieCard";
 import Specie from "@/model/domain/Specie";
-import { ThemedView } from "@/components/ui/themed/ThemedView";
+import {ThemedView} from "@/components/ui/themed/ThemedView";
 import FlipAnimationContainer from "@/components/animation/FlipAnimationContainer";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import EntranceFlipAnimation from "@/components/animation/EntranceFlipAnimation";
-import { ThemedText } from "@/components/ui/themed/ThemedText";
-import { UploadContext } from "@/context/UploadContext";
+import {ThemedText} from "@/components/ui/themed/ThemedText";
+import {UploadContext} from "@/context/UploadContext";
 import ThumbAnimationView from "@/components/ThumbAnimationView";
-import { router } from "expo-router";
-import { useSpeciesStore } from "@/context/zustand/store/useSpeciesStore";
-import { SuccessStore } from '@/context/zustand/store/useSuccessStore';
-import { SuccessType } from '@/model/domain/SuccessType';
-import { processSuccessByType } from '@/shared/successHelper';
+import {router} from "expo-router";
+import {useSpeciesStore} from "@/context/zustand/store/useSpeciesStore";
+import {SuccessType} from '@/model/domain/SuccessType';
+import {processSuccessByType} from '@/shared/successHelper';
 
 export type ThumbType = {
     main: string | null | undefined;
@@ -34,7 +33,6 @@ interface RevealScreenProps {
 
 export default function RevealScreen({ specie }: RevealScreenProps) {
     const addingState = useContext(UploadContext);
-    const { message, isVisibile } = SuccessStore();
     const [thumbnail, setThumbnail] = useState<ThumbType>({
         main: null,
         anim: null,

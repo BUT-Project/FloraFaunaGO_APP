@@ -1,5 +1,5 @@
 import React from 'react';
-import {Platform, StyleSheet, TouchableOpacity} from 'react-native';
+import {ActivityIndicator, Platform, StyleSheet, TouchableOpacity} from 'react-native';
 import normalize from '@/components/ui/responsive/Normalize';
 import {Link} from "expo-router";
 import {Entypo, FontAwesome} from "@expo/vector-icons";
@@ -72,7 +72,11 @@ export default function LoginScreen() {
                 onPress={submitForm}
                 disabled={isLoading}
             >
-                <Entypo name="check" size={40} color={tintColor}/>
+                {isLoading ?
+                    <ActivityIndicator size="large" color="#fff"/>
+                    :
+                    <Entypo name="check" size={40} color={tintColor}/>
+                }
             </TouchableOpacity>
             <ThemedView style={styles.footer}>
                 <ThemedText style={styles.footerText}>Tu n'as pas de compte? </ThemedText>

@@ -60,8 +60,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         const isAuthenticated = await authService?.isAuthenticated();
         if (isAuthenticated) {
             const user = await authService?.getUser();
-            set({user, isAuthenticated});
-            set({isAuthCheckCompleted:true});
+            set({user, isAuthenticated,isAuthCheckCompleted:true});
         } else {
 
             const storedAuth = await getStorageItemAsync(AUTH_TOKEN_KEY);
@@ -79,9 +78,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
                         set({
                             user: user,
                             isAuthenticated: true,
-                            rememberMe: true
+                            rememberMe: true,
+                            isAuthCheckCompleted:true,
                         });
-                        set({isAuthCheckCompleted:true});
                         return;
                     }
                 } catch (e) {
@@ -89,8 +88,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
                 }
             }
             // If not authenticated or no valid stored auth, set user to null
-            set({user: null, isAuthenticated: false});
-            set({isAuthCheckCompleted:true});
+            set({user: null, isAuthenticated: false,isAuthCheckCompleted:true});
         }
     },
     setRememberMe: async (value: boolean) => {

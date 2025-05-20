@@ -1,14 +1,14 @@
 import React, {useMemo} from "react";
 import {ActivityIndicator, Dimensions, FlatList, ScrollView, StyleSheet} from "react-native";
-import {ThemedText,ThemedView} from "@/components/ui/themed";
-import {SpecieListItem, CaptureDetails, ExtendableText,SpeciesImagePager } from "@/components/encyclopedia";
+import {ThemedText, ThemedView} from "@/components/ui/themed";
+import {CaptureDetails, ExtendableText, SpecieListItem, SpeciesImagePager} from "@/components/encyclopedia";
 import {ExtendableMap} from "@/components/ui/ExtendableMap";
 import {useGetSpecieByFamily} from "@/hooks/viewModels/useGetSpecieByFamily";
 import {useAuthStore} from "@/context/zustand/store/useAuthStore";
 import Capture from "@/model/domain/Capture";
 import Specie from "@/model/domain/Specie";
-import { SafeView } from "@/components/ui/SafeView";
-import { Colors } from "@/constants/Colors";
+import {SafeView} from "@/components/ui/SafeView";
+import {Colors} from "@/constants/Colors";
 
 interface SpeciesDetailScreenProps {
     capture: Capture | null;
