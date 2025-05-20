@@ -23,9 +23,7 @@ export function useGetSpecies(
         index: pageParam,
         count: pageSize,
       };
-      const v = await speciesRepository?.getAll(pageRequest);
-      console.log("species", v);
-      return v;
+      return await speciesRepository?.getAll(pageRequest);
     },
     getNextPageParam: (lastPage, allPages) => {
       if (!lastPage || lastPage.items.length < pageSize) {

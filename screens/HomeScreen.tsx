@@ -23,6 +23,7 @@ const {width: SCREEN_WIDTH} = Dimensions.get('window');
 export default function HomeScreen() {
     const { speciesRepository } = StubData.getInstance();
     const [location, setLocation] = useState<Location.LocationObject | null>(null);
+    const [isCameraActive, setIsCameraActive] = useState(false);
 
     const router = useRouter();
     useEffect(() => {
@@ -44,9 +45,9 @@ export default function HomeScreen() {
     const [activeView, setActiveView] = useState('camera');
     useFocusEffect(
         useCallback(() => {
-            setCapturedImage(null);
-            setBase64Image(null);
-             return () => {
+            setIsCameraActive(true);
+            return () => {
+                setIsCameraActive(false);
             };
         }, [])
     );
@@ -79,7 +80,6 @@ export default function HomeScreen() {
 
     const { setCurrentImageUri, setCurrentIdentifiedSpecies } = useSpeciesStore();
     
-    console.log('Identified Specie:', identifiedSpecie);
     useEffect(() => {
         if (capturedImage && !isFetching && !isLoading && identifiedSpecie) {
             setCurrentImageUri(capturedImage); 
@@ -95,7 +95,10 @@ export default function HomeScreen() {
                     <BlurSegmented tabsName={['Camera', 'Map']} onTabChange={switchView}/>
                 </View>
                 <Animated.View style={[styles.viewContainer, animatedStyle]}>
-                    <CameraView setBase64Image={setBase64Image} setCapturedImage={setCapturedImage} style={styles.camera}/>
+                    {isCameraActive
+                        && <CameraView setBase64Image={setBase64Image} setCapturedImage={setCapturedImage}
+                                       style={styles.camera} />
+                    }
                     {isFetching && (
                         <View style={styles.progressOverlay}>
                             <ARProgressIndicator width={SCREEN_WIDTH} height={SCREEN_WIDTH}/>
@@ -149,6 +152,7 @@ const styles = StyleSheet.create({
     camera: {
         flex: 1,
         width: '50%',
+        height: '100%'
     },
     map: {
         width: '50%',
