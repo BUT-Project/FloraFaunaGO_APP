@@ -1,18 +1,18 @@
 import React, {useMemo, useState} from 'react';
-import {Dimensions, Modal, Pressable, StyleSheet} from 'react-native';
+import {Dimensions, Modal, Pressable, StyleProp, StyleSheet, TouchableHighlight, ViewStyle} from 'react-native';
 import MapView, {Marker} from "react-native-maps";
 import {ThemedView} from '@/components/ui/themed/ThemedView';
 import {Ionicons} from '@expo/vector-icons';
 import Location from "@/model/domain/Location";
+import { ViewProps } from 'react-native-svg/lib/typescript/fabric/utils';
 
 const { width } = Dimensions.get('window');
 
 export type ExtendableMapProps = { 
     locations: Location[],
-    mapStyle: any,
-    style: any
+    mapStyle?: StyleProp<ViewStyle>,
+    style?: StyleProp<ViewStyle>
 }
-
 
 export function ExtendableMap({ locations, mapStyle, style }: ExtendableMapProps) {
     const [isExtended, setIsExtended] = useState(false);
@@ -36,18 +36,18 @@ export function ExtendableMap({ locations, mapStyle, style }: ExtendableMapProps
 
     return (
         <>
-            <ThemedView style={style}>
-                <Pressable onLongPress={() => setIsExtended(true)}>
-                    <MapView
-                        style={mapStyle}
-                        initialRegion={initialRegion}
-                        liteMode={true}
-                    >
-                        {markers}
-                    </MapView>
-                </Pressable>
-             
-            </ThemedView>
+                <ThemedView style={[styles.container,style]}>
+                    <TouchableHighlight onLongPress={() => setIsExtended(true)} style={{flex:1}}>
+                        <MapView
+                            style={[styles.map,mapStyle]}
+                            initialRegion={initialRegion}
+                            liteMode={true}
+                        >
+                            {markers}
+                        </MapView>
+                    </TouchableHighlight>
+
+                </ThemedView>
             <Modal animationType="fade" transparent={true} visible={isExtended}>
                 <ThemedView style={styles.modal}>
                     <Pressable style={styles.closeButton} onPress={() => setIsExtended(false)}>
@@ -68,6 +68,13 @@ export function ExtendableMap({ locations, mapStyle, style }: ExtendableMapProps
 }
 
 const styles = StyleSheet.create({
+    container:{
+        width:150,
+        aspectRatio:1
+    },
+    map:{
+        flex:1
+    },
     modal: {
         flex:1,
         justifyContent: 'center',

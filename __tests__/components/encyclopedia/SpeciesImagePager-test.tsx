@@ -1,5 +1,5 @@
 import {render} from '@testing-library/react-native';
-import SpeciesImagePager from "@/components/encyclopedia/SpeciesImagePager";
+import SpeciesImagePager from "@/components/encyclopedia/DetailsHeader";
 import { 
     Capture,
     Specie,

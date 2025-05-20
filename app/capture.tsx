@@ -6,7 +6,6 @@ import CaptureScreen from '@/screens/CaptureScreen';
 export default function Capture() {
     const imageUri = useSpeciesStore((state) => state.currentImageUri);
     const { resetState } = useSpeciesStore();
-
     const router = useRouter();
 
     const onResult = (Success:Boolean) => {
