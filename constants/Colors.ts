@@ -18,6 +18,7 @@ export const Colors = {
     error: '#e74c3c',
     warning: '#f1c40f',
     success: '#2ecc71',
+    card:'#d2f8d2'
   },
   dark: {
     text: '#F1F5F9',
@@ -28,6 +29,8 @@ export const Colors = {
     tabIconSelected: tintColorDark,
     error: "#922b21",
     warning: "#b9770e",
-    success: "#145a32"
+    success: "#145a32",
+    card:'#add8e6'
+
   },
 };

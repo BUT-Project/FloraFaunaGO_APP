@@ -35,7 +35,6 @@ export default function SettingsScreen() {
     };
 
     return (
-             <SafeAreaView>
         <SafeView style={styles.container} disableTopInset>
         <ThemedView  style={{flex: 1}}>
         <LinearGradient
@@ -76,9 +75,7 @@ export default function SettingsScreen() {
                 </TouchableOpacity>
             </LinearGradient>
             </ThemedView>
-        </SafeView>
-        </SafeAreaView>
-)}
+        </SafeView>)}
 const styles = StyleSheet.create({
     container: {
         display:"flex",
