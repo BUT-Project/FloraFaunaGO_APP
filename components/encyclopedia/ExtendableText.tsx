@@ -15,7 +15,7 @@ export function ExtendableText({ text, textStyle, style }: ExtendableTextProps) 
     const [isExtended, setIsExtended] = useState(false);
     return (
         <>
-            <TouchableOpacity style={style} onPress={() => setIsExtended(true)}>
+            <TouchableOpacity style={[styles.baseContainer,style]} onPress={() => setIsExtended(true)}>
                <ThemedText style={textStyle}>{text}</ThemedText>
                <ThemedView style={styles.icon}>
                     <Ionicons name={'chevron-forward'} size={30} color={'#fff'}/>
@@ -70,5 +70,10 @@ const styles = StyleSheet.create({
         alignSelf:"flex-end",
         padding: 5, 
         borderRadius: 5, 
-    }
+    },
+    baseContainer: {
+        padding: 5,
+        borderRadius: 15,
+        overflow: "hidden",
+    },
 });

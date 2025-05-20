@@ -1,32 +1,29 @@
-import React, {useMemo} from "react";
-import {ActivityIndicator, Dimensions, FlatList, ScrollView, StyleSheet} from "react-native";
-import {ThemedText,ThemedView} from "@/components/ui/themed";
-import {SpecieListItem, CaptureDetails, ExtendableText,SpeciesImagePager } from "@/components/encyclopedia";
-import {ExtendableMap} from "@/components/ui/ExtendableMap";
-import {useGetSpecieByFamily} from "@/hooks/viewModels/useGetSpecieByFamily";
-import {useAuthStore} from "@/context/zustand/store/useAuthStore";
-import Capture from "@/model/domain/Capture";
-import Specie from "@/model/domain/Specie";
-import { SafeView } from "@/components/ui/SafeView";
+import { Dimensions, StyleSheet, FlatList } from "react-native";
+import React, { useMemo } from "react";
+import Animated, {
+  useAnimatedRef,
+  useAnimatedScrollHandler,
+  useSharedValue,
+} from "react-native-reanimated";
+import { ThemedText, ThemedView } from "@/components/ui/themed";
+import { Capture ,Specie } from "@/model/domain";
+import { useAuthStore } from "@/context/zustand/store/useAuthStore";
+import { CaptureDetails, ExtendableText, FamilyList, DetailsHeader, NotCaptured } from "@/components/encyclopedia";
+import { ExtendableMap } from "@/components/ui/ExtendableMap";
 import { Colors } from "@/constants/Colors";
+import { SafeView } from "@/components/ui/SafeView";
+
+const {width} = Dimensions.get('window');
 
 interface SpeciesDetailScreenProps {
     capture: Capture | null;
     specie: Specie;
-}
+};
 
-const {width} = Dimensions.get('window');
-const itemSize = (width / 3) - 10;
-
-export default function SpeciesDetailScreen({specie,capture}: SpeciesDetailScreenProps) {
-    const {
-        captures: family,
-        isLoading: isFamLoading,
-        fetchMoreData,
-        error: errorFam,
-        isListEnd,
-        isLoadingMore
-    } = useGetSpecieByFamily(specie.family, capture?.id);
+const SpeciesDetailScreen = ({capture,specie}:SpeciesDetailScreenProps) => {
+  const scrollRef = useAnimatedRef<Animated.ScrollView>();
+  const scrollOffset = useSharedValue(0);
+   
     const user = useAuthStore((state) => state.user);
     if (!user) {
         throw new Error("User not found")
@@ -37,7 +34,7 @@ export default function SpeciesDetailScreen({specie,capture}: SpeciesDetailScree
 
     const isCaptured = useMemo(() => capture != null, [capture]);
 
-    const oldestCapture = React.useMemo(() => {
+    const oldestCapture = useMemo(() => {
         if (capture) {
             if (capture.capturesDetails?.length > 0) {
                 return capture.capturesDetails?.reduce((oldest, current) => {
@@ -47,141 +44,98 @@ export default function SpeciesDetailScreen({specie,capture}: SpeciesDetailScree
         } else return null;
     }, [capture?.capturesDetails]);
 
-    if (errorFam) {
-        console.error(errorFam);
-    }
+    const scrollHandler = useAnimatedScrollHandler({
+        onScroll: (event) => {
+            scrollOffset.value = event.contentOffset.y;
+        },
+    });
+
     return (
-        <SafeView disableBottomInset>
-            <ScrollView>
-                <ThemedView style={styles.container}>
-                    <SpeciesImagePager capture={capture} specie={specie}/>
-                    <ThemedView style={styles.section}>
-                        <ThemedView style={styles.row}>
-                            <ThemedView style={styles.halfVerticalContainer}>
-                                <ThemedView style={styles.infoRow}>
-                                    <ThemedText>Reigne :</ThemedText>
-                                    <ThemedText
-                                        style={styles.bold}>{isCaptured ? specie.kingdom.toString() : "?"}</ThemedText>
-                                </ThemedView>
-                                <ThemedView style={styles.infoRow}>
-                                    <ThemedText>Class :</ThemedText>
-                                    <ThemedText
-                                        style={styles.bold}>{isCaptured ? specie.class.toString() : "?"}</ThemedText>
-                                </ThemedView>
-
-                            </ThemedView>
-                            <ThemedView style={styles.halfVerticalContainer}>
-                                <ThemedView style={styles.infoRow}>
-                                    <ThemedText>Famille :</ThemedText>
-                                    <ThemedText
-                                        style={styles.bold}>{isCaptured ? specie.family.toString() : "?"}</ThemedText>
-                                </ThemedView>
-                                <ThemedView style={styles.infoRow}>
-                                    <ThemedText>Régime :</ThemedText>
-                                    <ThemedText
-                                        style={styles.bold}>{isCaptured ? specie.diet.toString() : "?"}</ThemedText>
-                                </ThemedView>
-                            </ThemedView>
-                        </ThemedView>
-
-                        <ThemedView style={styles.infoRow}>
-                            <ThemedText>Habitat :</ThemedText>
-                            <ThemedText style={styles.bold}>
-                                {isCaptured ? specie.habitat.climate.toString() : "?"},
-                                {isCaptured ? specie.habitat.zone : "?"}
-                            </ThemedText>
-                        </ThemedView>
-
-                    </ThemedView>
-
-                    <ThemedView style={styles.sectionRow}>
-                        <ExtendableText
-                            text={isCaptured ? specie.description : "Capturez-le pour en apprendre plus ! 🧐"}
-                            style={styles.descContainer}
-                            textStyle={styles.description}
-                        />
-                        <ExtendableMap locations={specie.locations} mapStyle={styles.map}
-                                        style={styles.mapContainer}/>
-                    </ThemedView>
-                    <ThemedView style={styles.section}>
-                        <ThemedText type={"defaultSemiBold"}>Famille :</ThemedText>
-                        {isFamLoading ?
-                            <ThemedView>
-                                <ActivityIndicator size={'small'}/>
-                            </ThemedView>
-                            :
-                            <FlatList
-                                data={family}
-                                keyExtractor={(item) => `FamilyMember-${item.id}`}
-                                renderItem={(specie) => (
-                                        <SpecieListItem specie={specie.item}
-                                                        captureId={capturedSpecie?.find(captureIn => captureIn.specie.id === specie.item.id)?.id ?? null} />
-                                    )
-                                }
-                                ListEmptyComponent={() => (
-                                    <ThemedView style={styles.emptyFam}>
-                                        <ThemedText>Aucune espèce trouvée</ThemedText>
-                                    </ThemedView>
-                                )}
-                                ListFooterComponent={() =>
-                                    family.length > 0 && (
-                                        <ThemedView style={styles.footerFam}>
-                                            {isListEnd &&
-                                                <ThemedText style={{textAlign: "center"}}>Pas plus de capture pour le
-                                                    moment.</ThemedText>}
-                                            {isLoadingMore && <ActivityIndicator size={"small"}/>}
-                                        </ThemedView>
-                                    )
-                                }
-                                onEndReached={fetchMoreData}
-                                onEndReachedThreshold={0.5}
-                                showsHorizontalScrollIndicator={false}
-                                horizontal={true}
-                            />
-                        }
-
-                    </ThemedView>
-                    {( capture && capture.capturesDetails.length > 0) ?
-                        <>
-                            <ThemedView style={styles.section}>
-                                <ThemedText type={"defaultSemiBold"}>Vos captures :</ThemedText>
-                                <FlatList
-                                    data={capture.capturesDetails}
-                                    renderItem={({item}) => (
-                                        <CaptureDetails captureDetail={item}/>
-                                    )}
-                                    keyExtractor={(item) => `CaptureDetail-${item.id}`}
-                                    horizontal={true}
-                                    showsHorizontalScrollIndicator={false}
-                                />
-
-
-                            </ThemedView>
-                            {oldestCapture &&
-                                <ThemedText style={styles.captureDate}>Date de capture
-                                    : {oldestCapture.date.toLocaleDateString()}</ThemedText>
-                            }
-                        </>
-                        :
-                        <ThemedView style={styles.section}>
-                            <ThemedText style={styles.captureDate}>Vous n'avez pas encore capturé cette espèce. Regardez
-                                la carte plus haut pour voir où vous pouvez le trouver !</ThemedText>
-                        </ThemedView>
-                    }
+    <SafeView disableBottomInset>
+        <Animated.ScrollView
+            ref={scrollRef}
+            onScroll={scrollHandler}
+            scrollEventThrottle={16}
+            stickyHeaderIndices={[0]}
+            contentContainerStyle={styles.container}
+        >
+        <DetailsHeader capture={capture} specie={specie}  />
+        { isCaptured ? 
+        <>
+              <ThemedView style={styles.section}>
+            <ThemedText type={"defaultSemiBold"}>Classification scientifique :</ThemedText>
+            <ThemedView style={styles.row}>
+                <ThemedView style={styles.halfVerticalContainer}>
+                    <ThemedText>Reigne :<ThemedText style={styles.bold}> {specie.kingdom}</ThemedText></ThemedText> 
+                    <ThemedText>Classe : <ThemedText style={styles.bold}>{specie.class}</ThemedText></ThemedText>
                 </ThemedView>
-            </ScrollView>
-        </SafeView>
-    );
+                <ThemedView style={styles.halfVerticalContainer}>
+                    <ThemedText>Famille :  <ThemedText style={styles.bold}>{specie.family.toString()}</ThemedText></ThemedText>
+                    <ThemedText>Régime : <ThemedText style={styles.bold}>{specie.diet.toString()}</ThemedText></ThemedText>
+                </ThemedView>
+            </ThemedView>
+            <ThemedText>
+                Habitat : <ThemedText style={styles.bold}> {specie.habitat.climate}, {specie.habitat.zone}</ThemedText>
+            </ThemedText>
+        </ThemedView>
+        <ThemedView style={styles.sectionRow}>
+            <ExtendableText
+                text={specie.description}
+                style={styles.descContainer}
+                textStyle={styles.description}
+            />
+            <ExtendableMap 
+                locations={specie.locations} 
+                mapStyle={styles.map} 
+                style={styles.mapContainer}
+                />
+        </ThemedView>
+        <ThemedView style={styles.section}>
+            <FamilyList family={specie.family} captureId={capture?.id} userCaptures={capturedSpecie}/>
+        </ThemedView>
+        {( capture && capture.capturesDetails.length > 0) ?
+            <>
+                <ThemedView style={styles.section}>
+                    <ThemedText type={"defaultSemiBold"}>Vos captures :</ThemedText>
+                    <FlatList
+                        data={capture.capturesDetails}
+                        renderItem={({item}) => (
+                            <CaptureDetails captureDetail={item}/>
+                        )}
+                        keyExtractor={(item) => `CaptureDetail-${item.id}`}
+                        horizontal={true}
+                        showsHorizontalScrollIndicator={false}
+                    />
+                </ThemedView>
+                {oldestCapture &&
+                    <ThemedText style={styles.captureDate}>Date de capture
+                        : {oldestCapture.date.toLocaleDateString()}</ThemedText>
+                }
+            </>
+            :
+            <ThemedView style={styles.section}>
+                <ThemedText style={styles.captureDate}>Vous n'avez pas encore capturé cette espèce. Regardez
+                    la carte plus haut pour voir où vous pouvez le trouver !</ThemedText>
+            </ThemedView>
+        }
+        </>
+        :
+            <NotCaptured specie={specie}/>
+        }
+        </Animated.ScrollView>
+    </SafeView>
+  );
 };
+
+export default SpeciesDetailScreen;
 
 const styles = StyleSheet.create({
     container: {
         gap: 10,
-        flex: 1,
     },
     section: {
         gap: 5,
-        padding: 7,
+        paddingVertical: 5,
         paddingHorizontal: 10,
         borderBottomWidth: 1,
     },
@@ -192,9 +146,8 @@ const styles = StyleSheet.create({
     sectionRow: {
         flexDirection: "row",
         gap: 10,
-        padding: 5,
+        paddingVertical: 5,
         paddingHorizontal: 10,
-        borderBottomWidth: 1,
     },
     halfVerticalContainer: {
         flexDirection: "column",
@@ -204,11 +157,8 @@ const styles = StyleSheet.create({
     },
     descContainer: {
         width: (width / 2) - 15,
-        padding: 5,
-        borderRadius: 15,
         aspectRatio: 1,
-        overflow: "hidden",
-        backgroundColor: Colors.light.tint,
+        backgroundColor: Colors.light.surface,
     },
     description: {
         color: "#FFF",
@@ -232,26 +182,8 @@ const styles = StyleSheet.create({
         alignSelf: "center",
         marginBottom: 10,
     },
-    infoRow: {
-        flexDirection: "row",
-        gap: 5,
-    },
     bold: {
         fontWeight: "600",
         flexWrap: "wrap"
-    },
-    emptyFam: {
-        width: width,
-        justifyContent: "center",
-        alignItems: "center"
-    },
-    footerFam: {
-        margin: 5,
-        width: itemSize,
-        height: itemSize,
-        alignItems: "center",
-        justifyContent: "center",
-        borderWidth: 1,
-        borderRadius: 10,
     },
 });

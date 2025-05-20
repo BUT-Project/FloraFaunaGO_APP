@@ -80,7 +80,6 @@ export default function HomeScreen() {
 
     const { setCurrentImageUri, setCurrentIdentifiedSpecies } = useSpeciesStore();
     
-    console.log('Identified Specie:', identifiedSpecie);
     useEffect(() => {
         if (capturedImage && !isFetching && !isLoading && identifiedSpecie) {
             setCurrentImageUri(capturedImage); 
