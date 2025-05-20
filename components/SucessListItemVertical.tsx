@@ -1,4 +1,4 @@
-import {StyleSheet, TouchableOpacity} from 'react-native';
+import {StyleSheet, TouchableOpacity, useColorScheme} from 'react-native';
 import {AnimatedCircularProgress} from "react-native-circular-progress";
 import {useThemeColor} from "@/hooks/useThemeColor";
 import {Success} from "@/model/domain/Success";
@@ -7,6 +7,7 @@ import {ThemedView} from "@/components/ui/themed/ThemedView";
 import {ThemedText} from "@/components/ui/themed/ThemedText";
 import SuccessDetailScreen from "@/screens/SuccessDetailScreen";
 import {useState} from "react";
+import { Colors } from '@/constants/Colors';
 
 type SucessListItemsProps = {
     items : Success;
@@ -14,8 +15,7 @@ type SucessListItemsProps = {
 
 export default function SucessListItemVertical(props:SucessListItemsProps){
     const tintColor = useThemeColor({ light: 'black', dark: 'white' }, 'background');
-    const color = useThemeColor({ light: 'black', dark: 'white' }, 'background');
-    const backgroundColor = useThemeColor({ light: 'black', dark: 'white' }, 'background');
+    const col = useColorScheme()
     const [modalVisible, setModalVisible] = useState(false);
 
     return(
@@ -33,8 +33,8 @@ export default function SucessListItemVertical(props:SucessListItemsProps){
                             size={100}
                             width={10}
                             fill={Number(((props.items.actualVal/props.items.objectif) * 100).toFixed(2))}
-                            tintColor="#2C9F54"
-                            backgroundColor="#DADADA">
+                            tintColor={'#2C9F54'}
+                            backgroundColor={'lightgrey'}>
                             {
                                 
                                 (fill) => (
@@ -43,7 +43,7 @@ export default function SucessListItemVertical(props:SucessListItemsProps){
                                 )
                             }
                         </AnimatedCircularProgress>
-                        <ThemedText style={[styles.text, {color}]}>{props.items.nom}</ThemedText>
+                        <ThemedText style={[styles.text, {tintColor}]}>{props.items.nom}</ThemedText>
                     </ThemedView>
             </TouchableOpacity>
         </>

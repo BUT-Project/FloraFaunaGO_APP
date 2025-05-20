@@ -36,7 +36,9 @@ export default function SuccessDetailScreen( { visible, onClose, sucess }: Suces
                                 <ThemedView
                                     style={[
                                         styles.progressFill,
-                                        { width: `${Number((sucess.actualVal/sucess.objectif * 100).toFixed(2))}%` }                                    ]}
+                                        
+                                        {  
+                                            width: `${Number((sucess.actualVal/sucess.objectif * 100).toFixed(2))}%` }                                    ]}
                                 />
                             </ThemedView>
                         </ThemedView>
