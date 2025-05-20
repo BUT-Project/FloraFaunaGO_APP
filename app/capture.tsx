@@ -8,7 +8,6 @@ export default function Capture() {
     const imageUri = useSpeciesStore((state) => state.currentImageUri);
     const identifiedSpecies = useSpeciesStore((state) => state.identifiedSpecies);
     const { resetState } = useSpeciesStore();
-
     console.log("specie",identifiedSpecies)
     const router = useRouter();
 
