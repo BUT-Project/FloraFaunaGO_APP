@@ -10,7 +10,6 @@ export const useRegisterViewModel = (
     repository?: IAuthService
 ) => {
     const register = useAuthStore((state) => state.register);
-    const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [failedSignup, setFailedSignup] = useState(false);
@@ -30,7 +29,6 @@ export const useRegisterViewModel = (
         setFailedSignup(false);
 
         const result = registerSchema.safeParse({
-            name: username,
             email,
             password,
         });
@@ -42,12 +40,12 @@ export const useRegisterViewModel = (
             return false;
         }
         return true;
-    }, [username, email, password]);
+    }, [ email, password]);
 
     const submitForm = useCallback(async () => {
         if (validateForm()) {
             try {
-                await register(email,username,password);
+                await register(email,password);
                 setFailedSignup(false);
                 await playSound();
                 router.replace('/(tabs)');
@@ -61,12 +59,10 @@ export const useRegisterViewModel = (
             }
 
         }
-    }, [validateForm, email, password, username, playSound]);
+    }, [validateForm, email, password, playSound]);
 
 
     return {
-        username,
-        setUsername,
         email,
         setEmail,
         password,

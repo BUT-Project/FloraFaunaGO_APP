@@ -16,8 +16,6 @@ export default function RegisterScreen() {
     const tintColor = useThemeColor({}, 'tint');
 
     const {
-        username,
-        setUsername,
         email,
         setEmail,
         password,
@@ -33,13 +31,6 @@ export default function RegisterScreen() {
             {failedSignup && (
                 <ThemedText style={styles.errorText}>{errorMessage}</ThemedText>
             )}
-            <InputWithIcon
-                icon="user"
-                placeholder="Username"
-                value={username}
-                onChangeText={setUsername}
-                autoCorrect={false}
-            />
             <InputWithIcon
                 icon="envelope"
                 placeholder="Email"
