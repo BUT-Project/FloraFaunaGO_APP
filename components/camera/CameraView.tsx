@@ -1,27 +1,25 @@
 import {useCallback, useRef, useState} from "react";
-import { Alert, ViewStyle,StyleProp,StyleSheet, TouchableOpacity } from "react-native";
+import {Alert, ViewStyle, StyleProp, StyleSheet, TouchableOpacity} from "react-native";
 import {useCamera} from "@/components/camera/hooks";
-import {ThemedView,ThemedText} from "@/components/ui/themed";
+import {ThemedView, ThemedText} from "@/components/ui/themed";
 import {CameraView} from "expo-camera";
 import CameraControls from "@/components/camera/CameraControls";
-import { useIsFocused } from '@react-navigation/native';
 import Loading from "../ui/Loading";
 
 export interface CustomCameraViewProps {
-    setBase64Image: (base64: string | null) => void;    
+    setBase64Image: (base64: string | null) => void;
     setCapturedImage: (image: string | null) => void;
-    style? : StyleProp<ViewStyle>;
+    style?: StyleProp<ViewStyle>;
 };
 
-const CustomCameraView = ({setBase64Image,setCapturedImage,style}:CustomCameraViewProps) => {
-    const isFocused = useIsFocused();
+const CustomCameraView = ({setBase64Image, setCapturedImage, style}: CustomCameraViewProps) => {
 
     const {facing, toggleCameraFacing, permission, requestPerm} = useCamera();
     const cameraRef = useRef<CameraView>(null);
     const [zoom, setZoom] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
     const [isCameraReady, setIsCameraReady] = useState(false);
-   
+
     const handleCameraReady = useCallback(() => {
         setIsCameraReady(true);
     }, []);
@@ -29,7 +27,7 @@ const CustomCameraView = ({setBase64Image,setCapturedImage,style}:CustomCameraVi
     const handleCapturePress = async () => {
         setIsLoading(true);
         const shouldUseMock = __DEV__ && (!isCameraReady || !cameraRef.current);
-        
+
         if ((!isCameraReady || !cameraRef.current) && !shouldUseMock) {
             Alert.alert('Camera not ready or already capturing');
             return;
@@ -40,10 +38,10 @@ const CustomCameraView = ({setBase64Image,setCapturedImage,style}:CustomCameraVi
                 // ✅ Image factice pour les tests en développement
                 photo = {
                     uri: 'https://via.placeholder.com/300.png?text=Mock+Image',
-                    base64: "dazpdoazopdazpodkoazp", 
+                    base64: "dazpdoazopdazpodkoazp",
                 };
             } else {
-                photo = await cameraRef.current?.takePictureAsync({ base64: true });
+                photo = await cameraRef.current?.takePictureAsync({base64: true});
             }
             setCapturedImage(photo?.uri ?? null);
             setBase64Image(photo?.base64 ?? null);
@@ -54,41 +52,42 @@ const CustomCameraView = ({setBase64Image,setCapturedImage,style}:CustomCameraVi
         }
     };
 
-    if(!permission){
-        return (<Loading style={[styles.container,style]} text="Récupération des permissions ..."/>);
+    if (!permission) {
+        return (<Loading style={[styles.container, style]} text="Récupération des permissions ..."/>);
     }
     if (permission && !permission.granted) {
         return (
-            <ThemedView style={[styles.container,style]}>
-                <ThemedText style={styles.message}>Nous avons besoin de votre permission pour utiliser la caméra de l'appareil.</ThemedText>
+            <ThemedView style={[styles.container, style]}>
+                <ThemedText style={styles.message}>Nous avons besoin de votre permission pour utiliser la caméra de
+                    l'appareil.</ThemedText>
                 <TouchableOpacity style={styles.permissionButton} onPress={requestPerm}>
                     <ThemedText style={styles.permissionButtonText}>Accorder la permission</ThemedText>
                 </TouchableOpacity>
             </ThemedView>
         );
-    };
-    
+    }
+    ;
+
     return (
-        <ThemedView style={[styles.container,style]}>
-             {isFocused && (
-                <CameraView 
-                    style={styles.camera}
-                    facing={facing}
-                    ref={cameraRef}
-                    zoom={zoom}
-                    onCameraReady={handleCameraReady}
-                />
-            )}
+        <ThemedView style={[styles.container, style]}>
+            <CameraView
+                style={styles.camera}
+                facing={facing}
+                ref={cameraRef}
+                zoom={zoom}
+                onCameraReady={handleCameraReady}
+            />
             <CameraControls
                 facing={facing}
                 handleCapturePress={handleCapturePress}
                 toggleCameraFacing={toggleCameraFacing}
-                handleCaptureRelease={()=>{}}
+                handleCaptureRelease={() => {
+                }}
                 isLoading={isLoading}
                 zoom={zoom}
                 setZoom={setZoom}
             />
-        </ThemedView>       
+        </ThemedView>
     );
 }
 

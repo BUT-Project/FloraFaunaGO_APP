@@ -1,11 +1,12 @@
 import React from 'react';
-import {Platform, StyleSheet, Text, TouchableOpacity, View,} from 'react-native';
+import {Platform, StyleSheet, TouchableOpacity} from 'react-native';
 import normalize from '@/components/ui/responsive/Normalize';
 import {Link} from "expo-router";
 import {Entypo, FontAwesome} from "@expo/vector-icons";
 import {InputWithIcon} from "@/components/ui/InputWithIcon";
 import {useLoginViewModel} from "@/hooks/viewModels/auth/useLoginViewModel";
-import { ThemedView } from '@/components/ui/themed';
+import {ThemedText, ThemedView} from "@/components/ui/themed";
+import {useThemeColor} from "@/hooks/useThemeColor";
 
 export interface LoginCredentials {
     email: string;
@@ -13,6 +14,9 @@ export interface LoginCredentials {
 }
 
 export default function LoginScreen() {
+    const textColor = useThemeColor({}, 'text');
+    const tintColor = useThemeColor({}, 'tint');
+
     const {
         username,
         setUsername,
@@ -27,9 +31,10 @@ export default function LoginScreen() {
 
     return (
         <ThemedView style={styles.content}>
-            <Text style={styles.title}>SE CONNECTER</Text>
+
+            <ThemedText style={[styles.title, {color: textColor}]}>SE CONNECTER</ThemedText>
             {failedLogin && (
-                <Text style={styles.errorText}>Email ou mot de passe incorrect!</Text>
+                <ThemedText style={styles.errorText}>Email ou mot de passe incorrect!</ThemedText>
             )}
             <InputWithIcon
                 icon="user"
@@ -50,7 +55,7 @@ export default function LoginScreen() {
                 autoCapitalize="none"
                 autoCorrect={false}
             />
-            <View style={styles.rememberMeContainer}>
+            <ThemedView style={styles.rememberMeContainer}>
                 <TouchableOpacity
                     style={[styles.checkbox, rememberMe && styles.checkboxChecked]}
                     onPress={toggleRememberMe}
@@ -59,17 +64,21 @@ export default function LoginScreen() {
                         <FontAwesome name="check" color="white" size={14}/>
                     )}
                 </TouchableOpacity>
-                <Text style={styles.rememberMeText}>SE SOUVENIR DE MOI</Text>
-            </View>
-            <TouchableOpacity style={styles.button} onPress={submitForm} disabled={isLoading}>
-                <Entypo name="check" size={40} color="#AFEDEC"/>
+                <ThemedText style={styles.rememberMeText}>SE SOUVENIR DE MOI</ThemedText>
+            </ThemedView>
+            <TouchableOpacity
+                style={[styles.button, {backgroundColor: textColor}]}
+                onPress={submitForm}
+                disabled={isLoading}
+            >
+                <Entypo name="check" size={40} color={tintColor}/>
             </TouchableOpacity>
-            <View style={styles.footer}>
-                <Text style={styles.footerText}>Tu n'as pas de compte? </Text>
+            <ThemedView style={styles.footer}>
+                <ThemedText style={styles.footerText}>Tu n'as pas de compte? </ThemedText>
                 <Link href="/register" replace>
-                        <Text style={styles.linkText}>S'inscrire</Text>
+                    <ThemedText style={[styles.linkText, {color: tintColor}]}>S'inscrire</ThemedText>
                 </Link>
-            </View>
+            </ThemedView>
         </ThemedView>
     );
 }
@@ -82,7 +91,6 @@ const styles = StyleSheet.create({
     title: {
         fontWeight: 'bold',
         fontSize: normalize(29),
-        color: 'white',
         marginBottom: normalize(20),
     },
     errorText: {
@@ -114,10 +122,8 @@ const styles = StyleSheet.create({
     rememberMeText: {
         fontWeight: 'bold',
         fontSize: normalize(19),
-        color: 'white'
     },
     button: {
-        backgroundColor: 'white',
         width: normalize(100),
         height: normalize(100),
         borderRadius: 50,
@@ -142,11 +148,9 @@ const styles = StyleSheet.create({
     },
     footerText: {
         fontSize: normalize(18),
-        color: 'white',
     },
     linkText: {
         fontSize: normalize(18),
-        color: '#AFEDEC',
         textDecorationLine: 'underline',
     },
 });
