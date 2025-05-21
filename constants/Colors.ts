@@ -11,14 +11,14 @@ export const Colors = {
   light: {
     text: '#11181C',
     background: '#FFFFFF',
-    tint: '#d2f8d2',
+    tint: '#6DCB6D',
     icon: '#687076',
     tabIconDefault: '#687076',
     tabIconSelected: tintColorLight,
     error: '#e74c3c',
     warning: '#f1c40f',
     success: '#2ecc71',
-    card:'#d2f8d2'
+    card:'#6DCB6D'
   },
   dark: {
     text: '#F1F5F9',

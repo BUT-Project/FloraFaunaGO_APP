@@ -1,5 +1,7 @@
 import {BlurView} from 'expo-blur';
 import {ReactNode, useMemo, useState} from 'react';
+import { Colors } from "@/constants/Colors"
+import { useColorScheme } from 'react-native';
 import {
     LayoutChangeEvent,
     LayoutRectangle,
@@ -34,7 +36,7 @@ const TabBar = ({
                     withBlurryBG = false,
                 }: TabBarProps) => {
     const [visibleTab, setVisibleTab] = useState<number>(0);
-
+    const colorScheme = useColorScheme()
     const handleTabPress = (index: number) => {
         onTabPress(index);
         if (!IS_IOS) {
@@ -50,7 +52,7 @@ const TabBar = ({
     return (
         <View
             onLayout={onLayout}
-            style={[styles.tabBarCommon, styles.tabBar, styles.shadow]}
+            style={[{backgroundColor : Colors[(colorScheme ?? 'light') as 'light' | 'dark'].tint},styles.tabBarCommon, styles.tabBar, styles.shadow]}
         >
             {withBlurryBG && IS_IOS && (
                 <BlurView intensity={100} style={styles.absolute} />
@@ -259,7 +261,6 @@ const styles = StyleSheet.create({
     tabBar: {
         height: 48,
         marginHorizontal: 20,
-        backgroundColor: '#273C3D',
         opacity: 0.9,
         paddingHorizontal: BAR_X_PADDING,
     },
