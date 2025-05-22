@@ -1,17 +1,15 @@
-import {ThemedText} from "@/components/ui/themed/ThemedText";
-import {Button, Dimensions, FlatList, Image, StyleSheet, TouchableOpacity} from "react-native";
-import {useThemeColor} from "@/hooks/useThemeColor";
+import {Dimensions, FlatList, Image, StyleSheet, TouchableOpacity, useColorScheme} from "react-native";
 import React, {useEffect, useState} from "react";
 import SucessListItemVertical from "@/components/SucessListItemVertical";
-import {ThemedView} from "@/components/ui/themed/ThemedView";
+import {ThemedView,ThemedText} from "@/components/ui/themed";
 import {Link} from 'expo-router';
-import {TabBarIcon} from "@/components/navigation/TabBarIcon";
-import {AntDesign, FontAwesome5, FontAwesome6} from "@expo/vector-icons";
+import {AntDesign, FontAwesome5, FontAwesome6, Ionicons} from "@expo/vector-icons";
 import {Success} from "@/model/domain/Success";
 import StubData from "@/dal/StubLib/StubData";
 import {PagedRequest} from "@/shared/PagedRequest";
 import {useAuthStore} from "@/context/zustand/store/useAuthStore";
 import { SafeView } from "@/components/ui/SafeView";
+import { Colors } from "@/constants/Colors";
 
 let ProfileImage: {};
 ProfileImage = require("../assets/images/ProfileImage.jpeg");
@@ -23,8 +21,10 @@ export default function ProfilScreen() {
     const [loading, setLoading] = useState(false);
     const [totalPages, setTotalPages] = useState(1);
 
-    const user = useAuthStore((state)=>state.user);
+    const colorScheme =  useColorScheme() ?? 'light';
+    const theme = Colors[colorScheme];
 
+    const user = useAuthStore((state)=>state.user);
 
     const fetchSuccesses = async (currentPage: number) => {
         setLoading(true);
@@ -48,13 +48,11 @@ export default function ProfilScreen() {
     }, [page]);
 
 
-    const tintColor = useThemeColor({light: 'black', dark: 'white'}, 'background');
-
     const renderHeader = () => (
         <ThemedView>
             <Link href={"/(profil)/settings"}  style={{ alignSelf: "flex-end",}} asChild>
                 <TouchableOpacity>
-                    <TabBarIcon size={30} name="settings" style={[styles.settings, {color: tintColor}]}/>
+                    <Ionicons size={30} name="settings" color={theme.text} style={styles.settings}/>
                 </TouchableOpacity>
             </Link>
 
@@ -70,19 +68,19 @@ export default function ProfilScreen() {
             </ThemedView>
 
             <ThemedView style={styles.container}>
-                <FontAwesome5 size={32} name="walking" style={[styles.settings, {color: tintColor}]}/>
+                <FontAwesome5 size={32} name="walking" style={[styles.settings, {color: theme.text}]}/>
                 <ThemedText style={styles.text}>  Distance marchées </ThemedText>
             </ThemedView>
             <ThemedView style={styles.container}>
-                <FontAwesome6 size={30} name="circle-question" style={[styles.settings, {color: tintColor}]}/>
+                <FontAwesome6 size={30} name="circle-question" style={[styles.settings, {color: theme.text}]}/>
                 <ThemedText style={styles.text}>Espèces découvertes</ThemedText>
             </ThemedView>
             <ThemedView style={styles.container}>
-                <FontAwesome5 size={30} name="dna" style={[styles.settings, {color: tintColor}]}/>
+                <FontAwesome5 size={30} name="dna" style={[styles.settings, {color: theme.text}]}/>
                 <ThemedText style={styles.text}> Familles complétées</ThemedText>
             </ThemedView>
             <ThemedView style={styles.container}>
-                <AntDesign size={30} name="clockcircleo" style={[styles.settings, {color:tintColor}]}/>
+                <AntDesign size={30} name="clockcircleo" style={[styles.settings, {color:theme.text}]}/>
                 <ThemedText style={styles.text}>Date d'inscription</ThemedText>
             </ThemedView>
             <ThemedView style={styles.lineContainer}>
@@ -90,17 +88,27 @@ export default function ProfilScreen() {
                 <ThemedText type={"title"} style={styles.title} >Succès</ThemedText><ThemedView style={styles.line} />
             </ThemedView>
             <ThemedView style={styles.pagination}>
-                <Button
-                    title="<"
+                <TouchableOpacity
                     onPress={() => setPage((prev) => Math.max(prev - 1, 1))}
                     disabled={page === 1}
-                />
+                >
+                    <Ionicons 
+                        name="chevron-back-circle"
+                        color={page === 1? theme.successBackground : theme.tint}
+                        size={40}
+                    />
+                </TouchableOpacity>
                 <ThemedText style={styles.pageInfo}>Page {page} sur {totalPages}</ThemedText>
-                <Button
-                    title=">"
+                <TouchableOpacity
                     onPress={() => setPage((prev) => Math.min(prev + 1, totalPages))}
                     disabled={page === totalPages}
-                />
+                >
+                    <Ionicons 
+                        name="chevron-forward-circle" 
+                        color={page === totalPages ? theme.successBackground : theme.tint}
+                        size={40}
+                    />
+                </TouchableOpacity>
             </ThemedView>
         </ThemedView>
 
@@ -108,20 +116,24 @@ export default function ProfilScreen() {
 
     return (
         <SafeView disableBottomInset>
-                <FlatList
-                    style={styles.list}
-                    data={Successes?? []}
-                    keyExtractor={(item) => item.nom}
-                    renderItem={({item}) => <SucessListItemVertical items={item}/>}
-                    numColumns={3}
-                    ListHeaderComponent={renderHeader}
-                    columnWrapperStyle={{ justifyContent: "center", marginBottom: 10 }}
-                />
+            <FlatList
+                style={styles.list}
+                data={Successes?? []}
+                keyExtractor={(item) => item.nom}
+                renderItem={({item}) => <SucessListItemVertical items={item}/>}
+                numColumns={3}
+                ListHeaderComponent={renderHeader}
+                columnWrapperStyle={styles.listWrapper}
+            />
         </SafeView>
     );
 }
 
 const styles = StyleSheet.create({
+    listWrapper:{
+        justifyContent: "center",
+        marginBottom: 10
+    },
     lineContainer: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -190,4 +202,8 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: '#666',
     },
+    button:{
+        borderRadius:30,
+
+    }
 });

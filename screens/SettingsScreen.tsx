@@ -1,14 +1,16 @@
-import {Appearance, Pressable, StyleSheet, Switch, TouchableOpacity} from "react-native";
-import {ThemedText} from "@/components/ui/themed";
+import {Appearance, Pressable, SafeAreaView, StyleSheet, Switch, TouchableOpacity} from "react-native";
+import {ThemedText, ThemedView} from "@/components/ui/themed";
 import React, {useEffect, useState} from "react";
 import {LinearGradient} from 'expo-linear-gradient';
+import {Colors} from "@/constants/Colors";  
+import {useColorScheme} from "@/hooks/useColorScheme";
 import {useAuthStore} from "@/context/zustand/store/useAuthStore";
 import { SafeView } from "@/components/ui/SafeView";
 
 export default function SettingsScreen() {
+    const colorScheme = useColorScheme();
     const systemTheme = Appearance.getColorScheme();
     const [theme, setTheme] = useState(systemTheme || 'light'); // État du thème
-
     const logout = useAuthStore((state)=>state.logout);
     const [switchTheme, setSwitchTheme] = useState((theme === 'dark') ? true : false);
     const switchThemes = () => {
@@ -34,7 +36,12 @@ export default function SettingsScreen() {
 
     return (
         <SafeView style={styles.container} disableTopInset>
-            <LinearGradient style={{flex:1}}  colors={["#90EE90","#0D98BA"]}>
+        <ThemedView  style={{flex: 1}}>
+        <LinearGradient
+            style={{ flex: 1 }}
+            colors={[ Colors[(colorScheme ?? 'light') as 'light' | 'dark'].card, 
+            Colors[(colorScheme ?? 'light') as 'light' | 'dark'].background]}
+            >
                 <ThemedText type={"title"} style={styles.title}>Settings</ThemedText>
                 <Pressable onPress={switchChange} style={styles.button}>
                     <ThemedText type={"subtitle"} style={styles.buttonText}>Mode offline</ThemedText>
@@ -67,9 +74,8 @@ export default function SettingsScreen() {
                     <ThemedText type={"subtitle"} style={[styles.deleteText]}>Supprimer le compte</ThemedText>
                 </TouchableOpacity>
             </LinearGradient>
-        </SafeView>
-    );
-}
+            </ThemedView>
+        </SafeView>)}
 const styles = StyleSheet.create({
     container: {
         display:"flex",

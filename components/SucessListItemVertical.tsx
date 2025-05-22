@@ -1,21 +1,20 @@
-import {StyleSheet, TouchableOpacity} from 'react-native';
+import {StyleSheet, TouchableOpacity, useColorScheme} from 'react-native';
 import {AnimatedCircularProgress} from "react-native-circular-progress";
-import {useThemeColor} from "@/hooks/useThemeColor";
 import {Success} from "@/model/domain/Success";
 import {TabBarIcon} from "@/components/navigation/TabBarIcon";
-import {ThemedView} from "@/components/ui/themed/ThemedView";
-import {ThemedText} from "@/components/ui/themed/ThemedText";
+import {ThemedView,ThemedText} from "@/components/ui/themed";
 import SuccessDetailScreen from "@/screens/SuccessDetailScreen";
 import {useState} from "react";
+import { Colors } from '@/constants/Colors';
+import { Ionicons } from '@expo/vector-icons';
 
 type SucessListItemsProps = {
     items : Success;
 }
 
 export default function SucessListItemVertical(props:SucessListItemsProps){
-    const tintColor = useThemeColor({ light: 'black', dark: 'white' }, 'background');
-    const color = useThemeColor({ light: 'black', dark: 'white' }, 'background');
-    const backgroundColor = useThemeColor({ light: 'black', dark: 'white' }, 'background');
+    const colorScheme = useColorScheme()
+    const theme = Colors[colorScheme ?? "light"]
     const [modalVisible, setModalVisible] = useState(false);
 
     return(
@@ -26,28 +25,27 @@ export default function SucessListItemVertical(props:SucessListItemsProps){
                 sucess={props.items}
             />
             <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.itemsContainer}>
-
-
-                    <ThemedView style={styles.itemContainer} >
-                        <AnimatedCircularProgress
-                            size={100}
-                            width={10}
-                            fill={Number(((props.items.actualVal/props.items.objectif) * 100).toFixed(2))}
-                            tintColor="#2C9F54"
-                            backgroundColor="#DADADA">
-                            {
-                                
-                                (fill) => (
-                                    //@ts-ignore
-                                    <TabBarIcon size={35} name={props.items.image} style={[styles.image,{color:tintColor}]}  />
-                                )
-                            }
-                        </AnimatedCircularProgress>
-                        <ThemedText style={[styles.text, {color}]}>{props.items.nom}</ThemedText>
-                    </ThemedView>
+                <ThemedView style={styles.itemContainer} >
+                    <AnimatedCircularProgress
+                        size={100}
+                        width={10}
+                        fill={Number(((props.items.actualVal/props.items.objectif) * 100).toFixed(2))}
+                        tintColor={theme.card}
+                        backgroundColor={theme.successBackground}
+                    >
+                        {()=>
+                            <TabBarIcon
+                                size={35}
+                                name={props.items.image as  keyof typeof Ionicons.glyphMap}
+                                color={theme.text}
+                                style={styles.image}
+                            />
+                        }
+                    </AnimatedCircularProgress>
+                    <ThemedText style={styles.text}>{props.items.nom}</ThemedText>
+                </ThemedView>
             </TouchableOpacity>
         </>
-
     );
 
 }

@@ -1,18 +1,22 @@
-import {ActivityIndicator, Button, FlatList, StyleSheet, View} from "react-native";
+import {ActivityIndicator, Button, FlatList, StyleSheet, useColorScheme, View} from "react-native";
 import {SpecieListItem,SearchBar,FilterModal} from "@/components/encyclopedia";
 import {useState} from "react";
 import {ThemedView, ThemedText} from "@/components/ui/themed";
 import {useGetSpecies} from "@/hooks/viewModels/useGetSpecies";
 import {useAuthStore} from "@/context/zustand/store/useAuthStore";
 import { SafeView } from "@/components/ui/SafeView";
+import { LinearGradient } from "expo-linear-gradient";
+import { Colors } from "@/constants/Colors";
 
 export default function EncyclopediaScreen() {
+    const colorScheme = useColorScheme();
     const [name,setName] = useState("")
     const {species=[],isLoading,isLoadingMore,error,isListEnd,refresh,fetchMoreData} = useGetSpecies("")
     const userCaptures = useAuthStore((state) => state.user?.captures);
 
     if (error) {
         return (
+            
         <View style={styles.errorContainer}>
             <ThemedText style={styles.errorText} type="subtitle">
                 {error.message || "Impossible de charger les espèces." || "Une erreur s'est produite."}
@@ -27,11 +31,19 @@ export default function EncyclopediaScreen() {
         );
     }
     return (
-        <SafeView disableBottomInset> 
+        <SafeView disableBottomInset>
+        <LinearGradient
+            style={{ flex: 1 }}
+            start={{x: 0, y: 0.75}}
+            end={{x: 1, y: 1.3}}
+            colors={[ Colors[colorScheme ?? 'light'].background, 
+            Colors[colorScheme ?? 'light'].card]}
+            >
             <ThemedView style={styles.header}>
                 <ThemedView style={styles.searchBar}>
                     <SearchBar search={name} setSearch={setName} placeholder={"Rechercher..."}/>
                 </ThemedView>
+
                 <FilterModal baseSpecies={species} setFilteredSpecies={()=>{}}/>
             </ThemedView>
             { isLoading ?
@@ -66,6 +78,8 @@ export default function EncyclopediaScreen() {
                     numColumns={3}
                 />
             }
+
+</LinearGradient>
         </SafeView>
     )
 }

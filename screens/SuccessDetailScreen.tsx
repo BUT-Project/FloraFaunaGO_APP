@@ -1,7 +1,8 @@
 import {ThemedView, ThemedText} from "@/components/ui/themed";
 import {Success} from "@/model/domain/Success";
-import {Modal, Pressable, ScrollView, StyleSheet } from "react-native";
+import {Modal, Pressable, ScrollView, StyleSheet, useColorScheme } from "react-native";
 import React from "react";
+import { Colors } from "@/constants/Colors";
 
 interface SucessDetailScreenProps {
     visible: boolean;
@@ -9,10 +10,9 @@ interface SucessDetailScreenProps {
     sucess: Success;
 }
 
-
-
 export default function SuccessDetailScreen( { visible, onClose, sucess }: SucessDetailScreenProps) {
-
+    const colorScheme =  useColorScheme()
+    const theme = Colors[colorScheme??"light"]
     return (
         <Modal visible={visible} transparent={true}  onRequestClose={onClose}>
             <Pressable  style={styles.overlay} onPress={onClose}>
@@ -35,7 +35,11 @@ export default function SuccessDetailScreen( { visible, onClose, sucess }: Suces
                                 <ThemedView
                                     style={[
                                         styles.progressFill,
-                                        { width: `${Number((sucess.actualVal/sucess.objectif * 100).toFixed(2))}%` }                                    ]}
+                                        {  
+                                            width: `${Number((sucess.actualVal/sucess.objectif * 100).toFixed(2))}%`,
+                                            backgroundColor: theme.tint
+                                        }                                    
+                                        ]}
                                 />
                             </ThemedView>
                         </ThemedView>
@@ -95,6 +99,5 @@ const styles = StyleSheet.create({
     },
     progressFill: {
         height: "100%",
-        backgroundColor: "#4caf50",
     },
 });
