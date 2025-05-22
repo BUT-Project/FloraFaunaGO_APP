@@ -2,7 +2,7 @@
 import {useCallback, useEffect, useState} from "react";
 import Animated, {useAnimatedStyle, useSharedValue, withSpring} from "react-native-reanimated";
 import {ThemedView} from "@/components/ui/themed";
-import {Dimensions, StyleSheet, View} from "react-native";
+import {Alert, Dimensions, StyleSheet, View} from "react-native";
 import { CameraView } from "@/components/camera";
 import ARProgressIndicator from "@/components/ARProgressIndicator";
 import MainMapView from "@/components/MainMapView";
@@ -17,6 +17,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { SuccessType } from "@/model/domain/SuccessType";
 import { processSuccessByType } from "@/shared/successHelper";
 import { SafeView } from "@/components/ui/SafeView";
+import {  isImageBlurry } from "@/services/imageQuality";
 
 
 const {width: SCREEN_WIDTH} = Dimensions.get('window');
@@ -38,6 +39,7 @@ export default function HomeScreen() {
         })();
     }, []);
 
+    
     const slideAnim = useSharedValue(0);
     const [capturedImage, setCapturedImage] = useState<string | null>(null);
     const [base64Image, setBase64Image] = useState<string | null>(null);
@@ -78,16 +80,33 @@ export default function HomeScreen() {
     }));
 
     const { setCurrentImageUri, setCurrentIdentifiedSpecies } = useSpeciesStore();
-    
-    console.log('Identified Specie:', identifiedSpecie);
+
     useEffect(() => {
-        if (capturedImage && !isFetching && !isLoading && identifiedSpecie) {
-            setCurrentImageUri(capturedImage); 
+        const verifyAndContinue = async () => {
+          if (!capturedImage || isFetching || isLoading || !identifiedSpecie) return;
+      
+          try {
+            const isBlurry = await isImageBlurry(capturedImage);
+      
+            if (isBlurry) {
+              Alert.alert(
+                "Image floue",
+                "Merci de reprendre une image plus nette."
+              );
+              return;
+            }
+      
+            setCurrentImageUri(capturedImage);
             setCurrentIdentifiedSpecies(identifiedSpecie);
             router.push('/capture');
-        }
-    }, [capturedImage, isFetching, isLoading, identifiedSpecie, router ]);
-
+          } catch (error) {
+            console.error("Erreur lors de la vérification de la netteté :", error);
+            // Optionnel: tu peux aussi alerter l'utilisateur ici si besoin
+          }
+        };
+      
+        verifyAndContinue();
+      }, [capturedImage, isFetching, isLoading, identifiedSpecie, router]);
     return (
         <SafeView style={styles.container} disableBottomInset>
             <ThemedView style={styles.content}>     
