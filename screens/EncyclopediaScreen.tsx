@@ -36,8 +36,8 @@ export default function EncyclopediaScreen() {
             style={{ flex: 1 }}
             start={{x: 0, y: 0.75}}
             end={{x: 1, y: 1.3}}
-            colors={[ Colors[(colorScheme ?? 'light') as 'light' | 'dark'].background, 
-            Colors[(colorScheme ?? 'light') as 'light' | 'dark'].card]}
+            colors={[ Colors[colorScheme ?? 'light'].background, 
+            Colors[colorScheme ?? 'light'].card]}
             >
             <ThemedView style={styles.header}>
                 <ThemedView style={styles.searchBar}>

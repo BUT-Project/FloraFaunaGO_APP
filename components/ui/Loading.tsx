@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image, StyleSheet, ActivityIndicator, Text, TextStyle } from 'react-native';
+import { Image, StyleSheet, ActivityIndicator, TextStyle, useColorScheme } from 'react-native';
 import { SafeView, SafeViewProps } from './SafeView';
 import { ThemedText } from './themed';
 import { Colors } from '@/constants/Colors';
@@ -11,6 +11,8 @@ type LoadingProps = SafeViewProps & {
 
 const Loading: React.FC<LoadingProps> = (props) => {
     const { text, textStyle, style, ...rest } = props;
+    const colorScheme = useColorScheme() ?? "light";
+    const theme  = Colors[colorScheme]
     return (
         <SafeView style={[styles.container, style]} {...rest}>
             <Image
@@ -18,9 +20,9 @@ const Loading: React.FC<LoadingProps> = (props) => {
                 style={styles.logo}
                 resizeMode="contain"
             />
-            <ActivityIndicator size="large" color={Colors.light.tint}/>
+            <ActivityIndicator size="large" color={theme.tint}/>
             {text ? (
-                <ThemedText style={[styles.text, textStyle]}>{text}</ThemedText>
+                <ThemedText style={[styles.text,{color:theme.tint},textStyle,]}>{text}</ThemedText>
             ) : null}
         </SafeView>
     );
@@ -40,7 +42,6 @@ const styles = StyleSheet.create({
     text: {
         marginTop: 16,
         fontSize: 16,
-        color: Colors.light.tint,
         textAlign: 'center',
     },
 });

@@ -1,5 +1,5 @@
 import React, {useCallback, useMemo, useRef, useState} from "react";
-import {Dimensions, StyleSheet, TouchableOpacity } from "react-native";
+import {ColorSchemeName, Dimensions, StyleSheet, TouchableOpacity, useColorScheme } from "react-native";
 import Carousel from "react-native-snap-carousel";
 import {Ionicons} from "@expo/vector-icons";
 import {ThemedText,ThemedView} from "@/components/ui/themed";
@@ -23,20 +23,24 @@ type SpeciesImageCarouselProps = {
 };
 
 type TabBarButtonProps = {
-    title:string;
-    index:number;
-    snapTo:(index:number)=>void;
-    isSelected:Boolean;
-
+    title: string;
+    index: number;
+    snapTo: (index: number) => void;
+    isSelected: boolean;
+    colorSheme: ColorSchemeName;
 };
 
-const TabBarButton =({title, index, snapTo, isSelected=false}:TabBarButtonProps)=> (
-    <TouchableOpacity onPress={() => snapTo(index)} style={[styles.tabButton, isSelected && styles.selected]}>
-            <ThemedText style={isSelected && styles.selectedText}>
-                {title}
-            </ThemedText>
+const TabBarButton = ({ title, index, snapTo, isSelected = false, colorSheme }: TabBarButtonProps) => (
+    <TouchableOpacity 
+        onPress={() => snapTo(index)}
+        style={[styles.tabButton, isSelected && { borderTopColor: Colors[colorSheme??"light"].card }]}
+    >
+        <ThemedText style={isSelected && {color:Colors[colorSheme??"light"].card,fontWeight:"bold",}}>
+            {title}
+        </ThemedText>
     </TouchableOpacity>
-)
+);
+
 
 const { width } = Dimensions.get("window");
 
@@ -44,6 +48,7 @@ export default function DetailsHeader({ capture ,specie}: SpeciesImageCarouselPr
 
     const router = useRouter();
 
+    const colorSheme = useColorScheme();
     const [activeSlide, setActiveSlide] = useState(0);
     const carouselRef = useRef<Carousel<any>>(null);
     const carouselData = useMemo<CarouselItem[]>(() => {
@@ -91,8 +96,20 @@ export default function DetailsHeader({ capture ,specie}: SpeciesImageCarouselPr
             />
             {capture?.photo && (
                 <ThemedView style={styles.tabBar}>
-                    <TabBarButton title="ILLUSTRATION" index={0} snapTo={snapTo} isSelected={0===activeSlide}/>
-                    <TabBarButton title="VOTRE PHOTO" index={1} snapTo={snapTo} isSelected={1===activeSlide}/>            
+                    <TabBarButton 
+                        title="ILLUSTRATION"
+                        index={0}
+                        snapTo={snapTo}
+                        isSelected={0===activeSlide}
+                        colorSheme={colorSheme}
+                    />
+                    <TabBarButton 
+                        title="VOTRE PHOTO"
+                        index={1}
+                        snapTo={snapTo} 
+                        isSelected={1===activeSlide}
+                        colorSheme={colorSheme}
+                    />            
                 </ThemedView>
             )}
             <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
@@ -150,13 +167,6 @@ const styles = StyleSheet.create({
         alignItems:"center",
         borderTopWidth:3,
         borderTopColor:Colors.light.tabIconDefault
-    },
-    selected:{
-        borderTopColor:Colors.light.tint,
-    },
-    selectedText:{
-        color:Colors.light.tint,
-        fontWeight:"bold",
     },
     overlay: {
         ...StyleSheet.absoluteFillObject,
