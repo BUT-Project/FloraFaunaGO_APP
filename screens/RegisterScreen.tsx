@@ -20,6 +20,8 @@ export default function RegisterScreen() {
         setEmail,
         password,
         setPassword,
+        confirmPassword,
+        setConfirmPassword,
         failedSignup,
         errorMessage,
         submitForm,
@@ -46,6 +48,15 @@ export default function RegisterScreen() {
                 placeholder="Password"
                 value={password}
                 onChangeText={setPassword}
+                secureTextEntry
+                autoCapitalize='none'
+                autoCorrect={false}
+            />
+            <InputWithIcon
+                icon="lock"
+                placeholder="Confirm Password"
+                value={confirmPassword}
+                onChangeText={setConfirmPassword}
                 secureTextEntry
                 autoCapitalize='none'
                 autoCorrect={false}

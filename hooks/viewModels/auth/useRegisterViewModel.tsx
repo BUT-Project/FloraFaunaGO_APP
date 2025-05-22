@@ -1,6 +1,6 @@
 import {useCallback, useState} from "react";
 import {useAudioPlayer} from "expo-audio";
-import {registerSchema} from "@/components/form/auth/RegisterForm";
+import {registerFormSchema} from "@/components/form/auth/RegisterForm";
 import IAuthService from "@/model/service/IAuthService";
 import {router} from "expo-router";
 import {useAuthStore} from "@/context/zustand/store/useAuthStore";
@@ -12,6 +12,7 @@ export const useRegisterViewModel = (
     const register = useAuthStore((state) => state.register);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
     const [failedSignup, setFailedSignup] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -29,9 +30,10 @@ export const useRegisterViewModel = (
     const validateForm = useCallback(() => {
         setFailedSignup(false);
 
-        const result = registerSchema.safeParse({
+        const result = registerFormSchema.safeParse({
             email,
             password,
+            confirmPassword,
         });
 
         if (!result.success) {
@@ -72,6 +74,8 @@ export const useRegisterViewModel = (
         setEmail,
         password,
         setPassword,
+        confirmPassword,
+        setConfirmPassword,
         failedSignup,
         isLoading,
         errorMessage,
