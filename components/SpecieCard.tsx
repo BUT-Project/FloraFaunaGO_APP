@@ -62,9 +62,6 @@ const SpecieCard = forwardRef<Animated.View, SpecieCardProps>(({specie, ...props
             <View style={styles.cardContent}>
                 <View style={styles.header}>
                     <ThemedText style={styles.name}>{name || 'Unknown'}</ThemedText>
-                    <View style={styles.pvContainer}>
-                        <ThemedText style={styles.pv}>PV {Math.floor(Math.random() * 100) + 50}</ThemedText>
-                    </View>
                 </View>
                 <View style={styles.imageContainer}>
                     <Image
@@ -114,7 +111,7 @@ const styles = StyleSheet.create({
     },
     header: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
+        justifyContent: 'flex-start',
         alignItems: 'center',
         marginBottom: 8,
     },
@@ -122,15 +119,6 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: 'bold',
         color: '#333',
-    },
-    pvContainer: {
-        backgroundColor: '#FF5252',
-        borderRadius: 12,
-        padding: 4,
-    },
-    pv: {
-        color: 'white',
-        fontWeight: 'bold',
     },
     imageContainer: {
         backgroundColor: '#F0F0F0',

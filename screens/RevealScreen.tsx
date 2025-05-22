@@ -19,7 +19,6 @@ import { UploadContext } from "@/context/UploadContext";
 import ThumbAnimationView from "@/components/ThumbAnimationView";
 import { router } from "expo-router";
 import { useSpeciesStore } from "@/context/zustand/store/useSpeciesStore";
-import { SuccessStore } from '@/context/zustand/store/useSuccessStore';
 import { SuccessType } from '@/model/domain/SuccessType';
 import { processSuccessByType } from '@/shared/successHelper';
 
@@ -34,7 +33,6 @@ interface RevealScreenProps {
 
 export default function RevealScreen({ specie }: RevealScreenProps) {
     const addingState = useContext(UploadContext);
-    const { message, isVisibile } = SuccessStore();
     const [thumbnail, setThumbnail] = useState<ThumbType>({
         main: null,
         anim: null,
