@@ -10,17 +10,16 @@ import Animated, {
 } from 'react-native-reanimated';
 import SpecieCard from "@/components/SpecieCard";
 import Specie from "@/model/domain/Specie";
-import FlipAnimationContainer from "@/components/animation/FlipAnimationContainer";
+import {FlipAnimationContainer,EntranceFlipAnimation} from "@/components/animation";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import EntranceFlipAnimation from "@/components/animation/EntranceFlipAnimation";
 import { ThemedText,ThemedView } from "@/components/ui/themed";
 import { UploadContext } from "@/context/UploadContext";
-import ThumbAnimationView from "@/components/ThumbAnimationView";
 import { router } from "expo-router";
 import { useSpeciesStore } from "@/context/zustand/store/useSpeciesStore";
 import { SuccessStore } from '@/context/zustand/store/useSuccessStore';
 import { SuccessType } from '@/model/domain/SuccessType';
 import { processSuccessByType } from '@/shared/successHelper';
+import ThumbAnimationView from '@/components/ThumbAnimationView';
 
 export type ThumbType = {
     main: string | null | undefined;
