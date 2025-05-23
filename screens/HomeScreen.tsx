@@ -10,10 +10,9 @@ import {useQuery} from "@tanstack/react-query";
 import * as Location from "expo-location";
 import {useRouter} from "expo-router";
 import StubData from "@/dal/StubLib/StubData";
-import Specie from "@/model/domain/Specie";
+import {Specie,SuccessType} from "@/model/domain";
 import {useSpeciesStore} from "@/context/zustand/store/useSpeciesStore";
 import {useFocusEffect} from '@react-navigation/native';
-import {SuccessType} from "@/model/domain/SuccessType";
 import {processSuccessByType} from "@/shared/successHelper";
 import {SafeView} from "@/components/ui/SafeView";
 
