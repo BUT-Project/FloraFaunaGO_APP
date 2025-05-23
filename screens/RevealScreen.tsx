@@ -32,7 +32,6 @@ interface RevealScreenProps {
 
 export default function RevealScreen({ specie }: RevealScreenProps) {
     const addingState = useContext(UploadContext);
-    const { message, isVisibile } = SuccessStore();
     const [thumbnail, setThumbnail] = useState<ThumbType>({
         main: null,
         anim: null,
@@ -65,6 +64,8 @@ export default function RevealScreen({ specie }: RevealScreenProps) {
         }
     };
 
+
+
     useEffect(() => {
         setThumbnail({ main: specie.image, anim: null });
         // Simulate animation completion after 3 seconds
@@ -78,7 +79,6 @@ export default function RevealScreen({ specie }: RevealScreenProps) {
             );
 
         }, 3000);
-        processSuccessByType(SuccessType.CAPTURE, specie);
         return () => clearTimeout(timeout);
     }, []);
 

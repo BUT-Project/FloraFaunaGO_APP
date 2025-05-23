@@ -36,10 +36,8 @@ export default function TabLayout() {
 
     return (
         <UploadContext.Provider value={{ uploading, setUploading }}>
-            <SuccessWrapper>     
                     <RootNavigation />
-                    <Toasts />
-            </SuccessWrapper>
+                    <Toasts globalAnimationConfig={{duration: 300}} />
         </UploadContext.Provider>
     );
 }
