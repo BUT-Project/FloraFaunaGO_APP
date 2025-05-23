@@ -47,10 +47,6 @@ export default function SettingsScreen() {
                     <ThemedText type={"subtitle"} style={styles.buttonText}>Mode offline</ThemedText>
                     <Switch value={switchBut} trackColor={{false: "#767577", true: "#90EE90"}}  />
                 </Pressable>
-
-                <TouchableOpacity style={styles.button}>
-                    <ThemedText type={"subtitle"} style={styles.buttonText}>Modifier l'adresse mail</ThemedText>
-                </TouchableOpacity>
                 <TouchableOpacity onPress={() => { toggleTheme(); switchThemes(); }} style={styles.button}>
                 <ThemedText type={"subtitle"} style={styles.buttonText}>Changer le thème</ThemedText>
 
@@ -60,10 +56,6 @@ export default function SettingsScreen() {
                 <ThemedText type={"subtitle"} style={styles.buttonText}>
                     {switchTheme ? '🌑' : '☀️'}
                 </ThemedText>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styles.button}>
-                    <ThemedText type={"subtitle"} style={styles.buttonText}>Activer l'économie de batterie</ThemedText>
                 </TouchableOpacity>
 
                 <TouchableOpacity style={styles.button} onPress={logout}>

@@ -11,6 +11,7 @@ import {useAuthStore} from "@/context/zustand/store/useAuthStore";
 import { SafeView } from "@/components/ui/SafeView";
 import { Colors } from "@/constants/Colors";
 
+
 let ProfileImage: {};
 ProfileImage = require("../assets/images/ProfileImage.jpeg");
 const { width } = Dimensions.get('window');
@@ -20,11 +21,14 @@ export default function ProfilScreen() {
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(false);
     const [totalPages, setTotalPages] = useState(1);
-
     const colorScheme =  useColorScheme() ?? 'light';
     const theme = Colors[colorScheme];
+    const [stepCount,setStepCount] = useState(0)
 
-    const user = useAuthStore((state)=>state.user);
+    const user = useAuthStore((state) => state.user);
+    const species = useAuthStore((state) => new Set(state.user?.captures.map(c => c.specie.id)).size);
+    const familiesCount = useAuthStore((state) => new Set(state.user?.captures.map(c => c.specie.family)).size);
+    
 
     const fetchSuccesses = async (currentPage: number) => {
         setLoading(true);
@@ -55,8 +59,14 @@ export default function ProfilScreen() {
                     <Ionicons size={30} name="settings" color={theme.text} style={styles.settings}/>
                 </TouchableOpacity>
             </Link>
-
             <Image source={ProfileImage} style={styles.profile}/>
+
+            <Link href={"/(profil)/editprofile"} asChild>
+            <TouchableOpacity>
+            <Ionicons name="pencil" color={theme.text} style={{alignSelf:"center"}} size={32} />
+
+            </TouchableOpacity>
+            </Link>
             <ThemedView style={styles.userInfoContainer}>
                 <ThemedText style={styles.username}>{user?.username || 'Username not available'}</ThemedText>
                 <ThemedText style={styles.email}>{user?.email || 'Email not available'}</ThemedText>
@@ -69,19 +79,24 @@ export default function ProfilScreen() {
 
             <ThemedView style={styles.container}>
                 <FontAwesome5 size={32} name="walking" style={[styles.settings, {color: theme.text}]}/>
-                <ThemedText style={styles.text}>  Distance marchées </ThemedText>
+                <ThemedText style={styles.text}>  Distance marchées {stepCount} </ThemedText>
             </ThemedView>
             <ThemedView style={styles.container}>
                 <FontAwesome6 size={30} name="circle-question" style={[styles.settings, {color: theme.text}]}/>
-                <ThemedText style={styles.text}>Espèces découvertes</ThemedText>
+                <ThemedText style={styles.text}>Espèces découvertes : {species}</ThemedText>
             </ThemedView>
             <ThemedView style={styles.container}>
                 <FontAwesome5 size={30} name="dna" style={[styles.settings, {color: theme.text}]}/>
-                <ThemedText style={styles.text}> Familles complétées</ThemedText>
+                <ThemedText style={styles.text}> Familles complétées : {familiesCount}</ThemedText>
             </ThemedView>
             <ThemedView style={styles.container}>
                 <AntDesign size={30} name="clockcircleo" style={[styles.settings, {color:theme.text}]}/>
-                <ThemedText style={styles.text}>Date d'inscription</ThemedText>
+                <ThemedText style={styles.text}>Date d'inscription : {user?.inscriptionDate &&
+                        new Date(user.inscriptionDate).toLocaleString('fr-FR', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric',
+                        })}</ThemedText>
             </ThemedView>
             <ThemedView style={styles.lineContainer}>
                 <ThemedView style={styles.line} />
@@ -180,7 +195,6 @@ const styles = StyleSheet.create({
     },
     settings: {
         marginRight: 10,
-        color: "white",
     },
     profile: {
         alignSelf: "center",

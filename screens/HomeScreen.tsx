@@ -2,7 +2,7 @@
 import {useCallback, useEffect, useState} from "react";
 import Animated, {useAnimatedStyle, useSharedValue, withSpring} from "react-native-reanimated";
 import {ThemedView} from "@/components/ui/themed";
-import {Alert, Dimensions, StyleSheet, View} from "react-native";
+import { Dimensions, StyleSheet, View} from "react-native";
 import { CameraView } from "@/components/camera";
 import ARProgressIndicator from "@/components/ARProgressIndicator";
 import MainMapView from "@/components/MainMapView";
@@ -18,13 +18,14 @@ import { SuccessType } from "@/model/domain/SuccessType";
 import { processSuccessByType } from "@/shared/successHelper";
 import { SafeView } from "@/components/ui/SafeView";
 import {  isImageBlurry } from "@/services/imageQuality";
+import { ToastPosition, toast } from "@backpackapp-io/react-native-toast";
 
 const {width: SCREEN_WIDTH} = Dimensions.get('window');
 export default function HomeScreen() {
     const { speciesRepository } = StubData.getInstance();
     const [location, setLocation] = useState<Location.LocationObject | null>(null);
     const [isCameraActive, setIsCameraActive] = useState(false);
-
+    const [spec,setSpec] = useState<Specie>()
     const router = useRouter();
     useEffect(() => {
         (async () => {
@@ -58,7 +59,7 @@ export default function HomeScreen() {
             if (!speciesRepository) throw new Error('No Repository');
             if (!base64Image) throw new Error('No base64 image data');
             var spec = await speciesRepository.identifySpecies(base64Image);
-            await processSuccessByType(SuccessType.PHOTO, spec);
+            setSpec(spec)
             return spec;
         },
         enabled:!!base64Image && !!speciesRepository
@@ -89,13 +90,12 @@ export default function HomeScreen() {
             const isBlurry = await isImageBlurry(capturedImage);
       
             if (isBlurry) {
-              Alert.alert(
-                "Image floue",
-                "Merci de reprendre une image plus nette."
+              toast.error(
+                "Image floue \n Merci de reprendre une image plus nette.",
               );
               return;
             }
-      
+            await processSuccessByType(SuccessType.PHOTO, spec!);
             setCurrentImageUri(capturedImage);
             setCurrentIdentifiedSpecies(identifiedSpecie);
             router.push('/capture');
