@@ -35,25 +35,11 @@ describe('<SpeciesDetailScreen />', () => {
         jest.clearAllMocks();
     });
 
-    test('renders ? as specie info because its not captured', async () => {
-         (useGetSpecieByFamily as jest.Mock).mockReturnValue({
-            captures: [],
-            isLoading: false,
-            fetchMoreData: jest.fn(),
-            error: null,
-            isListEnd: false,
-            isLoadingMore: false,
-        });
-        const { getByText,queryByText, queryAllByText } = render(<SpeciesDetailScreen specie={mockSpecie} capture={null} />);
-        // Vérification des données du `specie`
-        expect(getByText(mockCapture.specie.name)).toBeTruthy();
-        expect(getByText(mockCapture.specie.scientificName)).toBeTruthy();
-        expect(queryByText(mockCapture.specie.diet)).toBeFalsy(); // La diète ne doit pas être affichée
-        expect(queryByText(mockCapture.specie.class.toString())).toBeFalsy(); // La classe ne doit pas être affichée
-        expect(queryAllByText('?')).toBeTruthy(); 
-        expect(queryByText(mockCapture.specie.family.toString())).toBeFalsy(); 
-        expect(queryByText(mockCapture.specie.kingdom.toString())).toBeFalsy(); 
-        expect(queryByText(mockCapture.specie.description)).toBeFalsy(); 
+    test('renders NotCaptured component when the specie is not captured', async () => {
+        const { getByText,getByTestId, } = render(<SpeciesDetailScreen specie={mockSpecie} capture={null} />);
+        expect(getByText("Espèce non capturée")).toBeTruthy();
+        expect(getByText("Où capturer cette espèce :")).toBeTruthy();
+        expect(getByTestId("SpecieName").props.children).toBe(mockSpecie.name);
     });
 
     test('renders capture details when captures are available', async () => {

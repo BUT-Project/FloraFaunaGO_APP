@@ -1,9 +1,9 @@
 import {Dimensions, FlatList, Image, StyleSheet, TouchableOpacity, useColorScheme} from "react-native";
 import React, {useEffect, useState} from "react";
 import SucessListItemVertical from "@/components/SucessListItemVertical";
-import {ThemedView,ThemedText} from "@/components/ui/themed";
+import {ThemedView,ThemedText,ThemedIcon} from "@/components/ui/themed";
 import {Link} from 'expo-router';
-import {AntDesign, FontAwesome5, FontAwesome6, Ionicons} from "@expo/vector-icons";
+import {AntDesign, FontAwesome5, FontAwesome6} from "@expo/vector-icons";
 import {Success} from "@/model/domain/Success";
 import StubData from "@/dal/StubLib/StubData";
 import {PagedRequest} from "@/shared/PagedRequest";
@@ -52,7 +52,7 @@ export default function ProfilScreen() {
         <ThemedView>
             <Link href={"/(profil)/settings"}  style={{ alignSelf: "flex-end",}} asChild>
                 <TouchableOpacity>
-                    <Ionicons size={30} name="settings" color={theme.text} style={styles.settings}/>
+                    <ThemedIcon size={30} name="settings" style={styles.settings}/>
                 </TouchableOpacity>
             </Link>
 
@@ -92,7 +92,7 @@ export default function ProfilScreen() {
                     onPress={() => setPage((prev) => Math.max(prev - 1, 1))}
                     disabled={page === 1}
                 >
-                    <Ionicons 
+                    <ThemedIcon 
                         name="chevron-back-circle"
                         color={page === 1? theme.successBackground : theme.tint}
                         size={40}
@@ -103,7 +103,7 @@ export default function ProfilScreen() {
                     onPress={() => setPage((prev) => Math.min(prev + 1, totalPages))}
                     disabled={page === totalPages}
                 >
-                    <Ionicons 
+                    <ThemedIcon 
                         name="chevron-forward-circle" 
                         color={page === totalPages ? theme.successBackground : theme.tint}
                         size={40}
@@ -180,7 +180,6 @@ const styles = StyleSheet.create({
     },
     settings: {
         marginRight: 10,
-        color: "white",
     },
     profile: {
         alignSelf: "center",
@@ -204,6 +203,5 @@ const styles = StyleSheet.create({
     },
     button:{
         borderRadius:30,
-
     }
 });

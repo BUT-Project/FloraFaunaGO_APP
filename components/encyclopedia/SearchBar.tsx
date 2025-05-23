@@ -10,7 +10,7 @@ type SearchBarProps={
 }
 
 export default function SpeciesSearchBar({search,setSearch,placeholder}: SearchBarProps){
-    const color = useThemeColor({ light: "#000", dark: "#fff" }, 'text');
+    const color = useThemeColor({}, 'text');
    
     return (
         <ThemedView style={styles.searchBarContainer}>

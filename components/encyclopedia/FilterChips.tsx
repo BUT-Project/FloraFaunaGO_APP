@@ -1,24 +1,26 @@
+import React from 'react';
 import {StyleSheet, TouchableOpacity} from 'react-native';
-import {ThemedText} from "@/components/ui/themed/ThemedText";
+import { ThemedView,ThemedText } from '../ui/themed';
 
 type FilterChipsProps = {
     item: any;
-    selectedFilter : any;
+    isSelected : Boolean;
     onFilterChange: any;
+    selectedColor:string;
 }
 
-export default function FilterChips(props: FilterChipsProps) {
+const FilterChips = ({item,isSelected,onFilterChange, selectedColor}: FilterChipsProps) => {
     return (
-        <TouchableOpacity  
-            style={[
+        <TouchableOpacity onPress={() => onFilterChange(item)}>
+            <ThemedView style={[
                 styles.chip,
-                props.selectedFilter === props.item && styles.selectedChip,
-            ]}
-            onPress={() => props.onFilterChange(props.item)}
-        >
-            <ThemedText  style={props.selectedFilter === props.item ? styles.selectedName: styles.name }>
-                {props.item.toString()}
-            </ThemedText>
+                isSelected && {backgroundColor:selectedColor,borderColor:selectedColor},
+            ]}>
+                <ThemedText  style={isSelected ? styles.selectedName: styles.name }>
+                    {item.toString()}
+                </ThemedText>
+            </ThemedView>
+           
         </TouchableOpacity>
 
     );
@@ -27,26 +29,20 @@ export default function FilterChips(props: FilterChipsProps) {
 const styles = StyleSheet.create({
     chip: {
         height: 30,
-        backgroundColor: 'white',
         paddingHorizontal: 10, // Utilise uniquement du padding horizontal pour éviter le décalage vertical
         borderWidth: 1,
-        borderColor: "#000",
         justifyContent: "center",
         alignItems: "center",
         borderRadius: 10,
         margin: 2,
     },
-    selectedChip: {
-        backgroundColor: '#000',
-    },
     name: {
-        color: '#000',
         textAlignVertical: "center", // Force le centrage vertical
         lineHeight: 30, // Égale à la hauteur du chip pour un vrai centrage
     },
-    selectedName: {
-        color: '#FFF',
-        textAlignVertical: "center",
-        lineHeight: 30,
+    selectedName:{
+        color:"#fff"
     }
 });
+
+export default React.memo(FilterChips);
