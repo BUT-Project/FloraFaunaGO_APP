@@ -22,8 +22,11 @@ export interface TestSuccessParams {
 /**
  * Vérifie et met à jour un succès si les critères sont remplis
  */
+const globallyTestedSuccesses = new Set<string>();
+
 export const TestSuccess = async ({ name, spec, cl, kg, dt, fm }: TestSuccessParams) => {
     if (!successRepository || !spec) return;
+
 
     const success = await successRepository.getById(name);
     if (!success) return;
@@ -50,11 +53,17 @@ export const processSuccessByType = async (successType: SuccessType, spec: any) 
 
     const allSuccess = await successRepository.getAll({ index: 1, count: 100 });
 
-    // Filtrer les succès par type (ex: PHOTO)
+    // Filtrer les succès par type (ex: CAPTURE, PHOTO...)
     const filteredSuccesses = allSuccess?.items.filter(success => success.type === successType);
 
-    // Préparer les paramètres pour TestSuccess
-    const successQueue = filteredSuccesses?.map(success => {
+    const successQueue: TestSuccessParams[] = [];
+    const seen = new Set<string>();
+
+    for (const success of filteredSuccesses ?? []) {
+
+        const key = `${success.event}-${spec.id}`;
+        if (seen.has(key)) continue; // ← déjà traité
+        seen.add(key);
         const params: TestSuccessParams = { name: success.event, spec };
 
         const kingdoms = Object.values(Kingdom);
@@ -90,13 +99,14 @@ export const processSuccessByType = async (successType: SuccessType, spec: any) 
             }
         }
 
-        return params;
-    });
+        successQueue.push(params);
+    }
 
-    executeSuccessQueue(successQueue ?? []);
+    executeSuccessQueue(successQueue);
 
     return spec;
 };
+
 
 /**
  * Exécute chaque succès avec un délai sans bloquer l’UI
@@ -106,5 +116,7 @@ const executeSuccessQueue = (queue: TestSuccessParams[]) => {
         setTimeout(() => {
             TestSuccess(params);
         }, index * 5000);
+
+        
     });
 };

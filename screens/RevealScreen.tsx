@@ -63,6 +63,8 @@ export default function RevealScreen({ specie }: RevealScreenProps) {
         }
     };
 
+
+
     useEffect(() => {
         setThumbnail({ main: specie.image, anim: null });
         // Simulate animation completion after 3 seconds
@@ -76,7 +78,6 @@ export default function RevealScreen({ specie }: RevealScreenProps) {
             );
 
         }, 3000);
-        processSuccessByType(SuccessType.CAPTURE, specie);
         return () => clearTimeout(timeout);
     }, []);
 
