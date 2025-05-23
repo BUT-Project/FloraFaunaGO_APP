@@ -10,11 +10,10 @@ import Animated, {
 } from 'react-native-reanimated';
 import SpecieCard from "@/components/SpecieCard";
 import Specie from "@/model/domain/Specie";
-import { ThemedView } from "@/components/ui/themed/ThemedView";
 import FlipAnimationContainer from "@/components/animation/FlipAnimationContainer";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import EntranceFlipAnimation from "@/components/animation/EntranceFlipAnimation";
-import { ThemedText } from "@/components/ui/themed/ThemedText";
+import { ThemedText,ThemedView } from "@/components/ui/themed";
 import { UploadContext } from "@/context/UploadContext";
 import ThumbAnimationView from "@/components/ThumbAnimationView";
 import { router } from "expo-router";
