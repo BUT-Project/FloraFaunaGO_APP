@@ -17,7 +17,6 @@ import {SuccessType} from "@/model/domain/SuccessType";
 import {processSuccessByType} from "@/shared/successHelper";
 import {SafeView} from "@/components/ui/SafeView";
 
-
 const {width: SCREEN_WIDTH} = Dimensions.get('window');
 export default function HomeScreen() {
     const {speciesRepository} = StubData.getInstance();

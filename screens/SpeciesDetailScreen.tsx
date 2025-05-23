@@ -1,4 +1,4 @@
-import { Dimensions, StyleSheet, FlatList } from "react-native";
+import { Dimensions, StyleSheet, FlatList, useColorScheme } from "react-native";
 import React, { useMemo } from "react";
 import Animated, {
   useAnimatedRef,
@@ -21,9 +21,10 @@ interface SpeciesDetailScreenProps {
 };
 
 const SpeciesDetailScreen = ({capture,specie}:SpeciesDetailScreenProps) => {
-  const scrollRef = useAnimatedRef<Animated.ScrollView>();
-  const scrollOffset = useSharedValue(0);
-
+    const colorScheme = useColorScheme();
+    const scrollRef = useAnimatedRef<Animated.ScrollView>();
+    const scrollOffset = useSharedValue(0);
+   
     const user = useAuthStore((state) => state.user);
     if (!user) {
         throw new Error("User not found")
@@ -81,7 +82,7 @@ const SpeciesDetailScreen = ({capture,specie}:SpeciesDetailScreenProps) => {
         <ThemedView style={styles.sectionRow}>
             <ExtendableText
                 text={specie.description}
-                style={styles.descContainer}
+                style={[styles.descContainer,{backgroundColor:Colors[colorScheme ?? "light"].card}]}
                 textStyle={styles.description}
             />
             <ExtendableMap
@@ -158,7 +159,6 @@ const styles = StyleSheet.create({
     descContainer: {
         width: (width / 2) - 15,
         aspectRatio: 1,
-        backgroundColor: Colors.light.surface,
     },
     description: {
         color: "#FFF",

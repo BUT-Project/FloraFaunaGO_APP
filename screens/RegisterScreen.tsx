@@ -56,10 +56,7 @@ export default function RegisterScreen() {
                 icon="lock"
                 placeholder="Confirmer le mot passe"
                 value={confirmPassword}
-                onChangeText={(v)=> {
-                    console.log(v)
-                    setConfirmPassword(v)
-                }}
+                onChangeText={setConfirmPassword}
                 secureTextEntry
                 autoCapitalize='none'
                 autoCorrect={false}
