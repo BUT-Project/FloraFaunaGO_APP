@@ -36,7 +36,7 @@ export default function RegisterScreen() {
             )}
             <InputWithIcon
                 icon="envelope"
-                placeholder="Email"
+                placeholder="E-mail"
                 value={email}
                 onChangeText={setEmail}
                 keyboardType="email-address"
@@ -45,7 +45,7 @@ export default function RegisterScreen() {
             />
             <InputWithIcon
                 icon="lock"
-                placeholder="Password"
+                placeholder="Mot de passe"
                 value={password}
                 onChangeText={setPassword}
                 secureTextEntry
@@ -54,9 +54,12 @@ export default function RegisterScreen() {
             />
             <InputWithIcon
                 icon="lock"
-                placeholder="Confirm Password"
+                placeholder="Confirmer le mot passe"
                 value={confirmPassword}
-                onChangeText={setConfirmPassword}
+                onChangeText={(v)=> {
+                    console.log(v)
+                    setConfirmPassword(v)
+                }}
                 secureTextEntry
                 autoCapitalize='none'
                 autoCorrect={false}

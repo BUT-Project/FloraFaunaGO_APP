@@ -39,7 +39,7 @@ export default function LoginScreen() {
             )}
             <InputWithIcon
                 icon="user"
-                placeholder="Email"
+                placeholder="E-mail"
                 value={username}
                 onChangeText={setUsername}
                 keyboardType="email-address"
@@ -49,7 +49,7 @@ export default function LoginScreen() {
             />
             <InputWithIcon
                 icon="lock"
-                placeholder="Password"
+                placeholder="Mot de passe"
                 value={password}
                 onChangeText={setPassword}
                 secureTextEntry

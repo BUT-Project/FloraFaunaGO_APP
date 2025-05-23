@@ -41,8 +41,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
     register: async (email: string, password: string,username?: string) => {
         const {authService} = StubData.getInstance();
+        
         // [TODO] [Dave] add error handling since it can failed (like return true)
-        const user = await authService?.register(email, password,username);
+        const user = await authService?.register(email, password,username ?? email);
         set({user, isAuthenticated: true});
     },
 

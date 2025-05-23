@@ -10,7 +10,7 @@ export const LoginRequestSchema = z.object({
     email: z.string()
         .email("L'adresse e-mail n'est pas valide.")
         .max(100, "L'adresse e-mail ne peut pas être plus grand que 100 caractères."),
-    password: z.string("Le mot de passe est requis."),
+    password: z.string({ required_error: "Le mot de passe est requis." }),
     twoFactorCode: z.string().nullable().optional(),
     twoFactorRecoveryCode: z.string().nullable().optional(),
 });

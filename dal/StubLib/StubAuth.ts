@@ -19,7 +19,7 @@ export default class StubAuth implements IAuthService{
                     resolve(user);
                 }
             else {
-                    reject(new Error("Mauvais identifiants"));
+                    reject(new Error("Mot de passe ou email incorrect"));
                 }
         });
     }

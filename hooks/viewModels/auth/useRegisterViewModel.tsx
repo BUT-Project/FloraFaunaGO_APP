@@ -43,7 +43,7 @@ export const useRegisterViewModel = (
             return false;
         }
         return true;
-    }, [ email, password]);
+    }, [ email, password, confirmPassword]);
 
     const submitForm = useCallback(async () => {
         if (validateForm()) {
