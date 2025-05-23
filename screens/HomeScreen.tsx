@@ -1,4 +1,3 @@
-
 import {useCallback, useEffect, useState} from "react";
 import Animated, {useAnimatedStyle, useSharedValue, withSpring} from "react-native-reanimated";
 import {ThemedView} from "@/components/ui/themed";
@@ -11,24 +10,23 @@ import {useQuery} from "@tanstack/react-query";
 import * as Location from "expo-location";
 import {useRouter} from "expo-router";
 import StubData from "@/dal/StubLib/StubData";
-import Specie from "@/model/domain/Specie";
+import {Specie,SuccessType} from "@/model/domain";
 import {useSpeciesStore} from "@/context/zustand/store/useSpeciesStore";
 import { useFocusEffect } from '@react-navigation/native';
-import { SuccessType } from "@/model/domain/SuccessType";
 import { processSuccessByType } from "@/shared/successHelper";
 import { SafeView } from "@/components/ui/SafeView";
 import {  isImageBlurry } from "@/services/imageQuality";
 
 const {width: SCREEN_WIDTH} = Dimensions.get('window');
 export default function HomeScreen() {
-    const { speciesRepository } = StubData.getInstance();
+    const {speciesRepository} = StubData.getInstance();
     const [location, setLocation] = useState<Location.LocationObject | null>(null);
     const [isCameraActive, setIsCameraActive] = useState(false);
 
     const router = useRouter();
     useEffect(() => {
         (async () => {
-            const { status } = await Location.requestForegroundPermissionsAsync();
+            const {status} = await Location.requestForegroundPermissionsAsync();
             if (status !== 'granted') {
                 console.log('Permission to access location was denied');
                 return;
@@ -52,8 +50,8 @@ export default function HomeScreen() {
             };
         }, [])
     );
-    const {isLoading,isFetching, data: identifiedSpecie} = useQuery<Specie, Error>({
-        queryKey: ['identifySpecie',base64Image,speciesRepository],
+    const {isLoading, isFetching, data: identifiedSpecie} = useQuery<Specie, Error>({
+        queryKey: ['identifySpecie', base64Image, speciesRepository],
         queryFn: async (): Promise<Specie> => {
             if (!speciesRepository) throw new Error('No Repository');
             if (!base64Image) throw new Error('No base64 image data');
@@ -61,7 +59,7 @@ export default function HomeScreen() {
             await processSuccessByType(SuccessType.PHOTO, spec);
             return spec;
         },
-        enabled:!!base64Image && !!speciesRepository
+        enabled: !!base64Image && !!speciesRepository
     });
 
     const switchView = (tabName: string) => {
@@ -79,8 +77,8 @@ export default function HomeScreen() {
         transform: [{translateX: slideAnim.value}],
     }));
 
-    const { setCurrentImageUri, setCurrentIdentifiedSpecies } = useSpeciesStore();
-    
+    const {setCurrentImageUri, setCurrentIdentifiedSpecies} = useSpeciesStore();
+
     useEffect(() => {
         const verifyAndContinue = async () => {
           if (!capturedImage || isFetching || isLoading || !identifiedSpecie) return;
@@ -109,21 +107,23 @@ export default function HomeScreen() {
       }, [capturedImage, isFetching, isLoading, identifiedSpecie, router]);
     return (
         <SafeView style={styles.container} disableBottomInset>
-            <ThemedView style={styles.content}>     
+            <ThemedView style={styles.content}>
                 <View style={styles.segmentedControl}>
                     <BlurSegmented tabsName={['Camera', 'Map']} onTabChange={switchView}/>
                 </View>
                 <Animated.View style={[styles.viewContainer, animatedStyle]}>
                     {isCameraActive
-                        && <CameraView setBase64Image={setBase64Image} setCapturedImage={setCapturedImage}
-                                       style={styles.camera} />
-                    }
-                    {isFetching && (
-                        <View style={styles.progressOverlay}>
-                            <ARProgressIndicator width={SCREEN_WIDTH} height={SCREEN_WIDTH}/>
-                        </View>
-                    )}
-                    <MainMapView location={location}  style={styles.map}/>
+                        &&
+                        <>
+                            <CameraView setBase64Image={setBase64Image} setCapturedImage={setCapturedImage}
+                                        style={styles.camera}/>
+                            {isFetching && (
+                                <View style={styles.progressOverlay}>
+                                    <ARProgressIndicator width={SCREEN_WIDTH} height={SCREEN_WIDTH}/>
+                                </View>
+                            )}
+                            <MainMapView location={location} style={styles.map}/>
+                        </>}
                 </Animated.View>
             </ThemedView>
         </SafeView>

@@ -18,7 +18,7 @@ export default function ProfilScreen() {
     const [Successes, setSuccesses] = useState<Success[]>([]);
     const {successRepository} = StubData.getInstance()
     const [page, setPage] = useState(1);
-    const [loading, setLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const [totalPages, setTotalPages] = useState(1);
 
     const colorScheme =  useColorScheme() ?? 'light';
@@ -27,7 +27,7 @@ export default function ProfilScreen() {
     const user = useAuthStore((state)=>state.user);
 
     const fetchSuccesses = async (currentPage: number) => {
-        setLoading(true);
+        setIsLoading(true);
         try {
             const PageRequest : PagedRequest = {
                 index: currentPage,
@@ -39,7 +39,7 @@ export default function ProfilScreen() {
         } catch (error) {
             console.error('Erreur lors de la récupération des succès :', error);
         } finally {
-            setLoading(false);
+            setIsLoading(false);
         }
     };
 

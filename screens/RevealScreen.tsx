@@ -1,5 +1,5 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import React, {useContext, useEffect, useRef, useState} from 'react';
+import {StyleSheet, TouchableOpacity} from 'react-native';
 import Animated, {
     Easing,
     runOnJS,
@@ -16,7 +16,6 @@ import { ThemedText,ThemedView } from "@/components/ui/themed";
 import { UploadContext } from "@/context/UploadContext";
 import { router } from "expo-router";
 import { useSpeciesStore } from "@/context/zustand/store/useSpeciesStore";
-import { SuccessStore } from '@/context/zustand/store/useSuccessStore';
 import { SuccessType } from '@/model/domain/SuccessType';
 import { processSuccessByType } from '@/shared/successHelper';
 import ThumbAnimationView from '@/components/ThumbAnimationView';

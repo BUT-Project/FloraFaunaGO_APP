@@ -8,7 +8,7 @@ import SuccessWrapper from '@/components/animation/sucess/SuccessWrapper';
 import { Toasts } from '@backpackapp-io/react-native-toast';
 
 export default function TabLayout() {
-    //créer un wrapper pour l'appelle des popup success
+    // créer un wrapper pour l'appelle des popup success
     const [uploading, setUploading] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const checkAuth = useAuthStore((state) => state.checkAuth);
@@ -31,7 +31,7 @@ export default function TabLayout() {
     }
 
     if (!isAuthenticated) {
-        return <Redirect href="/(auth)/register" />;
+        return <Redirect href="/(auth)/login" />;
     }
 
     return (

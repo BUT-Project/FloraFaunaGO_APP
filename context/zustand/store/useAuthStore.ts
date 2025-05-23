@@ -7,11 +7,12 @@ interface AuthState {
     user: User | null;
     isAuthenticated: boolean;
     rememberMe: boolean;
-    login: (username: string, password: string, remember?: boolean) => Promise<void>;
-    register: (email: string, username: string, password: string) => Promise<void>;
+    login: (email: string, password: string, remember?: boolean) => Promise<void>;
+    register: (email: string, password: string,username?: string) => Promise<void>;
     logout: () => Promise<void>;
     checkAuth: () => Promise<void>;
     setRememberMe: (value: boolean) => void;
+    isAuthCheckCompleted: boolean;
 }
 
 const AUTH_TOKEN_KEY = 'auth_token';
@@ -21,10 +22,11 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     user: null,
     isAuthenticated: false,
     rememberMe: false,
+    isAuthCheckCompleted:false,
 
-    login: async (username: string, password: string, remember: boolean = false) => {
+    login: async (email: string, password: string, remember: boolean = false) => {
         const {authService} = StubData.getInstance();
-        const user = await authService?.login(username, password);
+        const user = await authService?.login(email, password);
         if (remember && user) {
             console.log(user);
             await setStorageItemAsync(AUTH_TOKEN_KEY, JSON.stringify({
@@ -37,10 +39,11 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         set({user, isAuthenticated: true, rememberMe: remember});
     },
 
-    register: async (email: string,username :string , password: string) => {
+    register: async (email: string, password: string,username?: string) => {
         const {authService} = StubData.getInstance();
+        
         // [TODO] [Dave] add error handling since it can failed (like return true)
-        const user = await authService?.register(email,username, password);
+        const user = await authService?.register(email, password,username ?? email);
         set({user, isAuthenticated: true});
     },
 
@@ -58,7 +61,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         const isAuthenticated = await authService?.isAuthenticated();
         if (isAuthenticated) {
             const user = await authService?.getUser();
-            set({user, isAuthenticated});
+            set({user, isAuthenticated,isAuthCheckCompleted:true});
         } else {
 
             const storedAuth = await getStorageItemAsync(AUTH_TOKEN_KEY);
@@ -76,7 +79,8 @@ export const useAuthStore = create<AuthState>((set, get) => ({
                         set({
                             user: user,
                             isAuthenticated: true,
-                            rememberMe: true
+                            rememberMe: true,
+                            isAuthCheckCompleted:true,
                         });
                         return;
                     }
@@ -84,7 +88,8 @@ export const useAuthStore = create<AuthState>((set, get) => ({
                     console.error('Error parsing stored auth:', e);
                 }
             }
-            set({user: null, isAuthenticated: false});
+            // If not authenticated or no valid stored auth, set user to null
+            set({user: null, isAuthenticated: false,isAuthCheckCompleted:true});
         }
     },
     setRememberMe: async (value: boolean) => {
