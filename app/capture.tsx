@@ -18,7 +18,7 @@ export default function Capture() {
 
     const onCancel = () => {
         resetState();
-        router.back();
+        router.replace("/");
     }
     
     return (<CaptureScreen animalPhoto={imageUri} onResult={onResult} onCancel={onCancel}/>)

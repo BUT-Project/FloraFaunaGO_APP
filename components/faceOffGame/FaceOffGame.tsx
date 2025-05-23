@@ -16,7 +16,7 @@ interface Props {
   animalPhoto: string; 
   onResult: (success: boolean) => void;
   onCancel: () => void;
-};
+}
 
 const NB_LIVES = 3;
 const NB_STEPS = 3;
@@ -113,8 +113,7 @@ const FaceOffGame = ({ animalPhoto, onResult, onCancel }: Props) => {
 
     // Permet de reprendre le round suivant immédiatement
     const handleResumeTimeBetweenRound = () => {
-        console.log("handleResumeTimeBetweenRound", isWaitingForNextRound);
-        if (!isWaitingForNextRound) return; 
+        if (!isWaitingForNextRound) return;
         if (nextRoundTimeoutRef.current) {
             clearTimeout(nextRoundTimeoutRef.current);
             nextRoundTimeoutRef.current = null;

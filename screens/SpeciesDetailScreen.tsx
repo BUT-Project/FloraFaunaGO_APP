@@ -61,13 +61,13 @@ const SpeciesDetailScreen = ({capture,specie}:SpeciesDetailScreenProps) => {
             contentContainerStyle={styles.container}
         >
         <DetailsHeader capture={capture} specie={specie}  />
-        { isCaptured ? 
+        { isCaptured ?
         <>
               <ThemedView style={styles.section}>
             <ThemedText type={"defaultSemiBold"}>Classification scientifique :</ThemedText>
             <ThemedView style={styles.row}>
                 <ThemedView style={styles.halfVerticalContainer}>
-                    <ThemedText>Reigne :<ThemedText style={styles.bold}> {specie.kingdom}</ThemedText></ThemedText> 
+                    <ThemedText>Reigne :<ThemedText style={styles.bold}> {specie.kingdom}</ThemedText></ThemedText>
                     <ThemedText>Classe : <ThemedText style={styles.bold}>{specie.class}</ThemedText></ThemedText>
                 </ThemedView>
                 <ThemedView style={styles.halfVerticalContainer}>
@@ -85,9 +85,9 @@ const SpeciesDetailScreen = ({capture,specie}:SpeciesDetailScreenProps) => {
                 style={[styles.descContainer,{backgroundColor:Colors[colorScheme ?? "light"].card}]}
                 textStyle={styles.description}
             />
-            <ExtendableMap 
-                locations={specie.locations} 
-                mapStyle={styles.map} 
+            <ExtendableMap
+                locations={specie.locations}
+                mapStyle={styles.map}
                 style={styles.mapContainer}
                 />
         </ThemedView>

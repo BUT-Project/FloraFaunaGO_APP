@@ -1,5 +1,5 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import React, {useContext, useEffect, useRef, useState} from 'react';
+import {StyleSheet, TouchableOpacity} from 'react-native';
 import Animated, {
     Easing,
     runOnJS,
@@ -10,17 +10,15 @@ import Animated, {
 } from 'react-native-reanimated';
 import SpecieCard from "@/components/SpecieCard";
 import Specie from "@/model/domain/Specie";
-import { ThemedView,ThemedText } from "@/components/ui/themed";
-import FlipAnimationContainer from "@/components/animation/FlipAnimationContainer";
+import {FlipAnimationContainer,EntranceFlipAnimation} from "@/components/animation";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import EntranceFlipAnimation from "@/components/animation/EntranceFlipAnimation";
+import { ThemedText,ThemedView } from "@/components/ui/themed";
 import { UploadContext } from "@/context/UploadContext";
-import ThumbAnimationView from "@/components/ThumbAnimationView";
 import { router } from "expo-router";
 import { useSpeciesStore } from "@/context/zustand/store/useSpeciesStore";
-import { SuccessType } from '@/model/domain/SuccessType';
-import { processSuccessByType } from '@/shared/successHelper';
 import { useThemeColor } from '@/hooks/useThemeColor';
+import ThumbAnimationView from '@/components/ThumbAnimationView';
+
 export type ThumbType = {
     main: string | null | undefined;
     anim: string | null | undefined;
@@ -65,6 +63,8 @@ export default function RevealScreen({ specie }: RevealScreenProps) {
         }
     };
 
+
+
     useEffect(() => {
         setThumbnail({ main: specie.image, anim: null });
         // Simulate animation completion after 3 seconds
@@ -78,7 +78,6 @@ export default function RevealScreen({ specie }: RevealScreenProps) {
             );
 
         }, 3000);
-        processSuccessByType(SuccessType.CAPTURE, specie);
         return () => clearTimeout(timeout);
     }, []);
 

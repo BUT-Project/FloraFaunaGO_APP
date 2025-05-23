@@ -8,20 +8,23 @@ import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import {useColorScheme} from '@/hooks/useColorScheme';
 import {GestureHandlerRootView} from "react-native-gesture-handler";
+import {useAuthStore} from "@/context/zustand/store/useAuthStore";
 
-// Prevent the splash screens from auto-hiding before asset loading is complete.
+// Prevent the splash screens from auto-hiding before asset loading is complete or authentication is done
 SplashScreen.preventAutoHideAsync();
 export default function RootLayout() {
     const queryClient = new QueryClient();
     const colorScheme = useColorScheme();
+    const isAuthCheckCompleted = useAuthStore((state) => state.isAuthCheckCompleted);
+
     const [loaded] = useFonts({
         SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
     });
     useEffect(() => {
-        if (loaded) {
+        if (loaded && isAuthCheckCompleted) {
             SplashScreen.hideAsync();
         }
-    }, [loaded]);
+    }, [loaded, isAuthCheckCompleted]);
 
     if (!loaded) {
         return null;
@@ -32,7 +35,7 @@ export default function RootLayout() {
             <SafeAreaProvider>
                     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
                         <QueryClientProvider client={queryClient}>
-                            <Stack initialRouteName="(auth)" >
+                            <Stack>
                                 <Stack.Screen name="(tabs)" options={{headerShown: false}}/>
                                 <Stack.Screen name="(auth)" options={{headerShown: false}}/>
                                 <Stack.Screen name="capture" options={{headerShown : false, presentation:"fullScreenModal", animation:"fade"}}/>

@@ -4,7 +4,6 @@ import {ThemedText, ThemedView } from '../ui/themed';
 import { Specie } from '@/model/domain';
 import { ExtendableMap } from '../ui/ExtendableMap';
 import { Ionicons } from '@expo/vector-icons';
-import { Colors } from '@/constants/Colors';
 import { useThemeColor } from '@/hooks/useThemeColor';
 
 type NotCapturedProps = {
@@ -13,13 +12,13 @@ type NotCapturedProps = {
 
 const NotCaptured: React.FC<NotCapturedProps> = ({ specie }) => {
     const color = useThemeColor({}, 'text');
-    
+    const tint = useThemeColor({},'tint');
     return (
         <ThemedView style={styles.container}>
             <Ionicons name="help" color={color} size={50}/>
             <ThemedText style={styles.title}>Espèce non capturée</ThemedText>
             <ThemedText style={styles.message}>
-                Capturez un(e) <ThemedText style={styles.species}>{specie.name}</ThemedText> pour en apprendre plus !
+                Capturez un(e) <ThemedText style={[styles.species,{color:tint}]}>{specie.name}</ThemedText> pour en apprendre plus !
             </ThemedText>
             <ThemedText style={styles.mapLabel}>Où capturer cette espèce :</ThemedText>
             <ExtendableMap locations={specie.locations} style={styles.mapContainer}/>
@@ -46,7 +45,6 @@ const styles = StyleSheet.create({
     },
     species: { 
         fontWeight: 'bold',
-        color: Colors.light.tint
     },
     mapLabel: { 
         fontSize: 15,
