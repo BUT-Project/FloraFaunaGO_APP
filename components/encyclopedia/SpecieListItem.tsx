@@ -4,6 +4,7 @@ import {ThemedView,ThemedText} from "@/components/ui/themed";
 import {Link} from "expo-router";
 import {LoadingImageBackground} from '../ui/LoadingImageBackground';
 import Specie from "@/model/domain/Specie";
+import { LinearGradient } from 'expo-linear-gradient';
 
 type CaptureListItemProps = {
     specie: Specie;
@@ -27,10 +28,12 @@ export default function SpecieListItem({ specie, captureId }: CaptureListItemPro
                         width={itemSize}
                         height={itemSize}
                         isCaptured={captureId !== null}
-                    >                        
-                        <ThemedText style={styles.name}>
-                            {specie.name}
-                        </ThemedText>
+                    >          
+                        <LinearGradient colors={["transparent",'rgba(0, 0, 0, 0.8)']} locations={[0.2,0.9]}>
+                            <ThemedText style={styles.name}>
+                                {specie.name}
+                            </ThemedText>
+                        </LinearGradient>              
                     </LoadingImageBackground>
                 </ThemedView>
             </TouchableOpacity>
@@ -41,19 +44,24 @@ export default function SpecieListItem({ specie, captureId }: CaptureListItemPro
 const styles = StyleSheet.create({
     container: {
         margin: 5,
-        borderRadius: 10,
+        borderRadius: 15,
         overflow: 'hidden',
     },
     image: {
         width: itemSize,
         height: itemSize,
         justifyContent: 'flex-end',
-        borderRadius: 10,
     },
     name: {
         color: 'white',
-        backgroundColor: 'rgba(0, 0, 0, 0.35)',
-        padding: 2,
+        fontWeight:"500",
+        textShadowColor:"black",
+        textShadowRadius:4,
+        textShadowOffset:{
+            width:0,
+            height:2,
+        },
+        padding: 5,
         textAlign: "center",
     },
 });

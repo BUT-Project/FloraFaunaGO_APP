@@ -18,7 +18,7 @@ const NotCaptured: React.FC<NotCapturedProps> = ({ specie }) => {
             <Ionicons name="help" color={color} size={50}/>
             <ThemedText style={styles.title}>Espèce non capturée</ThemedText>
             <ThemedText style={styles.message}>
-                Capturez un(e) <ThemedText style={[styles.species,{color:tint}]}>{specie.name}</ThemedText> pour en apprendre plus !
+                Capturez un(e) <ThemedText testID='SpecieName' style={[styles.species,{color:tint}]}>{specie.name}</ThemedText> pour en apprendre plus !
             </ThemedText>
             <ThemedText style={styles.mapLabel}>Où capturer cette espèce :</ThemedText>
             <ExtendableMap locations={specie.locations} style={styles.mapContainer}/>
