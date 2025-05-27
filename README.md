@@ -1,50 +1,65 @@
-# Welcome to your Expo app 👋
+<p align="center">
+  <img src="https://codefirst.iut.uca.fr/git/FloraFauna_GO/FloraFauna_GO_App/raw/branch/master/assets/images/logo_FFGO.png"/>
+</p>
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+# 🌿 Flora Fauna GO
 
-## Get started
+> Une application mobile d’exploration de la biodiversité inspirée de Pokémon GO.
 
-1. Install dependencies
+**Flora Fauna GO** permet aux utilisateurs de découvrir la nature qui les entoure en photographiant des organismes vivants (animaux, plantes, champignons, etc.). Grâce à une IA de reconnaissance, ils peuvent identifier ces espèces, les "capturer" via un mini-jeu, et enrichir leur propre encyclopédie.
 
-   ```bash
-   npm install
-   ```
+---
 
-2. Start the app
+## 📱 Fonctionnalités
 
-   ```bash
-    npx expo start
-   ```
+- 📷 Capture d’image via l’appareil photo
+- 🤖 Reconnaissance d’espèce via une API IA (<a href="https://codefirst.iut.uca.fr/git/FloraFauna_GO/FloraFauna_GO_API">Flora Fauna GO API</a>)
+- ⏳ Affichage de l’état de reconnaissance en temps réel
+- 🎮 Mini-jeu de capture en 3 étapes (chaque étape est validée uniquement en cas de bon choix)
+- 📚 Ajout de l’espèce capturée à une encyclopédie personnelle
 
-In the output, you'll find options to open the app in a
+---
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## ⚙️ Stack technique
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+- **React Native** (via [Expo](https://expo.dev))
+- **TypeScript**
+- **Zustand** pour la gestion d’état
+- **React Query** pour les appels réseau (fetch / mutation)
+- **React Navigation** pour la navigation entre écrans
+- **Expo Camera** pour l'accès à l'appareil photo
 
-## Get a fresh project
+---
 
-When you're ready, run:
+## 🚀 Installation
+
+### Prérequis
+- Node.js >= 18
+- Un émulateur Android/iOS ou l'application **Expo Go** sur votre smartphone
+
+### Étapes
 
 ```bash
-npm run reset-project
+# 1. Cloner le dépôt
+git clone https://codefirst.iut.uca.fr/git/FloraFauna_GO/FloraFauna_GO_App.git
+cd FloraFauna_GO_App
+
+# 2. Installer les dépendances
+npm install
+
+# 3. Lancer l'application
+expo start
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
 
-## Learn more
+## 🧑‍💻 Participants
 
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+<a href = "https://codefirst.iut.uca.fr/git/david.d_almeidar">
+<img src ="https://codefirst.iut.uca.fr/git/avatars/a16fa2dc52ceae18d8923c91121caa66?size=870" height="50px">
+</a>
+<a href="https://codefirst.iut.uca.fr/git/patrick.brugiere">
+<img src = "https://codefirst.iut.uca.fr/git/avatars/a472163657f75280bf1f720cf49b702c?size=870" height="50px">
+</a>
+<a href = "https://codefirst.iut.uca.fr/git/yoan.brugiere">
+<img src ="https://codefirst.iut.uca.fr/git/avatars/5408f837f14efca8b12f2aec56baac37?size=870" height="50px">
+</a>
