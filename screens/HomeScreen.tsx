@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import Animated, {useAnimatedStyle, useSharedValue, withSpring} from "react-native-reanimated";
 import {ThemedView} from "@/components/ui/themed";
 import {Alert, Dimensions, StyleSheet, View} from "react-native";
@@ -16,10 +16,15 @@ import { useFocusEffect } from '@react-navigation/native';
 import { processSuccessByType } from "@/shared/successHelper";
 import { SafeView } from "@/components/ui/SafeView";
 import {  isImageBlurry } from "@/services/imageQuality";
+import {ErrorView} from "@/app/(tabs)/(encyclopedia)/[id]";
 
 const {width: SCREEN_WIDTH} = Dimensions.get('window');
 export default function HomeScreen() {
     const {speciesRepository} = StubData.getInstance();
+
+    if (!speciesRepository) {
+        return <ErrorView message="Erreur de configuration des repositories" />;
+    }
     const [location, setLocation] = useState<Location.LocationObject | null>(null);
     const [isCameraActive, setIsCameraActive] = useState(false);
 
@@ -53,7 +58,6 @@ export default function HomeScreen() {
     const {isLoading, isFetching, data: identifiedSpecie} = useQuery<Specie, Error>({
         queryKey: ['identifySpecie', base64Image, speciesRepository],
         queryFn: async (): Promise<Specie> => {
-            if (!speciesRepository) throw new Error('No Repository');
             if (!base64Image) throw new Error('No base64 image data');
             var spec = await speciesRepository.identifySpecies(base64Image);
             await processSuccessByType(SuccessType.PHOTO, spec);
@@ -111,19 +115,19 @@ export default function HomeScreen() {
                 <View style={styles.segmentedControl}>
                     <BlurSegmented tabsName={['Camera', 'Map']} onTabChange={switchView}/>
                 </View>
-                <Animated.View style={[styles.viewContainer, animatedStyle]}>
+                <Animated.View style={[styles.container, animatedStyle]}>
                     {isCameraActive
                         &&
-                        <>
+                        <View style={styles.viewContainer}>
                             <CameraView setBase64Image={setBase64Image} setCapturedImage={setCapturedImage}
                                         style={styles.camera}/>
-                            {isFetching && (
-                                <View style={styles.progressOverlay}>
-                                    <ARProgressIndicator width={SCREEN_WIDTH} height={SCREEN_WIDTH}/>
-                                </View>
-                            )}
-                            <MainMapView location={location} style={styles.map}/>
-                        </>}
+                            <MainMapView location={location} style={styles.map} repository={speciesRepository}/>
+                        </View>}
+                    {isFetching && (
+                        <View style={styles.progressOverlay}>
+                            <ARProgressIndicator width={SCREEN_WIDTH} height={SCREEN_WIDTH}/>
+                        </View>
+                    )}
                 </Animated.View>
             </ThemedView>
         </SafeView>
@@ -174,6 +178,8 @@ const styles = StyleSheet.create({
         height: '100%'
     },
     map: {
+        flex: 1,
         width: '50%',
+        height: '100%',
     },
 });

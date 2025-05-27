@@ -14,7 +14,7 @@ const CenteredMessage = ({ children }: { children: React.ReactNode }) => (
     </ThemedView>
 );
 
-const ErrorView = ({ message }: { message: string }) => (
+export const ErrorView = ({ message }: { message: string }) => (
     <CenteredMessage>
         <ThemedText type={'subtitle'}>{message}</ThemedText>
     </CenteredMessage>

@@ -1,128 +1,204 @@
 import React, {useState} from 'react';
-import { Modal, StyleSheet, TouchableOpacity} from 'react-native';
-import {ThemedView,ThemedText, ThemedIcon} from "@/components/ui/themed";
-import {
-    Kingdom,
-    Class,
-    Family,
-    Diet,
-    Specie,
-} from "@/model/domain";
-import { FilterEnumSelector } from './FilterSelector';
-import { useThemeColor } from '@/hooks/useThemeColor';
+import {Modal, StyleSheet, TouchableOpacity} from 'react-native';
+import {ThemedIcon, ThemedText, ThemedView} from "@/components/ui/themed";
+import {Class, Diet, Family, Kingdom,} from "@/model/domain";
+import {FilterEnumSelector} from './FilterSelector';
+import {useThemeColor} from '@/hooks/useThemeColor';
 
-type SpeciesFilterProps={
-    baseSpecies:Specie[],
-    setFilteredSpecies:any;
+type SpeciesFilterProps = {
+    // Filter state from useInfiniteSpecies
+    currentKingdomFilter: Kingdom | null;
+    currentClassFilter: Class | null;
+    currentFamilyFilter: Family | null;
+    currentDietFilter: Diet | null;
+
+    // Filter methods from useInfiniteSpecies
+    toggleKingdomFilter: (kingdom: Kingdom) => void;
+    toggleClassFilter: (classType: Class) => void;
+    toggleFamilyFilter: (family: Family) => void;
+    toggleDietFilter: (diet: Diet) => void;
+    clearFilters: () => void;
+
+    // Sort methods from useInfiniteSpecies
+    sortByName: (descending?: boolean) => void;
 }
 
-export default function SpeciesFilterModal(props: SpeciesFilterProps){
+export default function SpeciesFilterModal(props: SpeciesFilterProps) {
+    const selectedBackground = useThemeColor({}, "tint");
+    const [visible, setVisible] = useState(false);
 
-    const selectedBackground = useThemeColor({},"tint");
+    // Use the current filter states from the hook
+    const {
+        currentKingdomFilter,
+        currentClassFilter,
+        currentFamilyFilter,
+        currentDietFilter,
+        toggleKingdomFilter,
+        toggleClassFilter,
+        toggleFamilyFilter,
+        toggleDietFilter,
+        clearFilters,
+        sortByName
+    } = props;
 
-    const [visible,setVisible] = useState(false);
-    const [kingdom,setKingdom] = useState<Kingdom | null>(null);
-    const [bioClass,setBioClass] = useState<Class | null>(null);
-    const [family,setFamily] = useState<Family | null>(null);
-    const [diet,setDiet] = useState<Diet | null>(null);
-
-    const onKingdomChange = (newKingdom:Kingdom) => {
-        if(kingdom==newKingdom){
-            setKingdom(null);
-            props.setFilteredSpecies(props.baseSpecies.filter(() => {return true;}))
-        }
-        else{
-            setKingdom(newKingdom);
-            props.setFilteredSpecies(props.baseSpecies.filter((item) => item.kingdom === newKingdom))
-        }
-    }
-    const onClassChange = (newClass:Class) => {
-        if(bioClass==newClass){
-            setBioClass(null);
-            props.setFilteredSpecies(props.baseSpecies.filter(() => {return true;}))
-        }
-        else{
-            setBioClass(newClass);
-            props.setFilteredSpecies(props.baseSpecies.filter((item) => {return item.class == bioClass;}))
-        }
-    }
-    const onFamilyChange = (newFamily:Family) => {
-        if(family==newFamily){
-            setFamily(null);
-            props.setFilteredSpecies(props.baseSpecies.filter(() => {return true;}))
-        }
-        else{
-            setFamily(newFamily);
-            props.setFilteredSpecies(props.baseSpecies.filter((item) => {return item.family === family;}))
-        }
+    const onKingdomChange = (newKingdom: Kingdom) => {
+        toggleKingdomFilter(newKingdom);
     }
 
-    const onDietChange = (newDiet:Diet) => {
-        if(diet==newDiet){
-            setDiet(null);
-            props.setFilteredSpecies(props.baseSpecies.filter(() => {return true;}))
-        }
-        else{
-            setDiet(newDiet);
-            props.setFilteredSpecies(props.baseSpecies.filter((item) => {return item.diet === diet;}))
-        }
+    const onClassChange = (newClass: Class) => {
+        toggleClassFilter(newClass);
     }
+
+    const onFamilyChange = (newFamily: Family) => {
+        toggleFamilyFilter(newFamily);
+    }
+
+    const onDietChange = (newDiet: Diet) => {
+        toggleDietFilter(newDiet);
+    }
+
     const sortAscending = () => {
-        props.setFilteredSpecies([...props.baseSpecies].sort((s1, s2) => s1.name.localeCompare(s2.name)));
+        sortByName(false); // ascending
     }
+
     const sortDescending = () => {
-        props.setFilteredSpecies([...props.baseSpecies].sort((s1, s2) => s2.name.localeCompare(s1.name)));
+        sortByName(true); // descending
+    }
+
+    const hasActiveFilters = !!(
+        currentKingdomFilter ||
+        currentClassFilter ||
+        currentFamilyFilter ||
+        currentDietFilter
+    );
+
+    const handleClearFilters = () => {
+        clearFilters();
     }
 
     return (
         <>
-            <TouchableOpacity style={styles.filterButton} onPress={()=>setVisible(true)}>
-                <ThemedIcon name={"filter"} size={24} color={visible ? selectedBackground : undefined}/>
+            <TouchableOpacity style={styles.filterButton} onPress={() => setVisible(true)}>
+                <ThemedIcon
+                    name={"filter"}
+                    size={24}
+                    color={hasActiveFilters ? selectedBackground : undefined}
+                />
+                {hasActiveFilters &&
+                    <ThemedView style={[styles.filterIndicator, {backgroundColor: selectedBackground}]}/>}
             </TouchableOpacity>
-            <Modal animationType="slide" transparent={true} visible={visible} onRequestClose={() =>setVisible(false)}>
-                    <TouchableOpacity style={styles.dismissButton} onPress={() => setVisible(false)}/>
-                    <ThemedView style={styles.modalContent}>
-                        <TouchableOpacity  style={styles.closeButton} onPress={()=>setVisible(false)}>
-                            <ThemedIcon name={"close"} size={25}/>
+
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={visible}
+                onRequestClose={() => setVisible(false)}
+            >
+                <TouchableOpacity
+                    style={styles.dismissButton}
+                    onPress={() => setVisible(false)}
+                />
+
+                <ThemedView style={styles.modalContent}>
+
+                    <TouchableOpacity
+                        style={styles.closeButton}
+                        onPress={() => setVisible(false)}
+                    >
+                        <ThemedIcon name={"close"} size={25}/>
+                    </TouchableOpacity>
+
+                    {/* Sort Section */}
+                    <ThemedView style={styles.sortContainer}>
+                        <ThemedText>Trier :</ThemedText>
+                        <TouchableOpacity onPress={sortAscending}>
+                            <ThemedIcon name={"chevron-up-outline"} size={25}/>
                         </TouchableOpacity>
-                        <ThemedView style={styles.sortContainer}>
-                            <ThemedText>Trier :</ThemedText>
-                            <TouchableOpacity onPress={sortAscending}>
-                                <ThemedIcon name={"chevron-up-outline"} size={25}/>
-                            </TouchableOpacity>
-                            <TouchableOpacity onPress={sortDescending}>
-                                <ThemedIcon name={"chevron-down-outline"}  size={25}/>
-                            </TouchableOpacity>
-                        </ThemedView>
-                        <FilterEnumSelector label='Reigne :' enumType={Kingdom} value={kingdom} selectedColor={selectedBackground} onFilterChange={setKingdom}  />
-                        <FilterEnumSelector label='Diète :' enumType={Diet} value={diet} selectedColor={selectedBackground} onFilterChange={setDiet}/>
-                        <FilterEnumSelector label='Classe :' enumType={Class} value={bioClass} selectedColor={selectedBackground} onFilterChange={setBioClass}/>
-                        <FilterEnumSelector label='Famille :' enumType={Family} value={family} selectedColor={selectedBackground} onFilterChange={setFamily}/>
+                        <TouchableOpacity onPress={sortDescending}>
+                            <ThemedIcon name={"chevron-down-outline"} size={25}/>
+                        </TouchableOpacity>
                     </ThemedView>
+
+                    {/* Clear Filters Button */}
+                    {hasActiveFilters && (
+                        <TouchableOpacity
+                            style={styles.clearFiltersButton}
+                            onPress={handleClearFilters}
+                        >
+                            <ThemedText style={styles.clearFiltersText}>
+                                Effacer les filtres
+                            </ThemedText>
+                            <ThemedIcon name={"refresh-outline"} size={20}/>
+                        </TouchableOpacity>
+                    )}
+
+
+                    {/* Filter Selectors */}
+                    <FilterEnumSelector
+                        label='Reigne :'
+                        enumType={Kingdom}
+                        value={currentKingdomFilter}
+                        selectedColor={selectedBackground}
+                        onFilterChange={onKingdomChange}
+                    />
+
+                    <FilterEnumSelector
+                        label='Diète :'
+                        enumType={Diet}
+                        value={currentDietFilter}
+                        selectedColor={selectedBackground}
+                        onFilterChange={onDietChange}
+                    />
+
+                    <FilterEnumSelector
+                        label='Classe :'
+                        enumType={Class}
+                        value={currentClassFilter}
+                        selectedColor={selectedBackground}
+                        onFilterChange={onClassChange}
+                    />
+
+                    <FilterEnumSelector
+                        label='Famille :'
+                        enumType={Family}
+                        value={currentFamilyFilter}
+                        selectedColor={selectedBackground}
+                        onFilterChange={onFamilyChange}
+                    />
+                </ThemedView>
             </Modal>
         </>
     );
-};
+}
 
 const styles = StyleSheet.create({
-    filterButton:{
-        borderRadius:15,
-        padding:5,
-        width:"10%"
+    filterButton: {
+        borderRadius: 15,
+        padding: 5,
+        width: "10%",
+        position: 'relative',
     },
-    dismissButton:{
-        flex:1,
-        width:"100%",
+    filterIndicator: {
+        position: 'absolute',
+        top: 2,
+        right: 2,
+        width: 8,
+        height: 8,
+        borderRadius: 4,
+    },
+    dismissButton: {
+        flex: 1,
+        width: "100%",
     },
     modalContent: {
         width: '100%',
         borderTopRightRadius: 20,
         borderTopLeftRadius: 20,
-        paddingVertical:20,
+        paddingVertical: 20,
         padding: 7,
-        alignItems:"center",
+        alignItems: "center",
         bottom: 0,
-        gap:10,
+        gap: 10,
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
@@ -138,11 +214,27 @@ const styles = StyleSheet.create({
         right: 10,
         borderRadius: 30,
     },
-    sortContainer:{
-        flexDirection:"row",
-        justifyContent:"space-between",
-        alignItems:"center",
-        gap:5,
+    sortContainer: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        gap: 5,
     },
-
-})
+    clearFiltersButton: {
+        marginRight: 8,
+        marginBottom: 8,
+        flexDirection: 'row',
+        alignItems: 'center',
+        alignSelf: 'flex-end',
+        gap: 8,
+        paddingHorizontal: 12,
+        paddingVertical: 8,
+        borderRadius: 8,
+        borderWidth: 1,
+        borderColor: '#ccc',
+    },
+    clearFiltersText: {
+        fontSize: 14,
+        fontWeight: '500',
+    },
+});

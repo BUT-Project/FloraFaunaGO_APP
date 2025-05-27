@@ -1,20 +1,13 @@
-import {useCallback, useState} from "react";
+import {useCallback, useEffect, useMemo, useState} from "react";
 import {useInfiniteData} from "@/hooks/viewModels/useInfiniteData";
 import {BaseInfiniteOptions, BaseInfiniteResult} from "@/hooks/types";
-import { 
-    Specie,
-    Habitat,
-    Diet,
-    Kingdom,
-    Class,
-    Family
-} from "@/model/domain";
+import {Class, Diet, Family, Kingdom, Specie} from "@/model/domain";
 import {ISpeciesRepository} from "@/dal/repository/ISpeciesRepository";
+import {QueryParams} from "@/shared/PagedRequest";
 
 interface SpecieFilterState {
     currentNameFilter: string | null;
     currentScientificNameFilter: string | null;
-    currentHabitatFilter: Habitat | null;
     currentDietFilter: Diet | null;
     currentKingdomFilter: Kingdom | null;
     currentClassFilter: Class | null;
@@ -23,16 +16,16 @@ interface SpecieFilterState {
 
 type UseInfiniteSpeciesResult = BaseInfiniteResult<Specie> &
     SpecieFilterState & {
-    // Filter methods
-    filterByName: (name: string) => void;
-    filterByScientificName: (scientificName: string) => void;
-    filterByHabitat: (habitat: Habitat) => void;
-    filterByDiet: (diet: Diet) => void;
-    filterByKingdom: (kingdom: Kingdom) => void;
-    filterByClass: (classType: Class) => void;
-    filterByFamily: (family: Family) => void;
+    // Toggle filter methods
+    search: (name: string) => void;
+    toggleScientificNameFilter: (scientificName: string) => void;
+    toggleDietFilter: (diet: Diet) => void;
+    toggleKingdomFilter: (kingdom: Kingdom) => void;
+    toggleClassFilter: (classType: Class) => void;
+    toggleFamilyFilter: (family: Family) => void;
     clearFilters: () => void;
-
+    // Manual filter method
+    applyFilters: () => void;
     // Sort methods
     sortByName: (descending?: boolean) => void;
     sortByScientificName: (descending?: boolean) => void;
@@ -51,18 +44,30 @@ export function useInfiniteSpecies(
         pageSize = 20,
         orderBy = 'name',
         descending = false,
-        enabled = true,
-        initialFilter,
+        enabled = true
     } = options;
 
     // Filter state management
     const [nameFilter, setNameFilter] = useState<string | null>(null);
     const [scientificNameFilter, setScientificNameFilter] = useState<string | null>(null);
-    const [habitatFilter, setHabitatFilter] = useState<Habitat | null>(null);
     const [dietFilter, setDietFilter] = useState<Diet | null>(null);
     const [kingdomFilter, setKingdomFilter] = useState<Kingdom | null>(null);
     const [classFilter, setClassFilter] = useState<Class | null>(null);
     const [familyFilter, setFamilyFilter] = useState<Family | null>(null);
+
+    // 🔧 FIX: Memoize the current filters to prevent unnecessary re-renders
+    const currentFilters = useMemo((): QueryParams => {
+        const params: QueryParams = {};
+
+        if (nameFilter) params.name = nameFilter;
+        if (scientificNameFilter) params.scientificName = scientificNameFilter;
+        if (dietFilter) params.diet = dietFilter;
+        if (kingdomFilter) params.kingdom = kingdomFilter;
+        if (classFilter) params.class = classFilter;
+        if (familyFilter) params.family = familyFilter;
+
+        return params;
+    }, [nameFilter, scientificNameFilter, dietFilter, kingdomFilter, classFilter, familyFilter]);
 
     // Core query setup
     const queryResult = useInfiniteData<Specie>(repository, {
@@ -71,83 +76,76 @@ export function useInfiniteSpecies(
         orderingProperty: orderBy as string,
         isDescending: descending,
         enabled,
-        initialFilter,
+        initialFilter: currentFilters, // 🔧 FIX: Pass current filters directly
         staleTime: 5 * 60 * 1000 // 5 minutes
     });
 
-    // Filter handlers
-    const filterByName = useCallback((name: string) => {
+    // 🔧 FIX: Use useEffect with proper dependencies to auto-apply filters
+    useEffect(() => {
+        queryResult.setFilter(currentFilters);
+    }, [currentFilters]); // Only depend on the memoized filters
+
+    // Apply current filters to the query (manual trigger)
+    const applyFilters = useCallback(() => {
+        queryResult.setFilter(currentFilters);
+    }, [currentFilters, queryResult.setFilter]);
+
+    // Toggle filter handlers
+    const search = useCallback((name: string) => {
         setNameFilter(name);
-        queryResult.setFilter((species) =>
-            species.name.toLowerCase().includes(name.toLowerCase())
-        );
-    }, [queryResult]);
+    }, []);
 
-    const filterByScientificName = useCallback((scientificName: string) => {
-        setScientificNameFilter(scientificName);
-        queryResult.setFilter((species) =>
-            species.scientificName.toLowerCase().includes(scientificName.toLowerCase())
-        );
-    }, [queryResult]);
+    const toggleScientificNameFilter = useCallback((scientificName: string) => {
+        setScientificNameFilter(current => current === scientificName ? null : scientificName);
+    }, []);
 
-    const filterByHabitat = useCallback((habitat: Habitat) => {
-        setHabitatFilter(habitat);
-        queryResult.setFilter((species) => species.habitat === habitat);
-    }, [queryResult]);
+    const toggleDietFilter = useCallback((diet: Diet) => {
+        setDietFilter(current => current === diet ? null : diet);
+    }, []);
 
-    const filterByDiet = useCallback((diet: Diet) => {
-        setDietFilter(diet);
-        queryResult.setFilter((species) => species.diet === diet);
-    }, [queryResult]);
+    const toggleKingdomFilter = useCallback((kingdom: Kingdom) => {
+        setKingdomFilter(current => current === kingdom ? null : kingdom);
+    }, []);
 
-    const filterByKingdom = useCallback((kingdom: Kingdom) => {
-        setKingdomFilter(kingdom);
-        queryResult.setFilter((species) => species.kingdom === kingdom);
-    }, [queryResult]);
+    const toggleClassFilter = useCallback((classType: Class) => {
+        setClassFilter(current => current === classType ? null : classType);
+    }, []);
 
-    const filterByClass = useCallback((classType: Class) => {
-        setClassFilter(classType);
-        queryResult.setFilter((species) => species.class === classType);
-    }, [queryResult]);
-
-    const filterByFamily = useCallback((family: Family) => {
-        setFamilyFilter(family);
-        queryResult.setFilter((species) => species.family === family);
-    }, [queryResult]);
+    const toggleFamilyFilter = useCallback((family: Family) => {
+        setFamilyFilter(current => current === family ? null : family);
+    }, []);
 
     const clearFilters = useCallback(() => {
         setNameFilter(null);
         setScientificNameFilter(null);
-        setHabitatFilter(null);
         setDietFilter(null);
         setKingdomFilter(null);
         setClassFilter(null);
         setFamilyFilter(null);
-        queryResult.setFilter(() => true);
-    }, [queryResult]);
+    }, []);
 
     // Sort handlers
     const sortByName = useCallback((descending: boolean = false) => {
         queryResult.setOrdering('name', descending);
-    }, [queryResult]);
+    }, [queryResult.setOrdering]);
 
     const sortByScientificName = useCallback((descending: boolean = false) => {
         queryResult.setOrdering('scientificName', descending);
-    }, [queryResult]);
+    }, [queryResult.setOrdering]);
 
     return {
         // Base query properties
         ...queryResult,
 
-        // Species-specific filter methods
-        filterByName,
-        filterByScientificName,
-        filterByHabitat,
-        filterByDiet,
-        filterByKingdom,
-        filterByClass,
-        filterByFamily,
+        // Species-specific toggle filter methods
+        search,
+        toggleScientificNameFilter,
+        toggleDietFilter,
+        toggleKingdomFilter,
+        toggleClassFilter,
+        toggleFamilyFilter,
         clearFilters,
+        applyFilters,
 
         // Sort methods
         sortByName,
@@ -156,7 +154,6 @@ export function useInfiniteSpecies(
         // Current filter states
         currentNameFilter: nameFilter,
         currentScientificNameFilter: scientificNameFilter,
-        currentHabitatFilter: habitatFilter,
         currentDietFilter: dietFilter,
         currentKingdomFilter: kingdomFilter,
         currentClassFilter: classFilter,

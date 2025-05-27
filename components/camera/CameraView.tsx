@@ -1,16 +1,17 @@
 import {useCallback, useRef, useState} from "react";
-import {Alert, ViewStyle, StyleProp, StyleSheet, TouchableOpacity} from "react-native";
+import {Alert, StyleProp, StyleSheet, TouchableOpacity, ViewStyle} from "react-native";
 import {useCamera} from "@/components/camera/hooks";
-import {ThemedView, ThemedText} from "@/components/ui/themed";
+import {ThemedText, ThemedView} from "@/components/ui/themed";
 import {CameraView} from "expo-camera";
 import CameraControls from "@/components/camera/CameraControls";
 import Loading from "../ui/Loading";
+import {SpecieList} from "@/dal/StubLib/Data";
 
 export interface CustomCameraViewProps {
     setBase64Image: (base64: string | null) => void;
     setCapturedImage: (image: string | null) => void;
     style?: StyleProp<ViewStyle>;
-};
+}
 
 const CustomCameraView = ({setBase64Image, setCapturedImage, style}: CustomCameraViewProps) => {
 
@@ -37,8 +38,8 @@ const CustomCameraView = ({setBase64Image, setCapturedImage, style}: CustomCamer
             if (shouldUseMock) {
                 // ✅ Image factice pour les tests en développement
                 photo = {
-                    uri: 'https://via.placeholder.com/300.png?text=Mock+Image',
-                    base64: "dazpdoazopdazpodkoazp",
+                    uri: 'https://images.unsplash.com/photo-1525498128493-380d1990a112?q=80&w=2535&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+                    base64: SpecieList[0].image
                 };
             } else {
                 photo = await cameraRef.current?.takePictureAsync({base64: true});
@@ -66,7 +67,7 @@ const CustomCameraView = ({setBase64Image, setCapturedImage, style}: CustomCamer
             </ThemedView>
         );
     }
-    ;
+
 
     return (
         <ThemedView style={[styles.container, style]}>
@@ -96,6 +97,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+        width: '100%',
     },
     message: {
         textAlign: 'center',
