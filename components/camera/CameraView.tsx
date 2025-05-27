@@ -53,14 +53,14 @@ const CustomCameraView = ({setBase64Image, setCapturedImage, style}: CustomCamer
     };
 
     if (!permission) {
-        return (<Loading style={[styles.container, style]} text="Récupération des permissions ..."/>);
+        return (<Loading testID="PermissionLoading" style={[styles.container, style]} text="Récupération des permissions ..."/>);
     }
     if (permission && !permission.granted) {
         return (
             <ThemedView style={[styles.container, style]}>
                 <ThemedText style={styles.message}>Nous avons besoin de votre permission pour utiliser la caméra de
                     l'appareil.</ThemedText>
-                <TouchableOpacity style={styles.permissionButton} onPress={requestPerm}>
+                <TouchableOpacity testID="AllowPermission.Button" style={styles.permissionButton} onPress={requestPerm}>
                     <ThemedText style={styles.permissionButtonText}>Accorder la permission</ThemedText>
                 </TouchableOpacity>
             </ThemedView>
