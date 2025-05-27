@@ -1,160 +1,103 @@
-
-// =====================================================
-// ZOD EXTENSION - Direct instantiation with validation
-// =====================================================
-
-import { z, ZodSchema } from 'zod';
-import {HttpClient, HttpRequestOptions} from "@/dal/network/HttpClient";
-
-export interface ValidatedRequestOptions<T = unknown> extends HttpRequestOptions<T> {
-    requestSchema?: ZodSchema<T>;
-    responseSchema?: ZodSchema<unknown>;
-}
+import {HttpClient, RequestConfig} from "@/dal/network/HttpClient";
+import {TypeOf, z} from "zod";
+import {Result} from "@/shared/Result";
+import {QueryParams} from "@/shared/PagedRequest";
 
 export class ZodHttpClient extends HttpClient {
-    async requestValidated<T = unknown, R = unknown>(options: ValidatedRequestOptions<T>): Promise<R> {
-        const { requestSchema, responseSchema, ...requestOptions } = options;
+    async requestWithValidation<
+        TRequest extends z.ZodSchema,
+        TResponse extends z.ZodSchema
+    >(
+        config: RequestConfig & {
+            readonly requestSchema?: TRequest;
+            readonly responseSchema?: TResponse;
+        }
+    ): Promise<Result<z.infer<TResponse>>> {
+        const { requestSchema, responseSchema, ...requestConfig } = config;
 
         // Validate request body
-        if (requestSchema && options.body !== undefined) {
-            requestOptions.body = requestSchema.parse(options.body);
+        if (requestSchema && config.body !== undefined) {
+            const validation = requestSchema.safeParse(config.body);
+            if (!validation.success) {
+                return {
+                    success: false,
+                    error: new Error(`Request validation failed: ${validation.error.message}`)
+                };
+            }
+            requestConfig.body = validation.data;
         }
 
         // Make request
-        const response = await this.request<T, R>(requestOptions);
+        const result = await this.request<{id : string}>(requestConfig);
+        if (!result.success) return result;
 
         // Validate response
-        if (responseSchema && response !== undefined) {
-            return responseSchema.parse(response);
+        if (responseSchema) {
+            const validation = responseSchema.safeParse(result.data);
+            if (!validation.success) {
+                return {
+                    success: false,
+                    error: new Error(`Response validation failed: ${validation.error.message}`)
+                };
+            }
+            return { success: true, data: validation.data };
         }
 
-        return response;
+        return result as Result<z.infer<TResponse>>;
     }
 
-    async postValidated<T = unknown, R = unknown>(
-        url: string,
-        body: T,
-        requestSchema?: ZodSchema<T>,
-        responseSchema?: ZodSchema<R>,
-        headers?: Record<string, string>
-    ): Promise<R> {
-        return this.requestValidated<T, R>({
-            method: 'POST',
-            url,
-            body,
-            requestSchema,
-            responseSchema,
-            headers,
-        });
-    }
-
-    async putValidated<T = unknown, R = unknown>(
-        url: string,
-        body: T,
-        requestSchema?: ZodSchema<T>,
-        responseSchema?: ZodSchema<R>,
-        headers?: Record<string, string>
-    ): Promise<R> {
-        return this.requestValidated<T, R>({
-            method: 'PUT',
-            url,
-            body,
-            requestSchema,
-            responseSchema,
-            headers,
-        });
-    }
-
-    // Validated resource operations
-    validatedResource<
-        TCreateSchema extends ZodSchema,
-        TUpdateSchema extends ZodSchema,
-        TResourceSchema extends ZodSchema
+    // Schema-aware convenience methods
+    async postValidated<
+        TRequest extends z.ZodTypeAny,
+        TResponse extends z.ZodTypeAny
     >(
-        path: string,
-        schemas: {
-            create: TCreateSchema;
-            update: TUpdateSchema;
-            resource: TResourceSchema;
-        }
-    ) {
-        return new ValidatedResource(this, path, schemas);
-    }
-}
-
-export class ValidatedResource<
-    TCreateSchema extends ZodSchema,
-    TUpdateSchema extends ZodSchema,
-    TResourceSchema extends ZodSchema
-> {
-    constructor(
-        private readonly http: ZodHttpClient,
-        private readonly path: string,
-        private readonly schemas: {
-            create: TCreateSchema;
-            update: TUpdateSchema;
-            resource: TResourceSchema;
-        }
-    ) {}
-
-    async find(id: string | number): Promise<z.infer<TResourceSchema> | null> {
-        try {
-            return await this.http.requestValidated({
-                method: 'GET',
-                url: `${this.path}/${id}`,
-                responseSchema: this.schemas.resource,
-            });
-        } catch {
-            return null;
-        }
-    }
-
-    async findAll(): Promise<z.infer<TResourceSchema>[]> {
-        try {
-            return await this.http.requestValidated({
-                method: 'GET',
-                url: this.path,
-                responseSchema: z.array(this.schemas.resource),
-            });
-        } catch {
-            return [];
-        }
-    }
-
-    async create(data: z.infer<TCreateSchema>): Promise<z.infer<TResourceSchema>> {
-        return this.http.requestValidated({
+        url: string,
+        body: z.infer<TRequest>,
+        requestSchema: TRequest,
+        responseSchema: TResponse,
+        headers?: Readonly<Record<string, string>>
+    ): Promise<Result<z.infer<TResponse>>> {
+        return this.requestWithValidation({
             method: 'POST',
-            url: this.path,
-            body: data,
-            requestSchema: this.schemas.create,
-            responseSchema: this.schemas.resource,
+            url,
+            body,
+            requestSchema,
+            responseSchema,
+            headers
         });
     }
 
-    async update(id: string | number, data: z.infer<TUpdateSchema>): Promise<z.infer<TResourceSchema>> {
-        return this.http.requestValidated({
+    async getValidated<TResponse extends z.ZodTypeAny>(
+        url: string,
+        responseSchema: TResponse,
+        headers?: Readonly<Record<string, string>>,
+        params?: QueryParams
+    ): Promise<Result<TypeOf<TResponse>>> {
+        return this.requestWithValidation({
+            method: 'GET',
+            url,
+            responseSchema,
+            headers
+        });
+    }
+
+    async putValidated<
+        TRequest extends z.ZodTypeAny,
+        TResponse extends z.ZodTypeAny
+    >(
+        url: string,
+        body: z.infer<TRequest>,
+        requestSchema: TRequest,
+        responseSchema: TResponse,
+        headers?: Readonly<Record<string, string>>
+    ): Promise<Result<z.infer<TResponse>>> {
+        return this.requestWithValidation({
             method: 'PUT',
-            url: `${this.path}/${id}`,
-            body: data,
-            requestSchema: this.schemas.update,
-            responseSchema: this.schemas.resource,
-        });
-    }
-
-    async patch(id: string | number, data: Partial<z.infer<TUpdateSchema>>): Promise<z.infer<TResourceSchema>> {
-        return this.http.requestValidated({
-            method: 'PATCH',
-            url: `${this.path}/${id}`,
-            body: data,
-            requestSchema: this.schemas.update.partial(),
-            responseSchema: this.schemas.resource,
-        });
-    }
-
-    async remove(id: string | number): Promise<void> {
-        return this.http.requestValidated({
-            method: 'DELETE',
-            url: `${this.path}/${id}`,
+            url,
+            body,
+            requestSchema,
+            responseSchema,
+            headers
         });
     }
 }

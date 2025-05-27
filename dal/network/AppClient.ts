@@ -1,16 +1,18 @@
 import {IDataManager} from "@/dal/IDataManager";
-import StubAuth from "@/dal/StubLib/StubAuth";
 import NetworkAuthService from "@/dal/network/NetworkAuthService";
-import {GenericClient} from "@/dal/network/GenericHttpClient";
+import {ZodHttpClient} from "@/dal/network/ZodHttpClient";
+import {UserClient} from "@/dal/network/UserClient";
 
 export default class AppClient extends IDataManager{
 
     private static instance: IDataManager;
-    private client : GenericClient;
+    private client : ZodHttpClient | undefined;
 
     public constructor() {
         super();
-        this.client = new GenericClient("");
+        this.client = this.buildClient();
+        this.userRepository = new UserClient(this.client, '/api/users');
+        this.authService = new NetworkAuthService(this.client,this.userRepository);
     }
 
     static getInstance():AppClient{
@@ -18,5 +20,15 @@ export default class AppClient extends IDataManager{
             AppClient.instance = new AppClient();
         }
         return AppClient.instance;
+    }
+
+    private buildClient(): ZodHttpClient {
+        if (this.client) {
+            return this.client;
+        }
+        // Use ZodHttpClient for schema validation
+        return new ZodHttpClient({
+            baseUrl: 'https://api.example.com'
+        });
     }
 }

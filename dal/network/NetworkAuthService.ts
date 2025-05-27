@@ -1,51 +1,47 @@
 import User from "@/model/domain/User";
 import IAuthService from "@/model/service/IAuthService";
-import AuthClient from "./AuthClient";
 import { AuthJWTMapper } from "./AuthJWTMapper";
 import { IUserRepository } from "@/dal/repository/IUserRepository";
 import KeyManager from "@/service/KeyManager";
 import {RegisterRequestDto, RegisterRequestSchema} from "@/shared/scheme/RegisterRequestSchema";
 import {LoginRequestDto, LoginRequestSchema} from "@/shared/scheme/LoginRequestSchema";
-import {RefreshRequestDto} from "@/shared/scheme/RefreshRequestSchema";
-import {z} from "zod";
+import {RefreshRequestDto, RefreshRequestSchema} from "@/shared/scheme/RefreshRequestSchema";
 import {AccessTokenResponseSchema} from "@/shared/scheme/AccessTokenResponseSchema";
 import {ZodHttpClient} from "@/dal/network/ZodHttpClient";
 
-const validatedApi = new ZodHttpClient({ baseUrl: 'https://api.example.com' });
-
 export default class NetworkAuthService implements IAuthService {
     private currentUser: User | null = null;
-    private authClient: AuthClient; // Can be abstract
-    private keyManager: KeyManager; // Can be abstract
-    private userRepository: IUserRepository;
+    private keyManager: KeyManager;
 
     constructor(
-        baseUrl: string,
-        userRepository: IUserRepository
+       private readonly authClient = new ZodHttpClient({baseUrl: '/auth'}),
+       private readonly userRepository: IUserRepository
     ) {
-        this.authClient = new AuthClient(baseUrl);
         this.keyManager = new KeyManager();
-        this.userRepository = userRepository;
     }
 
     async login(email: string, password: string, twoFactorCode?: string, twoFactorRecoveryCode?: string): Promise<User> {
         try {
-            const loginRequest : LoginRequestDto = {
+            const credentials : LoginRequestDto = {
                 email: email.toLowerCase().trim(),
                 password,
                 twoFactorCode: twoFactorCode || null,
                 twoFactorRecoveryCode: twoFactorRecoveryCode || null
             }
-            const tokenResponse = await this.authClient.login(loginRequest);
-
+            const tokenResponse = await this.authClient.postValidated('/login', credentials, LoginRequestSchema, AccessTokenResponseSchema);
             // Store tokens
-            this.keyManager.putToken(tokenResponse);
+            if (tokenResponse.success) {
+                this.keyManager.putToken(tokenResponse.data);
 
-            // Extract user ID from token and fetch user from repository
-            const userId = AuthJWTMapper.getUserIdFromToken(tokenResponse.accessToken);
-            this.currentUser = await this.userRepository.getById(userId);
+                // Extract user ID from token and fetch user from repository
+                const userId = AuthJWTMapper.getUserIdFromToken(tokenResponse.data.accessToken);
+                this.currentUser = await this.userRepository.getById(userId);
 
-            return this.currentUser;
+                return this.currentUser;
+            }else {
+                throw new Error(tokenResponse.error?.message || "Échec de la connexion");
+            }
+
         } catch (error) {
             throw new Error(error instanceof Error ? error.message : "Échec de la connexion");
         }
@@ -57,22 +53,28 @@ export default class NetworkAuthService implements IAuthService {
                 email: email.toLowerCase().trim(),
                 password
             }
-            const tokenResponse = await this.authClient.register(registerRequest);
 
-            // Store tokens
-            this.keyManager.putToken(tokenResponse);
+            const tokenResponse = await this.authClient.postValidated('/auth/register', registerRequest, RegisterRequestSchema, AccessTokenResponseSchema);
+            if (tokenResponse.success) {
+                // Store tokens
+                this.keyManager.putToken(tokenResponse.data);
 
-            // Extract user ID from token and fetch user from repository
-            const userId = AuthJWTMapper.getUserIdFromToken(tokenResponse.accessToken);
-            this.currentUser = await this.userRepository.getById(userId);
+                // Extract user ID from token and fetch user from repository
+                const userId = AuthJWTMapper.getUserIdFromToken(tokenResponse.data.accessToken);
+                this.currentUser = await this.userRepository.getById(userId);
 
-            return this.currentUser;
+                return this.currentUser;
+            }
+            else {
+                throw new Error(tokenResponse.error?.message || "Échec de l'inscription INTERNAL ERROR");
+            }
         } catch (error) {
             throw new Error(error instanceof Error ? error.message : "Échec de l'inscription");
         }
     }
 
     async logout(): Promise<void> {
+        await this.authClient.post('/auth/logout', {});
         this.keyManager.clearTokens();
         this.currentUser = null;
     }
@@ -119,12 +121,15 @@ export default class NetworkAuthService implements IAuthService {
             const refreshRequest: RefreshRequestDto = {
                 refreshToken
             }
-            const tokenResponse = await this.authClient.refresh(refreshRequest);
+            const tokenResponse = await this.authClient.postValidated('/auth/refresh', refreshRequest, RefreshRequestSchema, AccessTokenResponseSchema);
 
-            // Store new tokens
-            this.keyManager.putToken(tokenResponse);
-
-            return true;
+            if (tokenResponse.success) {
+                // Store new tokens
+                this.keyManager.putToken(tokenResponse.data);
+                return true;
+            } else {
+                throw new Error(tokenResponse.error?.message || "Échec du rafraîchissement du token");
+            }
         } catch (error) {
             // Refresh failed, clear tokens
             this.keyManager.clearTokens();

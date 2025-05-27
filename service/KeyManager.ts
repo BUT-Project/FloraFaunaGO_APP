@@ -1,7 +1,5 @@
 import {AccessTokenResponseDto} from "@/shared/scheme/AccessTokenResponseSchema";
-import {IKeyManager} from "@/model/service/IKeyManager";
-
-export default class KeyManager implements IKeyManager {
+export default class KeyManager {
     private static readonly ACCESS_TOKEN_KEY = 'access_token';
     private static readonly REFRESH_TOKEN_KEY = 'refresh_token';
     private static readonly TOKEN_EXPIRY_KEY = 'token_expiry';
