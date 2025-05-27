@@ -8,3 +8,5 @@ export { Class } from "./Class";
 export { Family } from "./Family";
 export { default as CaptureDetail } from "./CaptureDetail";
 export { default as Location } from "./Location";
+export { SuccessType} from './SuccessType'
+export {default as User} from './User'

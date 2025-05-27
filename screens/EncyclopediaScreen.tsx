@@ -1,19 +1,19 @@
-import {ActivityIndicator, Button, FlatList, StyleSheet, useColorScheme, View} from "react-native";
+import {ActivityIndicator, Button, FlatList, StyleSheet, View} from "react-native";
 import {SpecieListItem,SearchBar,FilterModal} from "@/components/encyclopedia";
 import {useState} from "react";
-import {ThemedView, ThemedText} from "@/components/ui/themed";
+import {ThemedText, ThemedView} from "@/components/ui/themed";
 import {useGetSpecies} from "@/hooks/viewModels/useGetSpecies";
 import {useAuthStore} from "@/context/zustand/store/useAuthStore";
 import { SafeView } from "@/components/ui/SafeView";
 import { LinearGradient } from "expo-linear-gradient";
-import { Colors } from "@/constants/Colors";
-
+import { useThemeColor } from "@/hooks/useThemeColor";
 export default function EncyclopediaScreen() {
-    const colorScheme = useColorScheme();
+    const background = useThemeColor({},"background");
+    const tint = useThemeColor({},"tint");
+
     const [name,setName] = useState("")
     const {species=[],isLoading,isLoadingMore,error,isListEnd,refresh,fetchMoreData} = useGetSpecies("")
-    const userCaptures = useAuthStore((state) => state.user?.captures);
-
+    const userCaptures = useAuthStore((state) => state.user?.captures) ?? [];
     if (error) {
         return (
             
@@ -36,18 +36,16 @@ export default function EncyclopediaScreen() {
             style={{ flex: 1 }}
             start={{x: 0, y: 0.75}}
             end={{x: 1, y: 1.3}}
-            colors={[ Colors[colorScheme ?? 'light'].background, 
-            Colors[colorScheme ?? 'light'].card]}
-            >
+            colors={[background,tint]}
+        >
             <ThemedView style={styles.header}>
                 <ThemedView style={styles.searchBar}>
                     <SearchBar search={name} setSearch={setName} placeholder={"Rechercher..."}/>
                 </ThemedView>
-
                 <FilterModal baseSpecies={species} setFilteredSpecies={()=>{}}/>
             </ThemedView>
             { isLoading ?
-                <ActivityIndicator size={"large"}/>
+                <ActivityIndicator testID="Loading" size={"large"}/>
                 :
                 <FlatList
                     style={styles.capturesList}
@@ -69,7 +67,7 @@ export default function EncyclopediaScreen() {
                     )}
                     ListFooterComponent={()=>(
                         <View style={styles.footer}>
-                            {isListEnd && <ThemedText>Pas de capture en plus pour le moment. </ThemedText>}
+                            {isListEnd && <ThemedText>Pas d'espèces en plus pour le moment. </ThemedText>}
                             {isLoadingMore && <ActivityIndicator size={"small"} />}
                         </View>
                     )}
@@ -93,6 +91,14 @@ const styles = StyleSheet.create({
         flexDirection:"row",
         justifyContent:"space-between",
         alignItems:"center",
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.5,
+        shadowRadius: 4,
+        elevation: 5,
     },
     searchBar:{
         width:"90%"

@@ -1,48 +1,72 @@
 import {useCallback, useState} from "react";
 import {useAuthStore} from "@/context/zustand/store/useAuthStore";
-import {Alert} from "react-native";
 import {router} from "expo-router";
 import {LoginCredentials} from "@/screens/LoginScreen";
+import {useAudioPlayer} from "expo-audio";
+import {loginSchema} from "@/components/form/auth/LoginForm";
 
-// [TODO] [Dave] Vous préférer les alert comme ici ou le msg comme dans le register
+
 export function useLoginViewModel() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [rememberMe, setRememberMe] = useState(false);
     const [failedLogin, setFailedLogin] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
     const [isLoading, setIsLoading] = useState(false);
 
     const login = useAuthStore((state) => state.login);
 
-    const submitForm = useCallback(async () => {
-        if (!username.trim() || !password) {
-            Alert.alert('Error', 'Please fill in all fields');
-            return;
-        }
+    const clickSound = useAudioPlayer(require('@/assets/sounds/click.mp3'));
 
-        const credentials: LoginCredentials = {
+    // Simple function to play the sound
+    const playSound = useCallback(async () => {
+        clickSound.play();
+    }, [clickSound]);
+
+    const validateForm = useCallback(() => {
+        setFailedLogin(false);
+
+        const result = loginSchema.safeParse({
             email: username.toLowerCase().trim(),
             password: password
-        };
+        });
 
-        setIsLoading(true);
-        try {
-            await login(credentials.email, credentials.password, rememberMe);
-            setFailedLogin(false);
-
-            // If login is successful, redirect to the main app
-            router.replace('/(tabs)');
-        } catch (error) {
+        if (!result.success) {
             setFailedLogin(true);
-            if (error instanceof Error) {
-                Alert.alert('Error', error.message);
-            } else {
-                Alert.alert('Error', 'An unexpected error occurred. Please try again.');
-            }
-        } finally {
-            setIsLoading(false);
+            const firstError = result.error.errors[0];
+            setErrorMessage(firstError.message);
+            return false;
         }
-    }, [username, password, login, rememberMe]);
+        return true;
+    }, [username, password]);
+
+    const submitForm = useCallback(async () => {
+        if (validateForm()) {
+            const credentials: LoginCredentials = {
+                email: username.toLowerCase().trim(),
+                password: password
+            };
+
+            setIsLoading(true);
+            try {
+                await login(credentials.email, credentials.password, rememberMe);
+                setFailedLogin(false);
+                await playSound();
+
+                // If login is successful, redirect to the main app
+                router.replace('/(tabs)');
+            } catch (error) {
+                setFailedLogin(true);
+                if (error instanceof Error) {
+                    setErrorMessage(error.message);
+                } else {
+                    setErrorMessage("Une erreur s'est produite lors de la connexion.");
+                }
+            } finally {
+                setIsLoading(false);
+            }
+        }
+    }, [validateForm, username, password, login, rememberMe, playSound]);
 
     const toggleRememberMe = useCallback(() => {
         setRememberMe(prev => !prev);
@@ -52,6 +76,7 @@ export function useLoginViewModel() {
         setUsername('');
         setPassword('');
         setFailedLogin(false);
+        setErrorMessage('');
     }, []);
 
     return {
@@ -61,6 +86,7 @@ export function useLoginViewModel() {
         setPassword,
         rememberMe,
         failedLogin,
+        errorMessage,
         isLoading,
         submitForm,
         toggleRememberMe,

@@ -1,14 +1,15 @@
 import React, {useState} from 'react';
-import {FlatList, Modal, StyleSheet, TouchableOpacity} from 'react-native';
-import {ThemedView,ThemedText} from "@/components/ui/themed";
-import Ionicons from "@expo/vector-icons/Ionicons";
-import {Kingdom} from "@/model/domain/Kingdom";
-import FilterChips from "./FilterChips";
-import {Class} from "@/model/domain/Class";
-import {Family} from "@/model/domain/Family";
-import {Diet} from "@/model/domain/Diet";
-import {useThemeColor} from "@/hooks/useThemeColor";
-import Specie from "@/model/domain/Specie";
+import { Modal, StyleSheet, TouchableOpacity} from 'react-native';
+import {ThemedView,ThemedText, ThemedIcon} from "@/components/ui/themed";
+import {
+    Kingdom,
+    Class,
+    Family,
+    Diet,
+    Specie,
+} from "@/model/domain";
+import { FilterEnumSelector } from './FilterSelector';
+import { useThemeColor } from '@/hooks/useThemeColor';
 
 type SpeciesFilterProps={
     baseSpecies:Specie[],
@@ -16,10 +17,11 @@ type SpeciesFilterProps={
 }
 
 export default function SpeciesFilterModal(props: SpeciesFilterProps){
-    const color = useThemeColor({},'text');
+
+    const selectedBackground = useThemeColor({},"tint");
 
     const [visible,setVisible] = useState(false);
-    const [kingdom,setKingdom] = useState<Kingdom | null>();
+    const [kingdom,setKingdom] = useState<Kingdom | null>(null);
     const [bioClass,setBioClass] = useState<Class | null>(null);
     const [family,setFamily] = useState<Family | null>(null);
     const [diet,setDiet] = useState<Diet | null>(null);
@@ -75,57 +77,32 @@ export default function SpeciesFilterModal(props: SpeciesFilterProps){
     return (
         <>
             <TouchableOpacity style={styles.filterButton} onPress={()=>setVisible(true)}>
-                <Ionicons name={"filter"} color={color}  size={24}/>
+                <ThemedIcon name={"filter"} size={24} color={visible ? selectedBackground : undefined}/>
             </TouchableOpacity>
             <Modal animationType="slide" transparent={true} visible={visible} onRequestClose={() =>setVisible(false)}>
-                <TouchableOpacity style={styles.dismissButton} onPress={() => setVisible(false)}/>
-                <ThemedView style={styles.modalContent}>
-                   
-                    <TouchableOpacity  style={styles.closeButton} onPress={()=>setVisible(false)}>
-                        <Ionicons name={"close"} color={color} size={25}/>
-                    </TouchableOpacity>
-                    
-                    <ThemedView style={styles.sortContainer}>
-                        <ThemedText>Sort :</ThemedText>
-                        <TouchableOpacity onPress={sortAscending}>
-                            <Ionicons name={"chevron-up-outline"} color={color} size={25}/>
+                    <TouchableOpacity style={styles.dismissButton} onPress={() => setVisible(false)}/>
+                    <ThemedView style={styles.modalContent}>
+                        <TouchableOpacity  style={styles.closeButton} onPress={()=>setVisible(false)}>
+                            <ThemedIcon name={"close"} size={25}/>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={sortDescending}>
-                            <Ionicons name={"chevron-down-outline"} color={color} size={25}/>
-                        </TouchableOpacity>
+                        <ThemedView style={styles.sortContainer}>
+                            <ThemedText>Trier :</ThemedText>
+                            <TouchableOpacity onPress={sortAscending}>
+                                <ThemedIcon name={"chevron-up-outline"} size={25}/>
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={sortDescending}>
+                                <ThemedIcon name={"chevron-down-outline"}  size={25}/>
+                            </TouchableOpacity>
+                        </ThemedView>
+                        <FilterEnumSelector label='Reigne :' enumType={Kingdom} value={kingdom} selectedColor={selectedBackground} onFilterChange={setKingdom}  />
+                        <FilterEnumSelector label='Diète :' enumType={Diet} value={diet} selectedColor={selectedBackground} onFilterChange={setDiet}/>
+                        <FilterEnumSelector label='Classe :' enumType={Class} value={bioClass} selectedColor={selectedBackground} onFilterChange={setBioClass}/>
+                        <FilterEnumSelector label='Famille :' enumType={Family} value={family} selectedColor={selectedBackground} onFilterChange={setFamily}/>
                     </ThemedView>
-                    <ThemedView style={styles.filteringOptions}>
-                        <ThemedText>Kingdom :</ThemedText>
-                        <FlatList 
-                            data={Object.values(Kingdom)} 
-                            renderItem={(item) => (<FilterChips item={item.item} onFilterChange={onKingdomChange} selectedFilter={kingdom}/>)}
-                            horizontal={true}
-                            showsHorizontalScrollIndicator={false}
-                        />
-                    </ThemedView>
-                    <ThemedView style={styles.filteringOptions}>
-                        <ThemedText>Class :</ThemedText>
-                        <FlatList 
-                            data={Object.values(Class)} 
-                            renderItem={(item) => (<FilterChips item={item.item} onFilterChange={onClassChange} selectedFilter={bioClass}/>)} 
-                            showsHorizontalScrollIndicator={false}
-                            horizontal={true}
-                        />
-                    </ThemedView>
-                    <ThemedView style={styles.filteringOptions}>
-                        <ThemedText>Family :</ThemedText>
-                        <FlatList data={Object.values(Family)} renderItem={(item) => (<FilterChips item={item.item} onFilterChange={onFamilyChange} selectedFilter={family}/>)} horizontal={true}/>
-                    </ThemedView>
-                    <ThemedView style={styles.filteringOptions}>
-                        <ThemedText>Diet :</ThemedText>
-                        <FlatList data={Object.values(Diet)} renderItem={(item) => (<FilterChips item={item.item} onFilterChange={onDietChange} selectedFilter={diet}/>)} horizontal={true}/>
-                    </ThemedView>
-                </ThemedView>
             </Modal>
         </>
-
-    )
-}
+    );
+};
 
 const styles = StyleSheet.create({
     filterButton:{
@@ -134,21 +111,18 @@ const styles = StyleSheet.create({
         width:"10%"
     },
     dismissButton:{
-        height:'65%',
+        flex:1,
         width:"100%",
     },
     modalContent: {
-        height: '35%',
         width: '100%',
         borderTopRightRadius: 20,
         borderTopLeftRadius: 20,
         paddingVertical:20,
-        padding: 10,
-        paddingBottom:0,
-        position: 'absolute',
+        padding: 7,
         alignItems:"center",
         bottom: 0,
-        gap:5,
+        gap:10,
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
@@ -170,10 +144,5 @@ const styles = StyleSheet.create({
         alignItems:"center",
         gap:5,
     },
-    filteringOptions:{
-        flexDirection:"row",
-        width:"100%",
-        gap:7,
-        alignItems:"center"
-    }
+
 })

@@ -1,5 +1,5 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import React, {useContext, useEffect, useRef, useState} from 'react';
+import {StyleSheet, TouchableOpacity} from 'react-native';
 import Animated, {
     Easing,
     runOnJS,
@@ -16,9 +16,7 @@ import { ThemedText,ThemedView } from "@/components/ui/themed";
 import { UploadContext } from "@/context/UploadContext";
 import { router } from "expo-router";
 import { useSpeciesStore } from "@/context/zustand/store/useSpeciesStore";
-import { SuccessStore } from '@/context/zustand/store/useSuccessStore';
-import { SuccessType } from '@/model/domain/SuccessType';
-import { processSuccessByType } from '@/shared/successHelper';
+import { useThemeColor } from '@/hooks/useThemeColor';
 import ThumbAnimationView from '@/components/ThumbAnimationView';
 
 export type ThumbType = {
@@ -32,12 +30,12 @@ interface RevealScreenProps {
 
 export default function RevealScreen({ specie }: RevealScreenProps) {
     const addingState = useContext(UploadContext);
-    const { message, isVisibile } = SuccessStore();
     const [thumbnail, setThumbnail] = useState<ThumbType>({
         main: null,
         anim: null,
     });
 
+    const tint = useThemeColor({},"tint");
     const [thumbPosition, setThumbPosition] = useState<{x: number, y: number}>({x: 0, y: 0});
 
     const thumbRef = useRef<Animated.View>(null);
@@ -65,6 +63,8 @@ export default function RevealScreen({ specie }: RevealScreenProps) {
         }
     };
 
+
+
     useEffect(() => {
         setThumbnail({ main: specie.image, anim: null });
         // Simulate animation completion after 3 seconds
@@ -78,7 +78,6 @@ export default function RevealScreen({ specie }: RevealScreenProps) {
             );
 
         }, 3000);
-        processSuccessByType(SuccessType.CAPTURE, specie);
         return () => clearTimeout(timeout);
     }, []);
 
@@ -138,10 +137,10 @@ export default function RevealScreen({ specie }: RevealScreenProps) {
             />
             {thumbnail.main ? (
                 <EntranceFlipAnimation content={
-                    <Animated.View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                    <Animated.View style={styles.cardContainer}>
                     <FlipAnimationContainer
                         frontContent={
-                            <ThemedView style={[styles.card]}>
+                            <ThemedView style={[styles.card,{backgroundColor:tint}]}>
                                 <Animated.View style={[styles.imageContainer]}>
                                     <Ionicons name="help-circle" size={100} color="#242424" style={styles.image}/>
                                 </Animated.View>
@@ -169,12 +168,12 @@ export default function RevealScreen({ specie }: RevealScreenProps) {
                         position: 'absolute',
                         bottom: 20,
                         left: 20,
-                        backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                        backgroundColor: tint,
                         padding: 10,
                         borderRadius: 25,
                     }}
                 >
-                    <ThemedText>Add to collection</ThemedText>
+                    <ThemedText style={styles.whiteText}>Add to collection</ThemedText>
                 </TouchableOpacity>
             )}
         </ThemedView>
@@ -197,7 +196,6 @@ const styles = StyleSheet.create({
         borderColor: 'white',
         overflow: 'hidden',
         color: '#FFD700',
-        backgroundColor: 'purple',
     },
     imageContainer: {
         backfaceVisibility: 'hidden',
@@ -224,9 +222,17 @@ const styles = StyleSheet.create({
     indicatorContent: {
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: 'rgba(0, 0, 0)',
+        backgroundColor:"transparent"
     },
     overlay: {
         backgroundColor: 'rgba(0, 0, 0, 0.3)',
     },
+    cardContainer:{
+        flex:1,
+        justifyContent:"center",
+        alignItems:"center",
+    },
+    whiteText:{
+        color:"#fff"
+    }
 });

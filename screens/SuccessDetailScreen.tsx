@@ -1,4 +1,4 @@
-import {ThemedView, ThemedText} from "@/components/ui/themed";
+import {ThemedText, ThemedView} from "@/components/ui/themed";
 import {Success} from "@/model/domain/Success";
 import {Modal, Pressable, ScrollView, StyleSheet, useColorScheme } from "react-native";
 import React from "react";
@@ -14,7 +14,7 @@ export default function SuccessDetailScreen( { visible, onClose, sucess }: Suces
     const colorScheme =  useColorScheme()
     const theme = Colors[colorScheme??"light"]
     return (
-        <Modal visible={visible} transparent={true}  onRequestClose={onClose}>
+        <Modal visible={visible} transparent={true} animationType="slide" onRequestClose={onClose}>
             <Pressable  style={styles.overlay} onPress={onClose}>
                 <ThemedView style={styles.container}>
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Platform, StyleSheet, TouchableOpacity} from 'react-native';
+import {ActivityIndicator, Platform, StyleSheet, TouchableOpacity} from 'react-native';
 import normalize from '@/components/ui/responsive/Normalize';
 import {Link} from "expo-router";
 import {Entypo, FontAwesome} from "@expo/vector-icons";
@@ -20,6 +20,7 @@ export default function LoginScreen() {
     const {
         username,
         setUsername,
+        errorMessage,
         isLoading,
         password,
         setPassword,
@@ -34,11 +35,11 @@ export default function LoginScreen() {
 
             <ThemedText style={[styles.title, {color: textColor}]}>SE CONNECTER</ThemedText>
             {failedLogin && (
-                <ThemedText style={styles.errorText}>Email ou mot de passe incorrect!</ThemedText>
+                <ThemedText style={styles.errorText}>{errorMessage}</ThemedText>
             )}
             <InputWithIcon
                 icon="user"
-                placeholder="Email"
+                placeholder="E-mail"
                 value={username}
                 onChangeText={setUsername}
                 keyboardType="email-address"
@@ -48,7 +49,7 @@ export default function LoginScreen() {
             />
             <InputWithIcon
                 icon="lock"
-                placeholder="Password"
+                placeholder="Mot de passe"
                 value={password}
                 onChangeText={setPassword}
                 secureTextEntry
@@ -71,7 +72,11 @@ export default function LoginScreen() {
                 onPress={submitForm}
                 disabled={isLoading}
             >
-                <Entypo name="check" size={40} color={tintColor}/>
+                {isLoading ?
+                    <ActivityIndicator size="large" color="#fff"/>
+                    :
+                    <Entypo name="check" size={40} color={tintColor}/>
+                }
             </TouchableOpacity>
             <ThemedView style={styles.footer}>
                 <ThemedText style={styles.footerText}>Tu n'as pas de compte? </ThemedText>

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Platform, StyleSheet, TouchableOpacity} from 'react-native';
+import {ActivityIndicator, Platform, StyleSheet, TouchableOpacity} from 'react-native';
 import {Link} from "expo-router";
 import normalize from "@/components/ui/responsive/Normalize";
 import {InputWithIcon} from "@/components/ui/InputWithIcon";
@@ -16,15 +16,16 @@ export default function RegisterScreen() {
     const tintColor = useThemeColor({}, 'tint');
 
     const {
-        username,
-        setUsername,
         email,
         setEmail,
         password,
         setPassword,
+        confirmPassword,
+        setConfirmPassword,
         failedSignup,
         errorMessage,
         submitForm,
+        isLoading
     } = useRegisterViewModel(authService);
 
     return (
@@ -34,15 +35,8 @@ export default function RegisterScreen() {
                 <ThemedText style={styles.errorText}>{errorMessage}</ThemedText>
             )}
             <InputWithIcon
-                icon="user"
-                placeholder="Username"
-                value={username}
-                onChangeText={setUsername}
-                autoCorrect={false}
-            />
-            <InputWithIcon
                 icon="envelope"
-                placeholder="Email"
+                placeholder="E-mail"
                 value={email}
                 onChangeText={setEmail}
                 keyboardType="email-address"
@@ -51,9 +45,18 @@ export default function RegisterScreen() {
             />
             <InputWithIcon
                 icon="lock"
-                placeholder="Password"
+                placeholder="Mot de passe"
                 value={password}
                 onChangeText={setPassword}
+                secureTextEntry
+                autoCapitalize='none'
+                autoCorrect={false}
+            />
+            <InputWithIcon
+                icon="lock"
+                placeholder="Confirmer le mot passe"
+                value={confirmPassword}
+                onChangeText={setConfirmPassword}
                 secureTextEntry
                 autoCapitalize='none'
                 autoCorrect={false}
@@ -61,8 +64,13 @@ export default function RegisterScreen() {
             <TouchableOpacity 
                 style={[styles.button, {backgroundColor: textColor}]} 
                 onPress={submitForm}
+                disabled={isLoading}
             >
-                <Entypo name="check" size={40} color={tintColor}/>
+                {isLoading ?
+                    <ActivityIndicator size="large" color="#fff"/>
+                    :
+                    <Entypo name="check" size={40} color={tintColor}/>
+                }
             </TouchableOpacity>
             <ThemedView style={styles.footer}>
                 <ThemedText style={styles.footerText}>Tu as déjà un compte? </ThemedText>

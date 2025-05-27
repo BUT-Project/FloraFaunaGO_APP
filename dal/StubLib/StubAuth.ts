@@ -19,17 +19,17 @@ export default class StubAuth implements IAuthService{
                     resolve(user);
                 }
             else {
-                    reject(new Error("Incorrect password"));
+                    reject(new Error("Mot de passe ou email incorrect"));
                 }
         });
     }
 
-    register(email: string, username: string, password: string): Promise<User> {
+    register(email: string, password: string, username: string): Promise<User> {
         return new Promise((resolve, reject) => {
             const existingUser = this.Users.find(user => user.email === email);
 
             if (existingUser) {
-                reject(new Error("User already exists"));
+                reject(new Error("Cet email est déjà utilisé"));
                 return;
             }
             const newUser: User = {

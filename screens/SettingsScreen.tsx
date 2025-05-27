@@ -5,14 +5,14 @@ import {LinearGradient} from 'expo-linear-gradient';
 import {Colors} from "@/constants/Colors";  
 import {useColorScheme} from "@/hooks/useColorScheme";
 import {useAuthStore} from "@/context/zustand/store/useAuthStore";
-import { SafeView } from "@/components/ui/SafeView";
+import {SafeView} from "@/components/ui/SafeView";
 
 export default function SettingsScreen() {
     const colorScheme = useColorScheme();
     const systemTheme = Appearance.getColorScheme();
     const [theme, setTheme] = useState(systemTheme || 'light'); // État du thème
     const logout = useAuthStore((state)=>state.logout);
-    const [switchTheme, setSwitchTheme] = useState((theme === 'dark') ? true : false);
+    const [switchTheme, setSwitchTheme] = useState((theme === 'dark'));
     const switchThemes = () => {
         setSwitchTheme(previousState => !previousState);
     }; 
