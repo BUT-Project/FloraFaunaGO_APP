@@ -11,11 +11,11 @@ export default class AppClient extends IDataManager{
     public constructor() {
         super();
         this.client = this.buildClient();
-        this.userRepository = new UserClient(this.client, '/api/users');
+        this.userRepository = new UserClient(this.client, '/api/utilisateur');
         this.authService = new NetworkAuthService(this.client,this.userRepository);
     }
 
-    static getInstance():AppClient{
+    static getInstance():IDataManager{
         if(!AppClient.instance){
             AppClient.instance = new AppClient();
         }

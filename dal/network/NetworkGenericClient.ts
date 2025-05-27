@@ -55,7 +55,7 @@ export interface HttpZodRepositoryConfig<TResponse, TCreate = Partial<TResponse>
  * Abstract base repository implementation using HTTP requests with Zod validation
  * Provides common HTTP operations that can be extended by concrete repository implementations
  */
-export abstract class HttpZodRepository<T, TCreate = Partial<T>, TUpdate = Partial<T>> {
+export class HttpZodRepository<T, TCreate = Partial<T>, TUpdate = Partial<T>> {
 
     private readonly defaultPagedResponseSchema: z.ZodSchema<PagingResult<T>>;
     private readonly defaultSuccessSchema = z.object({ success: z.boolean() });

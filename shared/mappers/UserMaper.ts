@@ -1,4 +1,4 @@
-import {UpdateUtilisateur, UtilisateurNormalDto} from "@/shared/scheme/UtilisateurNormalDtoSchema";
+import { UtilisateurNormalDto} from "@/shared/scheme/UtilisateurNormalDtoSchema";
 import User from "@/model/domain/User";
 
 /**
@@ -7,7 +7,7 @@ import User from "@/model/domain/User";
 export interface IUserMapper {
     toDomain(dto: UtilisateurNormalDto): User;
     toDto(domain: User): UtilisateurNormalDto;
-    toUpdateDto(domain: Partial<User>): UpdateUtilisateur;
+    toUpdateDto(domain: Partial<User>): Partial<UtilisateurNormalDto>;
 }
 
 /**
@@ -45,7 +45,7 @@ export class UserMapper implements IUserMapper {
         };
     }
 
-    toUpdateDto(domain: Partial<User>): UpdateUtilisateur {
+    toUpdateDto(domain: Partial<User>): Partial<UtilisateurNormalDto> {
         return {
             pseudo: domain.username,
             mail: domain.email,

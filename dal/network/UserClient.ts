@@ -3,7 +3,7 @@ import {IUserRepository} from "@/dal/repository/IUserRepository";
 import {ZodHttpClient} from "@/dal/network/ZodHttpClient";
 import {HttpZodRepository, HttpZodRepositoryConfig} from "@/dal/network/NetworkGenericClient";
 import {
-    UpdateUtilisateur, UpdateUtilisateurSchema, UtilisateurApiResponseSchema, UtilisateurListApiResponseSchema,
+    UtilisateurApiResponseSchema, UtilisateurListApiResponseSchema,
     UtilisateurNormalDto,
     UtilisateurNormalDtoSchema
 } from "@/shared/scheme/UtilisateurNormalDtoSchema";
@@ -11,40 +11,34 @@ import {IUserMapper, UserMapper} from "@/shared/mappers/UserMaper";
 import User from "@/model/domain/User";
 import {PagedRequest} from "@/shared/PagedRequest";
 import {PagingResult} from "@/shared/PagingResult";
+import { FilterPredicate } from "@/shared/FilterPredicate";
 
 /**
  * Configuration for the User HTTP repository
  */
-const createUserRepositoryConfig = (): HttpZodRepositoryConfig<UtilisateurNormalDto, UtilisateurNormalDto, UpdateUtilisateur> => ({
+const createUserRepositoryConfig = (): HttpZodRepositoryConfig<UtilisateurNormalDto> => ({
     responceSchema: UtilisateurNormalDtoSchema,
     createSchema: UtilisateurNormalDtoSchema,
-    updateSchema: UpdateUtilisateurSchema,
     responseSchemas: {
         create: UtilisateurApiResponseSchema,
         update: UtilisateurApiResponseSchema,
-        delete: z.object({ success: z.boolean() })
+        delete: z.object({success: z.boolean()})
     }
 });
 
+// HttpZodRepository<UtilisateurNormalDto>
 /**
- * Network repository implementation for User entities
- *
- * Follows SOLID principles:
- * - Single Responsibility: Handles only network operations for Users
- * - Open/Closed: Extends HttpZodRepository, closed for modification
- * - Liskov Substitution: Can be substituted for IUserRepository
- * - Interface Segregation: Implements only relevant repository methods
- * - Dependency Inversion: Depends on abstractions (HttpZodRepository, IUserMapper)
+ * Handles only network operations for Users
  */
-export class UserNetworkRepository extends HttpZodRepository<UtilisateurNormalDto, UtilisateurNormalDto, UpdateUtilisateur> implements IUserRepository {
+export class UserClient implements IUserRepository {
     private readonly mapper: IUserMapper;
 
     constructor(
         httpClient: ZodHttpClient,
         baseUrl: string = '/utilisateur',
-        mapper: IUserMapper = new UserMapper()
+        mapper: IUserMapper = new UserMapper(),
+        private userRepository : HttpZodRepository<UtilisateurNormalDto> = new HttpZodRepository<UtilisateurNormalDto>(httpClient, baseUrl, createUserRepositoryConfig())
     ) {
-        super(httpClient, baseUrl, createUserRepositoryConfig());
         this.mapper = mapper;
     }
 
@@ -53,8 +47,7 @@ export class UserNetworkRepository extends HttpZodRepository<UtilisateurNormalDt
      */
     async create(user: User): Promise<void> {
         const dto = this.mapper.toDto(user);
-        await super.create(dto);
-
+        await this.userRepository.create(dto);
     }
 
     /**
@@ -62,21 +55,21 @@ export class UserNetworkRepository extends HttpZodRepository<UtilisateurNormalDt
      */
     async update(id: number, user: User): Promise<void> {
         const updateDto = this.mapper.toUpdateDto(user);
-        await super.update(id, updateDto);
+        await this.userRepository.update(id, updateDto);
     }
 
     /**
      * Delete a user by ID
      */
     async delete(id: number): Promise<void> {
-        await super.delete(id);
+        await this.userRepository.delete(id);
     }
 
     /**
      * Get a user by ID
      */
     async getById(id: number): Promise<User> {
-        const dto = await super.getById(id);
+        const dto = await this.userRepository.getById(id);
         return this.mapper.toDomain(dto);
     }
 
@@ -84,7 +77,7 @@ export class UserNetworkRepository extends HttpZodRepository<UtilisateurNormalDt
      * Get all users with pagination
      */
     async getAll(request: PagedRequest): Promise<PagingResult<User>> {
-        const dtoResult = await super.getAll(request);
+        const dtoResult = await this.userRepository.getAll(request);
 
         return {
             count: dtoResult.count,
@@ -94,9 +87,13 @@ export class UserNetworkRepository extends HttpZodRepository<UtilisateurNormalDt
         };
     }
 
+
+    async count(filter: FilterPredicate<User>): Promise<number> {
+        throw new Error("Method not implemented.");
+    }
+
     /**
      * Build query parameters specific to user API requirements
-     */
     protected buildQueryParams(request: PagedRequest): any {
         const params = super.buildQueryParams(request);
 
@@ -121,4 +118,6 @@ export class UserNetworkRepository extends HttpZodRepository<UtilisateurNormalDt
 
         return params;
     }
+     */
+
 }

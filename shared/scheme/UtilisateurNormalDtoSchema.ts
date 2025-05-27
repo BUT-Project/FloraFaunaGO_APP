@@ -71,34 +71,9 @@ export const UtilisateurListQuerySchema = z.object({
 });
 
 /**
- * Schéma pour la modification d'un utilisateur (PUT)
+ * Schéma pour la modification d'un utilisateur (PUT) est un partial de UtilisateurNormalDto
  */
-export const UpdateUtilisateurSchema = z.object({
-    pseudo: z.string()
-        .min(1, "Le pseudo est obligatoire")
-        .max(50, "Le pseudo ne peut pas dépasser 50 caractères")
-        .regex(/^[a-zA-Z0-9_-]+$/, "Le pseudo ne peut contenir que des lettres, chiffres, tirets et underscores")
-        .optional()
-        .nullable(),
 
-    mail: z.string()
-        .email("L'adresse email n'est pas valide")
-        .max(254, "L'adresse email ne peut pas dépasser 254 caractères")
-        .optional()
-        .nullable(),
-
-    hash_mdp: z.string()
-        .min(8, "Le mot de passe doit contenir au moins 8 caractères")
-        .max(128, "Le mot de passe ne peut pas dépasser 128 caractères")
-        .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, "Le mot de passe doit contenir au moins une minuscule, une majuscule et un chiffre")
-        .optional()
-        .nullable(),
-
-    dateInscription: z.string()
-        .datetime("La date d'inscription doit être au format ISO 8601")
-        .or(z.date())
-        .optional()
-});
 
 /**
  * Schéma pour les détails de problème (erreurs 400/404)
@@ -196,7 +171,6 @@ export const UtilisateurListApiResponseSchema = z.object({
 export type UtilisateurNormalDto = z.infer<typeof UtilisateurNormalDtoSchema>;
 export type UserOrderingCriteria = z.infer<typeof UserOrderingCriteriaSchema>;
 export type UtilisateurListQuery = z.infer<typeof UtilisateurListQuerySchema>;
-export type UpdateUtilisateur = z.infer<typeof UpdateUtilisateurSchema>;
 export type ProblemDetails = z.infer<typeof ProblemDetailsSchema>;
 export type UtilisateurApiResponse = z.infer<typeof UtilisateurApiResponseSchema>;
 export type UtilisateurListApiResponse = z.infer<typeof UtilisateurListApiResponseSchema>;

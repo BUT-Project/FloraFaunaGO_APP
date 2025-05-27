@@ -6,7 +6,7 @@ type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
 export interface RequestConfig {
     readonly method: HttpMethod;
     readonly url: string;
-    readonly body?: unknown;
+    body?: unknown;
     readonly headers?: Readonly<Record<string, string>>;
     readonly timeout?: number;
     readonly params?: QueryParams;
