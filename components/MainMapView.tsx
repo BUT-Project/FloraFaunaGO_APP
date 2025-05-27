@@ -121,9 +121,21 @@ const BlurredZone = ({color, size}
     </Svg>
 );
 
-export default function MapInterface(
-    {location, style}: { location: Location.LocationObject | null, style: ViewStyle }
-) {
+export default function MapInterface({ style }: {style: ViewStyle }) {
+    const [location, setLocation] = useState<Location.LocationObject | null>(null);
+     useEffect(() => {
+            (async () => {
+                const {status} = await Location.requestForegroundPermissionsAsync();
+                if (status !== 'granted') {
+                    console.log('Permission to access location was denied');
+                    return;
+                }
+    
+                const location = await Location.getCurrentPositionAsync();
+                setLocation(location);
+            })();
+    }, []);
+
     const [selectedCategory, setSelectedCategory] = useState<Family>('All');
     const [searchQuery, setSearchQuery] = useState('');
     const [isSearchActive, setIsSearchActive] = useState(false);
@@ -323,6 +335,7 @@ export default function MapInterface(
                 <View style={styles.container}>
                     <Animated.View style={styles.container}>
                         <MapView
+                            testID='MainMapView'
                             ref={mapRef}
                             style={styles.map}
                             initialRegion={
@@ -363,6 +376,7 @@ export default function MapInterface(
                             {location && (
 
                                 <Marker
+
                                     coordinate={{
                                         latitude: location.coords.latitude,
                                         longitude: location.coords.longitude,
@@ -381,8 +395,11 @@ export default function MapInterface(
                             }}>
                                 <Animated.View>
                                     <Animated.View style={[styles.searchBarContainer, searchContainerStyle]}>
-                                        <TouchableOpacity onPress={handleSearchPress}
-                                                          style={styles.searchIconContainer}>
+                                        <TouchableOpacity 
+                                            testID='Map.Search.Button'
+                                            onPress={handleSearchPress}
+                                            style={styles.searchIconContainer}
+                                        >
                                             <Ionicons name="search" size={24} color="white"/>
                                         </TouchableOpacity>
                                         {isSearchActive && (

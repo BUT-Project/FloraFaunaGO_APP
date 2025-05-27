@@ -20,9 +20,9 @@ const Loading: React.FC<LoadingProps> = (props) => {
                 style={styles.logo}
                 resizeMode="contain"
             />
-            <ActivityIndicator size="large" color={theme.tint}/>
+            <ActivityIndicator testID="Loading.Indicator" size="large" color={theme.tint}/>
             {text ? (
-                <ThemedText style={[styles.text,{color:theme.tint},textStyle,]}>{text}</ThemedText>
+                <ThemedText testID="Loading.Text" style={[styles.text,{color:theme.tint},textStyle,]}>{text}</ThemedText>
             ) : null}
         </SafeView>
     );

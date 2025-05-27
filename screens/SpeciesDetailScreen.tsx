@@ -38,17 +38,13 @@ const SpeciesDetailScreen = ({capture,specie}:SpeciesDetailScreenProps) => {
     const oldestCapture = useMemo(() => {
         if (capture) {
             if (capture.capturesDetails?.length > 0) {
-                return capture.capturesDetails?.reduce((oldest, current) => {
-                    return current.date < oldest.date ? current : oldest;
-                })
+                return capture.capturesDetails?.reduce((oldest, current) =>  current.date < oldest.date ? current : oldest)
             }
         } else return null;
     }, [capture?.capturesDetails]);
 
-    const scrollHandler = useAnimatedScrollHandler({
-        onScroll: (event) => {
-            scrollOffset.value = event.contentOffset.y;
-        },
+    const scrollHandler = useAnimatedScrollHandler((event) => {
+        scrollOffset.value = event.contentOffset.y;
     });
 
     return (

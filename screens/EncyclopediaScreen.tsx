@@ -48,12 +48,13 @@ export default function EncyclopediaScreen() {
                 <ActivityIndicator testID="Loading" size={"large"}/>
                 :
                 <FlatList
+                    testID="Encyclopedia.Flatlist"
                     style={styles.capturesList}
                     showsVerticalScrollIndicator={false}
                     columnWrapperStyle={styles.columnWrapper}
                     contentContainerStyle={styles.listContent}
                     data={species}
-                    onRefresh={() => refresh}
+                    onRefresh={() => refresh()}
                     refreshing={isLoadingMore}
                     keyExtractor={capture => capture.id?.toString()}
                     renderItem={({item}) =>
@@ -62,7 +63,7 @@ export default function EncyclopediaScreen() {
                     ListEmptyComponent={() => (
                         <View style={styles.empty}>
                             <ThemedText type={"subtitle"}>Aucune espèce trouvée.</ThemedText>
-                            <Button title="Raffraîchir" onPress={() => refresh}/>
+                            <Button testID="Refresh" title="Raffraîchir" onPress={() => refresh()}/>
                         </View>
                     )}
                     ListFooterComponent={()=>(
