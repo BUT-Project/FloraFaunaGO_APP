@@ -20,7 +20,10 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/logo_FFGO.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#ffffff",
+        "permissions": [
+          "android.permission.ACTIVITY_RECOGNITION"
+        ]
       },
       "newArchEnabled": true
     },

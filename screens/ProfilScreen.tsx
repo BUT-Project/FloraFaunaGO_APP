@@ -10,6 +10,9 @@ import {PagedRequest} from "@/shared/PagedRequest";
 import {useAuthStore} from "@/context/zustand/store/useAuthStore";
 import { SafeView } from "@/components/ui/SafeView";
 import { Colors } from "@/constants/Colors";
+import { launchImageLibrary,ImageLibraryOptions} from 'react-native-image-picker';
+import * as ImagePicker from 'expo-image-picker';
+import { useUserStore } from "@/context/zustand/store/useUserStore";
 
 
 let ProfileImage: {};
@@ -24,11 +27,11 @@ export default function ProfilScreen() {
     const colorScheme =  useColorScheme() ?? 'light';
     const theme = Colors[colorScheme];
     const [stepCount,setStepCount] = useState(0)
-
+    const [imageUri, setImageUri] = useState<string | null | undefined>(null);
     const user = useAuthStore((state) => state.user);
     const species = useAuthStore((state) => new Set(state.user?.captures.map(c => c.specie.id)).size);
     const familiesCount = useAuthStore((state) => new Set(state.user?.captures.map(c => c.specie.family)).size);
-    
+    const dataUser = useUserStore()
 
     const fetchSuccesses = async (currentPage: number) => {
         setLoading(true);
@@ -51,7 +54,22 @@ export default function ProfilScreen() {
         fetchSuccesses(page);
     }, [page]);
 
-
+    const pickImage = async () => {
+        const result = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes:ImagePicker.MediaTypeOptions.Images,
+          quality: 1,
+          base64: true,
+          allowsEditing: true,
+        });
+    
+        if (!result.canceled) {
+          setImageUri(result.assets[0].uri);
+          if(user && result.assets[0].base64) {
+          user.image = result.assets[0].base64
+          dataUser.updateUser(user.id,user)
+          }
+        }
+      };
     const renderHeader = () => (
         <ThemedView>
             <Link href={"/(profil)/settings"}  style={{ alignSelf: "flex-end",}} asChild>
@@ -59,17 +77,25 @@ export default function ProfilScreen() {
                     <Ionicons size={30} name="settings" color={theme.text} style={styles.settings}/>
                 </TouchableOpacity>
             </Link>
-            <Image source={ProfileImage} style={styles.profile}/>
-
-            <Link href={"/(profil)/editprofile"} asChild>
-            <TouchableOpacity>
-            <Ionicons name="pencil" color={theme.text} style={{alignSelf:"center"}} size={32} />
-
-            </TouchableOpacity>
-            </Link>
+            <TouchableOpacity style={styles.imageContainer} onPress={pickImage}>
+        <Image
+          source={
+            imageUri
+              ? { uri: imageUri }
+              : require('./../assets/images/ProfileImage.jpeg')
+          }
+          style={styles.image}
+        />
+      </TouchableOpacity>
             <ThemedView style={styles.userInfoContainer}>
-                <ThemedText style={styles.username}>{user?.username || 'Username not available'}</ThemedText>
+                <ThemedText style={styles.username}>{user?.username || 'Username not available'}
+                <Link href={"/(profil)/editprofile"} asChild>
+            <TouchableOpacity>
+            <Ionicons name="pencil" color={theme.text} size={20} />
+            </TouchableOpacity>
+            </Link></ThemedText>
                 <ThemedText style={styles.email}>{user?.email || 'Email not available'}</ThemedText>
+                
             </ThemedView>
 
             <ThemedView style={styles.lineContainer}>
@@ -145,6 +171,15 @@ export default function ProfilScreen() {
 }
 
 const styles = StyleSheet.create({
+    imageContainer:{
+        alignItems: 'center',
+        marginTop: 50,
+    },
+    image: {
+        width: 150,
+        height: 150,
+        borderRadius: 75,
+      },
     listWrapper:{
         justifyContent: "center",
         marginBottom: 10
@@ -210,7 +245,7 @@ const styles = StyleSheet.create({
     username: {
         fontSize: 24,
         fontWeight: 'bold',
-        marginBottom: 5,
+
     },
     email: {
         fontSize: 16,

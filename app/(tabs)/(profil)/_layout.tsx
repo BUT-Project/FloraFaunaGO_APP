@@ -31,7 +31,7 @@ export default function Layout() {
 
             }}
             />
-            <Stack.Screen name="edit-profile"
+            <Stack.Screen name="editprofile"
             options={{
                 animation:'slide_from_bottom',
                 presentation: "modal",

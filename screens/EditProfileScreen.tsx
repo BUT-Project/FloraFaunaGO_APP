@@ -1,19 +1,25 @@
-import { TextInput, Button, StyleSheet, useColorScheme, TouchableOpacity } from "react-native";
+import {StyleSheet, useColorScheme, TouchableOpacity } from "react-native";
 import { useAuthStore } from "@/context/zustand/store/useAuthStore";
 import { useUserStore } from "@/context/zustand/store/useUserStore";
 import { ThemedText, ThemedView } from "@/components/ui/themed";
 import { Colors } from "@/constants/Colors";
 import { useState } from "react";
-import { BorderlessButton } from "react-native-gesture-handler";
-import { center } from "@shopify/react-native-skia";
+import { InputWithIcon } from "@/components/ui/InputWithIcon";
+import { useRegisterViewModel } from "@/hooks/viewModels/auth/useRegisterViewModel";
+import StubData from "@/dal/StubLib/StubData";
 export default function UserEditScreen() {
     const user = useAuthStore((state) => state.user);
     const userStore = useUserStore();
     const colorScheme =  useColorScheme() ?? 'light';
-    const [username, setUsername] = useState(user?.username || '');
     const [mail, setMail] = useState(user?.email || '');
     const [mdp, setMdp] = useState(user?.passwordHash || '');
+    const {authService} = StubData.getInstance();
 
+    const {
+      username,
+      setUsername,
+
+  } = useRegisterViewModel(authService);
     const theme = Colors[colorScheme];
 
     function handleSave() {
@@ -25,30 +31,25 @@ export default function UserEditScreen() {
   return (
     <ThemedView style={styles.container}>
       <ThemedText style={styles.label}>Nom d'utilisateur</ThemedText>
-      <TextInput
-    
-        style={[styles.input, { color: theme.text }]}
+        <InputWithIcon
+        icon="user"
+        placeholder="Username"
         value={username}
-        autoCapitalize="none"
         onChangeText={setUsername}
+        autoCapitalize="none"
+        autoCorrect={false}
       />
       <ThemedText style={styles.label}>Email</ThemedText>
-      <TextInput
-        style={[styles.input, { color: theme.text }]}
-        value={mail}
-        keyboardType="email-address"
-        autoCapitalize="none"
-        onChangeText={setMail}
-
-      />
-    <ThemedText style={styles.label}>Nouveau mot de passe</ThemedText>
-      <TextInput
-        style={[styles.input, { color: theme.text }]}
-        value={mdp}
-        autoCapitalize="none"
-        onChangeText={setMdp}
-
-      />
+        <InputWithIcon
+      icon="user"
+      placeholder="Email"
+      value={mail}
+      onChangeText={setMail}
+      keyboardType="email-address"
+      autoCapitalize="none"
+      autoComplete="email"
+      autoCorrect={false}
+  />
 
 <TouchableOpacity
   style={[styles.butt, { backgroundColor: theme.tint }]}
