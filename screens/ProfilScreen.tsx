@@ -29,6 +29,7 @@ export default function ProfilScreen() {
     const [stepCount,setStepCount] = useState(0)
     const [imageUri, setImageUri] = useState<string | null | undefined>(null);
     const user = useAuthStore((state) => state.user);
+    //modifier car les captures plus dans le modele (david)
     const species = useAuthStore((state) => new Set(state.user?.captures.map(c => c.specie.id)).size);
     const familiesCount = useAuthStore((state) => new Set(state.user?.captures.map(c => c.specie.family)).size);
     const dataUser = useUserStore()
