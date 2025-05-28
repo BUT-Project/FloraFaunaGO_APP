@@ -77,7 +77,8 @@ export class ZodHttpClient extends HttpClient {
             method: 'GET',
             url,
             responseSchema,
-            headers
+            headers,
+            params
         });
     }
 

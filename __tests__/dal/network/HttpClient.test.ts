@@ -1,4 +1,4 @@
-import { HttpClient, RequestConfig, HttpClientConfig } from '@/dal/network/HttpClient';
+import { HttpClient } from '@/dal/network/HttpClient';
 import { QueryParams } from '@/shared/PagedRequest';
 import { Result } from '@/shared/Result';
 

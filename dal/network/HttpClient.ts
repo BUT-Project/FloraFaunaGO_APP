@@ -20,17 +20,21 @@ export interface HttpClientConfig {
 }
 
 export class HttpClient {
-    private readonly baseUrl: string;
-    private readonly defaultHeaders: Readonly<Record<string, string>>;
-    private readonly defaultTimeout: number;
+    protected readonly baseUrl: string;
+    protected readonly defaultHeaders: Readonly<Record<string, string>>;
+    protected readonly defaultTimeout: number;
 
-    constructor(config: HttpClientConfig = {}) {
+    constructor(protected readonly config: HttpClientConfig = {}) {
         this.baseUrl = config.baseUrl ?? '';
         this.defaultHeaders = Object.freeze({
             'Content-Type': 'application/json',
             ...config.headers,
         });
         this.defaultTimeout = config.timeout ?? 10000;
+    }
+
+    protected getConfig(): HttpClientConfig {
+        return this.config;
     }
 
     private buildUrl(url: string, params?: QueryParams): string {

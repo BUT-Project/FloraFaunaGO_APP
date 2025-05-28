@@ -2,23 +2,23 @@ import User from "@/model/domain/User";
 import IAuthService from "@/model/service/IAuthService";
 import { AuthJWTMapper } from "./AuthJWTMapper";
 import { IUserRepository } from "@/dal/repository/IUserRepository";
-import KeyManager from "@/service/KeyManager";
 import {RegisterRequestDto, RegisterRequestSchema} from "@/shared/scheme/RegisterRequestSchema";
 import {LoginRequestDto, LoginRequestSchema} from "@/shared/scheme/LoginRequestSchema";
 import {RefreshRequestDto, RefreshRequestSchema} from "@/shared/scheme/RefreshRequestSchema";
-import {AccessTokenResponseSchema} from "@/shared/scheme/AccessTokenResponseSchema";
+import {AccessTokenResponseDto, AccessTokenResponseSchema} from "@/shared/scheme/AccessTokenResponseSchema";
 import {ZodHttpClient} from "@/dal/network/ZodHttpClient";
+import TokenManager from "@/service/keyManager/TokenManager";
+import {SecureLocalStorageAdapter} from "@/libs/LocalStorageAdapter";
+import {ITokenManager} from "@/service/keyManager/ITokenManager";
 
 export default class NetworkAuthService implements IAuthService {
     private currentUser: User | null = null;
-    private keyManager: KeyManager;
 
     constructor(
-       private readonly authClient = new ZodHttpClient({baseUrl: '/auth'}),
-       private readonly userRepository: IUserRepository
-    ) {
-        this.keyManager = new KeyManager();
-    }
+       private readonly authClient: ZodHttpClient,
+       private readonly userRepository: IUserRepository,
+       private keyManager: ITokenManager<AccessTokenResponseDto> = new TokenManager(new SecureLocalStorageAdapter())
+) {}
 
     async login(email: string, password: string, twoFactorCode?: string, twoFactorRecoveryCode?: string): Promise<User> {
         try {
@@ -31,7 +31,7 @@ export default class NetworkAuthService implements IAuthService {
             const tokenResponse = await this.authClient.postValidated('/login', credentials, LoginRequestSchema, AccessTokenResponseSchema);
             // Store tokens
             if (tokenResponse.success) {
-                this.keyManager.putToken(tokenResponse.data);
+                await this.keyManager.putToken(tokenResponse.data);
 
                 // Extract user ID from token and fetch user from repository
                 const userId = AuthJWTMapper.getUserIdFromToken(tokenResponse.data.accessToken);
@@ -57,7 +57,7 @@ export default class NetworkAuthService implements IAuthService {
             const tokenResponse = await this.authClient.postValidated('/auth/register', registerRequest, RegisterRequestSchema, AccessTokenResponseSchema);
             if (tokenResponse.success) {
                 // Store tokens
-                this.keyManager.putToken(tokenResponse.data);
+                await this.keyManager.putToken(tokenResponse.data);
 
                 // Extract user ID from token and fetch user from repository
                 const userId = AuthJWTMapper.getUserIdFromToken(tokenResponse.data.accessToken);
@@ -74,9 +74,15 @@ export default class NetworkAuthService implements IAuthService {
     }
 
     async logout(): Promise<void> {
-        await this.authClient.post('/auth/logout', {});
-        this.keyManager.clearTokens();
-        this.currentUser = null;
+        try {
+            await this.authClient.post('/logout', {});
+        } catch (error) {
+            console.warn('Server logout failed, proceeding with local cleanup:', error);
+        } finally {
+            // Always clear local tokens regardless of server response
+            this.keyManager.clearTokens();
+            this.currentUser = null;
+        }
     }
 
     async getUser(): Promise<User | null> {
@@ -92,12 +98,12 @@ export default class NetworkAuthService implements IAuthService {
         }
 
         try {
-            // Extract user ID from token and fetch from repository
+            // Extract user ID from a token and fetch from repository
             const userId = AuthJWTMapper.getUserIdFromToken(token);
             this.currentUser = await this.userRepository.getById(userId);
             return this.currentUser;
         } catch (error) {
-            // Token is invalid or user not found, clear token
+            // Token is invalid, or user not found, clear token
             this.keyManager.clearTokens();
             return null;
         }
@@ -113,7 +119,7 @@ export default class NetworkAuthService implements IAuthService {
      */
     private async refreshToken(): Promise<boolean> {
         try {
-            const refreshToken = this.keyManager.getRefreshToken();
+            const refreshToken = await this.keyManager.getRefreshToken();
             if (!refreshToken) {
                 return false;
             }
@@ -125,7 +131,7 @@ export default class NetworkAuthService implements IAuthService {
 
             if (tokenResponse.success) {
                 // Store new tokens
-                this.keyManager.putToken(tokenResponse.data);
+                await this.keyManager.putToken(tokenResponse.data);
                 return true;
             } else {
                 throw new Error(tokenResponse.error?.message || "Échec du rafraîchissement du token");
@@ -142,13 +148,13 @@ export default class NetworkAuthService implements IAuthService {
      * Get the current access token, refreshing if necessary
      */
     private async getValidToken(): Promise<string | null> {
-        let token = this.keyManager.getToken();
+        let token = await this.keyManager.getToken();
 
         if (!token) {
             // Try to refresh
             const refreshed = await this.refreshToken();
             if (refreshed) {
-                token = this.keyManager.getToken();
+                token = await this.keyManager.getToken();
             }
         }
 

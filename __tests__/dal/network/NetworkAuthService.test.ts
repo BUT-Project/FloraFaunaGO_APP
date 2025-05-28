@@ -5,8 +5,6 @@ import { LoginRequestSchema, LoginRequestDto } from "@/shared/scheme/LoginReques
 import { RegisterRequestSchema, RegisterRequestDto } from "@/shared/scheme/RegisterRequestSchema";
 import { RefreshRequestSchema, RefreshRequestDto } from "@/shared/scheme/RefreshRequestSchema";
 import { AccessTokenResponseSchema, AccessTokenResponseDto } from "@/shared/scheme/AccessTokenResponseSchema";
-import KeyManager from "@/service/KeyManager"; // Original import for mocking target
-// import { AuthJWTMapper } from "@/dal/network/AuthJWTMapper"; // No longer mocking AuthJWTMapper
 import User from "@/model/domain/User";
 import JWT from "expo-jwt";
 
@@ -18,7 +16,7 @@ const mockKeyManagerClearTokens = jest.fn();
 const mockKeyManagerGetToken = jest.fn();
 const mockKeyManagerGetRefreshToken = jest.fn();
 
-jest.mock('@/service/KeyManager', () => {
+jest.mock('@/service/keyManager/TokenManager', () => {
     return jest.fn().mockImplementation(() => {
         // This mock constructor is called when `new KeyManager()` is used in NetworkAuthService
         return {
