@@ -27,7 +27,18 @@
       "!**/node_modules/**",
       "!**/babel.config.js",
       "!**/expo-env.d.ts",
-      "!**/.expo/**"
+      "!**/.expo/**",
+
+      "!**/babel.config.js",
+      "!**/metro.config.js",
+      "!**/jest.setup.js",
+      "!**/*.config.{js,ts}",
+
+      "!**/app/+html.tsx",
+      "!**/app/+not-found.tsx"
+    ],
+    "coverageReporters": [
+      "lcov"
     ]
   },
   "dependencies": {
