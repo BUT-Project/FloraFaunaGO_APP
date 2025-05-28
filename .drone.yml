@@ -16,7 +16,7 @@ steps:
     image: node:latest
     commands:
       - npm install
-      - NODE_ENV=test npm test --forceExit
+      - NODE_ENV=test npm run test:ci --forceExit
     depends_on: [ app-build ]
 
   - name: code-analysis
