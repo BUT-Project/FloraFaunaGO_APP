@@ -21,7 +21,7 @@ const styles =StyleSheet.create({
     inputContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: 'white',
+        backgroundColor: 'grey',
         borderRadius: 30,
         marginBottom: 20,
         paddingHorizontal: 20,

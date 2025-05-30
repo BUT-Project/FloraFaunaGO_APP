@@ -1,7 +1,7 @@
 import {useCallback, useEffect, useState} from "react";
 import Animated, {useAnimatedStyle, useSharedValue, withSpring} from "react-native-reanimated";
 import {ThemedView} from "@/components/ui/themed";
-import {Alert, Dimensions, StyleSheet, View} from "react-native";
+import { Dimensions, StyleSheet, View} from "react-native";
 import { CameraView } from "@/components/camera";
 import ARProgressIndicator from "@/components/ARProgressIndicator";
 import MainMapView from "@/components/MainMapView";
@@ -12,15 +12,17 @@ import StubData from "@/dal/StubLib/StubData";
 import {Specie,SuccessType} from "@/model/domain";
 import {useSpeciesStore} from "@/context/zustand/store/useSpeciesStore";
 import { useFocusEffect } from '@react-navigation/native';
-import { processSuccessByType } from "@/shared/successHelper";
 import { SafeView } from "@/components/ui/SafeView";
-import { isImageBlurry } from "@/services/imageQuality";
+import {  isImageBlurry } from "@/services/imageQuality";
+import { toast } from "@backpackapp-io/react-native-toast";
+import { SuccessManager } from "@/dal/manager/SuccessManager";
 
 const {width: SCREEN_WIDTH} = Dimensions.get('window');
 export default function HomeScreen() {
     const {speciesRepository} = StubData.getInstance();
     const [isCameraActive, setIsCameraActive] = useState(false);
-
+    const [spec,setSpec] = useState<Specie>()
+    const successManager = new SuccessManager(StubData.getInstance().successRepository!);
     const router = useRouter();
     const slideAnim = useSharedValue(0);
     const [capturedImage, setCapturedImage] = useState<string | null>(null);
@@ -41,7 +43,7 @@ export default function HomeScreen() {
             if (!speciesRepository) throw new Error('No Repository');
             if (!base64Image) throw new Error('No base64 image data');
             var spec = await speciesRepository.identifySpecies(base64Image);
-            await processSuccessByType(SuccessType.PHOTO, spec);
+            setSpec(spec)
             return spec;
         },
         enabled: !!base64Image && !!speciesRepository
@@ -72,13 +74,12 @@ export default function HomeScreen() {
             const isBlurry = await isImageBlurry(capturedImage);
       
             if (isBlurry) {
-              Alert.alert(
-                "Image floue",
-                "Merci de reprendre une image plus nette."
+              toast.error(
+                "Image floue \n Merci de reprendre une image plus nette.",
               );
               return;
             }
-      
+            await successManager!.processSuccessByType(SuccessType.PHOTO, spec!);
             setCurrentImageUri(capturedImage);
             setCurrentIdentifiedSpecies(identifiedSpecie);
             router.push('/capture');

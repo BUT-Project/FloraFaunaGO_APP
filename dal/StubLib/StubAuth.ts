@@ -9,6 +9,23 @@ export default class StubAuth implements IAuthService{
 
     constructor(public Users: User[]) {
     }
+    resetPassword(email: string,oldPassword:string, newPassword: string): Promise<User> {
+        return new Promise((resolve, reject) => {
+            const user = this.Users.find(u => u.email === email);
+            if (!user) {
+                return reject(new Error("Utilisateur not found"));
+            }
+    
+            if (user.passwordHash !== oldPassword) {
+                return reject(new Error("Incorrect password"));
+            }
+            user.passwordHash = newPassword;
+                if (this.currentUser?.id === user.id) {
+                this.currentUser = user;
+            }
+    
+            resolve(user);
+    })}
     login(email: string, password: string): Promise<User> {
         const user = this.Users.find(u => u.email.toLocaleLowerCase() == email && u.passwordHash == password);
         return new Promise((resolve, reject) => {

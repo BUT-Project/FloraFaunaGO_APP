@@ -4,10 +4,13 @@ import {ISuccessRepository} from "@/dal/repository/ISuccessRepository";
 import {Success} from "@/model/domain/Success";
 import {PagedRequest} from "@/shared/PagedRequest";
 
+
 export default class StubSucess  implements ISuccessRepository {
 
     constructor(public Sucesses: Success[]) {
     }
+
+    
     count(filter: FilterPredicate<Success>): Promise<number> {
         return new Promise((resolve, reject) => {
             try {

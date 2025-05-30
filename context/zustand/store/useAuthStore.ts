@@ -47,6 +47,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         set({user, isAuthenticated: true});
     },
 
+
     logout: async () => {
         const {authService} = StubData.getInstance();
         await authService?.logout();
