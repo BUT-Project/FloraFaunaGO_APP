@@ -22,7 +22,8 @@
         "foregroundImage": "./assets/images/logo_FFGO.png",
         "backgroundColor": "#ffffff"
       },
-      "newArchEnabled": true
+      "newArchEnabled": true,
+      "permissions": ["android.permission.ACTIVITY_RECOGNITION"]
     },
     "web": {
       "bundler": "metro",
