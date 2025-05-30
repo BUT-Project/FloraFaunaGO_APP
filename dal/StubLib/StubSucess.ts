@@ -9,6 +9,22 @@ export default class StubSucess  implements ISuccessRepository {
 
     constructor(public Sucesses: Success[]) {
     }
+    isCompleted(suc: Success): Promise<Boolean> {
+        return new Promise((resolve, reject) => {
+            try {
+        if(suc){
+        if(suc.actualVal >= suc.objectif){
+            resolve(true)
+        }
+         resolve(false)
+    }
+    }
+    catch(error){
+        reject(new Error(`Error while checking if the success is finished`));
+
+    }
+    });
+    }
 
     
     count(filter: FilterPredicate<Success>): Promise<number> {

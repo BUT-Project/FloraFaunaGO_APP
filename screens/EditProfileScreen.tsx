@@ -15,11 +15,9 @@ export default function UserEditScreen() {
     const [newPassword, setNewPassword] = useState('');
     const [showPasswordFields, setShowPasswordFields] = useState(false);
     const [message, setMessage] = useState<string | null>(null);
-
+    const [username,setUsername] = useState("")
     const {authService} = StubData.getInstance();
     const {
-      username,
-      setUsername,
       email,
       setEmail,
       password,

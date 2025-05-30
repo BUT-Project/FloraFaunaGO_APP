@@ -3,7 +3,7 @@ import React, {useEffect, useState} from "react";
 import SucessListItemVertical from "@/components/SucessListItemVertical";
 import {ThemedView,ThemedText,ThemedIcon} from "@/components/ui/themed";
 import {Link} from 'expo-router';
-import {AntDesign, FontAwesome5, FontAwesome6} from "@expo/vector-icons";
+import {AntDesign, FontAwesome5, FontAwesome6, Ionicons} from "@expo/vector-icons";
 import {Success} from "@/model/domain/Success";
 import StubData from "@/dal/StubLib/StubData";
 import {PagedRequest} from "@/shared/PagedRequest";
