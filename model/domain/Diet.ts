@@ -1,4 +1,4 @@
-export enum Diet{
+export enum Diet {
     Carnivores = "Carnivores",
     Herbivores = "Herbivores",
     Omnivores = "Omnivores",

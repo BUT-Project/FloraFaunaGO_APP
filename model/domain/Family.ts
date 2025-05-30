@@ -1,4 +1,5 @@
 export enum Family {
+    Unknown = "INCONNUE",
     Canid="Canid",
     Bovids="Bovids",
     Leporids="Leporids",
