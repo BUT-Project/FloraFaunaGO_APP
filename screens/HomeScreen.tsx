@@ -17,7 +17,8 @@ import { useFocusEffect } from '@react-navigation/native';
 import { SuccessType } from "@/model/domain/SuccessType";
 import { SafeView } from "@/components/ui/SafeView";
 import {  isImageBlurry } from "@/services/imageQuality";
-import { ToastPosition, toast } from "@backpackapp-io/react-native-toast";
+import { toast } from "@backpackapp-io/react-native-toast";
+import { SuccessManager } from "@/dal/manager/SuccessManager";
 
 const {width: SCREEN_WIDTH} = Dimensions.get('window');
 export default function HomeScreen() {
@@ -25,7 +26,7 @@ export default function HomeScreen() {
     const [location, setLocation] = useState<Location.LocationObject | null>(null);
     const [isCameraActive, setIsCameraActive] = useState(false);
     const [spec,setSpec] = useState<Specie>()
-    const success =  StubData.getInstance().successRepository
+    const successManager = new SuccessManager(StubData.getInstance().successRepository!);
     const router = useRouter();
     useEffect(() => {
         (async () => {
@@ -95,7 +96,7 @@ export default function HomeScreen() {
               );
               return;
             }
-            await success!.processSuccessByType(SuccessType.PHOTO, spec!);
+            await successManager!.processSuccessByType(SuccessType.PHOTO, spec!);
             setCurrentImageUri(capturedImage);
             setCurrentIdentifiedSpecies(identifiedSpecie);
             router.push('/capture');

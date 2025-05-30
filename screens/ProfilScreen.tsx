@@ -13,6 +13,7 @@ import { Colors } from "@/constants/Colors";
 import { launchImageLibrary,ImageLibraryOptions} from 'react-native-image-picker';
 import * as ImagePicker from 'expo-image-picker';
 import { useUserStore } from "@/context/zustand/store/useUserStore";
+import { useSpeciesStore } from "@/context/zustand/store/useSpeciesStore";
 
 
 let ProfileImage: {};
@@ -31,9 +32,9 @@ export default function ProfilScreen() {
     const user = useAuthStore((state) => state.user);
     //modifier car les captures plus dans le modele (david)
     const species = useAuthStore((state) => new Set(state.user?.captures.map(c => c.specie.id)).size);
-    const familiesCount = useAuthStore((state) => new Set(state.user?.captures.map(c => c.specie.family)).size);
+    const specie = StubData.getInstance().speciesRepository
     const dataUser = useUserStore()
-
+    const familyCount = specie?.
     const fetchSuccesses = async (currentPage: number) => {
         setLoading(true);
         try {
@@ -114,7 +115,7 @@ export default function ProfilScreen() {
             </ThemedView>
             <ThemedView style={styles.container}>
                 <FontAwesome5 size={30} name="dna" style={[styles.settings, {color: theme.text}]}/>
-                <ThemedText style={styles.text}> Familles complétées : {familiesCount}</ThemedText>
+                <ThemedText style={styles.text}> Familles complétées : {specie}</ThemedText>
             </ThemedView>
             <ThemedView style={styles.container}>
                 <AntDesign size={30} name="clockcircleo" style={[styles.settings, {color:theme.text}]}/>

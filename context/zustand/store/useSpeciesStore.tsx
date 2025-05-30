@@ -5,6 +5,7 @@ import {useAuthStore} from "@/context/zustand/store/useAuthStore";
 import StubData from "@/dal/StubLib/StubData";
 import Location from "@/model/domain/Location";
 import { SuccessType } from "@/model/domain/SuccessType";
+import { SuccessManager } from "@/dal/manager/SuccessManager";
 export interface SpeciesState {
     currentImageUri: string | null;
     identifiedSpecies: Specie | null;
@@ -25,7 +26,7 @@ const initialState = {
     isLoading: false,
     error: null,
 };
-const success = StubData.getInstance().successRepository
+const successManager = new SuccessManager(StubData.getInstance().successRepository!);
 
 export const useSpeciesStore = create<SpeciesState>()(
     devtools(
@@ -59,7 +60,7 @@ export const useSpeciesStore = create<SpeciesState>()(
             },
             addSpecieToUser: async (specie: Specie, currentLocation : Location) => {
                 try {
-                    await success!.processSuccessByType(SuccessType.CAPTURE, specie);
+                    await successManager.processSuccessByType(SuccessType.CAPTURE, specie);
                     const { currentImageUri } = get();
                     if (!currentImageUri) {
                         console.log("Aucune image sélectionnée pour l\"ajout à utilisateur Current image uri: " + currentImageUri);
