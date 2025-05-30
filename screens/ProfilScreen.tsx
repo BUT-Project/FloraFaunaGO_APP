@@ -20,7 +20,7 @@ export default function ProfilScreen() {
     const [page, setPage] = useState(1);
     const [isLoading, setIsLoading] = useState(false);
     const [totalPages, setTotalPages] = useState(1);
-
+    const stepCount = useAuthStore((state) => state.user?.stepCount);
     const colorScheme =  useColorScheme() ?? 'light';
     const theme = Colors[colorScheme];
 
@@ -69,7 +69,7 @@ export default function ProfilScreen() {
 
             <ThemedView style={styles.container}>
                 <FontAwesome5 size={32} name="walking" style={[styles.settings, {color: theme.text}]}/>
-                <ThemedText style={styles.text}>  Distance marchées </ThemedText>
+                <ThemedText style={styles.text}>Distance marché <ThemedText type="defaultSemiBold">{stepCount} pas</ThemedText></ThemedText>
             </ThemedView>
             <ThemedView style={styles.container}>
                 <FontAwesome6 size={30} name="circle-question" style={[styles.settings, {color: theme.text}]}/>
