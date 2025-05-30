@@ -12,9 +12,13 @@ export interface CustomCameraViewProps {
     style?: StyleProp<ViewStyle>;
 };
 
+export const mockedUri = "https://via.placeholder.com/300.png?text=Mock+Image";
+export const mockedBase64 = "dazpdoazopdazpodkoazp"
+export const permLoading  = "Récupération des permissions ..."
+
 const CustomCameraView = ({setBase64Image, setCapturedImage, style}: CustomCameraViewProps) => {
 
-    const {facing, toggleCameraFacing, permission, requestPerm} = useCamera();
+    const { facing, toggleCameraFacing, permission, requestPerm } = useCamera();
     const cameraRef = useRef<CameraView>(null);
     const [zoom, setZoom] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
@@ -37,8 +41,8 @@ const CustomCameraView = ({setBase64Image, setCapturedImage, style}: CustomCamer
             if (shouldUseMock) {
                 // ✅ Image factice pour les tests en développement
                 photo = {
-                    uri: 'https://via.placeholder.com/300.png?text=Mock+Image',
-                    base64: "dazpdoazopdazpodkoazp",
+                    uri: mockedUri,
+                    base64: mockedBase64,
                 };
             } else {
                 photo = await cameraRef.current?.takePictureAsync({base64: true});
@@ -53,14 +57,14 @@ const CustomCameraView = ({setBase64Image, setCapturedImage, style}: CustomCamer
     };
 
     if (!permission) {
-        return (<Loading style={[styles.container, style]} text="Récupération des permissions ..."/>);
+        return (<Loading testID="PermissionLoading" style={[styles.container, style]} text={permLoading}/>);
     }
     if (permission && !permission.granted) {
         return (
             <ThemedView style={[styles.container, style]}>
                 <ThemedText style={styles.message}>Nous avons besoin de votre permission pour utiliser la caméra de
                     l'appareil.</ThemedText>
-                <TouchableOpacity style={styles.permissionButton} onPress={requestPerm}>
+                <TouchableOpacity testID="AllowPermission.Button" style={styles.permissionButton} onPress={requestPerm}>
                     <ThemedText style={styles.permissionButtonText}>Accorder la permission</ThemedText>
                 </TouchableOpacity>
             </ThemedView>

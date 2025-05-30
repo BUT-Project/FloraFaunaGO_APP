@@ -19,15 +19,15 @@ export default function CameraControls(props: CameraControlsProps) {
     return (
             <View style={styles.container}>
                 <View style={styles.part}>
-                    <TouchableOpacity style={styles.flipButton} disabled={isLoading} onPress={toggleCameraFacing}>
+                    <TouchableOpacity testID='Camera.Reverse.Button' style={styles.flipButton} disabled={isLoading} onPress={toggleCameraFacing}>
                         <Ionicons name={facing === 'back' ? 'camera-reverse' : 'camera'} size={30} color="#fff"/>
                     </TouchableOpacity>
                 </View>
                <View style={styles.part}>
-                    <TouchableOpacity style={styles.captureButton} disabled={isLoading} onPress={handleCapturePress}
+                    <TouchableOpacity testID='Camera.Capture.Button' style={styles.captureButton} disabled={isLoading} onPress={handleCapturePress}
                                   onPressOut={handleCaptureRelease}>
                     {isLoading ?  
-                        <ActivityIndicator size="large" color="#fff"/> 
+                        <ActivityIndicator testID='Camera.Capture.Loading' size="large" color="#fff"/> 
                         :
                         <View style={styles.captureButtonInner}/>
                     }

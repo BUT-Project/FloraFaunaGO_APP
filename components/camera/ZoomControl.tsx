@@ -30,7 +30,7 @@ const ZoomControl: React.FC<ZoomControlProps> = ({ zoom, setZoom }) => {
 
     return (
         <View>
-            <TouchableOpacity style={styles.zoomButton} onPress={handleZoomToggle}>
+            <TouchableOpacity testID='Camera.Zoom.Open' style={styles.zoomButton} onPress={handleZoomToggle}>
                 <Ionicons name={isZoom ? 'close' : 'search'} size={30} color="#fff" />
             </TouchableOpacity>
             {isZoom && (
@@ -41,6 +41,7 @@ const ZoomControl: React.FC<ZoomControlProps> = ({ zoom, setZoom }) => {
                     ]}
                 >
                     <TouchableOpacity
+                        testID='Camera.Zoom.Out'
                         onPress={() => setZoom(Math.max(0, zoom - 0.1))}
                         onLongPress={() => setZoom(0)}
                         disabled={zoom <= 0}
@@ -51,6 +52,7 @@ const ZoomControl: React.FC<ZoomControlProps> = ({ zoom, setZoom }) => {
                     </TouchableOpacity>
                     <Text style={styles.zoomText}>{zoom?.toFixed(1) ?? 0}</Text>
                     <TouchableOpacity
+                        testID='Camera.Zoom.In'
                         onPress={() => setZoom(Math.min(1, zoom + 0.1))}
                         onLongPress={() => setZoom(1)}
                         disabled={zoom >= 1}

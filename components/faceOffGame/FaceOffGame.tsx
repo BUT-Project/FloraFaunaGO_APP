@@ -18,10 +18,10 @@ interface Props {
   onCancel: () => void;
 }
 
-const NB_LIVES = 3;
-const NB_STEPS = 3;
-const MAX_RESPONSE_TIME = 4500;
-const DELAY_BETWEEN_ROUNDS = 2500;
+export const NB_LIVES = 3;
+export const NB_STEPS = 3;
+export const MAX_RESPONSE_TIME = 4500;
+export const DELAY_BETWEEN_ROUNDS = 2500;
 
 const FaceOffGame = ({ animalPhoto, onResult, onCancel }: Props) => {
   const [step, setStep] = useState(0);
@@ -139,7 +139,7 @@ const FaceOffGame = ({ animalPhoto, onResult, onCancel }: Props) => {
             <TouchableWithoutFeedback onPress={handleResumeTimeBetweenRound}>
                 <ThemedView style={styles.overlay}>
                     <ThemedView style={styles.topBar}>
-                        <TouchableOpacity style={styles.fleeButton} onPress={onCancel}>
+                        <TouchableOpacity testID='Flee.Button' style={styles.fleeButton} onPress={onCancel}>
                             <Ionicons name="chevron-back" size={30} color="#fff" />
                             <ThemedText style={styles.topText}>Fuir</ThemedText>
                         </TouchableOpacity>
@@ -148,10 +148,10 @@ const FaceOffGame = ({ animalPhoto, onResult, onCancel }: Props) => {
                     </ThemedView>
                     <ThemedView style={styles.bottom}>
                         {feedbackMessage && (
-                            <FeedbackMessageToast message={feedbackMessage}/>
+                            <FeedbackMessageToast testID='Result.Message' message={feedbackMessage}/>
                         )}
                         {animalAction && (
-                            <FeedbackMessageToast message={{text:`L’animal ${animalAction.label}`, icon:animalAction.icon, type: 'info'}}/>
+                            <FeedbackMessageToast testID='AnimalAction.Message' message={{text:`L’animal ${animalAction.label}`, icon:animalAction.icon, type: 'info'}}/>
                         )}
                         <TimeBar timeLeft={timeLeft} maxTime={MAX_RESPONSE_TIME} />
                     </ThemedView>
@@ -160,7 +160,7 @@ const FaceOffGame = ({ animalPhoto, onResult, onCancel }: Props) => {
         </ImageBackground>
         <ThemedView style={styles.buttons}>
                 {Object.values(PlayerActions).map((action) => (
-                <TouchableOpacity key={action.type} onPress={() => handleChoice(action.type)}>
+                <TouchableOpacity testID={`${action.label}.Button`} key={action.type} onPress={() => handleChoice(action.type)}>
                     <ThemedView style={styles.button}>
                     <ThemedText style={{color:action.color}}>{action.label}</ThemedText>
                     <Ionicons name={action.icon} color={action.color} size={30} />

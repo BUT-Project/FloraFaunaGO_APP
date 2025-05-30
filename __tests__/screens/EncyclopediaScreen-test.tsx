@@ -1,30 +1,27 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react-native';
+import { render, fireEvent, act } from '@testing-library/react-native';
 import EncyclopediaScreen from '@/screens/EncyclopediaScreen';
 import * as useSpeciesHook from '@/hooks/viewModels/useGetSpecies';
 import { Specie,Habitat,Diet,Family,Climate,Kingdom,Class, User } from '@/model/domain';
 import { useAuthStore } from  '@/context/zustand/store/useAuthStore';
 
 const cat = new Specie(
-          1,
-          "Chat",
-          "Felis catus",
-          "Petit mammifère carnivore domestique.",
-          new Habitat('maison', Climate.Temperate),
-          Diet.Carnivores,
-          Kingdom.Animal,
-          Class.Mammals,
-          Family.Felidae,
-          [],
-          ""
-        );
-
+    1,
+    "Chat",
+    "Felis catus",
+    "Petit mammifère carnivore domestique.",
+    new Habitat('maison', Climate.Temperate),
+    Diet.Carnivores,
+    Kingdom.Animal,
+    Class.Mammals,
+    Family.Felidae,
+    [],
+    ""
+);
 
 jest.mock('@/context/zustand/store/useAuthStore', () => ({
   useAuthStore: jest.fn(),
 }));
-
-
 
 describe('EncyclopediaScreen', () => {
   beforeEach(() => {
@@ -54,7 +51,7 @@ describe('EncyclopediaScreen', () => {
     expect(getByTestId('Loading')).toBeTruthy();
   });
 
-  it('affiche une erreur et permet de réessayer', () => {
+  it('affiche une erreur et permet de réessayer', async () => {
     const mockRefresh = jest.fn();
 
     jest.spyOn(useSpeciesHook, 'useGetSpecies').mockReturnValue({
@@ -69,9 +66,11 @@ describe('EncyclopediaScreen', () => {
 
     const { getByText } = render(<EncyclopediaScreen />);
     expect(getByText(/Erreur de chargement/i)).toBeTruthy();
-    fireEvent.press(getByText('Réessayer'));
+    const button = getByText("Réessayer");
+    fireEvent.press(button);
     expect(mockRefresh).toHaveBeenCalled();
   });
+
 
   it('affiche les espèces', async () => {
     jest.spyOn(useSpeciesHook, 'useGetSpecies').mockReturnValue({
@@ -104,18 +103,51 @@ describe('EncyclopediaScreen', () => {
     expect(getByText('Chien')).toBeTruthy();
   });
 
-  it('affiche le message vide quand aucune espèce', () => {
+  it('affiche le message vide quand aucune espèce et permet de réessayer', () => {
+    const mockRefresh = jest.fn()
     jest.spyOn(useSpeciesHook, 'useGetSpecies').mockReturnValue({
       species: [],
       isLoading: false,
       isLoadingMore: false,
       isListEnd: true,
       error: null,
-      refresh: jest.fn(),
+      refresh: mockRefresh,
       fetchMoreData: jest.fn(),
     });
 
-    const { getByText } = render(<EncyclopediaScreen />);
+    const { getByText, getByTestId } = render(<EncyclopediaScreen />);
+
+    
     expect(getByText('Aucune espèce trouvée.')).toBeTruthy();
+    const button = getByTestId("Refresh");
+    fireEvent.press(button);
+    expect(mockRefresh).toHaveBeenCalled();
   });
+
+  it("appeler refresh lorsque d'un pull and refresh sur la Flat List", async () => {
+    const mockRefresh = jest.fn();
+
+    jest.spyOn(useSpeciesHook, 'useGetSpecies').mockReturnValue({
+      species: [cat],
+      isLoading: false,
+      isLoadingMore: false,
+      isListEnd: true,
+      error: null,
+      refresh: mockRefresh,
+      fetchMoreData: jest.fn(),
+    });
+
+    const { getByTestId } = render(<EncyclopediaScreen />);
+    const List = getByTestId("Encyclopedia.Flatlist");
+    expect(List).toBeDefined();
+
+    const { refreshControl } = List.props;
+    await act(async() => {
+      refreshControl.props.onRefresh();
+    });
+
+    expect(mockRefresh).toHaveBeenCalled();
+
+  });
+
 });

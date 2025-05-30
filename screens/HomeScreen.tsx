@@ -7,7 +7,6 @@ import ARProgressIndicator from "@/components/ARProgressIndicator";
 import MainMapView from "@/components/MainMapView";
 import BlurSegmented from "@/components/BluredSegmented";
 import {useQuery} from "@tanstack/react-query";
-import * as Location from "expo-location";
 import {useRouter} from "expo-router";
 import StubData from "@/dal/StubLib/StubData";
 import {Specie,SuccessType} from "@/model/domain";
@@ -15,33 +14,19 @@ import {useSpeciesStore} from "@/context/zustand/store/useSpeciesStore";
 import { useFocusEffect } from '@react-navigation/native';
 import { processSuccessByType } from "@/shared/successHelper";
 import { SafeView } from "@/components/ui/SafeView";
-import {  isImageBlurry } from "@/services/imageQuality";
+import { isImageBlurry } from "@/services/imageQuality";
 
 const {width: SCREEN_WIDTH} = Dimensions.get('window');
 export default function HomeScreen() {
     const {speciesRepository} = StubData.getInstance();
-    const [location, setLocation] = useState<Location.LocationObject | null>(null);
     const [isCameraActive, setIsCameraActive] = useState(false);
 
     const router = useRouter();
-    useEffect(() => {
-        (async () => {
-            const {status} = await Location.requestForegroundPermissionsAsync();
-            if (status !== 'granted') {
-                console.log('Permission to access location was denied');
-                return;
-            }
-
-            const location = await Location.getCurrentPositionAsync();
-            setLocation(location);
-        })();
-    }, []);
-
-    
     const slideAnim = useSharedValue(0);
     const [capturedImage, setCapturedImage] = useState<string | null>(null);
     const [base64Image, setBase64Image] = useState<string | null>(null);
     const [activeView, setActiveView] = useState('camera');
+
     useFocusEffect(
         useCallback(() => {
             setIsCameraActive(true);
@@ -115,14 +100,14 @@ export default function HomeScreen() {
                     {isCameraActive
                         &&
                         <>
-                            <CameraView setBase64Image={setBase64Image} setCapturedImage={setCapturedImage}
+                            <CameraView  setBase64Image={setBase64Image} setCapturedImage={setCapturedImage}
                                         style={styles.camera}/>
                             {isFetching && (
                                 <View style={styles.progressOverlay}>
                                     <ARProgressIndicator width={SCREEN_WIDTH} height={SCREEN_WIDTH}/>
                                 </View>
                             )}
-                            <MainMapView location={location} style={styles.map}/>
+                            <MainMapView style={styles.map}/>
                         </>}
                 </Animated.View>
             </ThemedView>
