@@ -99,7 +99,7 @@ describe('NetworkAuthService', () => {
             const user = await authService.login(MOCK_EMAIL, MOCK_PASSWORD);
 
             expect(mockPostValidated).toHaveBeenCalledWith(
-                '/auth/login',
+                '/login',
                 loginCredentials,
                 LoginRequestSchema,
                 AccessTokenResponseSchema
@@ -120,7 +120,7 @@ describe('NetworkAuthService', () => {
             await expect(authService.login(MOCK_EMAIL, MOCK_PASSWORD)).rejects.toThrow(errorMessage);
 
             expect(mockPostValidated).toHaveBeenCalledWith(
-                '/auth/login',
+                '/login',
                 loginCredentials,
                 LoginRequestSchema,
                 AccessTokenResponseSchema
@@ -181,7 +181,7 @@ describe('NetworkAuthService', () => {
         it('should call the logout endpoint; KeyManager.clearTokens is NOT called by SUT', async () => {
             mockPost.mockResolvedValue({});
             await authService.logout();
-            expect(mockPost).toHaveBeenCalledWith('/auth/logout', {});
+            expect(mockPost).toHaveBeenCalledWith('/logout', {});
             expect(mockKeyManagerClearTokens).toHaveBeenCalled();
         });
     });
