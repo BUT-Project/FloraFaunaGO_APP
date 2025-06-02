@@ -28,11 +28,11 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         const {authService} = StubData.getInstance();
         const user = await authService?.login(email, password);
         if (remember && user) {
-            console.log(user);
-            await setStorageItemAsync(AUTH_TOKEN_KEY, JSON.stringify({
-                user: user?.id,
-                timestamp: new Date().getTime()
-            }));
+            // await setStorageItemAsync(AUTH_TOKEN_KEY, JSON.stringify({
+            //    user: user?.id,
+            //    timestamp: new Date().getTime()
+            //})
+            //);
             await setStorageItemAsync(REMEMBER_ME_KEY, 'true');
         }
         // [TODO] [Dave] add error handling since it can failed (like return true or use throw error from inner)
@@ -51,10 +51,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     logout: async () => {
         const {authService} = StubData.getInstance();
         await authService?.logout();
-        // Clear stored authentication state
-        await setStorageItemAsync(AUTH_TOKEN_KEY, null);
-        await setStorageItemAsync(REMEMBER_ME_KEY, null);
-
+//        Clear stored authentication state
+//        await setStorageItemAsync(AUTH_TOKEN_KEY, null);
+//        await setStorageItemAsync(REMEMBER_ME_KEY, null);
         set({user: null, isAuthenticated: false, rememberMe: false});
     },
     checkAuth: async () => {
@@ -75,6 +74,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
                     // Check if stored auth is not expired (e.g., 30 days)
                     const isValid = (new Date().getTime() - timestamp) < (30 * 24 * 60 * 60 * 1000);
+
                     const user = await userRepository?.getById(parsedAuth.user);
                     if (isValid && user) {
                         set({

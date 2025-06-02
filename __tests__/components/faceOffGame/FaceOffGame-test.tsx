@@ -76,10 +76,11 @@ describe('FaceOffGame', () => {
         );
 
         await act(async () => {
-            jest.advanceTimersByTime(MAX_RESPONSE_TIME+10);
+            jest.advanceTimersByTime(MAX_RESPONSE_TIME+100);
         });
 
         expect(getByTestId('Result.Message')).toBeTruthy()
+
     });
 
   it('termine la partie avec succès après 3 bonnes réponses', async () => {
