@@ -25,7 +25,7 @@ import Animated, {
     withTiming,
 } from 'react-native-reanimated';
 import {Ionicons} from '@expo/vector-icons';
-import {State, TapGestureHandler, TapGestureHandlerStateChangeEvent} from 'react-native-gesture-handler';
+import {GestureHandlerRootView, State, TapGestureHandler, TapGestureHandlerStateChangeEvent} from 'react-native-gesture-handler';
 import Svg, {Circle, Defs, RadialGradient, Stop} from 'react-native-svg';
 import * as Location from 'expo-location';
 import {ThemedView} from "@/components/ui/themed/ThemedView";
@@ -34,7 +34,7 @@ import {ThemedView} from "@/components/ui/themed/ThemedView";
 import {Class, Diet, Family, Kingdom, Specie} from "@/model/domain";
 import {useInfiniteSpecies} from "@/hooks/viewModels/useInfiniteSpecies";
 import {ISpeciesRepository} from "@/dal/repository/ISpeciesRepository";
-
+import { PROVIDER_GOOGLE } from "react-native-maps";
 const {width, height} = Dimensions.get('window');
 const SEARCH_HANDLE_WIDTH = 50;
 const BOTTOM_OFFSET = 20;
@@ -409,11 +409,12 @@ export default function MapInterface({location, style, repository}: MapInterface
     }
 
     return (
-        <View style={[styles.container, style]}>
+        <GestureHandlerRootView style={[styles.container, style]}>
             <TapGestureHandler onHandlerStateChange={handleOutsidePress}>
                 <View style={styles.container}>
                     <Animated.View style={styles.container}>
                         <MapView
+                            provider={PROVIDER_GOOGLE}
                             ref={mapRef}
                             style={styles.map}
                             initialRegion={
@@ -432,10 +433,9 @@ export default function MapInterface({location, style, repository}: MapInterface
                                     }
                             }
                         >
-                            {/* 🔧 FIX: Use stable keys to prevent marker re-creation */}
                             {displayedSpecies.map((specie) =>
                                 specie.locations.map((specieLocation, locationIndex) => (
-                                    <Marker
+                                    <AnimatedMarker
                                         key={`marker-${specie.id}-${locationIndex}`}
                                         coordinate={{
                                             latitude: specieLocation.latitude,
@@ -443,19 +443,8 @@ export default function MapInterface({location, style, repository}: MapInterface
                                         }}
                                         onPress={() => handleMarkerPress(specie.id.toString(), locationIndex)}
                                     >
-                                        <View style={[styles.markerContainer, {
-                                            width: specieLocation.radius * 2,
-                                            height: specieLocation.radius * 2
-                                        }]}>
-                                            <BlurredZone
-                                                color={getMarkerColor(specie)}
-                                                size={specieLocation.radius * 20}
-                                            />
                                             <Image source={{uri: specie.image}} style={styles.markerImage}/>
-                                        </View>
-                                        <Text style={{fontSize: 50}}>{specie.name[0]}</Text>
-
-                                    </Marker>
+                                    </AnimatedMarker>
                                 ))
                             )}
 
@@ -555,7 +544,7 @@ export default function MapInterface({location, style, repository}: MapInterface
                     </Animated.View>
                 </View>
             </TapGestureHandler>
-        </View>
+        </GestureHandlerRootView>
     );
 }
 
@@ -696,6 +685,9 @@ const styles = StyleSheet.create({
     markerContainer: {
         justifyContent: 'center',
         alignItems: 'center',
+        borderRadius : 100,
+        borderColor : 'grey',
+        borderWidth: 1,
     },
     markerImage: {
         width: 40,

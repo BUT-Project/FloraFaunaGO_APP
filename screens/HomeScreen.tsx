@@ -118,16 +118,16 @@ export default function HomeScreen() {
                 <Animated.View style={[styles.container, animatedStyle]}>
                     {isCameraActive
                         &&
-                        <View style={styles.viewContainer}>
-                            <CameraView setBase64Image={setBase64Image} setCapturedImage={setCapturedImage}
-                                        style={styles.camera}/>
+                        <>
+                            <CameraView  setBase64Image={setBase64Image} setCapturedImage={setCapturedImage}
+                                         style={styles.camera}/>
+                            {isFetching && (
+                                <View style={styles.progressOverlay}>
+                                    <ARProgressIndicator width={SCREEN_WIDTH} height={SCREEN_WIDTH}/>
+                                </View>
+                            )}
                             <MainMapView location={location} style={styles.map} repository={speciesRepository}/>
-                        </View>}
-                    {isFetching && (
-                        <View style={styles.progressOverlay}>
-                            <ARProgressIndicator width={SCREEN_WIDTH} height={SCREEN_WIDTH}/>
-                        </View>
-                    )}
+                        </>}
                 </Animated.View>
             </ThemedView>
         </SafeView>
@@ -166,11 +166,6 @@ const styles = StyleSheet.create({
         left: 0,
         right: 0,
         zIndex: 10,
-    },
-    viewContainer: {
-        flex: 1,
-        flexDirection: 'row',
-        width: '200%',
     },
     camera: {
         flex: 1,
