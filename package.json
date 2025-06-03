@@ -5,8 +5,8 @@
   "scripts": {
     "start": "expo start",
     "reset-project": "node ./scripts/reset-project.js",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
     "web": "expo start --web",
     "test": "jest --watch --coverage=false",
     "test:ci": "jest --coverageDirectory=./__tests__/coverage --forceExit",
@@ -28,12 +28,10 @@
       "!**/babel.config.js",
       "!**/expo-env.d.ts",
       "!**/.expo/**",
-
       "!**/babel.config.js",
       "!**/metro.config.js",
       "!**/jest.setup.js",
       "!**/*.config.{js,ts}",
-
       "!**/app/+html.tsx",
       "!**/app/+not-found.tsx"
     ],
@@ -81,7 +79,8 @@
     "react-native-vector-icons": "^10.2.0",
     "react-native-web": "^0.20.0",
     "zod": "^3.25.7",
-    "zustand": "^5.0.3"
+    "zustand": "^5.0.3",
+    "expo-dev-client": "~5.1.8"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
