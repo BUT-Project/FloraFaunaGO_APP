@@ -21,11 +21,12 @@ const underlayColors ={
   info: 'rgba(119, 119, 119, 0.4)',
 }
 interface Props {
+    testID?: string;
     message: FeedbackMessage;
     onPress?: () => void;
 };
 
-const FeedbackMessageToast = ({ message, onPress }: Props) => {
+const FeedbackMessageToast = ({ testID,message, onPress }: Props) => {
   const translateY = useSharedValue(-30); // start slightly above
 
   useEffect(() => {
@@ -40,7 +41,7 @@ const FeedbackMessageToast = ({ message, onPress }: Props) => {
   const underlayColor = underlayColors[message.type] || underlayColors.info;
 
   return (
-    <TouchableHighlight onPress={onPress} underlayColor={underlayColor}>
+    <TouchableHighlight  onPress={onPress} underlayColor={underlayColor}>
       <Animated.View style={animatedStyle}>
         
         {message.icon && (
@@ -49,7 +50,7 @@ const FeedbackMessageToast = ({ message, onPress }: Props) => {
           </View>
           )}
         <View style={[styles.textContainer,{backgroundColor}]}>
-          <Text style={styles.text}>{message.text}</Text>
+          <Text testID={testID} style={styles.text}>{message.text}</Text>
 
         </View>
       </Animated.View>

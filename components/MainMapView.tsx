@@ -112,17 +112,29 @@ const BlurredZone = ({color, size}: { color: string; size: number }) => (
 );
 
 interface MapInterfaceProps {
-    location: Location.LocationObject | null;
     style: ViewStyle;
     repository: ISpeciesRepository;
 }
 
-export default function MapInterface({location, style, repository}: MapInterfaceProps) {
+export default function MapInterface({style, repository}: MapInterfaceProps) {
     const [selectedCategory, setSelectedCategory] = useState<FilterCategory>('All');
     const [searchQuery, setSearchQuery] = useState('');
     const [isSearchActive, setIsSearchActive] = useState(false);
     const [keyboardHeight, setKeyboardHeight] = useState(0);
     const [selectedMarker, setSelectedMarker] = useState<Specie | null>(null);
+    const [location, setLocation] = useState<Location.LocationObject | null>(null);
+    useEffect(() => {
+        (async () => {
+            const {status} = await Location.requestForegroundPermissionsAsync();
+            if (status !== 'granted') {
+                console.log('Permission to access location was denied');
+                return;
+            }
+
+            const location = await Location.getCurrentPositionAsync();
+            setLocation(location);
+        })();
+    }, []);
 
     // 🔧 FIX: Load all species once and do client-side filtering for better UX
     const {

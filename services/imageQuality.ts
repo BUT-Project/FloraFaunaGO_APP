@@ -22,17 +22,13 @@ export async function isImageBlurry(uri: string): Promise<boolean> {
         const lightSize = light.base64?.length || 0;
         const heavySize = heavy.base64?.length || 0;
         const compressionRatio = heavySize / lightSize;
-        console.log("Ratio de compression:", compressionRatio);
 
         const compressionTest = compressionRatio > 0.55;
 
         const fileSize = (light.base64?.length || 0) * 0.75;
-        console.log("Taille fichier approximative:", fileSize);
 
         const sizeTest = fileSize < 8000;
 
-        console.log("Test compression:", compressionTest);
-        console.log("Test taille:", sizeTest);
 
         // Fidèle à ta logique : on fait confiance si les 2 sont d’accord
         if (compressionTest === sizeTest) {

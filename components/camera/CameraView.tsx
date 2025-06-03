@@ -1,21 +1,24 @@
 import {useCallback, useRef, useState} from "react";
-import {Alert, StyleProp, StyleSheet, TouchableOpacity, ViewStyle} from "react-native";
+import {Alert, ViewStyle, StyleProp, StyleSheet, TouchableOpacity} from "react-native";
 import {useCamera} from "@/components/camera/hooks";
-import {ThemedText, ThemedView} from "@/components/ui/themed";
+import {ThemedView, ThemedText} from "@/components/ui/themed";
 import {CameraView} from "expo-camera";
 import CameraControls from "@/components/camera/CameraControls";
 import Loading from "../ui/Loading";
-import {SpecieList} from "@/dal/StubLib/Data";
 
 export interface CustomCameraViewProps {
     setBase64Image: (base64: string | null) => void;
     setCapturedImage: (image: string | null) => void;
     style?: StyleProp<ViewStyle>;
-}
+};
+
+export const mockedUri = "https://via.placeholder.com/300.png?text=Mock+Image";
+export const mockedBase64 = "dazpdoazopdazpodkoazp"
+export const permLoading  = "Récupération des permissions ..."
 
 const CustomCameraView = ({setBase64Image, setCapturedImage, style}: CustomCameraViewProps) => {
 
-    const {facing, toggleCameraFacing, permission, requestPerm} = useCamera();
+    const { facing, toggleCameraFacing, permission, requestPerm } = useCamera();
     const cameraRef = useRef<CameraView>(null);
     const [zoom, setZoom] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
@@ -38,8 +41,8 @@ const CustomCameraView = ({setBase64Image, setCapturedImage, style}: CustomCamer
             if (shouldUseMock) {
                 // ✅ Image factice pour les tests en développement
                 photo = {
-                    uri: 'https://images.unsplash.com/photo-1525498128493-380d1990a112?q=80&w=2535&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-                    base64: SpecieList[0].image
+                    uri: mockedUri,
+                    base64: mockedBase64,
                 };
             } else {
                 photo = await cameraRef.current?.takePictureAsync({base64: true});
@@ -54,20 +57,20 @@ const CustomCameraView = ({setBase64Image, setCapturedImage, style}: CustomCamer
     };
 
     if (!permission) {
-        return (<Loading style={[styles.container, style]} text="Récupération des permissions ..."/>);
+        return (<Loading testID="PermissionLoading" style={[styles.container, style]} text={permLoading}/>);
     }
     if (permission && !permission.granted) {
         return (
             <ThemedView style={[styles.container, style]}>
                 <ThemedText style={styles.message}>Nous avons besoin de votre permission pour utiliser la caméra de
                     l'appareil.</ThemedText>
-                <TouchableOpacity style={styles.permissionButton} onPress={requestPerm}>
+                <TouchableOpacity testID="AllowPermission.Button" style={styles.permissionButton} onPress={requestPerm}>
                     <ThemedText style={styles.permissionButtonText}>Accorder la permission</ThemedText>
                 </TouchableOpacity>
             </ThemedView>
         );
     }
-
+    ;
 
     return (
         <ThemedView style={[styles.container, style]}>
@@ -97,7 +100,6 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        width: '100%',
     },
     message: {
         textAlign: 'center',

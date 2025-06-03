@@ -1,52 +1,39 @@
-import React, {useCallback, useEffect, useState} from "react";
+import {useCallback, useEffect, useState} from "react";
 import Animated, {useAnimatedStyle, useSharedValue, withSpring} from "react-native-reanimated";
 import {ThemedView} from "@/components/ui/themed";
-import {Alert, Dimensions, StyleSheet, View} from "react-native";
+import { Dimensions, StyleSheet, View} from "react-native";
 import { CameraView } from "@/components/camera";
 import ARProgressIndicator from "@/components/ARProgressIndicator";
 import MainMapView from "@/components/MainMapView";
 import BlurSegmented from "@/components/BluredSegmented";
 import {useQuery} from "@tanstack/react-query";
-import * as Location from "expo-location";
 import {useRouter} from "expo-router";
 import StubData from "@/dal/StubLib/StubData";
 import {Specie,SuccessType} from "@/model/domain";
 import {useSpeciesStore} from "@/context/zustand/store/useSpeciesStore";
 import { useFocusEffect } from '@react-navigation/native';
-import { processSuccessByType } from "@/shared/successHelper";
 import { SafeView } from "@/components/ui/SafeView";
 import {  isImageBlurry } from "@/services/imageQuality";
+import { toast } from "@backpackapp-io/react-native-toast";
+import { SuccessManager } from "@/dal/manager/SuccessManager";
 import {ErrorView} from "@/app/(tabs)/(encyclopedia)/[id]";
 
 const {width: SCREEN_WIDTH} = Dimensions.get('window');
 export default function HomeScreen() {
     const {speciesRepository} = StubData.getInstance();
-
-    if (!speciesRepository) {
-        return <ErrorView message="Erreur de configuration des repositories" />;
-    }
-    const [location, setLocation] = useState<Location.LocationObject | null>(null);
     const [isCameraActive, setIsCameraActive] = useState(false);
-
+    const [spec,setSpec] = useState<Specie>()
+    const successManager = new SuccessManager(StubData.getInstance().successRepository!);
     const router = useRouter();
-    useEffect(() => {
-        (async () => {
-            const {status} = await Location.requestForegroundPermissionsAsync();
-            if (status !== 'granted') {
-                console.log('Permission to access location was denied');
-                return;
-            }
-
-            const location = await Location.getCurrentPositionAsync();
-            setLocation(location);
-        })();
-    }, []);
-
-    
     const slideAnim = useSharedValue(0);
     const [capturedImage, setCapturedImage] = useState<string | null>(null);
     const [base64Image, setBase64Image] = useState<string | null>(null);
     const [activeView, setActiveView] = useState('camera');
+
+    if (!speciesRepository) {
+        return <ErrorView message="Erreur de configuration des repositories" />;
+    }
+
     useFocusEffect(
         useCallback(() => {
             setIsCameraActive(true);
@@ -60,7 +47,7 @@ export default function HomeScreen() {
         queryFn: async (): Promise<Specie> => {
             if (!base64Image) throw new Error('No base64 image data');
             var spec = await speciesRepository.identifySpecies(base64Image);
-            await processSuccessByType(SuccessType.PHOTO, spec);
+            setSpec(spec)
             return spec;
         },
         enabled: !!base64Image && !!speciesRepository
@@ -91,13 +78,12 @@ export default function HomeScreen() {
             const isBlurry = await isImageBlurry(capturedImage);
       
             if (isBlurry) {
-              Alert.alert(
-                "Image floue",
-                "Merci de reprendre une image plus nette."
+              toast.error(
+                "Image floue \n Merci de reprendre une image plus nette.",
               );
               return;
             }
-      
+            await successManager!.processSuccessByType(SuccessType.PHOTO, spec!);
             setCurrentImageUri(capturedImage);
             setCurrentIdentifiedSpecies(identifiedSpecie);
             router.push('/capture');
@@ -126,7 +112,7 @@ export default function HomeScreen() {
                                     <ARProgressIndicator width={SCREEN_WIDTH} height={SCREEN_WIDTH}/>
                                 </View>
                             )}
-                            <MainMapView location={location} style={styles.map} repository={speciesRepository}/>
+                            <MainMapView style={styles.map} repository={speciesRepository}/>
                         </>}
                 </Animated.View>
             </ThemedView>

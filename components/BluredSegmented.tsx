@@ -60,6 +60,7 @@ const TabBar = ({
 
             {tabs.map((label, index) => (
                 <TouchableOpacity
+                    testID={`Tab.${label}`}
                     key={`tab-${index}`}
                     hitSlop={{ top: 15, bottom: 15, left: 15, right: 15 }}
                     style={styles.tab}
@@ -234,6 +235,7 @@ const offsetX = useSharedValue(0);
         <>
             <View style={[styles.tabBarWrapper, styles.shadow]}>
                 <TabBar
+
                     tabs={tabs}
                     onTabPress={onTabPress}
                     onLayout={onLayout}

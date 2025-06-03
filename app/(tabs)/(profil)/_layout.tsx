@@ -31,6 +31,21 @@ export default function Layout() {
 
             }}
             />
+            <Stack.Screen name="editprofile"
+            options={{
+                animation:'slide_from_bottom',
+                presentation: "modal",
+                headerBackVisible: true,
+                headerStyle: {
+                    backgroundColor: colors.background, // change selon thème
+                },
+                 headerTintColor: colors.text,
+                headerLeft : () =>(
+                    <Link href="/(profil)/profil" asChild>
+                    </Link>)
+
+            }}
+            />
         </Stack>
         
     )

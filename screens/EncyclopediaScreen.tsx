@@ -127,6 +127,7 @@ export default function EncyclopediaScreen({speciesRepository}: EncyclopediaScre
                     </View>
                 ) : (
                     <FlatList
+                        testID="Encyclopedia.Flatlist"
                         style={styles.capturesList}
                         showsVerticalScrollIndicator={false}
                         columnWrapperStyle={styles.columnWrapper}
