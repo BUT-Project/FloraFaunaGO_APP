@@ -101,7 +101,7 @@ export default function HomeScreen() {
                 <View style={styles.segmentedControl}>
                     <BlurSegmented tabsName={['Camera', 'Map']} onTabChange={switchView}/>
                 </View>
-                <Animated.View style={[styles.container, animatedStyle]}>
+                <Animated.View style={[styles.viewContainer, animatedStyle]}>
                     {isCameraActive
                         &&
                         <>
@@ -162,5 +162,10 @@ const styles = StyleSheet.create({
         flex: 1,
         width: '50%',
         height: '100%',
+    },
+    viewContainer: {
+        flex: 1,
+        flexDirection: 'row',
+        width: '200%',
     },
 });
