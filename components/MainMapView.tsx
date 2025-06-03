@@ -426,6 +426,7 @@ export default function MapInterface({style, repository}: MapInterfaceProps) {
                 <View style={styles.container}>
                     <Animated.View style={styles.container}>
                         <MapView
+                            testID='MainMapView'
                             provider={PROVIDER_GOOGLE}
                             ref={mapRef}
                             style={styles.map}
