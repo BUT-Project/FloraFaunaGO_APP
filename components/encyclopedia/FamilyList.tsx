@@ -26,8 +26,8 @@ const FamilyList: React.FC<FamilyListProps> = ({family,captureId,userCaptures}) 
     } = useGetSpecieByFamily(family, captureId);
         
     return(
-    <ThemedView>
-        <ThemedText type={"defaultSemiBold"}>Famille :</ThemedText>
+    <>
+        <ThemedText type={"infoTitle"}>Famille :</ThemedText>
         {isLoading ? (
             <ThemedView>
                 <ActivityIndicator size={'small'} />
@@ -67,7 +67,7 @@ const FamilyList: React.FC<FamilyListProps> = ({family,captureId,userCaptures}) 
                 horizontal={true}
             />
         )}
-    </ThemedView>
+    </>
     );
 };
 

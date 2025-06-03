@@ -1,0 +1,112 @@
+{
+    "climate": {
+        "TROPICAL": "Tropical",
+        "ARID": "Aride",
+        "TEMPERATE": "Tempéré",
+        "CONTINENTAL": "Continental",
+        "POLAR": "Polaire",
+        "UNKNOWN": "Inconnu"
+    },
+    "family": {
+        "FELIDAE": "Félidés",
+        "CANIDAE": "Canidés",
+        "ELEPHANTIDAE": "Éléphantidés",
+        "GIRAFFIDAE": "Girafidés",
+        "HIPPOPOTAMIDAE": "Hippopotamidés",
+        "RHINOCEROTIDAE": "Rhinocérotidés",
+        "URSIDAE": "Ursidés",
+        "HOMINIDAE": "Hominidés",
+        "PHASCOLARCTIDAE": "Phascolarctidés",
+        "EQUIDAE": "Équidés",
+        "BOVIDAE": "Bovidés",
+        "DELPHINIDAE": "Delphinidés",
+
+        "ACCIPITRIDAE": "Accipitridés",
+        "COLUMBIDAE": "Columbidés",
+        "PSITTACIDAE": "Psittacidés",
+        "STRIGIDAE": "Strigidés",
+        "ANATIDAE": "Anatidés",
+
+        "ELAPIDAE": "Élapidés",
+        "VIPERIDAE": "Vipéridés",
+        "TESTUDINIDAE": "Testudinidés",
+        "CHELONIIDAE": "Chéloniidés",
+        "CHAMAELEONIDAE": "Caméléonidés",
+        "IGUANIDAE": "Iguanidés",
+
+        "RANIDAE": "Ranidés",
+        "HYLIDAE": "Hylidés",
+
+        "CYPRINIDAE": "Cyprinidés",
+        "SERRANIDAE": "Serranidés",
+        "CARCHARHINIDAE": "Carcharhinidés",
+
+        "FORMICIDAE": "Formicidés",
+        "ARANEIDAE": "Aranéidés",
+        "CARABIDAE": "Carabidés",
+        "PAPILIONIDAE": "Papilionidés",
+
+        "SAPINDACEAE": "Sapindacées",
+        "LAMIACEAE": "Lamiacées",
+        "MALVACEAE": "Malvacées",
+        "FAGACEAE": "Fagacées",
+        "ASTERACEAE": "Astéracées",
+
+        "AGARICACEAE": "Agaricacées",
+        "MORCHELLACEAE": "Morchellacées",
+        "SACCHAROMYCETACEAE": "Saccharomycétacées",
+
+        "UNKNOWN": "Inconnue"
+    },
+    "class": {
+        "MAMMALIA": "Mammifères",
+        "AVES": "Oiseaux",
+        "REPTILIA": "Reptiles",
+        "AMPHIBIA": "Amphibiens",
+        "ACTINOPTERYGII": "Poissons osseux",
+        "CHONDRICHTHYES": "Poissons cartilagineux",
+
+        "INSECTA": "Insectes",
+        "ARACHNIDA": "Arachnides",
+        "MYRIAPODA": "Myriapodes",
+        "CRUSTACEA": "Crustacés",
+        "GASTROPODA": "Gastéropodes",
+        "BIVALVIA": "Bivalves",
+
+        "MAGNOLIOPSIDA": "Plantes à fleurs (dicotylédones)",
+        "LILIOPSIDA": "Monocotylédones",
+        "PINOPSIDA": "Conifères",
+        "BRYOPSIDA": "Mousses",
+        "POLYPODIOPSIDA": "Fougères",
+
+        "SAPINDACEAE": "Sapindacées",
+        "LAMIACEAE": "Lamiacées",
+        "MALVACEAE": "Malvacées",
+        "FAGACEAE": "Fagacées",
+        "ASTERACEAE": "Astéracées",
+
+        "AGARICOMYCETES": "Champignons à chapeau",
+        "ASCOMYCETES": "Moisissures et levures",
+
+        "UNKNOWN": "Inconnue"
+    },
+    "diet":{
+        "CARNIVORA": "Carnivore",
+        "HERBIVORA": "Herbivore",
+        "OMNIVORA": "Omnivore",
+        "INSECTIVORA": "Insectivore",
+        "NECTARIVORA": "Nectarivore",
+        "AUTOTROPHA": "Autotrophe",
+        "DETRITIVORA": "Détritivore",
+        "FRUGIVORA": "Frugivore",
+        "FOLIVORA": "Folivore",
+        "GRANIVORA": "Granivore",
+        "PLANKTIVORA": "Planctonivore",
+        "PARASITICA": "Parasite"
+    },
+    "kingdom": {
+        "ANIMALIA": "Animal",
+        "PLANTAE": "Végétal",
+        "FUNGI": "Fongique"
+    }
+}

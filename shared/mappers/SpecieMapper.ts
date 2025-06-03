@@ -1,4 +1,4 @@
-import { Class, Habitat, Kingdom, Specie } from "@/model/domain";
+import { Habitat, Specie } from "@/model/domain";
 import { SpecieDto } from "../scheme/SpecieDtoSchema";
 import { LocationMapper } from "./LocationMapper";
 
@@ -20,8 +20,8 @@ export class SpecieMapper implements ISpecieMapper {
             dto.description,
             new Habitat(dto.zone,dto.climat),
             dto.regime,
-            Kingdom.Animal, // TODO  ajouter à la DTO
-            Class.Mammals, //TODO ajouter à la DTO
+            dto.kingdom, 
+            dto.class,
             dto.famille,
             this.locationMapper.toDomains(dto.locationNormalDtos),
             dto.image
@@ -36,6 +36,8 @@ export class SpecieMapper implements ISpecieMapper {
             description:domain.description,
             zone:domain.habitat.zone,
             climat:domain.habitat.climate,
+            class:domain.class,
+            kingdom:domain.kingdom,
             regime:domain.diet,
             famille:domain.family,
             locationNormalDtos:this.locationMapper.toDtos(domain.locations),

@@ -8,13 +8,14 @@ export interface ILocationMapper {
 
 export class LocationMapper implements ILocationMapper {
     toDomain(dto: LocationDto): Location {
-        return new Location(dto.latitude,dto.longitude,0,dto.rayon,1);
+        return new Location(dto.latitude,dto.longitude,dto.altitude,dto.rayon,1);
     }
     toDto(domain: Location): LocationDto {
         return {
             id:"",
             latitude:domain.latitude,
             longitude: domain.longitude,
+            altitude: domain.altitude,
             rayon: domain.radius,
         }
     }

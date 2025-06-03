@@ -20,11 +20,15 @@ jest.mock('@/components/faceOffGame/game/actions', () => ({
 const mockAnimalAction = actionsModule.AnimalActions.Attack
 
 describe('FaceOffGame', () => {
-    beforeAll(()=>jest.useFakeTimers())
-    beforeEach(() => {
-        (actionsModule.getRandomAnimalAction as jest.Mock).mockReturnValue(mockAnimalAction);
-    });
-
+  beforeAll(()=>jest.useFakeTimers())
+  beforeEach(() => {
+      jest.clearAllMocks();
+      (actionsModule.getRandomAnimalAction as jest.Mock).mockReturnValue(mockAnimalAction);
+  });
+  afterAll(() => jest.useRealTimers());
+  afterEach(() => {
+    jest.clearAllTimers();
+  });
   it('affiche la vue avec tout ces composant et commence une partie', async () => {
     const onResult = jest.fn();
     const onCancel = jest.fn();
@@ -75,9 +79,13 @@ describe('FaceOffGame', () => {
             <FaceOffGame animalPhoto="photo-url" onResult={()=>{}} onCancel={() => {}} />
         );
 
-        await act(async () => {
-            jest.advanceTimersByTime(MAX_RESPONSE_TIME+10);
-        });
+        for (let i = 0; i <= MAX_RESPONSE_TIME; i += 100) {
+          act(() => {
+            jest.advanceTimersByTime(100);
+          });
+          await Promise.resolve(); // Force React à finir le cycle de rendu
+        }
+
 
         expect(getByTestId('Result.Message')).toBeTruthy()
     });

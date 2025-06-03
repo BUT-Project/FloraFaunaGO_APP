@@ -2,7 +2,7 @@ import React from 'react';
 import { render, fireEvent, act } from '@testing-library/react-native';
 import EncyclopediaScreen from '@/screens/EncyclopediaScreen';
 import * as useSpeciesHook from '@/hooks/viewModels/useGetSpecies';
-import { Specie,Habitat,Diet,Family,Climate,Kingdom,Class, User } from '@/model/domain';
+import { Specie,Habitat,Diet,Family,Climate,Kingdom,Class } from '@/model/domain';
 import { useAuthStore } from  '@/context/zustand/store/useAuthStore';
 
 const cat = new Specie(
@@ -10,11 +10,11 @@ const cat = new Specie(
     "Chat",
     "Felis catus",
     "Petit mammifère carnivore domestique.",
-    new Habitat('maison', Climate.Temperate),
-    Diet.Carnivores,
-    Kingdom.Animal,
-    Class.Mammals,
-    Family.Felidae,
+    new Habitat('maison', Climate.TEMPERATE),
+    Diet.CARNIVORA,
+    Kingdom.ANIMALIA,
+    Class.MAMMALIA,
+    Family.FELIDAE,
     [],
     ""
 );
@@ -81,11 +81,11 @@ describe('EncyclopediaScreen', () => {
           "Chien",
           "Canis lupus familiaris",
           "Mammifère domestique, compagnon de l'homme.",
-          new Habitat('maison', Climate.Temperate),
-          Diet.Omnivores,
-          Kingdom.Animal,
-          Class.Mammals,
-          Family.Canid,
+          new Habitat('maison', Climate.TEMPERATE),
+          Diet.OMNIVORA,
+          Kingdom.ANIMALIA,
+          Class.MAMMALIA,
+          Family.CANIDAE,
           [],
           ""
         )
@@ -147,7 +147,5 @@ describe('EncyclopediaScreen', () => {
     });
 
     expect(mockRefresh).toHaveBeenCalled();
-
   });
-
 });

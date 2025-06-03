@@ -1,8 +1,14 @@
 export enum Diet {
-    Carnivores = "Carnivores",
-    Herbivores = "Herbivores",
-    Omnivores = "Omnivores",
-    Insectivores ="Insectivores",
-    Nectarivores = "Nectarivores",
-    Autotrophs = "Autotrophs"
+    CARNIVORA = "CARNIVORA",         
+    HERBIVORA = "HERBIVORA",          
+    OMNIVORA = "OMNIVORA",           
+    INSECTIVORA = "INSECTIVORA",     
+    NECTARIVORA = "NECTARIVORA",      
+    AUTOTROPHA = "AUTOTROPHA",        
+    DETRITIVORA = "DETRITIVORA",      
+    FRUGIVORA = "FRUGIVORA",        
+    FOLIVORA = "FOLIVORA",           
+    GRANIVORA = "GRANIVORA",          
+    PLANKTIVORA = "PLANKTIVORA",      
+    PARASITICA = "PARASITICA"         
 }

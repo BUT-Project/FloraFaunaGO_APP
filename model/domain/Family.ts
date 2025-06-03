@@ -1,33 +1,49 @@
 export enum Family {
-    Unknown = "INCONNUE",
-    Canid="Canid",
-    Bovids="Bovids",
-    Leporids="Leporids",
-    Hominids="Hominids",
-    Coccinellidae="Coccinellidae",
-    Sciuridae="Sciuridae",
-    Snakes="Snakes",
-    Phascolarctides="Phascolarctidés",
-    Spheniscidae="Manchots",
-    Testudines="Testudines",
-    Lizards="Lizards",
-    Chamaeleonidae="Chamaeleonidae",
-    Delphinidae="Delphinidae",
-    Accipitridae="Accipitridae",
-    Columbidae="Columbidae",
-    Muridae="Muridae",
-    Vespertilionidae="Vespertilionidae",
-    Corvidae="Corvidae",
-    Erinaceidae='Erinaceidae',
-    Felidae="Felidae",
-    Apididae="Apididae",
-    Asteraceae="Asteraceae",
-    Fagaceae="Fagaceae",
-    Malvaceae="Malvaceae",
-    Papilionidae="Papilionidae",
-    Lamiaceae="Lamiaceae",
-    Formicidae="Formicidae",
-    Sapindaceae="Sapindaceae",
-    Scarabaeidae="Scarabaeidae"
+    // Mammifères
+    CANIDAE = "CANIDAE",
+    BOVIDAE = "BOVIDAE",
+    LEPORIDAE = "LEPORIDAE",
+    HOMINIDAE = "HOMINIDAE",
+    SCIURIDAE = "SCIURIDAE",
+    PHASCOLARCTIDAE = "PHASCOLARCTIDAE",
+    DELPHINIDAE = "DELPHINIDAE",
+    MURIDAE = "MURIDAE",
+    VESPERTILIONIDAE = "VESPERTILIONIDAE",
+    ERINACEIDAE = "ERINACEIDAE",
+    FELIDAE = "FELIDAE",
 
+    // Oiseaux
+    SPHENISCIDAE = "SPHENISCIDAE",
+    ACCIPITRIDAE = "ACCIPITRIDAE",
+    COLUMBIDAE = "COLUMBIDAE",
+    CORVIDAE = "CORVIDAE",
+
+    // Reptiles
+    TESTUDINIDAE = "TESTUDINIDAE",
+    CHAMAELEONIDAE = "CHAMAELEONIDAE",
+    VIPERIDAE = "VIPERIDAE",
+    IGUANIDAE = "IGUANIDAE",
+
+    // Insectes
+    COCCINELLIDAE = "COCCINELLIDAE",
+    FORMICIDAE = "FORMICIDAE",
+    APIDAE = "APIDAE",
+    VESPIDAE = "VESPIDAE",
+    SCARABAEIDAE = "SCARABAEIDAE",
+    PAPILIONIDAE = "PAPILIONIDAE",
+    NYMPHALIDAE = "NYMPHALIDAE",
+    PIERIDAE = "PIERIDAE",
+
+    // Plantes
+    ASTERACEAE = "ASTERACEAE",
+    FAGACEAE = "FAGACEAE",
+    MALVACEAE = "MALVACEAE",
+    LAMIACEAE = "LAMIACEAE",
+    SAPINDACEAE = "SAPINDACEAE",
+    ROSACEAE = "ROSACEAE",
+    FABACEAE = "FABACEAE",
+    POACEAE = "POACEAE",
+
+    // Autres
+    UNKNOWN = "UNKNOWN"
 }

@@ -1,6 +1,8 @@
 export enum Kingdom {
-    Animal="Animal",
-    Fungi="Fungi",
-    Plant="Plant",
-    Protista="Protista"
+    ANIMALIA = "ANIMALIA",
+    FUNGI = "FUNGI",
+    PLANTAE = "PLANTAE",
+    //PROTISTA = "PROTISTA",
+    //ARCHAEA = "ARCHAEA",
+    //BACTERIA = "BACTERIA"
 }
