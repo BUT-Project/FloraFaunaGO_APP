@@ -51,7 +51,6 @@ npm install
 expo start
 ```
 
-
 ## 🧑‍💻 Participants
 
 <a href = "https://codefirst.iut.uca.fr/git/david.d_almeidar">
