@@ -6,6 +6,7 @@ import RootNavigation from "@/navigation/RootNavigation";
 import Loading from '@/components/ui/Loading';
 import SuccessWrapper from '@/components/animation/sucess/SuccessWrapper';
 import { Toasts } from '@backpackapp-io/react-native-toast';
+import { usePodometer } from '@/hooks/usePodometer';
 
 export default function TabLayout() {
     // créer un wrapper pour l'appelle des popup success
@@ -25,6 +26,8 @@ export default function TabLayout() {
 
         initAuth();
     }, [checkAuth]);
+
+    usePodometer({isAuthenticated});
 
     if (isLoading) {
         return (<Loading text='Connexion...'/>);

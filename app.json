@@ -32,7 +32,8 @@
         "android.permission.RECORD_AUDIO",
         "android.permission.ACCESS_COARSE_LOCATION",
         "android.permission.ACCESS_FINE_LOCATION",
-        "android.permission.MODIFY_AUDIO_SETTINGS"
+        "android.permission.MODIFY_AUDIO_SETTINGS",
+        "android.permission.ACTIVITY_RECOGNITION"
       ],
       "package": "com.ffgoapp.FloraFauna_GO_App"
     },
@@ -57,6 +58,12 @@
         "expo-location",
         {
           "locationAlwaysAndWhenInUsePermission": "Allow FFGO to use your location."
+        }
+      ],
+      [
+        "expo-sensors",
+        {
+          "motionPermission": "Allow FFGO to access your device motion"
         }
       ],
       "expo-audio"

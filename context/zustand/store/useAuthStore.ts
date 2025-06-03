@@ -12,6 +12,7 @@ interface AuthState {
     logout: () => Promise<void>;
     checkAuth: () => Promise<void>;
     setRememberMe: (value: boolean) => void;
+    updateStepCount: (steps:number) => void;
     isAuthCheckCompleted: boolean;
 }
 
@@ -94,5 +95,16 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     },
     setRememberMe: async (value: boolean) => {
         set({rememberMe: value});
+    },
+    updateStepCount: (steps: number) => {
+        const { user } = get();
+        if (!user) return;
+
+        const updatedUser = {
+            ...user,
+            stepCount: steps,
+        };
+
+        set({ user: updatedUser });
     },
 }));
