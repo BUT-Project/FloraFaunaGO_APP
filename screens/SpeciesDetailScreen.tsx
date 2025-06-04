@@ -1,4 +1,4 @@
-import { Dimensions, StyleSheet, FlatList, useColorScheme } from "react-native";
+import { Dimensions, StyleSheet, FlatList } from "react-native";
 import React, { useMemo } from "react";
 import Animated, {
   useAnimatedRef,
@@ -10,7 +10,7 @@ import { Capture ,Specie } from "@/model/domain";
 import { useAuthStore } from "@/context/zustand/store/useAuthStore";
 import { CaptureDetails, ExtendableText, FamilyList, DetailsHeader, NotCaptured } from "@/components/encyclopedia";
 import { ExtendableMap } from "@/components/ui/ExtendableMap";
-import { Colors } from "@/constants/Colors";
+import { useThemeColor } from "@/hooks/useThemeColor";
 import { SafeView } from "@/components/ui/SafeView";
 
 const {width} = Dimensions.get('window');
@@ -21,17 +21,11 @@ interface SpeciesDetailScreenProps {
 };
 
 const SpeciesDetailScreen = ({capture,specie}:SpeciesDetailScreenProps) => {
-    const colorScheme = useColorScheme();
     const scrollRef = useAnimatedRef<Animated.ScrollView>();
     const scrollOffset = useSharedValue(0);
-   
-    const user = useAuthStore((state) => state.user);
-    if (!user) {
-        throw new Error("User not found")
-    }
-    // [Dave] [TODO] should not do that
-
-    const capturedSpecie = user.captures;
+    const descBackgroundColor = useThemeColor({},"card");
+    const user = useAuthStore((state) => state.user);    
+    const capturedSpecie = user?.captures ?? [];
 
     const isCaptured = useMemo(() => capture != null, [capture]);
 
@@ -59,13 +53,13 @@ const SpeciesDetailScreen = ({capture,specie}:SpeciesDetailScreenProps) => {
         <DetailsHeader capture={capture} specie={specie}  />
         { isCaptured ?
         <>
-              <ThemedView style={styles.section}>
-            <ThemedText type={"defaultSemiBold"}>Classification scientifique :</ThemedText>
-            <ThemedView style={styles.row}>
-                <ThemedView style={styles.halfVerticalContainer}>
-                    <ThemedText>Reigne :<ThemedText style={styles.bold}> {specie.kingdom}</ThemedText></ThemedText>
-                    <ThemedText>Classe : <ThemedText style={styles.bold}>{specie.class}</ThemedText></ThemedText>
-                </ThemedView>
+            <ThemedView style={styles.section}>
+                <ThemedText type={"defaultSemiBold"}>Classification scientifique :</ThemedText>
+                <ThemedView style={styles.row}>
+                    <ThemedView style={styles.halfVerticalContainer}>
+                        <ThemedText>Reigne :<ThemedText style={styles.bold}> {specie.kingdom}</ThemedText></ThemedText>
+                        <ThemedText>Classe : <ThemedText style={styles.bold}>{specie.class}</ThemedText></ThemedText>
+                    </ThemedView>
                 <ThemedView style={styles.halfVerticalContainer}>
                     <ThemedText>Famille :  <ThemedText style={styles.bold}>{specie.family.toString()}</ThemedText></ThemedText>
                     <ThemedText>Régime : <ThemedText style={styles.bold}>{specie.diet.toString()}</ThemedText></ThemedText>
@@ -78,7 +72,7 @@ const SpeciesDetailScreen = ({capture,specie}:SpeciesDetailScreenProps) => {
         <ThemedView style={styles.sectionRow}>
             <ExtendableText
                 text={specie.description}
-                style={[styles.descContainer,{backgroundColor:Colors[colorScheme ?? "light"].card}]}
+                style={[styles.descContainer,{backgroundColor:descBackgroundColor}]}
                 textStyle={styles.description}
             />
             <ExtendableMap
