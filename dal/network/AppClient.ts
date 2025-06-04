@@ -1,75 +1,34 @@
 import {IDataManager} from "@/dal/IDataManager";
+import NetworkAuthService from "@/dal/network/NetworkAuthService";
+import {ZodHttpClient} from "@/dal/network/ZodHttpClient";
+import {UserClient} from "@/dal/network/UserClient";
 
 export default class AppClient extends IDataManager{
 
     private static instance: IDataManager;
+    private client : ZodHttpClient | undefined;
 
     public constructor() {
         super();
+        this.client = this.buildClient();
+        this.userRepository = new UserClient(this.client, '/api/utilisateur');
+        this.authService = new NetworkAuthService(this.client,this.userRepository);
     }
 
-    static getInstance():AppClient{
+    static getInstance():IDataManager{
         if(!AppClient.instance){
             AppClient.instance = new AppClient();
         }
         return AppClient.instance;
     }
-}
-/*
-interface HttpClientResponse {
-    request: ClientRequest;
-    response: IncomingMessage;
-    data: string;
-}
 
-export interface HttpClientRequestOptions {
-    hostname: string;
-    path: string;
-    headers: Record<string, string>;
-    timeout: number;
-    proxy?: string;
-}
-
-class HttpClient {
-    async post(json:any, options: HttpClientRequestOptions): Promise<HttpClientResponse> {
-        const { hostname, path, headers, timeout, proxy } = options;
-        const postContent = JSON.stringify(json);
-        const requestOptions: RequestOptions = {
-            port: 443,
-            hostname,
-            path,
-            method: 'POST',
-            headers: {
-                ...headers,
-                'Content-Type': 'application/json',
-                'Content-Length': Buffer.byteLength(postContent),
-            },
-            timeout,
-
-            agent: undefined,
-        };
-
-        return new Promise<HttpClientResponse>((resolve, reject) => {
-            const request = https.request(requestOptions, (response) => {
-                const body: Buffer[] = [];
-                response.on('data', (chunk) => body.push(chunk));
-                response.on('end', () => {
-                    resolve({
-                        request,
-                        response,
-                        data: Buffer.concat(body).toString(),
-                    });
-                });
-            });
-
-            request.on('error', reject);
-            request.on('timeout', () => {
-                request.destroy();
-                reject(new Error(`Time out error: request took over ${timeout}ms.`));
-            });
-
-            request.write(postContent);
-            request.end();
+    private buildClient(): ZodHttpClient {
+        if (this.client) {
+            return this.client;
+        }
+        // Use ZodHttpClient for schema validation
+        return new ZodHttpClient({
+            baseUrl: 'https://api.example.com'
         });
     }
-}*/
+}
