@@ -16,7 +16,7 @@ const mockKeyManagerClearTokens = jest.fn();
 const mockKeyManagerGetToken = jest.fn();
 const mockKeyManagerGetRefreshToken = jest.fn();
 
-jest.mock('@/service/keyManager/TokenManager', () => {
+jest.mock('@/services/keyManager/TokenManager', () => {
     return jest.fn().mockImplementation(() => {
         // This mock constructor is called when `new KeyManager()` is used in NetworkAuthService
         return {

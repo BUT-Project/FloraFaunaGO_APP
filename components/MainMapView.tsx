@@ -21,12 +21,10 @@ import Animated, {
     useSharedValue,
     withRepeat,
     withSequence,
-    withSpring,
     withTiming,
 } from 'react-native-reanimated';
 import {Ionicons} from '@expo/vector-icons';
 import {GestureHandlerRootView, State, TapGestureHandler, TapGestureHandlerStateChangeEvent} from 'react-native-gesture-handler';
-import Svg, {Circle, Defs, RadialGradient, Stop} from 'react-native-svg';
 import * as Location from 'expo-location';
 import {ThemedView} from "@/components/ui/themed/ThemedView";
 
@@ -36,7 +34,7 @@ import {useInfiniteSpecies} from "@/hooks/viewModels/useInfiniteSpecies";
 import {ISpeciesRepository} from "@/dal/repository/ISpeciesRepository";
 import { PROVIDER_GOOGLE } from "react-native-maps";
 const {width, height} = Dimensions.get('window');
-const SEARCH_HANDLE_WIDTH = 50;
+const SEARCH_HANDLE_DIMENSION = 50;
 const BOTTOM_OFFSET = 20;
 const SPACING = 16;
 
@@ -46,47 +44,18 @@ type FilterCategory = 'All' | Family | Kingdom | Class | Diet;
 // Filter categories
 const filterCategories: { label: string; value: FilterCategory; id: string }[] = [
     {label: 'All', value: 'All', id: 'all'},
-    {label: 'Mammals', value: Class.Mammals, id: 'class-mammals'},
-    {label: 'Birds', value: Class.Birds, id: 'class-birds'},
-    {label: 'Reptiles', value: Class.Reptiles, id: 'class-reptiles'},
-    {label: 'Insects', value: Class.Insects, id: 'class-insects'},
-    {label: 'Fish', value: Class.Fish, id: 'class-fish'},
-    {label: 'Flowering Plants', value: Class.Angiosperms, id: 'class-angiosperms'},
-    {label: 'Carnivores', value: Diet.Carnivores, id: 'diet-carnivores'},
-    {label: 'Herbivores', value: Diet.Herbivores, id: 'diet-herbivores'},
-    {label: 'Omnivores', value: Diet.Omnivores, id: 'diet-omnivores'},
-    {label: 'Animals', value: Kingdom.Animal, id: 'kingdom-animal'},
-    {label: 'Plant Kingdom', value: Kingdom.Plant, id: 'kingdom-plant'},
+    {label: 'Mammals', value: Class.MAMMALIA, id: 'class-mammals'},
+    {label: 'Birds', value: Class.AVES, id: 'class-birds'},
+    {label: 'Reptiles', value: Class.REPTILIA, id: 'class-reptiles'},
+    {label: 'Insects', value: Class.INSECTA, id: 'class-insects'},
+    {label: 'Fish', value: Class.ACTINOPTERYGII, id: 'class-fish'},
+    {label: 'Flowering Plants', value: Class.MAGNOLIOPSIDA, id: 'class-angiosperms'},
+    {label: 'Carnivores', value: Diet.CARNIVORA, id: 'diet-carnivores'},
+    {label: 'Herbivores', value: Diet.HERBIVORA, id: 'diet-herbivores'},
+    {label: 'Omnivores', value: Diet.OMNIVORA, id: 'diet-omnivores'},
+    {label: 'Animals', value: Kingdom.ANIMALIA, id: 'kingdom-animal'},
+    {label: 'Plant Kingdom', value: Kingdom.PLANTAE, id: 'kingdom-plant'},
 ];
-
-// Color mapping for different categories
-const getMarkerColor = (specie: Specie): string => {
-    switch (specie.kingdom) {
-        case Kingdom.Animal:
-            switch (specie.class) {
-                case Class.Mammals:
-                    return '#FF6B6B';
-                case Class.Birds:
-                    return '#4ECDC4';
-                case Class.Insects:
-                    return '#45B7D1';
-                case Class.Reptiles:
-                    return '#96CEB4';
-                case Class.Fish:
-                    return '#FFEAA7';
-                case Class.Amphibians:
-                    return '#DDA0DD';
-                default:
-                    return '#A29BFE';
-            }
-        case Kingdom.Plant:
-            return '#55A3FF';
-        case Kingdom.Fungi:
-            return '#D63031';
-        default:
-            return '#636E72';
-    }
-};
 
 const Chip = ({label, isSelected, onPress}: { label: string; isSelected: boolean; onPress: () => void }) => (
     <TouchableOpacity
@@ -99,18 +68,6 @@ const Chip = ({label, isSelected, onPress}: { label: string; isSelected: boolean
 
 const AnimatedMarker = Animated.createAnimatedComponent(Marker);
 
-const BlurredZone = ({color, size}: { color: string; size: number }) => (
-    <Svg height={size} width={size} style={styles.blurredZone}>
-        <Defs>
-            <RadialGradient id="grad" cx="50%" cy="50%" rx="50%" ry="50%" fx="50%" fy="50%">
-                <Stop offset="0%" stopColor={color} stopOpacity="0.7"/>
-                <Stop offset="100%" stopColor={color} stopOpacity="0"/>
-            </RadialGradient>
-        </Defs>
-        <Circle cx={size / 2} cy={size / 2} r={size / 2 - 10} fill="url(#grad)"/>
-    </Svg>
-);
-
 interface MapInterfaceProps {
     style: ViewStyle;
     repository: ISpeciesRepository;
@@ -121,7 +78,6 @@ export default function MapInterface({style, repository}: MapInterfaceProps) {
     const [searchQuery, setSearchQuery] = useState('');
     const [isSearchActive, setIsSearchActive] = useState(false);
     const [keyboardHeight, setKeyboardHeight] = useState(0);
-    const [selectedMarker, setSelectedMarker] = useState<Specie | null>(null);
     const [location, setLocation] = useState<Location.LocationObject | null>(null);
     useEffect(() => {
         (async () => {
@@ -182,13 +138,12 @@ export default function MapInterface({style, repository}: MapInterfaceProps) {
     }, [allSpecies, selectedCategory, searchQuery]);
 
     const pulseAnim = useSharedValue(0.5);
-    const searchWidth = useSharedValue(SEARCH_HANDLE_WIDTH);
+    const searchWidth = useSharedValue(SEARCH_HANDLE_DIMENSION);
     const searchOpacity = useSharedValue(1);
     const chipOpacity = useSharedValue(1);
     const resultsHeight = useSharedValue(0);
     const resultsPadding = useSharedValue(0);
     const bottomContainerTranslateY = useSharedValue(0);
-    const markerScale = useSharedValue(1);
 
     const mapRef = useRef<MapView>(null);
 
@@ -238,14 +193,14 @@ export default function MapInterface({style, repository}: MapInterfaceProps) {
 
     const searchContainerStyle = useAnimatedStyle(() => ({
         width: searchWidth.value,
-        height: SEARCH_HANDLE_WIDTH,
-        borderRadius: SEARCH_HANDLE_WIDTH / 2,
+        height: SEARCH_HANDLE_DIMENSION,
+        borderRadius: SEARCH_HANDLE_DIMENSION / 2,
         opacity: searchOpacity.value,
     }));
 
     const chipContainerStyle = useAnimatedStyle(() => ({
         opacity: chipOpacity.value,
-        transform: [{translateY: interpolate(searchWidth.value, [keyboardHeight - SEARCH_HANDLE_WIDTH, width - 20], [0, SEARCH_HANDLE_WIDTH + SPACING], Extrapolate.CLAMP)}],
+        transform: [{translateY: interpolate(searchWidth.value, [keyboardHeight - SEARCH_HANDLE_DIMENSION, width - 20], [0, SEARCH_HANDLE_DIMENSION + SPACING], Extrapolate.CLAMP)}],
     }));
 
     const resultsCardStyle = useAnimatedStyle(() => ({
@@ -253,10 +208,6 @@ export default function MapInterface({style, repository}: MapInterfaceProps) {
         opacity: interpolate(resultsHeight.value, [0, 1], [0, 1]),
         marginTop: SPACING,
         padding: resultsPadding.value,
-    }));
-
-    const animatedMarkerStyle = useAnimatedStyle(() => ({
-        transform: [{scale: withSpring(markerScale.value, {damping: 10, stiffness: 100})}],
     }));
 
     const animatedCircleStyle = useAnimatedStyle(() => {
@@ -314,7 +265,7 @@ export default function MapInterface({style, repository}: MapInterfaceProps) {
 
     const handleSearchFocus = () => {
         if (searchQuery.length > 0) {
-            resultsHeight.value = withTiming(Math.max(height / 2 - SEARCH_HANDLE_WIDTH - SPACING * 2, 100), {
+            resultsHeight.value = withTiming(Math.max(height / 2 - SEARCH_HANDLE_DIMENSION - SPACING * 2, 100), {
                 duration: 300,
                 easing: Easing.out(Easing.cubic)
             });
@@ -326,7 +277,7 @@ export default function MapInterface({style, repository}: MapInterfaceProps) {
         setSearchQuery(text);
 
         if (text.length > 0) {
-            resultsHeight.value = withTiming(Math.max(height / 2 - SEARCH_HANDLE_WIDTH - SPACING * 2, 100), {
+            resultsHeight.value = withTiming(Math.max(height / 2 - SEARCH_HANDLE_DIMENSION - SPACING * 2, 100), {
                 duration: 300,
                 easing: Easing.out(Easing.cubic)
             });
@@ -342,7 +293,7 @@ export default function MapInterface({style, repository}: MapInterfaceProps) {
     const dismissSearch = () => {
         setIsSearchActive(false);
         setSearchQuery('');
-        searchWidth.value = withTiming(SEARCH_HANDLE_WIDTH, {duration: 300, easing: Easing.out(Easing.cubic)});
+        searchWidth.value = withTiming(SEARCH_HANDLE_DIMENSION, {duration: 300, easing: Easing.out(Easing.cubic)});
         chipOpacity.value = withTiming(1, {duration: 200});
         resultsHeight.value = withTiming(0, {duration: 300, easing: Easing.in(Easing.cubic)});
 
@@ -351,7 +302,6 @@ export default function MapInterface({style, repository}: MapInterfaceProps) {
     };
 
     const handleResultPress = (specie: Specie) => {
-        setSelectedMarker(specie);
         dismissSearch();
 
         if (mapRef.current && specie.locations.length > 0) {
@@ -368,7 +318,6 @@ export default function MapInterface({style, repository}: MapInterfaceProps) {
         // Always resolve the current species by ID to avoid stale references
         const currentSpecie = displayedSpecies.find(s => s.id.toString() === specieId);
         if (currentSpecie && currentSpecie.locations[locationIndex]) {
-            setSelectedMarker(currentSpecie);
             dismissSearch();
 
             const location = currentSpecie.locations[locationIndex];
@@ -616,20 +565,20 @@ const styles = StyleSheet.create({
         overflow: 'hidden',
     },
     searchIconContainer: {
-        width: SEARCH_HANDLE_WIDTH,
-        height: SEARCH_HANDLE_WIDTH,
+        width: SEARCH_HANDLE_DIMENSION,
+        height: SEARCH_HANDLE_DIMENSION,
         justifyContent: 'center',
         alignItems: 'center',
     },
     closeIconContainer: {
-        width: SEARCH_HANDLE_WIDTH,
-        height: SEARCH_HANDLE_WIDTH,
+        width: SEARCH_HANDLE_DIMENSION,
+        height: SEARCH_HANDLE_DIMENSION,
         justifyContent: 'center',
         alignItems: 'center',
     },
     searchInput: {
         flex: 1,
-        height: SEARCH_HANDLE_WIDTH,
+        height: SEARCH_HANDLE_DIMENSION,
         color: 'white',
         fontSize: 16,
         paddingHorizontal: 10,
