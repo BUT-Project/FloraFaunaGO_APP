@@ -20,7 +20,6 @@ const TRANSITION_DURATION_MS = 600;
 
 const IS_IOS = Platform.OS === 'ios';
 
-
 interface TabBarProps {
     tabs: string[];
     onTabPress: (index: number) => void;
@@ -289,7 +288,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     tabText: {
-        fontSize: 12,
+        fontSize: 16,
         fontWeight: 'bold',
         color: '#fff',
         textShadowColor: Platform.select({ios: '#0009', android: '#0005'}),
