@@ -9,10 +9,10 @@ export const SpecieDtoSchema = z.object({
     description: z.string(),
     image: z.string(),
     image3D: z.string(),
-    class: z.nativeEnum(Class).default(Class.UNKNOWN),
+    class: z.nativeEnum(Class).default(Class.UNKNOWN), // Default to UNKNOWN if not provided (in case the user find an unknown specie by the API)
     kingdom: z.nativeEnum(Kingdom),
     famille: z.nativeEnum(Family).default(Family.UNKNOWN),
-    zone:  z.string(),
+    zone:  z.string(), 
     climat: z.nativeEnum(Climate).default(Climate.UNKNOWN),
     regime: z.nativeEnum(Diet),
     locationNormalDtos: z.array(LocationDtoSchema)
