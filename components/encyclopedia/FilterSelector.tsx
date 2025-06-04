@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlatList, View, StyleSheet } from 'react-native';
+import { FlatList, StyleSheet } from 'react-native';
 import { ThemedText, ThemedView } from '../ui/themed'; // adapte l'import selon ton projet
 import FilterChips from './FilterChips';
 
@@ -9,6 +9,7 @@ interface FilterEnumSelectorProps<T> {
     value?:T[keyof T] | null;
     selectedColor:string;
     onFilterChange: (value: T[keyof T]) => void;
+    renderLabel?: (item: T[keyof T]) => string;
 };
 
 export function FilterEnumSelector<T extends Record<string,string>>({
@@ -17,14 +18,16 @@ export function FilterEnumSelector<T extends Record<string,string>>({
     value,
     selectedColor,
     onFilterChange,
+    renderLabel,
 }: FilterEnumSelectorProps<T>) {
+
     return (
         <ThemedView style={styles.filteringOptions}>
             <ThemedText>{label}</ThemedText>
             <FlatList
                 data={Object.values(enumType)}
                 renderItem={({ item }) => (
-                    <FilterChips item={item} isSelected={item == value} selectedColor={selectedColor} onFilterChange={onFilterChange} />
+                    <FilterChips item={item} isSelected={item == value} selectedColor={selectedColor} onFilterChange={onFilterChange} renderLabel={renderLabel} />
                 )}
                 keyExtractor={(item) => String(item)}
                 horizontal

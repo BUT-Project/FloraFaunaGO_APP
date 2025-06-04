@@ -175,6 +175,13 @@ const styles = StyleSheet.create({
     },
     description: {
         color: "#FFF",
+        fontSize:18,
+        textShadowColor:"rgba(0, 0, 0, 0.5)",
+        textShadowRadius:3,
+        textShadowOffset:{
+            width:0,
+            height:2,
+        },
     },
     mapContainer: {
         width: (width / 2) - 15,

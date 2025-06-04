@@ -10,16 +10,17 @@ import {
 } from "@/model/domain";
 import { FilterEnumSelector } from './FilterSelector';
 import { useThemeColor } from '@/hooks/useThemeColor';
+import { useTranslation } from 'react-i18next';
 
 type SpeciesFilterProps={
     baseSpecies:Specie[],
     setFilteredSpecies:any;
-}
+};
 
 export default function SpeciesFilterModal(props: SpeciesFilterProps){
 
     const selectedBackground = useThemeColor({},"tint");
-
+    const { t } = useTranslation();
     const [visible,setVisible] = useState(false);
     const [kingdom,setKingdom] = useState<Kingdom | null>(null);
     const [bioClass,setBioClass] = useState<Class | null>(null);
@@ -94,10 +95,39 @@ export default function SpeciesFilterModal(props: SpeciesFilterProps){
                                 <ThemedIcon name={"chevron-down-outline"}  size={25}/>
                             </TouchableOpacity>
                         </ThemedView>
-                        <FilterEnumSelector label='Reigne :' enumType={Kingdom} value={kingdom} selectedColor={selectedBackground} onFilterChange={setKingdom}  />
-                        <FilterEnumSelector label='Diète :' enumType={Diet} value={diet} selectedColor={selectedBackground} onFilterChange={setDiet}/>
-                        <FilterEnumSelector label='Classe :' enumType={Class} value={bioClass} selectedColor={selectedBackground} onFilterChange={setBioClass}/>
-                        <FilterEnumSelector label='Famille :' enumType={Family} value={family} selectedColor={selectedBackground} onFilterChange={setFamily}/>
+                        <FilterEnumSelector 
+                            label='Reigne :'
+                            enumType={Kingdom} 
+                            value={kingdom} 
+                            selectedColor={selectedBackground} 
+                            onFilterChange={setKingdom}  
+                            renderLabel={(item) => t(`kingdom.${item}`)}
+                        />
+                        <FilterEnumSelector 
+                            label='Classe :'
+                            enumType={Class} 
+                            value={bioClass} 
+                            selectedColor={selectedBackground} 
+                            onFilterChange={setBioClass}
+                            renderLabel={(item) => t(`class.${item}`)}
+                        />
+                        <FilterEnumSelector 
+                            label='Famille :' 
+                            enumType={Family} 
+                            value={family} 
+                            selectedColor={selectedBackground} 
+                            onFilterChange={setFamily}
+                            renderLabel={(item) => t(`family.${item}`)}
+                        />
+                        <FilterEnumSelector 
+                            label='Diète :' 
+                            enumType={Diet} 
+                            value={diet} 
+                            selectedColor={selectedBackground} 
+                            onFilterChange={setDiet}
+                            renderLabel={(item) => t(`diet.${item}`)}
+                        />
+
                     </ThemedView>
             </Modal>
         </>
@@ -108,6 +138,8 @@ const styles = StyleSheet.create({
     filterButton:{
         borderRadius:15,
         padding:5,
+        alignItems:"center",
+        justifyContent:"center",
         width:"10%"
     },
     dismissButton:{
