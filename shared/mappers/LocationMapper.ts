@@ -1,12 +1,8 @@
 import Location from "@/model/domain/Location";
 import { LocationDto } from "../scheme/LocationDtoSchema";
+import {IMapper} from "@/shared/mappers/IMapper";
 
-export interface ILocationMapper {
-    toDomain(dto: LocationDto): Location;
-    toDto(domain: Location): LocationDto;
-}
-
-export class LocationMapper implements ILocationMapper {
+export class LocationMapper implements IMapper<LocationDto,Location> {
     toDomain(dto: LocationDto): Location {
         return new Location(dto.latitude,dto.longitude,dto.altitude,dto.rayon,1);
     }

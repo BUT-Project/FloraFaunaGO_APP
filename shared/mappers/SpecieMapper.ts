@@ -1,14 +1,9 @@
 import { Habitat, Specie } from "@/model/domain";
 import { SpecieDto } from "../scheme/SpecieDtoSchema";
 import { LocationMapper } from "./LocationMapper";
+import {IMapper} from "@/shared/mappers/IMapper";
 
-export interface ISpecieMapper {
-    toDomain(dto: SpecieDto): Specie;
-    toDto(domain: Specie): SpecieDto;
-
-};
-
-export class SpecieMapper implements ISpecieMapper {
+export class SpecieMapper implements IMapper<SpecieDto,Specie> {
     locationMapper: LocationMapper = new LocationMapper;
     
     toDomain(dto: SpecieDto): Specie {
