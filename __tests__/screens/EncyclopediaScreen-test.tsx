@@ -1,5 +1,6 @@
 import React from 'react';
-import { render, fireEvent, act } from '@testing-library/react-native';
+import { renderWithProviders as render } from '@/shared/utils/renderWithProviders';
+import { fireEvent, act } from '@testing-library/react-native';
 import EncyclopediaScreen from '@/screens/EncyclopediaScreen';
 import * as useSpeciesHook from '@/hooks/viewModels/useGetSpecies';
 import { Specie,Habitat,Diet,Family,Climate,Kingdom,Class } from '@/model/domain';
