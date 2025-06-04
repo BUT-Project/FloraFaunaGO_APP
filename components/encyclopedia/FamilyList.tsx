@@ -14,7 +14,6 @@ interface FamilyListProps {
 const width = Dimensions.get('window').width;
 const itemSize = (width / 3) - 10;
 
-
 const FamilyList: React.FC<FamilyListProps> = ({family,captureId,userCaptures}) => {
     const {
             captures,
@@ -28,6 +27,11 @@ const FamilyList: React.FC<FamilyListProps> = ({family,captureId,userCaptures}) 
     return(
     <>
         <ThemedText type={"infoTitle"}>Famille :</ThemedText>
+        {error && (
+            <ThemedView style={{padding: 10}}>
+                <ThemedText style={{color: 'red'}}>Erreur lors du chargement</ThemedText>
+            </ThemedView>
+        )}
         {isLoading ? (
             <ThemedView>
                 <ActivityIndicator size={'small'} />
@@ -92,3 +96,4 @@ const styles = StyleSheet.create({
 });
 
 export default FamilyList;
+
