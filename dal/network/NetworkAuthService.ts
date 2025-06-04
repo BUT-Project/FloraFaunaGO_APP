@@ -19,6 +19,9 @@ export default class NetworkAuthService implements IAuthService {
        private readonly userRepository: IUserRepository,
        private keyManager: ITokenManager<AccessTokenResponseDto> = new TokenManager(new SecureLocalStorageAdapter())
 ) {}
+    resetPassword(email: string, oldPassword: string, newPassword: string): Promise<void> {
+        throw new Error("Method not implemented.");
+    }
 
     async login(email: string, password: string, twoFactorCode?: string, twoFactorRecoveryCode?: string): Promise<User> {
         try {

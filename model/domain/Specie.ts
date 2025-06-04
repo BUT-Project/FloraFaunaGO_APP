@@ -31,4 +31,5 @@ export default class Specie{
         this.locations=locations;
         this.image = image;
     }
+
 }

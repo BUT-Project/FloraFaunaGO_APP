@@ -28,12 +28,10 @@
       "!**/babel.config.js",
       "!**/expo-env.d.ts",
       "!**/.expo/**",
-
       "!**/babel.config.js",
       "!**/metro.config.js",
       "!**/jest.setup.js",
       "!**/*.config.{js,ts}",
-
       "!**/app/+html.tsx",
       "!**/app/+not-found.tsx"
     ],
@@ -65,10 +63,12 @@
     "expo-status-bar": "~2.2.3",
     "expo-system-ui": "~5.0.7",
     "expo-web-browser": "~14.1.6",
+    "i18next": "^25.2.1",
     "jwt-decode": "^4.0.0",
     "react": "19.0.0",
     "react-content-loader": "^7.0.2",
     "react-dom": "19.0.0",
+    "react-i18next": "^15.5.2",
     "react-native": "0.79.2",
     "react-native-circular-progress": "^1.4.0",
     "react-native-gesture-handler": "~2.24.0",

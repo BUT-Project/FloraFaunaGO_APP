@@ -10,7 +10,7 @@ describe('<CaptureDetails />', () => {
         getByText(`Date : ${captureDetails.date.toLocaleDateString()}`);
         getByText(`Latitude : ${captureDetails.location.latitude.toString()}`);
         getByText(`Longitude : ${captureDetails.location.longitude.toString()}`);
-        getByText(`Altitude : ${captureDetails.location.altitude.toString()}`);
+        getByText(`Altitude : ${captureDetails.location.altitude.toString()} mètres`);
         getByText(`Shiny : ${captureDetails.shiny? "Oui" : "Non"}`);
     });
 });
