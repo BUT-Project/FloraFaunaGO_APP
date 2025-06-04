@@ -1,9 +1,9 @@
-import { Habitat, Specie } from "@/model/domain";
-import { SpecieDto } from "../scheme/SpecieDtoSchema";
-import { LocationMapper } from "./LocationMapper";
+import { Class, Climate, Diet, Family, Habitat, Kingdom, Specie} from "@/model/domain";
+import {SpecieDto} from "../scheme/SpecieDtoSchema";
+import {LocationMapper} from "./LocationMapper";
 import {IMapper} from "@/shared/mappers/IMapper";
 
-export class SpecieMapper implements IMapper<SpecieDto,Specie> {
+export class SpecieMapper implements IMapper<SpecieDto, Specie> {
     locationMapper: LocationMapper = new LocationMapper;
     
     toDomain(dto: SpecieDto): Specie {
@@ -39,5 +39,9 @@ export class SpecieMapper implements IMapper<SpecieDto,Specie> {
             image:domain.image,
             image3D:""
         }
+    }
+
+    toUpdateDto(domain: Partial<Specie>): Partial<{ id: string; nom: string; nom_scientifique: string; description: string; image: string; image3D: string; class: Class; kingdom: Kingdom; famille: Family; zone: string; climat: Climate; regime: Diet; locationNormalDtos: { id: string; latitude: number; longitude: number; altitude: number; rayon: number; }[]; }> {
+        throw new Error("Method not implemented We should not update a specie in the database, only get it");
     }
 }
