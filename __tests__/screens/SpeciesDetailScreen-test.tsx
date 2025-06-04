@@ -75,4 +75,5 @@ describe('<SpeciesDetailScreen />', () => {
         const { getByText } = render(<SpeciesDetailScreen specie={mockSpecie} capture={mockCapture}/>);
         expect(getByText('Pas plus de capture pour le moment.')).toBeTruthy();
     });
+
 });

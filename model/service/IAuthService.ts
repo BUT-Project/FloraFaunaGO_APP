@@ -6,6 +6,6 @@ export default interface IAuthService {
     logout: () => Promise<void>;
     getUser: () => Promise<User | null>;
     isAuthenticated: () => Promise<boolean>;
-    resetPassword(email:string,oldPassword:string,newPassword:string) : Promise<User | null>
+    resetPassword(email:string,oldPassword:string,newPassword:string) : Promise<void>
 
 }

@@ -10,7 +10,7 @@ import { Capture ,Specie } from "@/model/domain";
 import { useAuthStore } from "@/context/zustand/store/useAuthStore";
 import { CaptureDetails, ExtendableText, FamilyList, DetailsHeader, NotCaptured } from "@/components/encyclopedia";
 import { ExtendableMap } from "@/components/ui/ExtendableMap";
-import { Colors } from "@/constants/Colors";
+import { useThemeColor } from "@/hooks/useThemeColor";
 import { SafeView } from "@/components/ui/SafeView";
 import { useTranslation } from "react-i18next";
 import { Ionicons } from "@expo/vector-icons";
@@ -37,17 +37,12 @@ const InfoRow = ({ icon, label, value, latin }: IconRowProps) => (
 
 
 const SpeciesDetailScreen = ({capture,specie}:SpeciesDetailScreenProps) => {
-    const colorScheme = useColorScheme();
     const scrollRef = useAnimatedRef<Animated.ScrollView>();
     const scrollOffset = useSharedValue(0);
     const {t} = useTranslation();
+    const descBackgroundColor = useThemeColor({},"card");
     const user = useAuthStore((state) => state.user);
-    if (!user) {
-        throw new Error("User not found")
-    }
-    // [Dave] [TODO] should not do that
-
-    const capturedSpecie = user.captures;
+    const capturedSpecie = user?.captures ?? [];
 
     const isCaptured = useMemo(() => capture != null, [capture]);
 
@@ -97,7 +92,7 @@ const SpeciesDetailScreen = ({capture,specie}:SpeciesDetailScreenProps) => {
             <ThemedView style={styles.sectionRow}>
                 <ExtendableText
                     text={specie.description}
-                    style={[styles.descContainer,{backgroundColor:Colors[colorScheme ?? "light"].card}]}
+                    style={[styles.descContainer,{backgroundColor:descBackgroundColor}]}
                     textStyle={styles.description}
                 />
                 <ExtendableMap
@@ -227,5 +222,5 @@ const styles = StyleSheet.create({
         alignItems: "center",
         gap: 5,
     },
-  
+
 });
