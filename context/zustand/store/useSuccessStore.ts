@@ -37,11 +37,12 @@ export const SuccessStore = create<SuccessState>()(
         try {
             var sucessRepo = StubData.getInstance().successRepository;
             var sucess = await sucessRepo?.getById(successId);
-            if(sucess !== undefined) {
+            if(sucess !== undefined && sucess !== null && sucess.actualVal < sucess.objectif) {
                 sucess.actualVal += 1
-            // je vérifie les résultat du update si c'est completed alors 
             sucessRepo?.update(successId,sucess);
-            toast.success(sucess.nom+ " completed ! 🏆");            
+            if(sucess.actualVal >= sucess.objectif) {
+            toast.success(sucess.nom+ " completed ! 🏆");  
+            }          
         } 
         }
         catch (error) {

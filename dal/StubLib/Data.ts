@@ -109,11 +109,11 @@ export const SpecieList = [specie1,specie2,specie3,specie4,specie5,specie6];
 
 export const SuccessList = [
     new Success("Photographe Amateur", "camera", "Capturez votre première photo.", 1,10,SuccessType.PHOTO, "PhotographeAmateur"),
-    new Success("Maître des Animaux", "paw", "Débloqué en interagissant avec 50 animaux différents.", 20,50,SuccessType.PHOTO, "Animal"),
+    new Success("Maître des Animaux", "paw", "Débloqué en interagissant avec 50 animaux différents.", 20,50,SuccessType.CAPTURE, "Animal"),
     new Success("Pêcheur Expert", "fish", "Attrapez 30 poissons lors de vos aventures.", 15,30,SuccessType.CAPTURE, "Fish"),
     new Success("Chasseur d'insect", "bug", "Trouvez et collectionnez 20 insectes.", 15,20,SuccessType.CAPTURE, "Insect"),
-    new Success("Explorateur des Bois", "leaf", "Visitez 10 forêts ou réserves naturelles.", 9,10,SuccessType.LIEUX, "ExplorateurDesBois"),
-    new Success("Dompteur d'Oiseaux", "paw", "Interagissez avec 15 espèces d'oiseaux sauvages.", 10,15,SuccessType.PHOTO, "dompBirds"),
+    new Success("Explorateur des Bois", "leaf", "Visitez 10 forêts ou réserves naturelles.", 9,10,SuccessType.CAPTURE, "ExplorateurDesBois"),
+    new Success("Dompteur d'Oiseaux", "paw", "Interagissez avec 15 espèces d'oiseaux sauvages.", 10,15,SuccessType.CAPTURE, "dompBirds"),
     new Success("Voyageur Aventurier", "airplane", "Voyagez dans 5 régions différentes.", 4,5,SuccessType.LIEUX, "unlockVoyageurAventurier"),
     new Success("Guide des Montagnes", "leaf", "Randonnez jusqu'au sommet de 3 montagnes.", 3,3,SuccessType.LIEUX, "unlockGuideDesMontagnes"),
     new Success("Maitre de l'air", "airplane", "Capturez 5 espèces d'oiseaux.", 4,5,SuccessType.CAPTURE, "Birds"),
