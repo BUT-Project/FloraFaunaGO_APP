@@ -30,7 +30,7 @@ export class HttpClient {
             'Content-Type': 'application/json',
             ...config.headers,
         });
-        this.defaultTimeout = config.timeout ?? 1;
+        this.defaultTimeout = config.timeout ?? 5000; // Default timeout of 5 seconds
     }
 
     protected getConfig(): HttpClientConfig {
@@ -108,11 +108,28 @@ export class HttpClient {
 
             return { success: true, data };
         } catch (error) {
+            // Handle different types of errors with specific messages
+            if (error instanceof Error) {
+                if (error.name === 'AbortError') {
+                    return {
+                        success: false,
+                        error: new Error('Request was cancelled or timed out')
+                    };
+                }
+                if (error.name === 'TypeError' && error.message.includes('fetch')) {
+                    return {
+                        success: false,
+                        error: new Error('Network error - check your connection')
+                    };
+                }
+                return {
+                    success: false,
+                    error: error
+                };
+            }
             return {
                 success: false,
-                error: error instanceof Error
-                    ? error
-                    : new Error('Unknown request error')
+                error: new Error('Unknown request error')
             };
         } finally {
             // Clear timeout to prevent memory leaks
