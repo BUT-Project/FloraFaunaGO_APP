@@ -87,7 +87,7 @@ export function useInfiniteData<T>(
         refetch
     } = useInfiniteQuery({
         queryKey: completeQueryKey,
-        queryFn: async ({ pageParam = 1 }) => {
+        queryFn: async ({ pageParam = 0 }) => {
             const request: PagedRequest = {
                 index: pageParam,
                 count: pageSize,

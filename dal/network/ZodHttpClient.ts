@@ -30,7 +30,7 @@ export class ZodHttpClient extends HttpClient {
         // Make request
         const result = await this.request<{id : string}>(requestConfig);
         if (!result.success) return result;
-
+        console.log("DAVIDD",result.data);
         // Validate response
         if (responseSchema) {
             const validation = responseSchema.safeParse(result.data);
@@ -73,13 +73,14 @@ export class ZodHttpClient extends HttpClient {
         headers?: Readonly<Record<string, string>>,
         params?: QueryParams
     ): Promise<Result<TypeOf<TResponse>>> {
-        return this.requestWithValidation({
+        const response =  this.requestWithValidation({
             method: 'GET',
             url,
             responseSchema,
             headers,
             params
         });
+        return response;
     }
 
     async putValidated<

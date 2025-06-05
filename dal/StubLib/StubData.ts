@@ -5,6 +5,8 @@ import StubUsers from "@/dal/StubLib/StubUsers";
 import StubSucess from "@/dal/StubLib/StubSucess";
 import StubAuth from "@/dal/StubLib/StubAuth";
 import {IDataManager} from "@/dal/IDataManager";
+import { SpeciesClient } from "../network/SpeciesClient";
+import { ZodHttpClient } from "../network/ZodHttpClient";
 
 export default class StubData extends IDataManager{
     private static instance: StubData;
@@ -19,7 +21,9 @@ export default class StubData extends IDataManager{
         this.successRepository = new StubSucess(this.ListSucess);
         this.userRepository = new StubUsers(this.ListUser);
         this.captureRepository = new StubCaptures(this.ListCapture,this.ListUser);
-        this.speciesRepository = new StubSpecies(this.ListSpecie);
+        this.speciesRepository = new SpeciesClient(new ZodHttpClient({
+                    baseUrl: 'https://codefirst.iut.uca.fr/containers/FloraFauna_GO-api'
+                }), '/FloraFaunaGo_API/espece');
         this.authService = new StubAuth(this.ListUser);
     }
 

@@ -17,7 +17,7 @@ export function useGetSpecies(
     error
   } = useInfiniteQuery({
     queryKey: ['species2', name, pageSize],
-    queryFn: async ({ pageParam = 1 }) => {
+    queryFn: async ({ pageParam = 0 }) => {
       const { speciesRepository } = StubData.getInstance();
       const pageRequest: PagedRequest = {
         index: pageParam,
@@ -31,7 +31,7 @@ export function useGetSpecies(
       }
       return allPages.length + 1;
     },
-    initialPageParam: 1,
+    initialPageParam: 0,
   });
 
   // Flatten all pages into a single array of species
