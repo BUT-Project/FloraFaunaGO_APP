@@ -2,6 +2,7 @@ import {ActivityIndicator, Button, FlatList, StyleSheet, View,ScrollView} from "
 import {SpecieListItem,SearchBar,FilterModal} from "@/components/encyclopedia";
 import {useState} from "react";
 import {ThemedText, ThemedView} from "@/components/ui/themed";
+import { ErrorMessage } from "@/components/ui/ErrorMessage";
 import {useGetSpecies} from "@/hooks/viewModels/useGetSpecies";
 import {useAuthStore} from "@/context/zustand/store/useAuthStore";
 import { LinearGradient } from "expo-linear-gradient";
@@ -30,24 +31,11 @@ export default function EncyclopediaScreen() {
                 <FilterModal baseSpecies={species} setFilteredSpecies={()=>{}}/>
             </ThemedView>
             {error ? 
-                <ThemedView style={styles.errorContainer}>
-                    <Ionicons name="warning-outline" size={64} color="red"/>
-                    <ThemedText type="subtitle">
-                        Erreur lors de la récupération des espèces :
-                    </ThemedText>
-                    <ScrollView style={styles.scroll}> 
-                        <ThemedText style={styles.errorText}>
-                            {error.message || "Impossible de charger les espèces." || "Une erreur s'est produite."}
-                        </ThemedText>
-                    </ScrollView>
-                    {refresh && (
-                        <Button title="Réessayer" onPress={() => refresh()} color={tint}/>
-                    )}
-                </ThemedView>
+               <ErrorMessage message="Une erreur est survenue lors de la récupération des espèces..." refresh={refresh} />
                 :
                 <>
                 { isLoading ?
-                    <Loading disableTopInset disableBottomInset text="Chargement des espèces..."/>
+                    <Loading disableTopInset disableBottomInset text="Chargement des espèces..." />
                     :
                     <FlatList
                         testID="Encyclopedia.Flatlist"
@@ -123,18 +111,4 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         marginVertical: 10
     },
-    errorContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: 20,
-        gap:20,
-    },
-    errorText: {
-        color: 'red',
-    },
-    scroll:{
-        maxHeight: "70%",
-        flexShrink:1,
-    }
 });

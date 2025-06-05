@@ -18,12 +18,17 @@ export function useGetSpecies(
   } = useInfiniteQuery({
     queryKey: ['species2', name, pageSize],
     queryFn: async ({ pageParam = 0 }) => {
-      const { speciesRepository } = StubData.getInstance();
-      const pageRequest: PagedRequest = {
-        index: pageParam,
-        count: pageSize,
-      };
-      return await speciesRepository?.getAll(pageRequest);
+      try{
+        const { speciesRepository } = StubData.getInstance();
+        const pageRequest: PagedRequest = {
+          index: pageParam,
+          count: pageSize,
+        };
+        return await speciesRepository?.getAll(pageRequest);
+      } catch (err) {
+        console.error("Error fetching species:", err);
+        throw err;
+      }
     },
     getNextPageParam: (lastPage, allPages) => {
       if (!lastPage || lastPage.items.length < pageSize) {
@@ -31,6 +36,7 @@ export function useGetSpecies(
       }
       return allPages.length + 1;
     },
+    retry:false,
     initialPageParam: 0,
   });
 
