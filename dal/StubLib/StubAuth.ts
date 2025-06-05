@@ -42,7 +42,7 @@ export default class StubAuth implements IAuthService{
                 return;
             }
             const newUser: User = {
-                id: this.Users.length + 1,
+                id: Math.random().toString(36).substring(2, 15),
                 username: username,
                 email :email,
                 passwordHash: password,

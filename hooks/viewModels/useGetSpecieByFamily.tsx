@@ -4,8 +4,7 @@ import {Family} from "@/model/domain/Family";
 import Specie from "@/model/domain/Specie";
 
 export function useGetSpecieByFamily(
-    family: Family | undefined,
-    selfId?: number,
+    selfId?: string,
     pageSize: number = 10,
 ) {
 
@@ -25,13 +24,13 @@ export function useGetSpecieByFamily(
 
     useEffect(() => {
         const fetchCaptures = async () => {
-            if(!family) return;
+            if(!selfId) return;
             if (isLoading || isListEnd) return;
             if(captures.length == 0) setIsLoading(true);
             setError(null);
             try {
                 const { speciesRepository } = StubData.getInstance();
-                const result = await speciesRepository?.getByFamily(family, page, pageSize, selfId);
+                const result = await speciesRepository?.getRelatedSpeciesByFamily(selfId, page, pageSize);
                 if(!result) throw new Error("result undefined")
                 setIsListEnd(captures.length >= result.total);
                 setCaptures((prev) => [...prev, ...result.items]);
@@ -43,7 +42,7 @@ export function useGetSpecieByFamily(
             }
         };
         fetchCaptures();
-    }, [family, page, pageSize]);
+    }, [page, pageSize]);
 
     return {
         captures,

@@ -9,3 +9,19 @@ export function useAsyncState<T>(
         initialValue
     ) as UseStateHook<T>;
 }
+export function getImageUri(image?: string | null): string | undefined {
+
+    if (!image || typeof image !== 'string') {
+        return undefined;
+    }
+
+    const trimmed = image.trim();
+
+    if (trimmed.startsWith('data:image')) {
+        return trimmed;
+    } else if (trimmed.startsWith('/9j/') || trimmed.length > 100) {
+        return `data:image/jpeg;base64,${trimmed}`; // assume it's raw base64
+    } else {
+        return trimmed; // regular URL
+    }
+}

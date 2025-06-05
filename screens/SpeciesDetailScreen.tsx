@@ -102,7 +102,7 @@ const SpeciesDetailScreen = ({capture,specie}:SpeciesDetailScreenProps) => {
                     />
             </ThemedView>
             <ThemedView style={styles.section}>
-                <FamilyList family={specie.family} captureId={capture?.id} userCaptures={capturedSpecie}/>
+                <FamilyList family={specie.family} specieId={specie?.id} userCaptures={capturedSpecie}/>
             </ThemedView>
             {( capture && capture.capturesDetails.length > 0) ?
                 <>

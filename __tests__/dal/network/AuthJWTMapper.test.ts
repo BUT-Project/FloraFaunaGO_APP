@@ -71,26 +71,14 @@ describe('AuthJWTMapper', () => {
     describe('getUserIdFromToken', () => {
         it('test_getUserIdFromToken_withValidToken_returnsUserId', () => {
             const payload = {
-                nameid: '789', // nameid is a string representation of a number
+                nameid: '789',
                 email: 'another@example.com',
                 exp: Math.floor(Date.now() / 1000) + 3600,
                 iat: Math.floor(Date.now() / 1000),
             };
             const token = createTestToken(payload);
             const userId = AuthJWTMapper.getUserIdFromToken(token);
-            expect(userId).toBe(789);
-        });
-
-        it('test_getUserIdFromToken_withNonIntegerStringNameId_returnsNaN', () => {
-            const payload = {
-                nameid: 'abc', // Non-integer string
-                email: 'nan_user@example.com',
-                exp: Math.floor(Date.now() / 1000) + 3600,
-                iat: Math.floor(Date.now() / 1000),
-            };
-            const token = createTestToken(payload);
-            const userId = AuthJWTMapper.getUserIdFromToken(token);
-            expect(userId).toBeNaN(); // parseInt('abc') results in NaN
+            expect(userId).toBe("789");
         });
     });
 });

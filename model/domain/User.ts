@@ -2,7 +2,7 @@ import Capture from "@/model/domain/Capture";
 import {Success} from "@/model/domain/Success";
 
 export default class User {
-    id: number
+    id: string
     username: string
     email: string
     passwordHash: string
@@ -11,7 +11,7 @@ export default class User {
     _success:Success[]
     image?: string
 
-    constructor(id: number, username: string, email: string, passwordHash: string, inscriptionDate: Date,captures:Capture[],success:Success[],image?:string) {
+    constructor(id: string, username: string, email: string, passwordHash: string, inscriptionDate: Date,captures:Capture[],success:Success[],image?:string) {
         this.id = id
         this.username = username
         this.email = email

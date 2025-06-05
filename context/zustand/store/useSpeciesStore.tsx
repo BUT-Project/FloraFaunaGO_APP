@@ -84,9 +84,7 @@ export const useSpeciesStore = create<SpeciesState>()(
                     set((state) => ({ ...state, isLoading: true }));
 
                     const { captureRepository } = StubData.getInstance();
-                    await captureRepository?.addSpecieToUser(authStore.user.id, specie,currentLocation,currentImageUri);
-
-                    console.log(`Species ${specie.id} added to user ${authStore.user.id}`);
+                    await captureRepository?.addSpecieToUser(authStore.user.id, specie, currentLocation, currentImageUri);
 
                     set((state) => ({
                         ...state,

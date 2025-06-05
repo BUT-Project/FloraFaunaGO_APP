@@ -21,9 +21,10 @@ const ErrorView = ({ message }: { message: string }) => (
 );
 
 export default function Details() {
+
     const {specieId, capturedId} = useLocalSearchParams();
-    const captureId = typeof capturedId === 'string' ? parseInt(capturedId) : NaN;
-    const specieId2 = typeof specieId === 'string' ? parseInt(specieId) : NaN;
+    const captureId = typeof capturedId === 'string' ? capturedId : null;
+    const specieId2 = typeof specieId === 'string' ? specieId : null;
 
     const stubData = StubData.getInstance();
     const repositories = {
@@ -43,7 +44,7 @@ export default function Details() {
         error: errorSpecie
     } = useGetById<Specie>(specieId2, repositories.species);
 
-    if (isNaN(specieId2)) {
+    if (!specieId2) {
         return <ErrorView message="Paramètre `id` manquant ou invalide !" />;
     }
 
@@ -53,12 +54,10 @@ export default function Details() {
 
     if (errorSpecie || errorCapture) {
         const errorMessage = [
-            errorSpecie?.message || "Erreur lors de la récupération de l'espèce",
-            errorCapture?.message || "Erreur lors de la récupération de la capture"
+            errorSpecie?.message || (errorSpecie ? String(errorSpecie) : "Erreur lors de la récupération de l'espèce"),
+            errorCapture?.message || (errorCapture ? String(errorCapture) : "Erreur lors de la récupération de la capture")
         ].join(' ');
 
-        errorSpecie && alert(errorSpecie);
-        errorCapture && alert(errorCapture);
 
         return <ErrorView message={errorMessage} />;
     }
@@ -76,5 +75,5 @@ export default function Details() {
                 specie={specie}
                 capture={capture}
             />
-    );
+    )
 }

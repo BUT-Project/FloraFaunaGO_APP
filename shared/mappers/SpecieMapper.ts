@@ -1,12 +1,13 @@
 import { Class, Climate, Diet, Family, Habitat, Kingdom, Specie} from "@/model/domain";
-import {FullSpecieDto, SpecieDto} from "../scheme/SpecieDtoSchema";
+import {SpecieDto} from "../scheme/SpecieDtoSchema";
 import {IMapper} from "@/shared/mappers/IMapper";
+import {getImageUri} from "@/shared/utils";
 
 export class SpecieMapper implements IMapper<SpecieDto, Specie> {
 
     toDomain(dto: SpecieDto): Specie {
         return new Specie(
-            parseInt(dto.id),
+            dto.id,
             dto.nom,
             dto.nom_scientifique,
             dto.description,
@@ -15,8 +16,8 @@ export class SpecieMapper implements IMapper<SpecieDto, Specie> {
             dto.kingdom, 
             dto.class,
             dto.famille,
-            [],
-            dto.image
+            [], // [YOAN] TODO: On ne gère pas les Locations pour pck ils y sont pas encore dans le DTO
+            getImageUri(dto.image)!
         );
     }
 
@@ -38,20 +39,6 @@ export class SpecieMapper implements IMapper<SpecieDto, Specie> {
     }
 
     toUpdateDto(domain: Partial<Specie>): Partial<SpecieDto> {
-        throw new Error("Method not implemented We should not update a specie in the database, only get it");
-    }
-}
-export class FullSpecieMapper implements IMapper<FullSpecieDto, Specie> {
-
-    toDomain(dto: FullSpecieDto): Specie {
-        return {} as Specie; // TODO: Implement FullSpecieMapper toDomain method
-    }
-
-    toDto(domain: Specie): FullSpecieDto {
-        return {} as FullSpecieDto; // TODO: Implement FullSpecieMapper toDto method
-    }
-
-    toUpdateDto(domain: Partial<Specie>): Partial<FullSpecieDto> {
         throw new Error("Method not implemented We should not update a specie in the database, only get it");
     }
 }

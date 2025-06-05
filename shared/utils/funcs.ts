@@ -1,6 +1,6 @@
 import { Specie,Habitat,Diet,Kingdom,Class,Family, Climate } from "@/model/domain";
 
-export  const buildSpecie = (id:number) => new Specie(
+export  const buildSpecie = (id:string) => new Specie(
     id,
     `Specie ${id}`,
     `Scientific Name ${id}`,

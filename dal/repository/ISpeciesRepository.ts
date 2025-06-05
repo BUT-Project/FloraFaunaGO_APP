@@ -5,5 +5,5 @@ import {PagingResult} from "@/shared/PagingResult";
 
 export interface ISpeciesRepository extends GenericRepository<Specie> {
     identifySpecies(imageBase64: string): Promise<Specie>;
-    getByFamily(family: Family, page: number, pageSize: number , selfId?: number): Promise<PagingResult<Specie>>;
+    getRelatedSpeciesByFamily(specieId: string, page: number, pageSize: number): Promise<PagingResult<any>>;
 }

@@ -4,7 +4,7 @@ import {ZodHttpClient} from "@/dal/network/ZodHttpClient";
 import {UserClient} from "@/dal/network/UserClient";
 import {SpeciesClient} from "@/dal/network/SpeciesClient";
 
-export default class AppClient extends IDataManager{
+export default class WebApiClient extends IDataManager{
 
     private client : ZodHttpClient | undefined;
 

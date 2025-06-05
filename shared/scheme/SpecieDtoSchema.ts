@@ -15,11 +15,7 @@ export const SpecieDtoSchema = z.object({
   zone: z.string(),
   climat: z.nativeEnum(Climate),
   regime: z.nativeEnum(Diet),
-});
-
-export const FullSpecieDtoSchema = z.object({
-  espece: SpecieDtoSchema,
-  localisationNormalDtos: z.array(LocationDtoSchema),
+  localisationNormalDtos: z.array(LocationDtoSchema).optional(),
 });
 
 export const PagingResultSpecieSchema = z.object({
@@ -30,5 +26,4 @@ export const PagingResultSpecieSchema = z.object({
 });
 
 export type SpecieDto = z.infer<typeof SpecieDtoSchema>;
-export type FullSpecieDto = z.infer<typeof FullSpecieDtoSchema>;
 export type SpecieDtos = z.infer<typeof PagingResultSpecieSchema>;

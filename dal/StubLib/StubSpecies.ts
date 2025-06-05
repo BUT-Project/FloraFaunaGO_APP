@@ -29,15 +29,7 @@ export default class StubSpecies implements ISpeciesRepository {
 
     getById(id: string): Promise<Specie> {
         return new Promise((resolve) => {
-            // Convert string id to number for comparison
-            const numericId = parseInt(id);
-
-            // Handle invalid id
-            if (isNaN(numericId)) {
-                return;
-            }
-
-            const specie = this.Species.find(specie => specie.id === numericId);
+            const specie = this.Species.find(specie => specie.id === id);
             if (!specie) {
                 return;
             }
@@ -56,7 +48,7 @@ export default class StubSpecies implements ISpeciesRepository {
         });
     }
 
-    update(id: number, updatedSpecie: Specie): Promise<void> {
+    update(id: string, updatedSpecie: Specie): Promise<void> {
         return new Promise((resolve, reject) => {
             const index = this.Species.findIndex(specie => specie.id === id);
             if (index === -1) {
@@ -68,7 +60,7 @@ export default class StubSpecies implements ISpeciesRepository {
         });
     }
 
-    delete(id: number): Promise<void> {
+    delete(id: string): Promise<void> {
         return new Promise((resolve, reject) => {
             const initialLength = this.Species.length;
             this.Species = this.Species.filter(specie => specie.id !== id);
@@ -82,13 +74,13 @@ export default class StubSpecies implements ISpeciesRepository {
         });
     }
 
-    getByFamily(family: Family, page: number = 1, pageSize: number = 10, selfId?: number): Promise<PagingResult<Specie>> {
+    getRelatedSpeciesByFamily(specieId: string, page: number, pageSize: number): Promise<PagingResult<any>> {
         return new Promise((resolve) => {
             const startIndex = (page - 1) * pageSize;
             const endIndex = startIndex + pageSize;
             const items = this.Species.filter((capture) =>
-                capture.family === family &&
-                (selfId === undefined || capture.id !== selfId)
+                capture.family === specieId &&
+                (specieId === undefined || capture.id !== specieId)
             );
             const pageItems = items.slice(startIndex, endIndex);
             const total = items.length;

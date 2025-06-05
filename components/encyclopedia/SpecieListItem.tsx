@@ -8,7 +8,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 
 type CaptureListItemProps = {
     specie: Specie;
-    captureId: number|null;
+    captureId: string|null;
 };
 
 const { width } = Dimensions.get('window');

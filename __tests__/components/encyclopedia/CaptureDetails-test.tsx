@@ -5,7 +5,7 @@ import Location from "@/model/domain/Location";
 
 describe('<CaptureDetails />', () => {
     test('Text renders correctly on CaptureDetails', () => {
-        const captureDetails = new CaptureDetail(1,new Date(),false,new Location(77,77,77,77,77));
+        const captureDetails = new CaptureDetail("1",new Date(),false,new Location(77,77,77,77,77));
         const { getByText } = render(<CaptureDetails captureDetail={captureDetails}/>);
         getByText(`Date : ${captureDetails.date.toLocaleDateString()}`);
         getByText(`Latitude : ${captureDetails.location.latitude.toString()}`);

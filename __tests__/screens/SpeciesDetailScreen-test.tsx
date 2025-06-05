@@ -20,10 +20,10 @@ jest.mock('@/hooks/viewModels/useGetSpecieByFamily', () => ({
 }));
 
 describe('<SpeciesDetailScreen />', () => {
-    const mockSpecie = buildSpecie(1);
-    const mockCapture = new Capture(1, "", mockSpecie, []);
-    const captureDetails = [new CaptureDetail(1,new Date(),false, new Location(10,10,10,10,1))];
-    const mockCaptureWithDetails = new Capture(1, "", mockSpecie, captureDetails);
+    const mockSpecie = buildSpecie("1");
+    const mockCapture = new Capture("1", "", mockSpecie, []);
+    const captureDetails = [new CaptureDetail("1",new Date(),false, new Location(10,10,10,10,1))];
+    const mockCaptureWithDetails = new Capture("1", "", mockSpecie, captureDetails);
         
     beforeEach(() => {
         jest.clearAllMocks();

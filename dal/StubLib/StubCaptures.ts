@@ -33,7 +33,7 @@ export default class StubCaptures implements ICaptureRepository {
         });
     }
 
-    getById(id: number): Promise<Capture> {
+    getById(id: string): Promise<Capture> {
         return new Promise((resolve) => {
 
             const capture = this.Captures.find(capture => capture.id === id) || null;
@@ -54,7 +54,7 @@ export default class StubCaptures implements ICaptureRepository {
         });
     }
 
-    getByFamily(family: Family, page: number = 1, pageSize: number = 10, selfId?: number): Promise<PagingResult<Capture>> {
+    getByFamily(family: Family, page: number = 1, pageSize: number = 10, selfId?: string): Promise<PagingResult<Capture>> {
         return new Promise((resolve) => {
             const startIndex = (page - 1) * pageSize;
             const endIndex = startIndex + pageSize;
@@ -69,7 +69,7 @@ export default class StubCaptures implements ICaptureRepository {
         });
     }
 
-    update(id: number, updatedCapture: Capture): Promise<void> {
+    update(id: string, updatedCapture: Capture): Promise<void> {
         return new Promise((resolve, reject) => {
             const index = this.Captures.findIndex(capture => capture.id === id);
             if (index === -1) {
@@ -81,7 +81,7 @@ export default class StubCaptures implements ICaptureRepository {
         });
     }
 
-    delete(id: number): Promise<void> {
+    delete(id: string): Promise<void> {
         return new Promise((resolve, reject) => {
             const initialLength = this.Captures.length;
             this.Captures = this.Captures.filter(capture => capture.id !== id);
@@ -95,7 +95,7 @@ export default class StubCaptures implements ICaptureRepository {
         });
     }
 
-    addSpecieToUser(userId: number, specie: Specie, userLocation: Location, capturedImageUri: string): Promise<void> {
+    addSpecieToUser(userId: string, specie: Specie, userLocation: Location, capturedImageUri: string): Promise<void> {
         return new Promise((resolve, reject) => {
             const user = this.Users.find(user => user.id === userId);
 
@@ -112,7 +112,7 @@ export default class StubCaptures implements ICaptureRepository {
             const specieInUserCaptures = user.captures.find(s => s.id === specie.id);
 
             const newCaptureDetail = new CaptureDetail(
-                Date.now(),
+                Date.now().toString(),
                 new Date(),
                 false, // Default shiny value [TODO]
                 userLocation
@@ -124,7 +124,7 @@ export default class StubCaptures implements ICaptureRepository {
                 ];
             } else {
                 const newCapture = new Capture(
-                    Date.now(),
+                    Date.now().toString(),
                     capturedImageUri,
                     specie,
                     [newCaptureDetail]

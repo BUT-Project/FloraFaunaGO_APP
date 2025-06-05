@@ -10,10 +10,10 @@ interface UserStoreState {
     total: number;
     loading: boolean;
     fetchUsers: (request: PagedRequest) => Promise<void>;
-    getUserById: (id: number) => Promise<User | null>;
+    getUserById: (id: string) => Promise<User | null>;
     addUser: (newUser: User) => Promise<void>;
-    updateUser: (id: number, updatedUser: User) => Promise<void>;
-    deleteUser: (id: number) => Promise<void>;
+    updateUser: (id: string, updatedUser: any) => Promise<void>;
+    deleteUser: (id: string) => Promise<void>;
     countUsers: (filter: FilterPredicate<User>) => Promise<number>;
 }
 
@@ -36,7 +36,7 @@ export const useUserStore = create<UserStoreState>((set, get) => ({
         }
     },
 
-    getUserById: async (id: number): Promise<User | null> => {
+    getUserById: async (id: string): Promise<any | null> => {
         try {
             const { userRepository } = StubData.getInstance();
             if (!userRepository) throw new Error("UserRepository is not available");
@@ -57,7 +57,7 @@ export const useUserStore = create<UserStoreState>((set, get) => ({
         }
     },
 
-    updateUser: async (id: number, updatedUser: User): Promise<void> => {
+    updateUser: async (id: string, updatedUser: User): Promise<void> => {
         try {
             const { userRepository } = StubData.getInstance();
             if (!userRepository) throw new Error("UserRepository is not available");
@@ -67,7 +67,7 @@ export const useUserStore = create<UserStoreState>((set, get) => ({
         }
     },
 
-    deleteUser: async (id: number): Promise<void> => {
+    deleteUser: async (id: string): Promise<void> => {
         try {
             const { userRepository } = StubData.getInstance();
             if (!userRepository) throw new Error("UserRepository is not available");

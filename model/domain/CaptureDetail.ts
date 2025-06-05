@@ -1,12 +1,12 @@
 import Location from "@/model/domain/Location";
 
 export default class CaptureDetail {
-    id: number;
+    id: string;
     date: Date;
     shiny: boolean;
     location:Location;
 
-    constructor(id: number, date: Date, shiny: boolean,location:Location) {
+    constructor(id: string, date: Date, shiny: boolean,location:Location) {
         this.id = id;
         this.date = date;
         this.shiny = shiny;

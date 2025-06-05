@@ -85,13 +85,13 @@ export default class StubSucess  implements ISuccessRepository {
         });
     }
 
-    delete(nom: string): Promise<void> {
+    delete(id: string): Promise<void> {
         return new Promise((resolve, reject) => {
             const initialLength = this.Sucesses.length;
-            this.Sucesses = this.Sucesses.filter(sucess => sucess.nom !== nom);
+            this.Sucesses = this.Sucesses.filter(sucess => sucess.nom !== id);
 
             if (this.Sucesses.length === initialLength) {
-                reject(new Error(`Success with nom '${nom}' not found for delete`));
+                reject(new Error(`Success with nom '${id}' not found for delete`));
                 return;
             }
 

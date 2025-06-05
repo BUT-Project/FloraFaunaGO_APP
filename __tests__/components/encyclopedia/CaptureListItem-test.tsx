@@ -5,8 +5,8 @@ import  Specie from '@/model/domain/Specie';
 
 describe('<CaptureListItem />', () => {
     test('Text renders correctly on CaptureListItem', () => {
-        const specie: Specie = buildSpecie(1);
-        const { getByText } = render(<SpecieListItem  specie={specie} captureId={1} />);
+        const specie: Specie = buildSpecie("1");
+        const { getByText } = render(<SpecieListItem  specie={specie} captureId={"1"} />);
         getByText(specie.name);
     });
 });

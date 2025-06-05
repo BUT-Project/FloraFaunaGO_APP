@@ -1,9 +1,8 @@
 import {z} from "zod";
 import {IUserRepository} from "@/dal/repository/IUserRepository";
 import {ZodHttpClient} from "@/dal/network/ZodHttpClient";
-import {HttpZodResourceClient, HttpZodResourceConfig} from "@/dal/network/NetworkGenericClient";
+import {HttpZodResourceClient} from "@/dal/network/HttpZodResourceClient";
 import {
-    UtilisateurApiResponseSchema,
     UtilisateurNormalDto,
     UtilisateurNormalDtoSchema
 } from "@/shared/scheme/UtilisateurNormalDtoSchema";
@@ -15,20 +14,6 @@ import { FilterPredicate } from "@/shared/FilterPredicate";
 import {IMapper} from "@/shared/mappers/IMapper";
 
 /**
- * Configuration for the User HTTP repository
- */
-const createUserRepositoryConfig = (): HttpZodResourceConfig<UtilisateurNormalDto> => ({
-    responceSchema: UtilisateurNormalDtoSchema,
-    createSchema: UtilisateurNormalDtoSchema,
-    responseSchemas: {
-        create: UtilisateurApiResponseSchema,
-        update: UtilisateurApiResponseSchema,
-        delete: z.object({success: z.boolean()})
-    }
-});
-
-// HttpZodRepository<UtilisateurNormalDto>
-/**
  * Handles only network operations for Users
  */
 export class UserClient implements IUserRepository {
@@ -38,7 +23,7 @@ export class UserClient implements IUserRepository {
         httpClient: ZodHttpClient,
         baseUrl: string = '/utilisateur',
         mapper: IMapper<UtilisateurNormalDto, User> = new UserMapper(),
-        private userRepository : HttpZodResourceClient<UtilisateurNormalDto> = new HttpZodResourceClient<UtilisateurNormalDto>(httpClient, baseUrl, createUserRepositoryConfig())
+        private userRepository : HttpZodResourceClient<UtilisateurNormalDto> = HttpZodResourceClient.create<UtilisateurNormalDto>(httpClient, baseUrl,UtilisateurNormalDtoSchema)
     ) {
         this.mapper = mapper;
     }
@@ -54,7 +39,7 @@ export class UserClient implements IUserRepository {
     /**
      * Update an existing user
      */
-    async update(id: number, user: User): Promise<void> {
+    async update(id: string, user: User): Promise<void> {
         const updateDto = this.mapper.toUpdateDto(user);
         await this.userRepository.update(id, updateDto);
     }
@@ -62,14 +47,14 @@ export class UserClient implements IUserRepository {
     /**
      * Delete a user by ID
      */
-    async delete(id: number): Promise<void> {
+    async delete(id: string): Promise<void> {
         await this.userRepository.delete(id);
     }
 
     /**
      * Get a user by ID
      */
-    async getById(id: number): Promise<User> {
+    async getById(id: string): Promise<User> {
         const dto = await this.userRepository.getById(id);
         return this.mapper.toDomain(dto);
     }
@@ -92,33 +77,5 @@ export class UserClient implements IUserRepository {
     async count(filter: FilterPredicate<User>): Promise<number> {
         throw new Error("Method not implemented.");
     }
-
-    /**
-     * Build query parameters specific to user API requirements
-    protected buildQueryParams(request: PagedRequest): any {
-        const params = super.buildQueryParams(request);
-
-        // Map generic ordering to user-specific criteria
-        if (request.orderingPropertyName) {
-            switch (request.orderingPropertyName.toLowerCase()) {
-                case 'id':
-                    params.criterium = 0;
-                    break;
-                case 'username':
-                case 'pseudo':
-                    params.criterium = 1;
-                    break;
-                case 'inscriptiondate':
-                case 'dateinscription':
-                    params.criterium = 2;
-                    break;
-                default:
-                    params.criterium = 0; // Default to ID
-            }
-        }
-
-        return params;
-    }
-     */
 
 }

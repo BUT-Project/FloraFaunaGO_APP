@@ -48,7 +48,7 @@ const mockUserRepository: jest.Mocked<IUserRepository> = {
 };
 
 // --- Shared Mock Data ---
-const MOCK_USER_ID = 1;
+const MOCK_USER_ID = "1";
 const MOCK_EMAIL = "test@example.com";
 const MOCK_PASSWORD = "password123";
 const MOCK_JWT_SECRET = "test-secret-key"; // Secret for JWT encoding

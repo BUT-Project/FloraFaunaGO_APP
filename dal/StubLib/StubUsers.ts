@@ -26,9 +26,9 @@ export default class StubUsers implements IUserRepository{
         });
     }
 
-    getById(id: number): Promise<User> {
+    getById(id: string): Promise<User> {
         return new Promise((resolve, reject) => {
-            const user = this.Users.find(u => u.id === id);
+            const user = this.Users.find(u => u.id == id);
             if (user == null) {
                 reject(new Error('User not found'));
                 return;
@@ -48,7 +48,7 @@ export default class StubUsers implements IUserRepository{
         });
     }
 
-    update(id: number, updatedUser: User): Promise<void> {
+    update(id: string, updatedUser: User): Promise<void> {
         return new Promise((resolve, reject) => {
             const index = this.Users.findIndex(user => user.id === id);
             if (index === -1) {
@@ -60,7 +60,7 @@ export default class StubUsers implements IUserRepository{
         });
     }
 
-    delete(id: number): Promise<void> {
+    delete(id: string): Promise<void> {
         return new Promise((resolve, reject) => {
             const initialLength = this.Users.length;
             this.Users = this.Users.filter(user => user.id !== id);

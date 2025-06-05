@@ -1,5 +1,4 @@
 import {
-    FullSpecieDto, FullSpecieDtoSchema,
     PagingResultSpecieSchema,
     SpecieDto,
     SpecieDtoSchema
@@ -11,8 +10,8 @@ import { IMapper } from "@/shared/mappers/IMapper";
 import { FilterPredicate } from "@/shared/FilterPredicate";
 import { PagedRequest } from "@/shared/PagedRequest";
 import { PagingResult } from "@/shared/PagingResult";
-import {FullSpecieMapper, SpecieMapper} from "@/shared/mappers/SpecieMapper";
-import {HttpZodResourceClient} from "@/dal/network/NetworkGenericClient";
+import { SpecieMapper} from "@/shared/mappers/SpecieMapper";
+import {HttpZodResourceClient} from "@/dal/network/HttpZodResourceClient";
 import z from "zod";
 
 export class SpeciesClient implements ISpeciesRepository {
@@ -20,9 +19,7 @@ export class SpeciesClient implements ISpeciesRepository {
         private readonly httpClient: ZodHttpClient,
         private baseUrl: string = '/espece',
         private specieMapper: IMapper<SpecieDto, Specie> = new SpecieMapper(),
-        private fullSpecieMapper: IMapper<FullSpecieDto, Specie> = new FullSpecieMapper(),
-
-        private speciesHttpClient : HttpZodResourceClient<SpecieDto,FullSpecieDto> = HttpZodResourceClient.create<SpecieDto,FullSpecieDto>(httpClient, baseUrl,SpecieDtoSchema,FullSpecieDtoSchema)
+        private speciesHttpClient : HttpZodResourceClient<SpecieDto> = HttpZodResourceClient.create<SpecieDto>(httpClient, baseUrl,SpecieDtoSchema)
     ) {}
 
     async identifySpecies(imageBase64: string): Promise<Specie> {
@@ -34,14 +31,16 @@ export class SpeciesClient implements ISpeciesRepository {
 
         return this.specieMapper.toDomain(identifySpecieResult.data);
     }
-    async getByFamily(family: Family, page: number, pageSize: number, selfId?: number): Promise<PagingResult<Specie>> {
+
+    // TODO: [YOAN] DES que il on fait la route /espece/{id}/related, on peut l'utiliser pour les espèces liées par famille et adapte le code
+    async getRelatedSpeciesByFamily(specieId: string, page: number, pageSize: number): Promise<PagingResult<Specie>> {
         const resultData = await this.httpClient.getValidated(
-            this.baseUrl + `/famille=${family}`,
+            `${this.baseUrl}/${specieId}` + '/related',
             PagingResultSpecieSchema,
             undefined,
             {index: page,count: pageSize}
         );
-        
+
         if (!resultData.success) {
             throw resultData.error;
         }
@@ -54,16 +53,17 @@ export class SpeciesClient implements ISpeciesRepository {
             count: pagingResult.count,
             total: pagingResult.total
         };
-    
+
     }
-    async getById(id: any): Promise<Specie> {
+    async getById(id: string): Promise<Specie> {
         const specie = await this.speciesHttpClient.getById(id)
-        return this.fullSpecieMapper.toDomain(specie);
+        return this.specieMapper.toDomain(specie);
     }
 
     async getAll(request: PagedRequest): Promise<PagingResult<Specie>> {
         const pagingResult = await this.speciesHttpClient.getAll(request);
-        const mappedSpecies = pagingResult.items.map(this.specieMapper.toDomain);
+        //@ts-ignore [YOAN] TODO: Fix this type issue, it should be toDomain but as the current dto is bullshit
+        const mappedSpecies = pagingResult.items.map((d) => this.specieMapper.toDomain(d.espece));
         return {
             items: mappedSpecies,
             index: pagingResult.index,
@@ -82,7 +82,7 @@ export class SpeciesClient implements ISpeciesRepository {
         throw new Error("Method not implemented.");
     }
 
-    delete(id: any): Promise<void> {
+    delete(id: string): Promise<void> {
         throw new Error("Method not implemented.");
     }
 

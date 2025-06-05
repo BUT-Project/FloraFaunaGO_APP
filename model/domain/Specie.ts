@@ -6,7 +6,7 @@ import {Family} from "@/model/domain/Family";
 import Location from "@/model/domain/Location";
 
 export default class Specie{
-    id: number;
+    id: string;
     name: string;
     scientificName: string;
     description: string;
@@ -18,7 +18,7 @@ export default class Specie{
     locations:Location[];
     image: string;
 
-    constructor(id: number, name: string, scientificName: string, description: string, habitat:Habitat, diet:Diet, kingdom:Kingdom, animalClass:Class, family:Family,locations:Location[], image: string) {
+    constructor(id: string, name: string, scientificName: string, description: string, habitat:Habitat, diet:Diet, kingdom:Kingdom, animalClass:Class, family:Family,locations:Location[], image: string) {
         this.id = id;
         this.name = name;
         this.scientificName = scientificName;

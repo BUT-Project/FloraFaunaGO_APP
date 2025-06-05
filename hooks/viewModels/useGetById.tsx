@@ -2,7 +2,7 @@ import {useEffect, useState} from "react";
 import {GenericRepository} from "@/dal/repository/IGenericRepository";
 
 export function useGetById<T>(
-    id: number | undefined,
+    id: string | null,
     repository: GenericRepository<T> | null
 ) {
     const [isLoading, setIsLoading] = useState(false);
@@ -11,7 +11,7 @@ export function useGetById<T>(
 
     useEffect(() => {
         // Reset state if ID is invalid or repository is null
-        if (!id || isNaN(id) || !repository) {
+        if (!id || !repository) {
             setItem(null);
             setError(null);
             setIsLoading(false);

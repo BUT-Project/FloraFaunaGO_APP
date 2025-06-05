@@ -7,7 +7,7 @@ import { Specie,Habitat,Diet,Family,Climate,Kingdom,Class } from '@/model/domain
 import { useAuthStore } from  '@/context/zustand/store/useAuthStore';
 
 const cat = new Specie(
-    1,
+    "1",
     "Chat",
     "Felis catus",
     "Petit mammifère carnivore domestique.",
@@ -78,7 +78,7 @@ describe('EncyclopediaScreen', () => {
       species: [
         cat,
         new Specie(
-          2,
+          "2",
           "Chien",
           "Canis lupus familiaris",
           "Mammifère domestique, compagnon de l'homme.",

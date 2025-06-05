@@ -7,7 +7,7 @@ import Specie from "@/model/domain/Specie";
 import Location from "@/model/domain/Location";
 
 export interface ICaptureRepository extends GenericRepository<Capture> {
-    getByFamily(family:Family, page: number, pageSize: number, selfId?: number) : Promise<PagingResult<Capture>>;
-    addSpecieToUser(userId: number, specie: Specie, userLocation: Location,capturedImageUri: string): Promise<void>;
+    getByFamily(family:Family, page: number, pageSize: number, selfId?: string) : Promise<PagingResult<Capture>>;
+    addSpecieToUser(userId: string, specie: Specie, userLocation: Location, capturedImageUri: string): Promise<void>;
 }
 

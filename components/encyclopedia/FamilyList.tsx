@@ -7,7 +7,7 @@ import { Capture, Family } from '@/model/domain';
 
 interface FamilyListProps {
     family:Family
-    captureId?:number,
+    specieId?:string,
     userCaptures:Capture[]
 }
 
@@ -15,7 +15,7 @@ const width = Dimensions.get('window').width;
 const itemSize = (width / 3) - 10;
 
 
-const FamilyList: React.FC<FamilyListProps> = ({family,captureId,userCaptures}) => {
+const FamilyList: React.FC<FamilyListProps> = ({family,specieId,userCaptures}) => {
     const {
             captures,
             isLoading,
@@ -23,7 +23,7 @@ const FamilyList: React.FC<FamilyListProps> = ({family,captureId,userCaptures}) 
             error,
             isListEnd,
             isLoadingMore
-    } = useGetSpecieByFamily(family, captureId);
+    } = useGetSpecieByFamily(specieId);
         
     return(
     <>

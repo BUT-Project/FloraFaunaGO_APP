@@ -17,7 +17,7 @@ export class UserMapper implements IMapper<UtilisateurNormalDto,User> {
             : dto.dateInscription;
 
         return new User(
-            parseInt(dto.id), // Convert UUID string to number if needed, or keep as string
+            dto.id,
             dto.pseudo,
             "fakePasswordHash",// should be remove [DAVE] [TODO] password not included in domain model for security
             dto.mail,
