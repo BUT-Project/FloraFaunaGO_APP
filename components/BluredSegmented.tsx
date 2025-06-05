@@ -288,7 +288,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     tabText: {
-        fontSize: 16,
+        fontSize: 13,
         fontWeight: 'bold',
         color: '#fff',
         textShadowColor: Platform.select({ios: '#0009', android: '#0005'}),
