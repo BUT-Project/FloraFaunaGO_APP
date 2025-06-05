@@ -4,9 +4,8 @@ import { PagingResult } from "@/shared/PagingResult";
 import { PagedRequest, QueryParams } from "@/shared/PagedRequest";
 import { GenericRepository } from "@/dal/repository/IGenericRepository";
 import { FilterPredicate } from "@/shared/FilterPredicate";
-import {IUserRepository} from "@/dal/repository/IUserRepository";
 
-type RepositoryOperation = keyof GenericRepository<any>
+type RepositoryOperation = keyof GenericRepository<unknown>
 
 export interface HttpZodResourceConfig<TResponse, TCreate = Partial<TResponse>, TUpdate = Partial<TResponse>> {
     /**
@@ -83,7 +82,7 @@ export abstract class HttpZodResourceClient<T, TCreate = Partial<T>, TUpdate = P
         }
     }
 
-    async update(id: any, item: TUpdate): Promise<void> {
+    async update(id: string, item: TUpdate): Promise<void> {
         const url = this.getEndpoint('update', id);
         const requestSchema = this.config.updateSchema ?? this.config.resourceSchema;
         const responseSchema =
@@ -147,7 +146,7 @@ export abstract class HttpZodResourceClient<T, TCreate = Partial<T>, TUpdate = P
         return result.data;
     }
 
-    async count(filter: FilterPredicate<T>): Promise<number> {
+    async count(): Promise<number> {
         throw new Error("Not implemented");
     }
 

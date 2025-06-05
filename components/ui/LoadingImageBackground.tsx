@@ -1,15 +1,13 @@
-import React, {useState} from "react";
+import React, {PropsWithChildren, useState} from "react";
 import {ImageBackground, type ImageBackgroundProps, StyleSheet} from "react-native";
 import Skeleton from "./Skeleton";
 import CrossPlatformBlur from "../CrossPlatformBlur";
 
-export type LoadingImageBackgroundProps = ImageBackgroundProps & {
-    children: any;
+export type LoadingImageBackgroundProps = ImageBackgroundProps & PropsWithChildren<{
     width: number;
     height: number;
     isCaptured?:boolean;
-};
-
+}>
 export const LoadingImageBackground = ({ 
     children, 
     width, 

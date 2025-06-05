@@ -12,7 +12,7 @@ interface UserStoreState {
     fetchUsers: (request: PagedRequest) => Promise<void>;
     getUserById: (id: string) => Promise<User | null>;
     addUser: (newUser: User) => Promise<void>;
-    updateUser: (id: string, updatedUser: any) => Promise<void>;
+    updateUser: (id: string, updatedUser: User) => Promise<void>;
     deleteUser: (id: string) => Promise<void>;
     countUsers: (filter: FilterPredicate<User>) => Promise<number>;
 }
@@ -36,7 +36,7 @@ export const useUserStore = create<UserStoreState>((set, get) => ({
         }
     },
 
-    getUserById: async (id: string): Promise<any | null> => {
+    getUserById: async (id: string): Promise<User | null> => {
         try {
             const { userRepository } = StubData.getInstance();
             if (!userRepository) throw new Error("UserRepository is not available");

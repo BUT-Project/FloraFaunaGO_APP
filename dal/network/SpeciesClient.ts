@@ -4,7 +4,7 @@ import {
     SpecieDtoSchema
 } from "@/shared/scheme/SpecieDtoSchema";
 import { ISpeciesRepository } from "../repository/ISpeciesRepository";
-import { Family, Specie } from "@/model/domain";
+import { Specie } from "@/model/domain";
 import { ZodHttpClient } from "./ZodHttpClient";
 import { IMapper } from "@/shared/mappers/IMapper";
 import { FilterPredicate } from "@/shared/FilterPredicate";
@@ -78,7 +78,7 @@ export class SpeciesClient implements ISpeciesRepository {
         throw new Error("Method not implemented.");
     }
 
-    update(id: any, item: Specie): Promise<void> {
+    update(id: string, item: Specie): Promise<void> {
         throw new Error("Method not implemented.");
     }
 
