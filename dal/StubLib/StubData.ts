@@ -20,7 +20,7 @@ export default class StubData extends IDataManager{
         this.successRepository = new StubSucess(this.ListSucess);
         this.userRepository = new StubUsers(this.ListUser);
         this.captureRepository = new StubCaptures(this.ListCapture,this.ListUser);
-        this.speciesRepository = new SpeciesClient(new ZodHttpClient({baseUrl: 'https://codefirst.iut.uca.fr/containers/FloraFauna_GO-api'}), '/FloraFaunaGo_API/espece');
+        this.speciesRepository = new SpeciesClient(new ZodHttpClient({baseUrl: process.env.EXPO_PUBLIC_API_URL || 'https://codefirst.iut.uca.fr/containers/FloraFauna_GO-api'}), '/FloraFaunaGo_API/espece');
         this.authService = new StubAuth(this.ListUser);
     }
 
