@@ -63,7 +63,6 @@ def step_e2e_test():
     return {
         "name": "e2e-test",
         "image": "ghcr.io/mobile-dev-inc/maestro:latest",
-        "privileged": True,
         "volumes": [
             {
                 "name": "docker-sock",
