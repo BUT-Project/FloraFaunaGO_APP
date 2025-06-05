@@ -1,7 +1,11 @@
+import { SafeView } from "@/components/ui/SafeView";
 import EncyclopediaScreen from "@/screens/EncyclopediaScreen";
 
 export default function Encyclopedia() {
     return (
-        <EncyclopediaScreen/>
+        <SafeView disableBottomInset>
+             <EncyclopediaScreen/>
+        </SafeView>
+       
     );
 }

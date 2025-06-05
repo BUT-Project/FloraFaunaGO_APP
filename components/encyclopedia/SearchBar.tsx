@@ -11,13 +11,14 @@ type SearchBarProps={
 
 export default function SpeciesSearchBar({search,setSearch,placeholder}: SearchBarProps){
     const color = useThemeColor({}, 'text');
-   
+    const placeholderColor = useThemeColor({}, 'successBackground');
     return (
         <ThemedView style={styles.searchBarContainer}>
             <TextInput
                 style={[styles.searchBar,{color:color}]}
                 value={search}
                 placeholder={placeholder}
+                placeholderTextColor={placeholderColor}
                 onChangeText={(text) => setSearch(text)}
             />
             {search ? 
@@ -41,7 +42,6 @@ const styles = StyleSheet.create({
         paddingHorizontal:12,
     },
     searchBar: {
-        height:37,
         width:"90%",
     },
 })

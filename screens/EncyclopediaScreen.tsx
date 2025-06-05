@@ -1,12 +1,14 @@
-import {ActivityIndicator, Button, FlatList, StyleSheet, View} from "react-native";
+import {ActivityIndicator, Button, FlatList, StyleSheet, View,ScrollView} from "react-native";
 import {SpecieListItem,SearchBar,FilterModal} from "@/components/encyclopedia";
 import {useState} from "react";
 import {ThemedText, ThemedView} from "@/components/ui/themed";
 import {useGetSpecies} from "@/hooks/viewModels/useGetSpecies";
 import {useAuthStore} from "@/context/zustand/store/useAuthStore";
-import { SafeView } from "@/components/ui/SafeView";
 import { LinearGradient } from "expo-linear-gradient";
 import { useThemeColor } from "@/hooks/useThemeColor";
+import { Ionicons } from "@expo/vector-icons";
+import Loading from "@/components/ui/Loading";
+
 export default function EncyclopediaScreen() {
     const background = useThemeColor({},"background");
     const tint = useThemeColor({},"tint");
@@ -14,24 +16,7 @@ export default function EncyclopediaScreen() {
     const [name,setName] = useState("")
     const {species=[],isLoading,isLoadingMore,error,isListEnd,refresh,fetchMoreData} = useGetSpecies("")
     const userCaptures = useAuthStore((state) => state.user?.captures) ?? [];
-    if (error) {
-        return (
-            
-        <View style={styles.errorContainer}>
-            <ThemedText style={styles.errorText} type="subtitle">
-                {error.message || "Impossible de charger les espèces." || "Une erreur s'est produite."}
-            </ThemedText>
-            {refresh && (
-                <Button
-                    title="Réessayer"
-                    onPress={() => refresh()}
-                />
-            )}
-        </View>
-        );
-    }
     return (
-        <SafeView disableBottomInset>
         <LinearGradient
             style={{ flex: 1 }}
             start={{x: 0, y: 0.75}}
@@ -44,42 +29,59 @@ export default function EncyclopediaScreen() {
                 </ThemedView>
                 <FilterModal baseSpecies={species} setFilteredSpecies={()=>{}}/>
             </ThemedView>
-            { isLoading ?
-                <ActivityIndicator testID="Loading" size={"large"}/>
+            {error ? 
+                <ThemedView style={styles.errorContainer}>
+                    <Ionicons name="warning-outline" size={64} color="red"/>
+                    <ThemedText type="subtitle">
+                        Erreur lors de la récupération des espèces :
+                    </ThemedText>
+                    <ScrollView style={styles.scroll}> 
+                        <ThemedText style={styles.errorText}>
+                            {error.message || "Impossible de charger les espèces." || "Une erreur s'est produite."}
+                        </ThemedText>
+                    </ScrollView>
+                    {refresh && (
+                        <Button title="Réessayer" onPress={() => refresh()} color={tint}/>
+                    )}
+                </ThemedView>
                 :
-                <FlatList
-                    testID="Encyclopedia.Flatlist"
-                    style={styles.capturesList}
-                    showsVerticalScrollIndicator={false}
-                    columnWrapperStyle={styles.columnWrapper}
-                    contentContainerStyle={styles.listContent}
-                    data={species}
-                    onRefresh={() => refresh()}
-                    refreshing={isLoadingMore}
-                    keyExtractor={capture => capture.id?.toString()}
-                    renderItem={({item}) =>
-                        <SpecieListItem specie={item} captureId={(userCaptures?.find((capture)=> capture.specie == item)?.id) ?? null}/>
-                    }
-                    ListEmptyComponent={() => (
-                        <View style={styles.empty}>
-                            <ThemedText type={"subtitle"}>Aucune espèce trouvée.</ThemedText>
-                            <Button testID="Refresh" title="Raffraîchir" onPress={() => refresh()}/>
-                        </View>
-                    )}
-                    ListFooterComponent={()=>(
-                        <View style={styles.footer}>
-                            {isListEnd && <ThemedText>Pas d'espèces en plus pour le moment. </ThemedText>}
-                            {isLoadingMore && <ActivityIndicator size={"small"} />}
-                        </View>
-                    )}
-                    onEndReachedThreshold={0.2}
-                    onEndReached={fetchMoreData}
-                    numColumns={3}
-                />
+                <>
+                { isLoading ?
+                    <Loading disableTopInset disableBottomInset text="Chargement des espèces..."/>
+                    :
+                    <FlatList
+                        testID="Encyclopedia.Flatlist"
+                        style={styles.capturesList}
+                        showsVerticalScrollIndicator={false}
+                        columnWrapperStyle={styles.columnWrapper}
+                        contentContainerStyle={styles.listContent}
+                        data={species}
+                        onRefresh={() => refresh()}
+                        refreshing={isLoadingMore}
+                        keyExtractor={capture => capture.id?.toString()}
+                        renderItem={({item}) =>
+                            <SpecieListItem specie={item} captureId={(userCaptures?.find((capture)=> capture.specie == item)?.id) ?? null}/>
+                        }
+                        ListEmptyComponent={() => (
+                            <View style={styles.empty}>
+                                <ThemedText type={"subtitle"}>Aucune espèce trouvée.</ThemedText>
+                                <Button testID="Refresh" title="Raffraîchir" onPress={() => refresh()}/>
+                            </View>
+                        )}
+                        ListFooterComponent={()=>(
+                            <View style={styles.footer}>
+                                {isListEnd && <ThemedText>Pas d'espèces en plus pour le moment. </ThemedText>}
+                                {isLoadingMore && <ActivityIndicator size={"small"} />}
+                            </View>
+                        )}
+                        onEndReachedThreshold={0.2}
+                        onEndReached={fetchMoreData}
+                        numColumns={3}
+                    />
+                }
+                </>
             }
-
-</LinearGradient>
-        </SafeView>
+    </LinearGradient>
     )
 }
 
@@ -126,10 +128,13 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         padding: 20,
+        gap:20,
     },
     errorText: {
         color: 'red',
-        marginBottom: 8,
-        textAlign: 'center',
     },
+    scroll:{
+        maxHeight: "70%",
+        flexShrink:1,
+    }
 });
