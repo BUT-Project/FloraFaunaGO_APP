@@ -4,7 +4,6 @@
 
 # 🌿 Flora Fauna GO
 
-
 > Une application mobile d’exploration de la biodiversité inspirée de Pokémon GO.
 
 **Flora Fauna GO** permet aux utilisateurs de découvrir la nature qui les entoure en photographiant des organismes vivants (animaux, plantes, champignons, etc.). Grâce à une IA de reconnaissance, ils peuvent identifier ces espèces, les "capturer" via un mini-jeu, et enrichir leur propre encyclopédie.
