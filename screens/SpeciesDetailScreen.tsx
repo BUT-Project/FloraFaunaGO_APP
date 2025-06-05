@@ -1,4 +1,4 @@
-import { Dimensions, StyleSheet, FlatList, useColorScheme } from "react-native";
+import { Dimensions, StyleSheet, FlatList } from "react-native";
 import React, { useMemo } from "react";
 import Animated, {
   useAnimatedRef,
@@ -20,7 +20,7 @@ const {width} = Dimensions.get('window');
 interface SpeciesDetailScreenProps {
     capture: Capture | null;
     specie: Specie;
-};
+}
 
 type IconRowProps = {
     icon?: keyof typeof Ionicons.glyphMap;

@@ -7,9 +7,9 @@ import {LoginRequestDto, LoginRequestSchema} from "@/shared/scheme/LoginRequestS
 import {RefreshRequestDto, RefreshRequestSchema} from "@/shared/scheme/RefreshRequestSchema";
 import {AccessTokenResponseDto, AccessTokenResponseSchema} from "@/shared/scheme/AccessTokenResponseSchema";
 import {ZodHttpClient} from "@/dal/network/ZodHttpClient";
-import TokenManager from "@/service/keyManager/TokenManager";
+import TokenManager from "@/services/keyManager/TokenManager";
 import {SecureLocalStorageAdapter} from "@/libs/LocalStorageAdapter";
-import {ITokenManager} from "@/service/keyManager/ITokenManager";
+import {ITokenManager} from "@/services/keyManager/ITokenManager";
 
 export default class NetworkAuthService implements IAuthService {
     private currentUser: User | null = null;

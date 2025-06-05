@@ -1,6 +1,6 @@
 import {AccessTokenResponseDto} from "@/shared/scheme/AccessTokenResponseSchema";
-import {IKVStorage} from "@/service/IKVStorage";
-import {ITokenManager} from "@/service/keyManager/ITokenManager";
+import {IKVStorage} from "@/services/IKVStorage";
+import {ITokenManager} from "@/services/keyManager/ITokenManager";
 
 export default class TokenManager<T extends AccessTokenResponseDto>
     implements ITokenManager<T> {
