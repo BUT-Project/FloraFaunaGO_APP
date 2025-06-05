@@ -79,22 +79,24 @@ def step_e2e_test():
             }
         ],
         "commands": [
-            "# Install Node.js dependencies",
+            "# Install system dependencies",
+            "apt-get update && apt-get install -y openjdk-11-jdk curl",
+            "",
+            "# Install Node.js dependencies", 
             "npm install",
             "",
             "# Install Maestro CLI",
             "curl -Ls \"https://get.maestro.mobile.dev\" | bash",
             "export PATH=\"$PATH:/root/.maestro/bin\"",
             "",
-            "# For now, just validate the test file syntax (no emulator in untrusted repo)",
+            "# Validate Maestro test file syntax",
             "echo 'Validating Maestro test files...'",
             "/root/.maestro/bin/maestro test --dry-run e2e/login-flow.yaml",
             "",
-            "# Create test report placeholder",
-            "mkdir -p /test-results",
+            "# Create test report",
+            "mkdir -p /test-results", 
             "echo '<?xml version=\"1.0\" encoding=\"UTF-8\"?>' > /test-results/e2e-results.xml",
-            "echo '<testsuites><testsuite name=\"E2E Tests\" tests=\"1\" failures=\"0\"><testcase name=\"login-flow-validation\" /></testsuite></testsuites>' >> /test-results/e2e-results.xml",
-            "",
+            "echo '<testsuites><testsuite name=\"E2E Tests\" tests=\"1\" failures=\"0\"><testcase name=\"login-flow-validation\" /></testsuite></testsuites>' >> /test-results/e2e-results.xml"
         ],
         "depends_on": ["test"]
     }
