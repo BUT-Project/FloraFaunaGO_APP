@@ -80,7 +80,7 @@ def step_e2e_test():
         ],
         "commands": [
             "# Install system dependencies",
-            "apt-get update && apt-get install -y openjdk-11-jdk curl",
+            "apt-get update && apt-get install -y openjdk-17-jdk curl",
             "",
             "# Install Node.js dependencies", 
             "npm install",
