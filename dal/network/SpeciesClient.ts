@@ -11,7 +11,7 @@ import { IMapper } from "@/shared/mappers/IMapper";
 import { FilterPredicate } from "@/shared/FilterPredicate";
 import { PagedRequest } from "@/shared/PagedRequest";
 import { PagingResult } from "@/shared/PagingResult";
-import { SpecieMapper } from "@/shared/mappers/SpecieMapper";
+import {FullSpecieMapper, SpecieMapper} from "@/shared/mappers/SpecieMapper";
 import {HttpZodResourceClient} from "@/dal/network/NetworkGenericClient";
 import z from "zod";
 
@@ -20,6 +20,8 @@ export class SpeciesClient implements ISpeciesRepository {
         private readonly httpClient: ZodHttpClient,
         private baseUrl: string = '/espece',
         private specieMapper: IMapper<SpecieDto, Specie> = new SpecieMapper(),
+        private fullSpecieMapper: IMapper<FullSpecieDto, Specie> = new FullSpecieMapper(),
+
         private speciesHttpClient : HttpZodResourceClient<SpecieDto,FullSpecieDto> = HttpZodResourceClient.create<SpecieDto,FullSpecieDto>(httpClient, baseUrl,SpecieDtoSchema,FullSpecieDtoSchema)
     ) {}
 
@@ -56,7 +58,7 @@ export class SpeciesClient implements ISpeciesRepository {
     }
     async getById(id: any): Promise<Specie> {
         const specie = await this.speciesHttpClient.getById(id)
-        return this.specieMapper.toDomain(specie);
+        return this.fullSpecieMapper.toDomain(specie);
     }
 
     async getAll(request: PagedRequest): Promise<PagingResult<Specie>> {
