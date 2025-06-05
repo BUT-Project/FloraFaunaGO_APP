@@ -1,13 +1,10 @@
 import { Class, Climate, Diet, Family, Habitat, Kingdom, Specie} from "@/model/domain";
 import {SpecieDto} from "../scheme/SpecieDtoSchema";
-import {LocationMapper} from "./LocationMapper";
 import {IMapper} from "@/shared/mappers/IMapper";
 
 export class SpecieMapper implements IMapper<SpecieDto, Specie> {
-    locationMapper: LocationMapper = new LocationMapper;
-    
+
     toDomain(dto: SpecieDto): Specie {
-    
         return new Specie(
             parseInt(dto.id),
             dto.nom,
@@ -18,7 +15,7 @@ export class SpecieMapper implements IMapper<SpecieDto, Specie> {
             dto.kingdom, 
             dto.class,
             dto.famille,
-            this.locationMapper.toDomains(dto.locationNormalDtos),
+            [],
             dto.image
         );
     }
@@ -35,7 +32,6 @@ export class SpecieMapper implements IMapper<SpecieDto, Specie> {
             kingdom:domain.kingdom,
             regime:domain.diet,
             famille:domain.family,
-            locationNormalDtos:this.locationMapper.toDtos(domain.locations),
             image:domain.image,
             image3D:""
         }

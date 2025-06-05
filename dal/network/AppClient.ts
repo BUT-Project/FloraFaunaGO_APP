@@ -2,24 +2,18 @@ import {IDataManager} from "@/dal/IDataManager";
 import NetworkAuthService from "@/dal/network/NetworkAuthService";
 import {ZodHttpClient} from "@/dal/network/ZodHttpClient";
 import {UserClient} from "@/dal/network/UserClient";
+import {SpeciesClient} from "@/dal/network/SpeciesClient";
 
 export default class AppClient extends IDataManager{
 
-    private static instance: IDataManager;
     private client : ZodHttpClient | undefined;
 
     public constructor() {
         super();
         this.client = this.buildClient();
         this.userRepository = new UserClient(this.client, '/api/utilisateur');
+        this.speciesRepository = new SpeciesClient(this.client, '/api/espece');
         this.authService = new NetworkAuthService(this.client,this.userRepository);
-    }
-
-    static getInstance():IDataManager{
-        if(!AppClient.instance){
-            AppClient.instance = new AppClient();
-        }
-        return AppClient.instance;
     }
 
     private buildClient(): ZodHttpClient {

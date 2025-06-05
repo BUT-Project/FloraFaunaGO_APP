@@ -28,13 +28,14 @@ export class ZodHttpClient extends HttpClient {
         }
 
         // Make request
-        const result = await this.request<{id : string}>(requestConfig);
+        const result = await this.request<TResponse>(requestConfig);
         if (!result.success) return result;
-        console.log("DAVIDD",result.data);
+        console.log("DAVIDD",result);
         // Validate response
         if (responseSchema) {
             const validation = responseSchema.safeParse(result.data);
             if (!validation.success) {
+                // If validation fails, return an error with the validation message
                 return {
                     success: false,
                     error: new Error(`Response validation failed: ${validation.error.message}`)
@@ -43,7 +44,7 @@ export class ZodHttpClient extends HttpClient {
             return { success: true, data: validation.data };
         }
 
-        return result as Result<z.infer<TResponse>>;
+        return result;
     }
 
     // Schema-aware convenience methods

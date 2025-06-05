@@ -69,7 +69,7 @@ export class HttpClient {
         };
     }
 
-    async request<T>(config: RequestConfig): Promise<Result<T>> {
+    async request<TResponse>(config: RequestConfig): Promise<Result<TResponse>> {
         const { method, url, body, headers, timeout = this.defaultTimeout, params, signal } = config;
 
         try {
@@ -104,21 +104,21 @@ export class HttpClient {
     }
 
     // HTTP method convenience methods with explicit request/response types
-    async get<R>(url: string,    params?: QueryParams,
-                 headers?: Readonly<Record<string, string>>): Promise<Result<R>> {
-        return this.request<R>({ method: 'GET',params, url, headers });
+    async get<TResponse>(url: string, params?: QueryParams,
+                         headers?: Readonly<Record<string, string>>): Promise<Result<TResponse>> {
+        return this.request<TResponse>({ method: 'GET',params, url, headers });
     }
 
-    async post<T = unknown, R = T>(url: string, body: T, headers?: Readonly<Record<string, string>>): Promise<Result<R>> {
-        return this.request<R>({ method: 'POST', url, body, headers });
+    async post<TRequest = unknown, TResponse = TRequest>(url: string, body: TRequest, headers?: Readonly<Record<string, string>>): Promise<Result<TResponse>> {
+        return this.request<TResponse>({ method: 'POST', url, body, headers });
     }
 
-    async put<T = unknown, R = T>(url: string, body: T, headers?: Readonly<Record<string, string>>): Promise<Result<R>> {
-        return this.request<R>({ method: 'PUT', url, body, headers });
+    async put<TRequest = unknown, TResponse = TRequest>(url: string, body: TRequest, headers?: Readonly<Record<string, string>>): Promise<Result<TResponse>> {
+        return this.request<TResponse>({ method: 'PUT', url, body, headers });
     }
 
-    async patch<T = unknown, R = T>(url: string, body: T, headers?: Readonly<Record<string, string>>): Promise<Result<R>> {
-        return this.request<R>({ method: 'PATCH', url, body, headers });
+    async patch<TRequest = unknown, TResponse = TRequest>(url: string, body: TRequest, headers?: Readonly<Record<string, string>>): Promise<Result<TResponse>> {
+        return this.request<TResponse>({ method: 'PATCH', url, body, headers });
     }
 
     async delete(url: string,    params?: QueryParams,

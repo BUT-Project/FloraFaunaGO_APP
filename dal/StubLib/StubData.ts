@@ -1,5 +1,4 @@
 import {CaptureList, SpecieList, SuccessList, UserList} from "./Data"
-import StubSpecies from "@/dal/StubLib/StubSpecies";
 import StubCaptures from "@/dal/StubLib/StubCaptures";
 import StubUsers from "@/dal/StubLib/StubUsers";
 import StubSucess from "@/dal/StubLib/StubSucess";
@@ -21,9 +20,7 @@ export default class StubData extends IDataManager{
         this.successRepository = new StubSucess(this.ListSucess);
         this.userRepository = new StubUsers(this.ListUser);
         this.captureRepository = new StubCaptures(this.ListCapture,this.ListUser);
-        this.speciesRepository = new SpeciesClient(new ZodHttpClient({
-                    baseUrl: 'https://codefirst.iut.uca.fr/containers/FloraFauna_GO-api'
-                }), '/FloraFaunaGo_API/espece');
+        this.speciesRepository = new SpeciesClient(new ZodHttpClient({baseUrl: 'https://codefirst.iut.uca.fr/containers/FloraFauna_GO-api'}), '/FloraFaunaGo_API/espece');
         this.authService = new StubAuth(this.ListUser);
     }
 
@@ -33,8 +30,4 @@ export default class StubData extends IDataManager{
         }
         return StubData.instance;
     }
-
-
-
-
 }

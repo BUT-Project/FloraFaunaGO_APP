@@ -1,7 +1,7 @@
 import {z} from "zod";
 import {IUserRepository} from "@/dal/repository/IUserRepository";
 import {ZodHttpClient} from "@/dal/network/ZodHttpClient";
-import {HttpZodRepository, HttpZodRepositoryConfig} from "@/dal/network/NetworkGenericClient";
+import {HttpZodResourceClient, HttpZodResourceConfig} from "@/dal/network/NetworkGenericClient";
 import {
     UtilisateurApiResponseSchema,
     UtilisateurNormalDto,
@@ -17,7 +17,7 @@ import {IMapper} from "@/shared/mappers/IMapper";
 /**
  * Configuration for the User HTTP repository
  */
-const createUserRepositoryConfig = (): HttpZodRepositoryConfig<UtilisateurNormalDto> => ({
+const createUserRepositoryConfig = (): HttpZodResourceConfig<UtilisateurNormalDto> => ({
     responceSchema: UtilisateurNormalDtoSchema,
     createSchema: UtilisateurNormalDtoSchema,
     responseSchemas: {
@@ -38,7 +38,7 @@ export class UserClient implements IUserRepository {
         httpClient: ZodHttpClient,
         baseUrl: string = '/utilisateur',
         mapper: IMapper<UtilisateurNormalDto, User> = new UserMapper(),
-        private userRepository : HttpZodRepository<UtilisateurNormalDto> = new HttpZodRepository<UtilisateurNormalDto>(httpClient, baseUrl, createUserRepositoryConfig())
+        private userRepository : HttpZodResourceClient<UtilisateurNormalDto> = new HttpZodResourceClient<UtilisateurNormalDto>(httpClient, baseUrl, createUserRepositoryConfig())
     ) {
         this.mapper = mapper;
     }
