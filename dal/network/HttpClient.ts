@@ -30,7 +30,7 @@ export class HttpClient {
             'Content-Type': 'application/json',
             ...config.headers,
         });
-        this.defaultTimeout = config.timeout ?? 5000; // Default timeout of 5 seconds
+        this.defaultTimeout = config.timeout ?? 10000; // Default timeout of 5 seconds
     }
 
     protected getConfig(): HttpClientConfig {
