@@ -84,27 +84,34 @@ export function useInfiniteData<T>(
         isFetching,
         isError,
         error,
+        
         refetch
     } = useInfiniteQuery({
         queryKey: completeQueryKey,
         queryFn: async ({ pageParam = 0 }) => {
-            const request: PagedRequest = {
-                index: pageParam,
-                count: pageSize,
-                orderingPropertyName: orderingProperty || null,
-                descending: isDescending || null
-            };
-            let result = await repository.getAll(request);
-            if (filter) {
-                const filteredItems = result.items.filter(filter);
-                result = {
-                    ...result,
-                    items: filteredItems,
-                    total: await repository.count(filter)
+            try{
+                            
+                const request: PagedRequest = {
+                    index: pageParam,
+                    count: pageSize,
+                    orderingPropertyName: orderingProperty || null,
+                    descending: isDescending || null
                 };
-            }
+                let result = await repository.getAll(request);
+                if (filter) {
+                    const filteredItems = result.items.filter(filter);
+                    result = {
+                        ...result,
+                        items: filteredItems,
+                        total: await repository.count(filter)
+                    };
+                }
 
-            return result;
+                return result;
+            } catch(err) {
+                console.error("Error fetching data:", err);
+                throw err;
+            }
         },
         initialPageParam: 1,
         getNextPageParam: (lastPage: PagingResult<T>, allPages) => {
@@ -115,6 +122,7 @@ export function useInfiniteData<T>(
             const prevPage = firstPage.index - 1;
             return prevPage > 0 ? prevPage : undefined;
         },
+   
         enabled,
         staleTime
     });
@@ -140,6 +148,7 @@ export function useInfiniteData<T>(
     const refresh = useCallback(async () => {
         await refetch();
     }, [refetch]);
+
 
     return {
         // Data properties
