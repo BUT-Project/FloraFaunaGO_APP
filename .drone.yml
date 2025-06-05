@@ -28,9 +28,6 @@ steps:
 
   - name: e2e-test
     image: ghcr.io/mobile-dev-inc/maestro:latest
-    environment:
-      DISABLE_AUTOFILL: "true"
-    privileged: true
     volumes:
       - name: docker-sock
         path: /var/run/docker.sock
