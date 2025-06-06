@@ -1,4 +1,0 @@
-appId: host.exp.exponent
----
-# For Expo apps, use openLink instead of launchApp
-- openLink: exp://localhost:8081

@@ -68,6 +68,7 @@ export default function LoginScreen() {
                 <ThemedText style={styles.rememberMeText}>SE SOUVENIR DE MOI</ThemedText>
             </ThemedView>
             <TouchableOpacity
+                testID="login-submit-button"
                 style={[styles.button, {backgroundColor: textColor}]}
                 onPress={submitForm}
                 disabled={isLoading}

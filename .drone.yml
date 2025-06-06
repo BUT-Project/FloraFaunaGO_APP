@@ -45,8 +45,6 @@ steps:
       # Validate Maestro test files exist and are readable
       - echo 'Validating Maestro test files structure...'
       - ls -la e2e/
-      - cat e2e/login-flow.yaml
-      
       # Set environment variables to disable analytics and notifications
       - export MAESTRO_CLI_NO_ANALYTICS=true
       - export MAESTRO_CLI_ANALYSIS_NOTIFICATION_DISABLED=true
@@ -56,8 +54,6 @@ steps:
       - echo 'Creating test report for CI pipeline...'
       - /root/.maestro/bin/maestro test --format junit --output /test-results/e2e-results.xml e2e/ || echo 'Expected failure - no device connected'
       
-      # Generate fallback report if needed
-      - if [ ! -f /test-results/e2e-results.xml ]; then echo 'Creating fallback test report...'; echo '<?xml version="1.0" encoding="UTF-8"?>' > /test-results/e2e-results.xml; echo '<testsuites><testsuite name="E2E Tests (Validation Only)" tests="1" failures="0"><testcase name="login-flow-structure-validation" /></testsuite></testsuites>' >> /test-results/e2e-results.xml; fi
     depends_on: [ test ]
     when:
       not:
@@ -92,20 +88,3 @@ steps:
 volumes:
   - name: test-results
     temp: {}
-
----
-kind: pipeline
-type: docker
-name: Skip-CI
-
-trigger:
-  message:
-    includes:
-      - "[ci_none]"
-      - "readme.md"
-
-steps:
-  - name: skip-message
-    image: alpine:latest
-    commands:
-      - echo "CI pipeline skipped due to commit message"

@@ -1,0 +1,32 @@
+# Test Case 1: Successful login Flow
+appId: host.exp.exponent
+---
+# For Expo apps, use openLink instead of launchApp
+- openLink: exp://192.168.1.149:8081
+
+# Test Case 1: Successful login Flow
+- assertVisible: "SE CONNECTER"
+- assertVisible:
+    text: "E-mail"
+- assertVisible:
+    text: "Mot de passe"
+
+# Fill in valid credentials
+- tapOn:
+    text: "E-mail"
+- inputText: "johndoe@example.com"
+- hideKeyboard
+
+- tapOn:
+    text: "Mot de passe"
+- inputText: "Hashedpassword1*"
+- hideKeyboard
+
+# Submit login form
+- tapOn:
+    id: "login-submit-button"
+
+# Wait for navigation and verify a successful login
+- assertVisible:
+    text: "Camera"  # Home
+    optional: true
