@@ -35,7 +35,8 @@
       "!**/jest.setup.js",
       "!**/*.config.{js,ts}",
       "!**/app/+html.tsx",
-      "!**/app/+not-found.tsx"
+      "!**/app/+not-found.tsx",
+      "!**/e2e/**"
     ],
     "coverageReporters": [
       "lcov"
