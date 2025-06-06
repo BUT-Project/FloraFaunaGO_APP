@@ -38,7 +38,9 @@ export default function ProfilScreen() {
                 index: currentPage,
                 count: 9
             }
+            console.log("PageRequest",PageRequest)
             const response = await successRepository?.getAll(PageRequest);
+            console.log("Response",response)
             setSuccesses(response?.items ?? []);
             setTotalPages(Math.ceil(response!.total/ 9));
         } catch (error) {

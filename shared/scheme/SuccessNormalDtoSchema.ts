@@ -19,12 +19,12 @@ export const SuccessNormalDtoSchema = z.object({
     .max(100, "Le nom ne peut pas dépasser 100 caractères"),
 
   image: z.string()
-    .url("L'image doit être une URL valide")
     .min(1, "L'image est obligatoire"),
 
-  actualVal: z.number()
-    .int("La valeur actuelle doit être un entier")
-    .nonnegative("La valeur actuelle ne peut pas être négative"),
+  // actualVal: z.number()
+  //   .int("La valeur actuelle doit être un entier")
+  //   .nonnegative("La valeur actuelle ne peut pas être négative")
+  //   .optional(),
 
   objectif: z.number()
     .int("L'objectif doit être un entier")
@@ -36,7 +36,7 @@ export const SuccessNormalDtoSchema = z.object({
 
   type: SuccessTypeEnum,
 
-  event: z.string()
+  evenement: z.string()
     .min(1, "L'événement est obligatoire")
     .max(100, "L'événement ne peut pas dépasser 100 caractères")
 });

@@ -21,11 +21,11 @@ export class SuccessMapper implements IMapper<SuccessNormalDto,Success> {
         if (
             !dto.nom ||
             !dto.image ||
-            dto.actualVal === undefined ||
+            //dto.actualVal === undefined ||
             dto.objectif === undefined ||
             !dto.description ||
             dto.type === undefined ||
-            !dto.event
+            !dto.evenement
         ) {
             throw new Error("Invalid DTO: missing required fields for Success domain model");
         }
@@ -34,10 +34,10 @@ export class SuccessMapper implements IMapper<SuccessNormalDto,Success> {
             dto.nom,
             dto.image,
             dto.description,
-            dto.actualVal,
+            SuccessType.CAPTURE, // Default value, should be set properly in the domain logic
             dto.objectif,
             this.toEnum(dto.type),
-            dto.event
+            dto.evenement
         );
     }
 
@@ -46,10 +46,10 @@ export class SuccessMapper implements IMapper<SuccessNormalDto,Success> {
             nom: domain.nom,
             image: domain.image,
             description: domain.description,
-            actualVal: domain.actualVal,
+           //actualVal: domain.actualVal,
             objectif: domain.objectif,
             type: this.toString(domain.type),
-            event: domain.event
+            evenement: domain.event
         };
     }
 
@@ -58,10 +58,10 @@ export class SuccessMapper implements IMapper<SuccessNormalDto,Success> {
             nom: domain.nom,
             image: domain.image,
             description: domain.description,
-            actualVal: domain.actualVal,
+            //actualVal: domain.actualVal,
             objectif: domain.objectif,
             type: domain.type !== undefined ? this.toString(domain.type) : undefined,
-            event: domain.event
+            evenement: domain.event
         };
     }
 }

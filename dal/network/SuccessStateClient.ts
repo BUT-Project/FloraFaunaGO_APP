@@ -16,10 +16,20 @@ import { PagedRequest } from "@/shared/PagedRequest";
 import { PagingResult } from "@/shared/PagingResult";
 import { FilterPredicate } from "@/shared/FilterPredicate";
 import { IMapper } from "@/shared/mappers/IMapper";
+import { UtilisateurApiResponseSchema, UtilisateurNormalDto, UtilisateurNormalDtoSchema } from "@/shared/scheme/UtilisateurNormalDtoSchema";
+import { UserMapper } from "@/shared/mappers/UserMaper";
+import User from "@/model/domain/User";
 
-/**
- * Configuration du repository réseau pour les succès
- */
+const createUserRepositoryConfig = (): HttpZodRepositoryConfig<UtilisateurNormalDto> => ({
+    responceSchema: UtilisateurNormalDtoSchema,
+    createSchema: UtilisateurNormalDtoSchema,
+    responseSchemas: {
+        create: UtilisateurApiResponseSchema,
+        update: UtilisateurApiResponseSchema,
+        delete: z.object({success: z.boolean()})
+    }
+});
+
 const createSuccessRepositoryConfig = (): HttpZodRepositoryConfig<SuccessNormalDto> => ({
   responceSchema: SuccessNormalDtoSchema,
   createSchema: SuccessNormalDtoSchema,
@@ -27,26 +37,26 @@ const createSuccessRepositoryConfig = (): HttpZodRepositoryConfig<SuccessNormalD
     create: SuccessApiResponseSchema,
     update: SuccessApiResponseSchema,
     delete: z.object({ success: z.boolean() })
-    
   }
 });
 
-
-/**
- * Client réseau pour la ressource "Succès"
- */
 export class SuccessClient implements ISuccessRepository {
   private readonly mapper: IMapper<SuccessNormalDto, Success>;
 
-  constructor(
+  constructor( 
     httpClient: ZodHttpClient,
-    baseUrl: string = "/success",
+    baseUrl: string = "/successState",
     mapper: IMapper<SuccessNormalDto, Success> = new SuccessMapper(),
+        private userRepository = new HttpZodRepository<UtilisateurNormalDto>(
+      httpClient,
+      baseUrl,
+      createUserRepositoryConfig()
+    ),
     private successRepository = new HttpZodRepository<SuccessNormalDto>(
       httpClient,
       baseUrl,
       createSuccessRepositoryConfig()
-    ),
+    )
   ) {
     this.mapper = mapper;
   }
@@ -55,8 +65,7 @@ export class SuccessClient implements ISuccessRepository {
     }
 
   async create(success: Success): Promise<void> {
-    const dto = this.mapper.toDto(success);
-    await this.successRepository.create(dto);
+        throw new Error("Method not implemented.");
   }
 
   async update(id: number, success: Success): Promise<void> {
@@ -65,7 +74,7 @@ export class SuccessClient implements ISuccessRepository {
   }
 
   async delete(id: number): Promise<void> {
-    await this.successRepository.delete(id);
+        throw new Error("Method not implemented.");
   }
 
   async getById(id: number): Promise<Success> {

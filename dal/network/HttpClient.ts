@@ -73,13 +73,11 @@ export class HttpClient {
         const { method, url, body, headers, timeout = this.defaultTimeout, params, signal } = config;
 
         try {
-            const abortSignal = signal || AbortSignal.timeout(timeout);
 
             const response = await fetch(this.buildUrl(url,params), {
                 method,
                 headers: this.buildHeaders(headers),
                 body: body != null ? JSON.stringify(body) : null,
-                signal: abortSignal,
             });
 
             if (!response.ok) {
