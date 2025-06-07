@@ -46,7 +46,7 @@ export default function ProfilScreen() {
     if (response?.items && state?.items) {
     const stateMap = new Map<string, number>();
     state.items.forEach(item => {
-        stateMap.set(item.success.id, item.state.percentSucces);
+        stateMap.set(item.success.nom, item.state.percentSucces);
     });
 
     const mergedSuccesses = response.items.map(success => {
