@@ -19,31 +19,48 @@ const { width } = Dimensions.get('window');
 export default function ProfilScreen() {
     const [Successes, setSuccesses] = useState<Success[]>([]);
     const {successRepository} = StubData.getInstance()
-    const [page, setPage] = useState(1);
+    const {successStateRepository} = StubData.getInstance()
+    const [page, setPage] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
     const [totalPages, setTotalPages] = useState(1);
     const colorScheme =  useColorScheme() ?? 'light';
     const theme = Colors[colorScheme];
-    const [stepCount,setStepCount] = useState(0)
+    const [stepCount,setStepCount] = useState(1)
     const [imageUri, setImageUri] = useState<string | null | undefined>(null);
     const user = useAuthStore((state) => state.user);
     //modifier car les captures plus dans le modele (david)
     const species = useAuthStore((state) => new Set(state.user?.captures.map(c => c.specie.id)).size);
     const family = useAuthStore((state) => new Set(state.user?.captures.map(c => c.specie.family)).size);
     const dataUser = useUserStore()
+
     const fetchSuccesses = async (currentPage: number) => {
         setIsLoading(true);
         try {
             const PageRequest : PagedRequest = {
-                index: currentPage,
+                index: currentPage-1,
                 count: 9
             }
-            console.log("PageRequest",PageRequest)
             const response = await successRepository?.getAll(PageRequest);
-            console.log("Response",response)
-            setSuccesses(response?.items ?? []);
-            setTotalPages(Math.ceil(response!.total/ 9));
-        } catch (error) {
+            const state = await successStateRepository?.getAll(PageRequest);
+
+    if (response?.items && state?.items) {
+    const stateMap = new Map<string, number>();
+    state.items.forEach(item => {
+        stateMap.set(item.success.id, item.state.percentSucces);
+    });
+
+    const mergedSuccesses = response.items.map(success => {
+        const progress = stateMap.get(success.nom) ?? 0;
+        return {
+            ...success,
+            actualVal: progress,
+        };
+    });
+
+    setSuccesses(mergedSuccesses);
+    setTotalPages(Math.ceil(response.total / 9));
+    }
+    } catch (error) {
             console.error('Erreur lors de la récupération des succès :', error);
         } finally {
             setIsLoading(false);

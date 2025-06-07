@@ -4,7 +4,7 @@ import { IMapper } from "./IMapper";
 import { SuccessType } from "@/model/domain/SuccessType";
 
 export class SuccessMapper implements IMapper<SuccessNormalDto,Success> {
-    private toEnum(type: SuccessTypeNormal): SuccessType {
+    private toEnum(type: String): SuccessType {
         switch (type) {
             case "CAPTURE": return SuccessType.CAPTURE;
             case "DISTANCE": return SuccessType.DISTANCE;
@@ -13,6 +13,7 @@ export class SuccessMapper implements IMapper<SuccessNormalDto,Success> {
             default: throw new Error(`Invalid SuccessType string: ${type}`);
         }
     }
+
     private toString(type: SuccessType): SuccessTypeNormal {
         return SuccessType[type] as SuccessTypeNormal;
     }
@@ -34,10 +35,10 @@ export class SuccessMapper implements IMapper<SuccessNormalDto,Success> {
             dto.nom,
             dto.image,
             dto.description,
-            SuccessType.CAPTURE, // Default value, should be set properly in the domain logic
-            dto.objectif,
-            this.toEnum(dto.type),
-            dto.evenement
+            dto.objectif,  
+            dto.objectif,          // objectif
+            this.toEnum(dto.type), // type
+            dto.evenement          // event
         );
     }
 

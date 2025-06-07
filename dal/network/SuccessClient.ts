@@ -10,7 +10,7 @@ import {
   SuccessApiResponseSchema
 } from "@/shared/scheme/SuccessNormalDtoSchema";
 import { z } from "zod";
-import { SuccessMapper } from "@/shared/mappers/SuccessMaper";
+import { SuccessMapper } from "@/shared/mappers/SuccessMapper";
 import {Success} from "@/model/domain/Success";
 import { PagedRequest } from "@/shared/PagedRequest";
 import { PagingResult } from "@/shared/PagingResult";

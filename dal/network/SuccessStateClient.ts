@@ -4,95 +4,114 @@ import {
   HttpZodRepository,
   HttpZodRepositoryConfig
 } from "@/dal/network/NetworkGenericClient";
+
 import {
   SuccessNormalDto,
-  SuccessNormalDtoSchema,
-  SuccessApiResponseSchema
-} from "@/shared/scheme/SuccessNormalDtoSchema";
+  SuccessStateCompleteItem,
+  SuccessListApiResponseSchema,
+  SuccessStateListApiResponse,
+  SuccessStateListApiResponseSchema,
+  SuccessStateCompleteItemSchema
+} from "@/shared/scheme/SuccessStateNormalDtoSchema";
+
 import { z } from "zod";
-import { SuccessMapper } from "@/shared/mappers/SuccessMaper";
-import {Success} from "@/model/domain/Success";
+import { SuccessCompletMapper } from "@/shared/mappers/SuccessCompletMapper";
+import { Success } from "@/model/domain/Success";
 import { PagedRequest } from "@/shared/PagedRequest";
 import { PagingResult } from "@/shared/PagingResult";
 import { FilterPredicate } from "@/shared/FilterPredicate";
 import { IMapper } from "@/shared/mappers/IMapper";
-import { UtilisateurApiResponseSchema, UtilisateurNormalDto, UtilisateurNormalDtoSchema } from "@/shared/scheme/UtilisateurNormalDtoSchema";
-import { UserMapper } from "@/shared/mappers/UserMaper";
-import User from "@/model/domain/User";
+import { ISuccessStateRepository } from "../repository/ISuccessStateRepository";
 
-const createUserRepositoryConfig = (): HttpZodRepositoryConfig<UtilisateurNormalDto> => ({
-    responceSchema: UtilisateurNormalDtoSchema,
-    createSchema: UtilisateurNormalDtoSchema,
-    responseSchemas: {
-        create: UtilisateurApiResponseSchema,
-        update: UtilisateurApiResponseSchema,
-        delete: z.object({success: z.boolean()})
-    }
+
+const SuccessStateCreateDtoSchema = z.object({
+  state: z.object({
+    id: z.string().uuid(),
+    percentSucces: z.number().int().nonnegative(),
+    isSucces: z.boolean()
+  }),
+  success: z.object({
+    id: z.string().uuid(),
+    nom: z.string(),
+    type: z.string(),
+    image: z.string(),
+    description: z.string(),
+    objectif: z.number().int().nonnegative(),
+    evenement: z.string()
+  })
 });
 
-const createSuccessRepositoryConfig = (): HttpZodRepositoryConfig<SuccessNormalDto> => ({
-  responceSchema: SuccessNormalDtoSchema,
-  createSchema: SuccessNormalDtoSchema,
+const SuccessStateApiResponseSchema = z.object({
+  success: z.boolean(),
+  item: SuccessStateCompleteItemSchema.optional()
+});
+
+const createSuccessRepositoryConfig = (): HttpZodRepositoryConfig<SuccessStateCompleteItem> => ({
+  responceSchema: SuccessStateCompleteItemSchema,
+  createSchema: SuccessStateCreateDtoSchema,
   responseSchemas: {
-    create: SuccessApiResponseSchema,
-    update: SuccessApiResponseSchema,
+    create: SuccessStateApiResponseSchema,
+    update: SuccessStateApiResponseSchema,
     delete: z.object({ success: z.boolean() })
   }
 });
 
-export class SuccessClient implements ISuccessRepository {
-  private readonly mapper: IMapper<SuccessNormalDto, Success>;
+export class SuccessStateClient implements ISuccessStateRepository {
+  private readonly mapper: IMapper<SuccessStateCompleteItem, Success>;
+  private readonly successStateRepository: HttpZodRepository<SuccessStateCompleteItem>;
 
-  constructor( 
+  constructor(
     httpClient: ZodHttpClient,
     baseUrl: string = "/successState",
-    mapper: IMapper<SuccessNormalDto, Success> = new SuccessMapper(),
-        private userRepository = new HttpZodRepository<UtilisateurNormalDto>(
-      httpClient,
-      baseUrl,
-      createUserRepositoryConfig()
-    ),
-    private successRepository = new HttpZodRepository<SuccessNormalDto>(
+    mapper: IMapper<SuccessStateCompleteItem, Success> = new SuccessCompletMapper()
+  ) {
+    this.mapper = mapper;
+
+    this.successStateRepository = new HttpZodRepository<SuccessStateCompleteItem>(
       httpClient,
       baseUrl,
       createSuccessRepositoryConfig()
-    )
-  ) {
-    this.mapper = mapper;
-  }
-    isCompleted(suc: Success): Promise<Boolean> {
-        throw new Error("Method not implemented.");
-    }
-
-  async create(success: Success): Promise<void> {
-        throw new Error("Method not implemented.");
+    );
   }
 
-  async update(id: number, success: Success): Promise<void> {
-    const dto = this.mapper.toUpdateDto(success);
-    await this.successRepository.update(id, dto);
+  isCompleted(suc: Success): Promise<boolean> {
+    throw new Error("Méthode non implémentée.");
   }
 
-  async delete(id: number): Promise<void> {
-        throw new Error("Method not implemented.");
+  async create(success: SuccessStateCompleteItem): Promise<void> {
+    throw new Error("Méthode non implémentée.");
   }
 
-  async getById(id: number): Promise<Success> {
-    const dto = await this.successRepository.getById(id);
-    return this.mapper.toDomain(dto);
+  async update(id: string, success: SuccessStateCompleteItem): Promise<void> {
+    // const dto = this.mapper.toUpdateDto(success);
+    // await this.successStateRepository.update(id, dto);
+            throw new Error("Méthode non implémentée.");
+
   }
 
-  async getAll(request: PagedRequest): Promise<PagingResult<Success>> {
-    const dtoResult = await this.successRepository.getAll(request);
+  async delete(id: string): Promise<void> {
+    throw new Error("Méthode non implémentée.");
+  }
+
+  async getById(id: string): Promise<SuccessStateCompleteItem> {
+    // const dto = await this.successStateRepository.getById(id);
+    // return this.mapper.toDomain(dto);
+        throw new Error("Méthode non implémentée.");
+
+  }
+
+  async getAll(request: PagedRequest): Promise<PagingResult<SuccessStateCompleteItem>> {
+    const dtoResult = await this.successStateRepository.getAll(request);
+
     return {
       count: dtoResult.count,
       index: dtoResult.index,
       total: dtoResult.total,
-      items: dtoResult.items.map(dto => this.mapper.toDomain(dto))
+      items: dtoResult.items
     };
   }
 
-  async count(filter: FilterPredicate<Success>): Promise<number> {
+  async count(filter: FilterPredicate<SuccessStateCompleteItem>): Promise<number> {
     throw new Error("Méthode non implémentée.");
   }
 }
