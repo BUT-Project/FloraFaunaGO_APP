@@ -1,4 +1,4 @@
-import {ActivityIndicator, Button, FlatList, StyleSheet, View,ScrollView} from "react-native";
+import {ActivityIndicator, Button, FlatList, StyleSheet, View} from "react-native";
 import {SpecieListItem,SearchBar,FilterModal} from "@/components/encyclopedia";
 import {useState} from "react";
 import {ThemedText, ThemedView} from "@/components/ui/themed";
@@ -7,7 +7,6 @@ import {useGetSpecies} from "@/hooks/viewModels/useGetSpecies";
 import {useAuthStore} from "@/context/zustand/store/useAuthStore";
 import { LinearGradient } from "expo-linear-gradient";
 import { useThemeColor } from "@/hooks/useThemeColor";
-import { Ionicons } from "@expo/vector-icons";
 import Loading from "@/components/ui/Loading";
 
 export default function EncyclopediaScreen() {
@@ -52,16 +51,19 @@ export default function EncyclopediaScreen() {
                         }
                         ListEmptyComponent={() => (
                             <View style={styles.empty}>
-                                <ThemedText type={"subtitle"}>Aucune espèce trouvée.</ThemedText>
-                                <Button testID="Refresh" title="Raffraîchir" onPress={() => refresh()}/>
+                                <ThemedText type={"subtitle"}>Aucune espèce trouvée</ThemedText>
+                                <Button testID="Refresh" title="Raffraîchir" color={tint} onPress={() => refresh()}/>
                             </View>
                         )}
-                        ListFooterComponent={()=>(
-                            <View style={styles.footer}>
-                                {isListEnd && <ThemedText>Pas d'espèces en plus pour le moment. </ThemedText>}
-                                {isLoadingMore && <ActivityIndicator size={"small"} />}
-                            </View>
-                        )}
+                        ListFooterComponent={()=>
+                            species.length > 0 ?
+                                <View style={styles.footer}>
+                                    {isListEnd && <ThemedText>Pas d'espèces en plus pour le moment. </ThemedText>}
+                                    {isLoadingMore && <ActivityIndicator size={"small"} />}
+                                </View>
+                            :
+                            null
+                        }
                         onEndReachedThreshold={0.2}
                         onEndReached={fetchMoreData}
                         numColumns={3}
@@ -102,6 +104,7 @@ const styles = StyleSheet.create({
     },
     empty:{
         flex:1,
+        gap: 10,
         justifyContent:"center",
         alignItems:"center",
     },

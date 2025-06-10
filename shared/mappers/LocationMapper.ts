@@ -15,6 +15,7 @@ export class LocationMapper implements IMapper<LocationDto,Location> {
             latitude:domain.latitude,
             longitude: domain.longitude,
             altitude: domain.altitude,
+            exactitude: domain.accuracy,
             rayon: domain.radius,
         }
     }

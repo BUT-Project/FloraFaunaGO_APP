@@ -41,7 +41,7 @@ export function useGetSpecies(
   });
 
   // Flatten all pages into a single array of species
-  const species = data?.pages.reduce<Specie[]>((acc, page) => {
+  const species = data?.pages.reduce<Partial<Specie>[]>((acc, page) => {
     if (page?.items) {
       return [...acc, ...page.items];
     }

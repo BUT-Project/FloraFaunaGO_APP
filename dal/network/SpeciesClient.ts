@@ -1,6 +1,7 @@
 import {
     PagingResultSpecieSchema,
     SpecieDto,
+    SpecieListDto,
     SpecieDtoSchema
 } from "@/shared/scheme/SpecieDtoSchema";
 import { ISpeciesRepository } from "../repository/ISpeciesRepository";
@@ -13,13 +14,15 @@ import { PagingResult } from "@/shared/PagingResult";
 import { SpecieMapper} from "@/shared/mappers/SpecieMapper";
 import {HttpZodResourceClient} from "@/dal/network/HttpZodResourceClient";
 import z from "zod";
+import { SpecieListMapper } from "@/shared/mappers/SpecieListMapper";
 
 export class SpeciesClient implements ISpeciesRepository {
     constructor(
         private readonly httpClient: ZodHttpClient,
         private baseUrl: string = '/espece',
         private specieMapper: IMapper<SpecieDto, Specie> = new SpecieMapper(),
-        private speciesHttpClient : HttpZodResourceClient<SpecieDto> = HttpZodResourceClient.create<SpecieDto>(httpClient, baseUrl,SpecieDtoSchema)
+        private specieListMapper: IMapper<SpecieListDto, Partial<Specie>> = new SpecieListMapper(),
+        private speciesHttpClient : HttpZodResourceClient<SpecieDto,SpecieListDto> = HttpZodResourceClient.create<SpecieDto,SpecieListDto>(httpClient, baseUrl,SpecieDtoSchema)
     ) {}
 
     async identifySpecies(imageBase64: string): Promise<Specie> {
@@ -45,10 +48,10 @@ export class SpeciesClient implements ISpeciesRepository {
             throw resultData.error;
         }
         const pagingResult = resultData.data;
-        const mappedSpecies = pagingResult.items.map(this.specieMapper.toDomain);
+        const mappedSpecies = pagingResult.items.map(this.specieListMapper.toDomain);
 
         return {
-            items: mappedSpecies,
+            items: [],
             index: pagingResult.index,
             count: pagingResult.count,
             total: pagingResult.total
@@ -60,10 +63,10 @@ export class SpeciesClient implements ISpeciesRepository {
         return this.specieMapper.toDomain(specie);
     }
 
-    async getAll(request: PagedRequest): Promise<PagingResult<Specie>> {
+    async getAll(request: PagedRequest): Promise<PagingResult<Partial<Specie>>> {
         const pagingResult = await this.speciesHttpClient.getAll(request);
-        //@ts-ignore [YOAN] TODO: Fix this type issue, it should be toDomain but as the current dto is bullshit
-        const mappedSpecies = pagingResult.items.map((d) => this.specieMapper.toDomain(d.espece));
+        console.log("getAll result", pagingResult);
+        const mappedSpecies = pagingResult.items.map(specieListDto =>this.specieListMapper.toDomain(specieListDto));
         return {
             items: mappedSpecies,
             index: pagingResult.index,

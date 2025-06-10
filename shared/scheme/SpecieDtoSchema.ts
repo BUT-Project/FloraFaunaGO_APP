@@ -15,15 +15,23 @@ export const SpecieDtoSchema = z.object({
   zone: z.string(),
   climat: z.nativeEnum(Climate),
   regime: z.nativeEnum(Diet),
-  localisationNormalDtos: z.array(LocationDtoSchema).optional(),
+  localisations: z.array(LocationDtoSchema).optional(),
+});
+
+export const SpecieListDtoSchema = z.object({
+  id: z.string(),
+  nom: z.string(),
+  image: z.string(),
+  image3D: z.string(),
 });
 
 export const PagingResultSpecieSchema = z.object({
   count: z.number(),
   index: z.number(),
   total: z.number(),
-  items: z.array(SpecieDtoSchema),
+  items: z.array(SpecieListDtoSchema),
 });
 
-export type SpecieDto = z.infer<typeof SpecieDtoSchema>;
+export type SpecieDto = z.infer<typeof SpecieDtoSchema>; 
+export type SpecieListDto = z.infer<typeof SpecieListDtoSchema>;
 export type SpecieDtos = z.infer<typeof PagingResultSpecieSchema>;

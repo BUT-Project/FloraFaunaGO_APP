@@ -7,11 +7,13 @@ import { FilterPredicate } from "@/shared/FilterPredicate";
 
 type RepositoryOperation = keyof GenericRepository<unknown>
 
-export interface HttpZodResourceConfig<TResponse, TCreate = Partial<TResponse>, TUpdate = Partial<TResponse>> {
+export interface HttpZodResourceConfig<TResponse,TList = TResponse, TCreate = Partial<TResponse>, TUpdate = Partial<TResponse>> {
     /**
      * Schema for the response
      */
     resourceSchema: z.ZodSchema<TResponse>;
+
+    listItemSchema?: z.ZodSchema<TList>;
 
     /**
      * Schema for create operations (optional if different from partial response schema)
@@ -26,7 +28,7 @@ export interface HttpZodResourceConfig<TResponse, TCreate = Partial<TResponse>, 
     /**
      * Schema for the paginated response
      */
-    pagedResponseSchema?: z.ZodSchema<PagingResult<Partial<TResponse>>>;
+    pagedResponseSchema?: z.ZodSchema<PagingResult<TList>>;
 
     /**
      * Custom endpoint paths (optional)
@@ -45,22 +47,22 @@ export interface HttpZodResourceConfig<TResponse, TCreate = Partial<TResponse>, 
  * Abstract base repository implementation using HTTP requests with Zod validation
  * Provides common HTTP operations that can be extended by concrete repository implementations
  */
-export abstract class HttpZodResourceClient<T, TCreate = Partial<T>, TUpdate = Partial<T>> {
+export abstract class HttpZodResourceClient<T,TList=T, TCreate = Partial<T>, TUpdate = Partial<T>> {
 
-    private readonly defaultPagedResponseSchema: z.ZodSchema<PagingResult<Partial<T>>>;
+    private readonly defaultPagedResponseSchema: z.ZodSchema<PagingResult<TList | T>>;
     private readonly defaultSuccessSchema = z.object({ success: z.boolean() });
 
     constructor(
         protected readonly httpClient: ZodHttpClient,
         protected readonly baseUrl: string,
-        protected readonly config: HttpZodResourceConfig<T, TCreate, TUpdate>
+        protected readonly config: HttpZodResourceConfig<T,TList, TCreate, TUpdate>
     ) {
         // Create the default paged response schema to match PagingResult<T> interface exactly
         this.defaultPagedResponseSchema = z.object({
             count: z.number(),
             index: z.number(),
             total: z.number(),
-            items: z.array(this.config.resourceSchema)
+            items: z.array(this.config.listItemSchema ?? this.config.resourceSchema)
         })
     }
 
@@ -129,16 +131,17 @@ export abstract class HttpZodResourceClient<T, TCreate = Partial<T>, TUpdate = P
         return result.data;
     }
 
-    async getAll(request: PagedRequest): Promise<PagingResult<Partial<T>>> {
+    async getAll(request: PagedRequest): Promise<PagingResult<TList | T>> {
         const url = this.getEndpoint('getAll');
         const responseSchema = this.config.pagedResponseSchema ?? this.defaultPagedResponseSchema;
-
+        console.log("getAll URL", url);
         const result = await this.httpClient.getValidated(
             url,
             responseSchema,
             undefined,
             this.buildQueryParams(request)
         );
+        console.log("getAll result", result);
 
         if (!result.success) {
             throw result.error;
@@ -202,19 +205,19 @@ export abstract class HttpZodResourceClient<T, TCreate = Partial<T>, TUpdate = P
     /**
      * Static factory method for creating repository instances
      */
-    static create<T, TCreate = Partial<T>, TUpdate = Partial<T>>(
+    static create<T,TList=T, TCreate = Partial<T>, TUpdate = Partial<T>>(
         httpClient: ZodHttpClient,
         baseUrl: string,
         resourceSchema: z.ZodSchema<T>,
-        options?: Partial<HttpZodResourceConfig<T, TCreate, TUpdate>>
-    ): HttpZodResourceClient<T, TCreate, TUpdate> {
-        const config: HttpZodResourceConfig<T, TCreate, TUpdate> = {
+        options?: Partial<HttpZodResourceConfig<T,TList, TCreate, TUpdate>>
+    ): HttpZodResourceClient<T,TList, TCreate, TUpdate> {
+        const config: HttpZodResourceConfig<T,TList, TCreate, TUpdate> = {
             resourceSchema,
             ...options
         };
 
         // Return a concrete implementation using anonymous class
-        return new (class extends HttpZodResourceClient<T, TCreate, TUpdate> {
+        return new (class extends HttpZodResourceClient<T,TList, TCreate, TUpdate> {
             constructor() {
                 super(httpClient, baseUrl, config);
             }

@@ -20,7 +20,15 @@ export default class StubData extends IDataManager{
         this.successRepository = new StubSucess(this.ListSucess);
         this.userRepository = new StubUsers(this.ListUser);
         this.captureRepository = new StubCaptures(this.ListCapture,this.ListUser);
-        this.speciesRepository = new SpeciesClient(new ZodHttpClient({baseUrl: process.env.EXPO_PUBLIC_API_URL || 'https://codefirst.iut.uca.fr/containers/FloraFauna_GO-api'}), '/FloraFaunaGo_API/espece');
+        this.speciesRepository = new SpeciesClient(
+            new ZodHttpClient({
+                headers:{
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlNjk2MjRiNi1lMTI2LTRmYWEtOTI4Yy1jNmE5YWY0NTg3NDkiLCJlbWFpbCI6InlveW9AZ21haWwuY29tIiwidWlkIjoiZTY5NjI0YjYtZTEyNi00ZmFhLTkyOGMtYzZhOWFmNDU4NzQ5IiwiZXhwIjoxNzQ5NTg1MjkzLCJpc3MiOiJGbG9yYUZhdW5hSXNzdWVyIiwiYXVkIjoiRmxvcmFGYXVuYUlzc3VlciJ9.wrONFNaVnhGOpxY0BJUeNUL0SXOuWIqB_DgNhp5MtNQ"
+                },
+                baseUrl: process.env.EXPO_PUBLIC_API_URL || 'https://codefirst.iut.uca.fr/containers/FloraFauna_GO-api'}
+            ), '/FloraFaunaGo_API/espece');
         this.authService = new StubAuth(this.ListUser);
     }
 

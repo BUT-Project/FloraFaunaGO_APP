@@ -11,7 +11,7 @@ export abstract class GenericRepository<T> {
 
     abstract getById(id: string): Promise<T>;
 
-    abstract getAll(request: PagedRequest): Promise<PagingResult<T>>;
+    abstract getAll(request: PagedRequest): Promise<PagingResult<Partial<T>>>;
 
     abstract count(filter: FilterPredicate<T>): Promise<number>;
 }
