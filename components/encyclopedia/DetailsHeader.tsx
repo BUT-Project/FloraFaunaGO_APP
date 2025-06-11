@@ -59,7 +59,7 @@ export default function DetailsHeader({ capture ,specie}: SpeciesImageCarouselPr
             items.push({ key: "2", image: capture.photo});
         }
         return items;
-    }, [capture]);
+    }, [capture,specie.image]);
 
     // RenderItem pour le carousel
     const renderItem = ({ item }: { item: CarouselItem }) => (

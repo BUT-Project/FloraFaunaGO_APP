@@ -86,7 +86,10 @@ export function useInfiniteSpecies(
     const filterByScientificName = useCallback((scientificName: string) => {
         setScientificNameFilter(scientificName);
         queryResult.setFilter((species) =>
+            species.scientificName ?
             species.scientificName.toLowerCase().includes(scientificName.toLowerCase())
+            :
+            false
         );
     }, [queryResult]);
 

@@ -26,7 +26,7 @@ export function ExtendableMap({ locations, mapStyle, style }: ExtendableMapProps
             latitudeDelta: 0.3,
             longitudeDelta: 0.3,
         };
-    }, [locations]);
+    }, [locations,hasLocations]);
 
     const markers = useMemo(() => locations.map((loc, index) => (
         <Marker

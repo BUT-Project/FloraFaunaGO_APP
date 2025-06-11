@@ -1,5 +1,5 @@
 // FaceOffGame.tsx
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { ImageBackground, TouchableOpacity, StyleSheet, TouchableWithoutFeedback } from 'react-native';
 import { ThemedView,ThemedText } from '@/components/ui/themed';
 import { Ionicons } from '@expo/vector-icons';
@@ -38,7 +38,30 @@ const FaceOffGame = ({ animalPhoto, onResult, onCancel }: Props) => {
     if(step >= NB_STEPS) {
       onResult(true);
     }
-  }, [step]);
+  }, [step,onResult]);
+
+  const startNextRoundDelay = useCallback(() => {
+        if (lives <= 0) return;
+
+        setIsWaitingForNextRound(true); 
+
+        if (nextRoundTimeoutRef.current) {
+            clearTimeout(nextRoundTimeoutRef.current);
+        }
+        nextRoundTimeoutRef.current = setTimeout(() => {
+            setFeedbackMessage(null);
+            setAnimalAction(getRandomAnimalAction());
+            setIsWaitingForNextRound(false); 
+        }, DELAY_BETWEEN_ROUNDS);
+  },[setFeedbackMessage,setAnimalAction,setIsWaitingForNextRound,lives]);
+
+
+  const handleTimeout = useCallback(() => {
+    setAnimalAction(null);
+    setFeedbackMessage({text:"Trop tard ! Vous avez hésité...", type: 'error'});
+    setLives((prev) => prev - 1);
+    startNextRoundDelay();
+  },[setLives,startNextRoundDelay,setFeedbackMessage,setAnimalAction]);
 
   useEffect(() => {
     if (animalAction) {
@@ -62,15 +85,7 @@ const FaceOffGame = ({ animalPhoto, onResult, onCancel }: Props) => {
         clearInterval(intervalRef.current);
       }
     };
-  }, [animalAction]);
-
-
-  const handleTimeout = () => {
-    setAnimalAction(null);
-    setFeedbackMessage({text:"Trop tard ! Vous avez hésité...", type: 'error'});
-    setLives((prev) => prev - 1);
-    startNextRoundDelay();
-  };
+  }, [animalAction,handleTimeout]);
 
   const handleChoice = (choice: PlayerActionType) => {
     if (!animalAction) return;
@@ -96,20 +111,6 @@ const FaceOffGame = ({ animalPhoto, onResult, onCancel }: Props) => {
   const onClose = () => setAnimalAction(getRandomAnimalAction());
 
 
-    const startNextRoundDelay = () => {
-        if (lives <= 0) return;
-
-        setIsWaitingForNextRound(true); 
-
-        if (nextRoundTimeoutRef.current) {
-            clearTimeout(nextRoundTimeoutRef.current);
-        }
-        nextRoundTimeoutRef.current = setTimeout(() => {
-            setFeedbackMessage(null);
-            setAnimalAction(getRandomAnimalAction());
-            setIsWaitingForNextRound(false); 
-        }, DELAY_BETWEEN_ROUNDS);
-    };
 
     // Permet de reprendre le round suivant immédiatement
     const handleResumeTimeBetweenRound = () => {

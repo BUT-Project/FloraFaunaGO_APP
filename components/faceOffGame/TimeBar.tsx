@@ -13,12 +13,12 @@ interface TimeBarProps {
 }
 
 const TimeBar: React.FC<TimeBarProps> = ({ timeLeft, maxTime }) => {
-    if(!timeLeft) return null; 
-    const progress = useSharedValue(timeLeft / maxTime);
-
+    const progress = useSharedValue(timeLeft? timeLeft / maxTime : 0);
+    
     useEffect(() => {
-        progress.value = withTiming(timeLeft / maxTime, { duration: 100 });
-    }, [timeLeft, maxTime]);
+        progress.value = withTiming(timeLeft? timeLeft / maxTime : 0, { duration: 100 });
+    }, [timeLeft, maxTime,progress]);
+
 
     const animatedStyle = useAnimatedStyle(() => {
         const backgroundColor = interpolateColor(
@@ -32,6 +32,7 @@ const TimeBar: React.FC<TimeBarProps> = ({ timeLeft, maxTime }) => {
             backgroundColor,
         };
     });
+    if(!timeLeft) return null; 
 
     return (
         <View style={styles.container}>

@@ -32,7 +32,7 @@ export default function ThumbAnimationView({
         if (!customThumbView) {
             thumbAnimation.value = 0;
         }
-    }, [customThumbView]);
+    }, [customThumbView,thumbAnimation]);
 
     function calcBezier(
         interpolatedValue: number,

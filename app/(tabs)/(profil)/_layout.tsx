@@ -1,7 +1,5 @@
 import {Link, Stack} from "expo-router";
 import { useTheme } from '@react-navigation/native';
-import { Ionicons } from "@expo/vector-icons";
-
 
 export default function Layout() {
   const { colors } = useTheme();

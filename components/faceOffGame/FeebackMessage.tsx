@@ -31,7 +31,7 @@ const FeedbackMessageToast = ({ testID,message, onPress }: Props) => {
 
   useEffect(() => {
     translateY.set(withTiming(0, { duration: 300 })) 
-  }, []);
+  }, [translateY]);
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ translateY: translateY.get() }],

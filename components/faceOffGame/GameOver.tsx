@@ -16,7 +16,7 @@ const GameOverModal = ({ visible, onClose }: Props) => {
         <ThemedView style={styles.container}>
           <Ionicons name="close-circle-outline" size={64} color={Colors.light.error}/>
           <ThemedText style={styles.title}>Game Over</ThemedText>
-          <ThemedText style={styles.subtitle}>L’animal s'est enfui...</ThemedText>
+          <ThemedText style={styles.subtitle}>L&apos;animal s&apos;est enfui...</ThemedText>
           <TouchableOpacity style={styles.button} onPress={onClose}>
             <ThemedText style={styles.buttonText}>Continuer</ThemedText>
           </TouchableOpacity>
