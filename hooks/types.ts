@@ -1,3 +1,4 @@
+import {QueryParams} from "@/shared/PagedRequest";
 
 export interface BaseInfiniteOptions<T> {
     // Core options
@@ -5,7 +6,7 @@ export interface BaseInfiniteOptions<T> {
     orderBy?: keyof T;
     descending?: boolean;
     enabled?: boolean;
-    initialFilter?: (item: T) => boolean;
+    initialFilter?: QueryParams;
 }
 
 // Base result type that includes common infinite scroll functionality
@@ -30,23 +31,3 @@ export interface BaseInfiniteResult<T> {
     // Data manipulation methods
     refresh: () => Promise<void>;
 }
-
-// Entity-specific filter state type
-export interface FilterState<TStatus, TDateRange = { startDate: Date; endDate: Date }> {
-    currentStatus: TStatus | null;
-    currentDateRange: TDateRange | null;
-}
-
-// Entity-specific filter methods type
-export interface FilterMethods<TStatus> {
-    filterByStatus: (status: TStatus) => void;
-    filterByDate: (startDate: Date, endDate: Date) => void;
-    sortByMostRecent: () => void;
-    sortByOldest: () => void;
-    clearFilters: () => void;
-}
-
-// Combined type for entity-specific infinite scroll functionality
-export type EntityInfiniteResult<T, TStatus> = BaseInfiniteResult<T> &
-    FilterMethods<TStatus> &
-    FilterState<TStatus>;

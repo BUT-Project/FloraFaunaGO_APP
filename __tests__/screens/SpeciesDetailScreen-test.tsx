@@ -1,19 +1,13 @@
-import {render} from '@testing-library/react-native';
+import { renderWithProviders as render } from '@/shared/utils/renderWithProviders';
 import SpeciesDetailScreen from '@/screens/SpeciesDetailScreen';
 import { 
     Capture,
     CaptureDetail,
     Location,
-    Specie,
-    Habitat,
-    Climate,
-    Diet,
-    Kingdom,
-    Class,
-    Family
 } from '@/model/domain';
 
 import { useGetSpecieByFamily } from '@/hooks/viewModels/useGetSpecieByFamily';
+import { buildSpecie } from '@/shared/utils/funcs';
 
 jest.mock('@/context/zustand/store/useAuthStore', () => ({
   useAuthStore: jest.fn().mockImplementation((selector) =>
@@ -26,7 +20,7 @@ jest.mock('@/hooks/viewModels/useGetSpecieByFamily', () => ({
 }));
 
 describe('<SpeciesDetailScreen />', () => {
-    const mockSpecie = new Specie(1, "Lion", "Panthera leo", "Le roi des animaux", new Habitat('savanna', Climate.Tropical), Diet.Carnivores, Kingdom.Animal, Class.Mammals, Family.Felidae, [], '');
+    const mockSpecie = buildSpecie(1);
     const mockCapture = new Capture(1, "", mockSpecie, []);
     const captureDetails = [new CaptureDetail(1,new Date(),false, new Location(10,10,10,10,1))];
     const mockCaptureWithDetails = new Capture(1, "", mockSpecie, captureDetails);
@@ -81,4 +75,5 @@ describe('<SpeciesDetailScreen />', () => {
         const { getByText } = render(<SpeciesDetailScreen specie={mockSpecie} capture={mockCapture}/>);
         expect(getByText('Pas plus de capture pour le moment.')).toBeTruthy();
     });
+
 });

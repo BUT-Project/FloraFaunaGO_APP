@@ -16,6 +16,7 @@ import { SafeView } from "@/components/ui/SafeView";
 import {  isImageBlurry } from "@/services/imageQuality";
 import { toast } from "@backpackapp-io/react-native-toast";
 import { SuccessManager } from "@/dal/manager/SuccessManager";
+import {ErrorView} from "@/app/(tabs)/(encyclopedia)/[id]";
 
 const {width: SCREEN_WIDTH} = Dimensions.get('window');
 export default function HomeScreen() {
@@ -29,6 +30,10 @@ export default function HomeScreen() {
     const [base64Image, setBase64Image] = useState<string | null>(null);
     const [activeView, setActiveView] = useState('camera');
 
+    if (!speciesRepository) {
+        return <ErrorView message="Erreur de configuration des repositories" />;
+    }
+
     useFocusEffect(
         useCallback(() => {
             setIsCameraActive(true);
@@ -40,7 +45,6 @@ export default function HomeScreen() {
     const {isLoading, isFetching, data: identifiedSpecie} = useQuery<Specie, Error>({
         queryKey: ['identifySpecie', base64Image, speciesRepository],
         queryFn: async (): Promise<Specie> => {
-            if (!speciesRepository) throw new Error('No Repository');
             if (!base64Image) throw new Error('No base64 image data');
             var spec = await speciesRepository.identifySpecies(base64Image);
             setSpec(spec)
@@ -102,13 +106,13 @@ export default function HomeScreen() {
                         &&
                         <>
                             <CameraView  setBase64Image={setBase64Image} setCapturedImage={setCapturedImage}
-                                        style={styles.camera}/>
+                                         style={styles.camera}/>
                             {isFetching && (
                                 <View style={styles.progressOverlay}>
                                     <ARProgressIndicator width={SCREEN_WIDTH} height={SCREEN_WIDTH}/>
                                 </View>
                             )}
-                            <MainMapView style={styles.map}/>
+                            <MainMapView style={styles.map} repository={speciesRepository}/>
                         </>}
                 </Animated.View>
             </ThemedView>
@@ -149,17 +153,19 @@ const styles = StyleSheet.create({
         right: 0,
         zIndex: 10,
     },
-    viewContainer: {
-        flex: 1,
-        flexDirection: 'row',
-        width: '200%',
-    },
     camera: {
         flex: 1,
         width: '50%',
         height: '100%'
     },
     map: {
+        flex: 1,
         width: '50%',
+        height: '100%',
+    },
+    viewContainer: {
+        flex: 1,
+        flexDirection: 'row',
+        width: '200%',
     },
 });

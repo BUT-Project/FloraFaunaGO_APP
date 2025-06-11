@@ -9,7 +9,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import {useColorScheme} from '@/hooks/useColorScheme';
 import {GestureHandlerRootView} from "react-native-gesture-handler";
 import {useAuthStore} from "@/context/zustand/store/useAuthStore";
-
+import '../i18n'
 // Prevent the splash screens from auto-hiding before asset loading is complete or authentication is done
 SplashScreen.preventAutoHideAsync();
 export default function RootLayout() {

@@ -5,11 +5,12 @@ import { ThemedView,ThemedText } from '../ui/themed';
 type FilterChipsProps = {
     item: any;
     isSelected : Boolean;
-    onFilterChange: any;
+    onFilterChange: (item: any) => void;
     selectedColor:string;
+    renderLabel?: (item:any) => string;
 }
 
-const FilterChips = ({item,isSelected,onFilterChange, selectedColor}: FilterChipsProps) => {
+const FilterChips = ({item,isSelected,onFilterChange, selectedColor, renderLabel}: FilterChipsProps) => {
     return (
         <TouchableOpacity onPress={() => onFilterChange(item)}>
             <ThemedView style={[
@@ -17,7 +18,7 @@ const FilterChips = ({item,isSelected,onFilterChange, selectedColor}: FilterChip
                 isSelected && {backgroundColor:selectedColor,borderColor:selectedColor},
             ]}>
                 <ThemedText  style={isSelected ? styles.selectedName: styles.name }>
-                    {item.toString()}
+                    {renderLabel ? renderLabel(item) : item.toString()}
                 </ThemedText>
             </ThemedView>
            

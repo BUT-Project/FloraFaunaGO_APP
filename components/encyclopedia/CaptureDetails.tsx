@@ -8,14 +8,15 @@ type CaptureDetailsProps={
 }
 const { width } = Dimensions.get("window");
 const itemWidth = width - 30 //Item margin + Section padding
+
 export default function CaptureDetails({captureDetail}: CaptureDetailsProps){
     return (
         <ThemedView style={styles.container}>
             <ThemedView style={styles.infoContainer}>
                 <ThemedText type={"defaultSemiBold"}>Informations :</ThemedText>
-                <ThemedText>Longitude : {captureDetail.location.longitude} </ThemedText>
-                <ThemedText>Latitude : {captureDetail.location.latitude} </ThemedText>
-                <ThemedText>Altitude : {captureDetail.location.altitude} </ThemedText>
+                <ThemedText>Longitude : {captureDetail.location.longitude}</ThemedText>
+                <ThemedText>Latitude : {captureDetail.location.latitude}</ThemedText>
+                <ThemedText>Altitude : {captureDetail.location.altitude} mètres</ThemedText>
                 <ThemedText>Shiny : {captureDetail.shiny ? "Oui" : "Non"}</ThemedText>
                 <ThemedText>Date : {captureDetail.date.toLocaleDateString()}</ThemedText>
             </ThemedView>

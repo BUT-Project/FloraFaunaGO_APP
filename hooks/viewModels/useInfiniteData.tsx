@@ -1,14 +1,13 @@
 import {useInfiniteQuery} from '@tanstack/react-query';
 import {useCallback, useMemo, useState} from 'react';
-import {FilterPredicate} from "@/shared/FilterPredicate";
 import {GenericRepository} from "@/dal/repository/IGenericRepository";
-import {PagedRequest} from "@/shared/PagedRequest";
+import {PagedRequest, QueryParams} from "@/shared/PagedRequest";
 import {PagingResult} from "@/shared/PagingResult";
 
 interface InfiniteDataOptions<T> {
     // Core options
     pageSize?: number;
-    initialFilter?: FilterPredicate<T>;
+    initialFilter?: QueryParams;
     orderingProperty?: string;
     isDescending?: boolean;
 
@@ -38,11 +37,11 @@ interface InfiniteDataResult<T> {
 
     // Data manipulation methods
     refresh: () => Promise<void>;
-    setFilter: (filter: FilterPredicate<T>) => void;
+    setFilter: (filter: QueryParams) => void;
     setOrdering: (property: string, descending?: boolean) => void;
 
     // Current state trackers
-    currentFilter: FilterPredicate<T> | undefined;
+    currentFilter: QueryParams | undefined;
     currentOrderingProperty: string | undefined;
     currentOrderingDirection: boolean;
 }
@@ -52,7 +51,7 @@ export function useInfiniteData<T>(
     options: InfiniteDataOptions<T>
 ): InfiniteDataResult<T> {
     // State management
-    const [filter, setFilter] = useState<FilterPredicate<T> | undefined>(options.initialFilter);
+    const [filter, setFilter] = useState<QueryParams | undefined>(options.initialFilter);
     const [orderingProperty, setOrderingProperty] = useState<string | undefined>(options.orderingProperty);
     const [isDescending, setIsDescending] = useState(options.isDescending ?? false);
 
@@ -64,11 +63,11 @@ export function useInfiniteData<T>(
         staleTime,
     } = options;
 
-    // Query key construction
+    // Query key construction - serialize filter object for proper caching
     const completeQueryKey = useMemo(() => [
         ...queryKey,
         pageSize,
-        filter ? filter.toString() : undefined,
+        filter ? JSON.stringify(filter) : undefined,
         orderingProperty,
         isDescending
     ], [queryKey, pageSize, filter, orderingProperty, isDescending]);
@@ -87,24 +86,16 @@ export function useInfiniteData<T>(
         refetch
     } = useInfiniteQuery({
         queryKey: completeQueryKey,
-        queryFn: async ({ pageParam = 1 }) => {
+        queryFn: async ({pageParam = 1}) => {
             const request: PagedRequest = {
                 index: pageParam,
                 count: pageSize,
                 orderingPropertyName: orderingProperty || null,
-                descending: isDescending || null
+                descending: isDescending || null,
+                filter: filter || undefined
             };
-            let result = await repository.getAll(request);
-            if (filter) {
-                const filteredItems = result.items.filter(filter);
-                result = {
-                    ...result,
-                    items: filteredItems,
-                    total: await repository.count(filter)
-                };
-            }
 
-            return result;
+            return await repository.getAll(request);
         },
         initialPageParam: 1,
         getNextPageParam: (lastPage: PagingResult<T>, allPages) => {
@@ -128,7 +119,7 @@ export function useInfiniteData<T>(
     const currentPage = data?.pages[data.pages.length - 1]?.index ?? 0;
 
     // Event handlers
-    const handleSetFilter = useCallback((newFilter: FilterPredicate<T>) => {
+    const handleSetFilter = useCallback((newFilter: QueryParams) => {
         setFilter(newFilter);
     }, []);
 
@@ -154,10 +145,14 @@ export function useInfiniteData<T>(
         error: error,
 
         // Pagination controls
-        hasNextPage: !!hasNextPage,
-        hasPreviousPage: !!hasPreviousPage,
-        fetchNextPage: async () => { await fetchNextPage(); },
-        fetchPreviousPage: async () => { await fetchPreviousPage(); },
+        hasNextPage: hasNextPage,
+        hasPreviousPage: hasPreviousPage,
+        fetchNextPage: async () => {
+            await fetchNextPage();
+        },
+        fetchPreviousPage: async () => {
+            await fetchPreviousPage();
+        },
 
         // Data manipulation methods
         refresh,
