@@ -20,8 +20,28 @@ export default class StubData extends IDataManager{
     public constructor() {
         super();
         //this.successRepository = new StubSucess(this.ListSucess);
-        this.successRepository = new SuccessClient(new ZodHttpClient({baseUrl: 'https://codefirst.iut.uca.fr/containers/FloraFauna_GO-api'}),'/FloraFaunaGo_API/success');
-        this.successStateRepository = new SuccessStateClient(new ZodHttpClient({baseUrl: 'https://codefirst.iut.uca.fr/containers/FloraFauna_GO-api'}),'/FloraFaunaGo_API/success/state');
+        this.successRepository = new SuccessClient(
+            new ZodHttpClient({
+                baseUrl: 'https://codefirst.iut.uca.fr/containers/FloraFauna_GO-api',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMTllYTEwOC04YWY4LTQxNGItYTRjNy1mMTJjZjQ0ZjUyNDciLCJlbWFpbCI6InRlc3RAdGVzdC5mciIsInVpZCI6IjIxOWVhMTA4LThhZjgtNDE0Yi1hNGM3LWYxMmNmNDRmNTI0NyIsImV4cCI6MTc0OTY0OTgwMywiaXNzIjoiRmxvcmFGYXVuYUlzc3VlciIsImF1ZCI6IkZsb3JhRmF1bmFJc3N1ZXIifQ.dfC6qPC8F5jHEuDcHl2fkgS_LBDoEJvwT755AOokSqE"
+                }
+            }),
+            new StubAuth(this.ListUser),
+            '/FloraFaunaGo_API/success/')
+            this.successStateRepository = new SuccessStateClient(
+            new ZodHttpClient({
+                baseUrl: 'https://codefirst.iut.uca.fr/containers/FloraFauna_GO-api',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMTllYTEwOC04YWY4LTQxNGItYTRjNy1mMTJjZjQ0ZjUyNDciLCJlbWFpbCI6InRlc3RAdGVzdC5mciIsInVpZCI6IjIxOWVhMTA4LThhZjgtNDE0Yi1hNGM3LWYxMmNmNDRmNTI0NyIsImV4cCI6MTc0OTY0OTgwMywiaXNzIjoiRmxvcmFGYXVuYUlzc3VlciIsImF1ZCI6IkZsb3JhRmF1bmFJc3N1ZXIifQ.dfC6qPC8F5jHEuDcHl2fkgS_LBDoEJvwT755AOokSqE"
+                }
+            }),            
+            new StubAuth(this.ListUser),
+            '/FloraFaunaGo_API/success/state/')
         this.userRepository = new StubUsers(this.ListUser);
         this.captureRepository = new StubCaptures(this.ListCapture,this.ListUser);
         this.speciesRepository = new StubSpecies(this.ListSpecie);

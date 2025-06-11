@@ -2,6 +2,8 @@ import {create} from 'zustand';
 import StubData from "@/dal/StubLib/StubData";
 import { devtools } from 'zustand/middleware';
 import { toast } from '@backpackapp-io/react-native-toast';
+import { SuccessStateCompleteItem } from '@/shared/scheme/SuccessStateNormalDtoSchema';
+import { Success } from '@/model/domain/Success';
 
 export interface SuccessState {
     updateSuccess(successId: string): void
@@ -36,12 +38,20 @@ export const SuccessStore = create<SuccessState>()(
     updateSuccess: async (successId: string) => {
         try {
             var sucessRepo = StubData.getInstance().successRepository;
+            var sucessStateRepo = StubData.getInstance().successStateRepository;
+
             var sucess = await sucessRepo?.getById(successId);
             if(sucess !== undefined) {
                 sucess.actualVal += 1
             // je vérifie les résultat du update si c'est completed alors 
             sucessRepo?.update(successId,sucess);
-            toast.success(sucess.nom+ " completed ! 🏆");            
+            if (sucessStateRepo !== undefined) {
+
+                sucessStateRepo.update(successId, successStateItem);
+            }
+            if(sucess.actualVal >= sucess.objectif) {
+            toast.success(sucess.nom+ " completed ! 🏆");    
+            }        
         } 
         }
         catch (error) {

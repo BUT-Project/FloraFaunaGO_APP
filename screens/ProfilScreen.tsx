@@ -43,14 +43,18 @@ export default function ProfilScreen() {
             const response = await successRepository?.getAll(PageRequest);
             const state = await successStateRepository?.getAll(PageRequest);
 
-    if (response?.items && state?.items) {
+    if (state?.items) {
+        console.log("state", state.items);
     const stateMap = new Map<string, number>();
     state.items.forEach(item => {
-        stateMap.set(item.success.nom, item.state.percentSucces);
+        //a modifier quand le user sera connecté
+        //if (item.user?.mail === "test@test.fr") {
+            stateMap.set(item.success.nom, item.state.percentSucces);
+       // }
     });
 
-    const mergedSuccesses = response.items.map(success => {
-        const progress = stateMap.get(success.nom) ?? 0;
+    const mergedSuccesses = response!.items.map(success => {
+        const progress = stateMap.get(success.nom);
         return {
             ...success,
             actualVal: progress,
@@ -58,7 +62,7 @@ export default function ProfilScreen() {
     });
 
     setSuccesses(mergedSuccesses);
-    setTotalPages(Math.ceil(response.total / 9));
+    setTotalPages(Math.ceil(state.total / 9));
     }
     } catch (error) {
             console.error('Erreur lors de la récupération des succès :', error);

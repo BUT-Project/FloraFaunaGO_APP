@@ -8,7 +8,7 @@ const UserSchema = z.object({
   mail: z.string(),
   hash_mdp: z.string(),
   dateInscription: z.string()
-});
+}).nullable();
 
 // Schéma pour l'objet 'state' dans la réponse API
 const StateSchema = z.object({

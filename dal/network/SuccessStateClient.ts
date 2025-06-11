@@ -14,6 +14,7 @@ import {
   SuccessStateCompleteItemSchema
 } from "@/shared/scheme/SuccessStateNormalDtoSchema";
 
+import { UtilisateurApiResponseSchema } from "@/shared/scheme/UtilisateurNormalDtoSchema";
 import { z } from "zod";
 import { SuccessCompletMapper } from "@/shared/mappers/SuccessCompletMapper";
 import { Success } from "@/model/domain/Success";
@@ -22,6 +23,7 @@ import { PagingResult } from "@/shared/PagingResult";
 import { FilterPredicate } from "@/shared/FilterPredicate";
 import { IMapper } from "@/shared/mappers/IMapper";
 import { ISuccessStateRepository } from "../repository/ISuccessStateRepository";
+import IAuthService from "@/model/service/IAuthService";
 
 
 const SuccessStateCreateDtoSchema = z.object({
@@ -61,7 +63,8 @@ export class SuccessStateClient implements ISuccessStateRepository {
   private readonly successStateRepository: HttpZodRepository<SuccessStateCompleteItem>;
 
   constructor(
-    httpClient: ZodHttpClient,
+    private httpClient: ZodHttpClient,
+    private authService: IAuthService,
     baseUrl: string = "/successState",
     mapper: IMapper<SuccessStateCompleteItem, Success> = new SuccessCompletMapper()
   ) {
@@ -83,9 +86,8 @@ export class SuccessStateClient implements ISuccessStateRepository {
   }
 
   async update(id: string, success: SuccessStateCompleteItem): Promise<void> {
-    // const dto = this.mapper.toUpdateDto(success);
-    // await this.successStateRepository.update(id, dto);
-            throw new Error("Méthode non implémentée.");
+    await this.successStateRepository.update(id, success);
+
 
   }
 
@@ -101,13 +103,45 @@ export class SuccessStateClient implements ISuccessStateRepository {
   }
 
   async getAll(request: PagedRequest): Promise<PagingResult<SuccessStateCompleteItem>> {
-    const dtoResult = await this.successStateRepository.getAll(request);
+    // const user = await this.authService.getValidated(
+    //   "/FloraFaunaGo_API/user",
+    //   z.object({
+    //   count: z.number(),
+    //   index: z.number(),
+    //   total: z.number(),
+    //   items: z.array(UtilisateurApiResponseSchema)
+    //   }),
+    //   undefined,
+    //   { index: request.index, count: request.count }
+    // )
+    // if (!user) {
+    //   throw new Error("User not authenticated or missing ID");
+    // }
+    
+    //const user = await this.authService.getUser();
+
+    //a modifier [Patrick]
+    const endpoint = `/FloraFaunaGo_API/success/state/idUser=219ea108-8af8-414b-a4c7-f12cf44f5247`
+    const dtoResult = await this.httpClient.getValidated(
+      endpoint,
+      z.object({
+      count: z.number(),
+      index: z.number(),
+      total: z.number(),
+      items: z.array(SuccessStateCompleteItemSchema)
+      }),
+      undefined,
+      { index: request.index, count: request.count }
+    );
+if (!dtoResult.success) {
+  throw dtoResult.error; // ou autre gestion d’erreur
+}
 
     return {
-      count: dtoResult.count,
-      index: dtoResult.index,
-      total: dtoResult.total,
-      items: dtoResult.items
+      count: dtoResult.data.count,
+      index: dtoResult.data.index,
+      total: dtoResult.data.total,
+      items: dtoResult.data.items
     };
   }
 

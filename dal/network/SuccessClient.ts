@@ -11,11 +11,12 @@ import {
 } from "@/shared/scheme/SuccessNormalDtoSchema";
 import { z } from "zod";
 import { SuccessMapper } from "@/shared/mappers/SuccessMapper";
-import {Success} from "@/model/domain/Success";
+import { Success } from "@/model/domain/Success";
 import { PagedRequest } from "@/shared/PagedRequest";
 import { PagingResult } from "@/shared/PagingResult";
 import { FilterPredicate } from "@/shared/FilterPredicate";
 import { IMapper } from "@/shared/mappers/IMapper";
+import IAuthService from "@/model/service/IAuthService";
 
 /**
  * Configuration du repository réseau pour les succès
@@ -27,7 +28,7 @@ const createSuccessRepositoryConfig = (): HttpZodRepositoryConfig<SuccessNormalD
     create: SuccessApiResponseSchema,
     update: SuccessApiResponseSchema,
     delete: z.object({ success: z.boolean() })
-    
+
   }
 });
 
@@ -36,23 +37,22 @@ const createSuccessRepositoryConfig = (): HttpZodRepositoryConfig<SuccessNormalD
  * Client réseau pour la ressource "Succès"
  */
 export class SuccessClient implements ISuccessRepository {
-  private readonly mapper: IMapper<SuccessNormalDto, Success>;
 
   constructor(
-    httpClient: ZodHttpClient,
+    private readonly httpClient: ZodHttpClient,
+    private authService: IAuthService,
     baseUrl: string = "/success",
-    mapper: IMapper<SuccessNormalDto, Success> = new SuccessMapper(),
+    private mapper: IMapper<SuccessNormalDto, Success> = new SuccessMapper(),
     private successRepository = new HttpZodRepository<SuccessNormalDto>(
       httpClient,
       baseUrl,
       createSuccessRepositoryConfig()
     ),
   ) {
-    this.mapper = mapper;
   }
-    isCompleted(suc: Success): Promise<Boolean> {
-        throw new Error("Method not implemented.");
-    }
+  isCompleted(suc: Success): Promise<Boolean> {
+    throw new Error("Method not implemented.");
+  }
 
   async create(success: Success): Promise<void> {
     const dto = this.mapper.toDto(success);
@@ -74,7 +74,12 @@ export class SuccessClient implements ISuccessRepository {
   }
 
   async getAll(request: PagedRequest): Promise<PagingResult<Success>> {
-    const dtoResult = await this.successRepository.getAll(request);
+    const user = this.authService.getUser();
+    if (!user) {
+      throw new Error("Utilisateur non authentifié");
+    }
+    const dtoResult = await this.successRepository.getAll(request)
+    user
     return {
       count: dtoResult.count,
       index: dtoResult.index,
