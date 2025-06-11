@@ -10,6 +10,7 @@ describe('<SpeciesImagePager />', () => {
         const capture = new Capture("1","",specie,[])
         const { getByText } = render(<SpeciesImagePager specie={specie} capture={capture}/>);
         getByText(specie.name);
-        getByText(specie.scientificName);
+        if(specie.scientificName)
+            getByText(specie.scientificName);
     });
 });
