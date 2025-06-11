@@ -86,6 +86,7 @@ export class SuccessStateClient implements ISuccessStateRepository {
   }
 
   async update(id: string, success: SuccessStateCompleteItem): Promise<void> {
+    console.log("Updating success state with ID:", id);
     await this.successStateRepository.update(id, success);
 
 
@@ -103,22 +104,6 @@ export class SuccessStateClient implements ISuccessStateRepository {
   }
 
   async getAll(request: PagedRequest): Promise<PagingResult<SuccessStateCompleteItem>> {
-    // const user = await this.authService.getValidated(
-    //   "/FloraFaunaGo_API/user",
-    //   z.object({
-    //   count: z.number(),
-    //   index: z.number(),
-    //   total: z.number(),
-    //   items: z.array(UtilisateurApiResponseSchema)
-    //   }),
-    //   undefined,
-    //   { index: request.index, count: request.count }
-    // )
-    // if (!user) {
-    //   throw new Error("User not authenticated or missing ID");
-    // }
-    
-    //const user = await this.authService.getUser();
 
     //a modifier [Patrick]
     const endpoint = `/FloraFaunaGo_API/success/state/idUser=219ea108-8af8-414b-a4c7-f12cf44f5247`

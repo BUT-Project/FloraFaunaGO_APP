@@ -26,7 +26,7 @@ export default class StubData extends IDataManager{
                 headers: {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json',
-                    "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMTllYTEwOC04YWY4LTQxNGItYTRjNy1mMTJjZjQ0ZjUyNDciLCJlbWFpbCI6InRlc3RAdGVzdC5mciIsInVpZCI6IjIxOWVhMTA4LThhZjgtNDE0Yi1hNGM3LWYxMmNmNDRmNTI0NyIsImV4cCI6MTc0OTY0OTgwMywiaXNzIjoiRmxvcmFGYXVuYUlzc3VlciIsImF1ZCI6IkZsb3JhRmF1bmFJc3N1ZXIifQ.dfC6qPC8F5jHEuDcHl2fkgS_LBDoEJvwT755AOokSqE"
+                    "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMTllYTEwOC04YWY4LTQxNGItYTRjNy1mMTJjZjQ0ZjUyNDciLCJlbWFpbCI6InRlc3RAdGVzdC5mciIsInVpZCI6IjIxOWVhMTA4LThhZjgtNDE0Yi1hNGM3LWYxMmNmNDRmNTI0NyIsImV4cCI6MTc0OTY3MjM1NCwiaXNzIjoiRmxvcmFGYXVuYUlzc3VlciIsImF1ZCI6IkZsb3JhRmF1bmFJc3N1ZXIifQ.Ce0RM_dHAd2lNOX-dXCQl6A1jzYV0O0o8vxIpHY-SWo"
                 }
             }),
             new StubAuth(this.ListUser),
@@ -37,7 +37,7 @@ export default class StubData extends IDataManager{
                 headers: {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json',
-                    "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMTllYTEwOC04YWY4LTQxNGItYTRjNy1mMTJjZjQ0ZjUyNDciLCJlbWFpbCI6InRlc3RAdGVzdC5mciIsInVpZCI6IjIxOWVhMTA4LThhZjgtNDE0Yi1hNGM3LWYxMmNmNDRmNTI0NyIsImV4cCI6MTc0OTY0OTgwMywiaXNzIjoiRmxvcmFGYXVuYUlzc3VlciIsImF1ZCI6IkZsb3JhRmF1bmFJc3N1ZXIifQ.dfC6qPC8F5jHEuDcHl2fkgS_LBDoEJvwT755AOokSqE"
+                    "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMTllYTEwOC04YWY4LTQxNGItYTRjNy1mMTJjZjQ0ZjUyNDciLCJlbWFpbCI6InRlc3RAdGVzdC5mciIsInVpZCI6IjIxOWVhMTA4LThhZjgtNDE0Yi1hNGM3LWYxMmNmNDRmNTI0NyIsImV4cCI6MTc0OTY3MjM1NCwiaXNzIjoiRmxvcmFGYXVuYUlzc3VlciIsImF1ZCI6IkZsb3JhRmF1bmFJc3N1ZXIifQ.Ce0RM_dHAd2lNOX-dXCQl6A1jzYV0O0o8vxIpHY-SWo"
                 }
             }),            
             new StubAuth(this.ListUser),

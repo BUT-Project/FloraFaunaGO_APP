@@ -20,6 +20,7 @@ export class SuccessManager {
   
     async testSuccess(params: TestSuccessParams): Promise<void> {
       const success = await this.repo.getById(params.name);
+      console.log(`Testing success: ${success}`);
       if (!success || !params.spec) return;
   
       const { cl, kg, dt, fm, spec } = params;
@@ -33,7 +34,8 @@ export class SuccessManager {
         return;
       }
   
-      if (success.objectif !== success.actualVal) {
+      if (success.objectif <= success.actualVal) {
+        console.log(`Success already completed: ${success.event}`);
         await SuccessStore.getState().updateSuccess(params.name);
       }
     }
@@ -47,12 +49,13 @@ export class SuccessManager {
     }
   
     async processSuccessByType(successType: SuccessType, spec: any): Promise<any> {
-      const all = await this.repo.getAll({ index: 1, count: 100 });
-      const filtered = all.items.filter(s => s.type === successType);
+      const all = await this.repo.getAll({ index: 0, count: 100 });
+      const filtered = all.items.filter(s => s.type === SuccessType.PHOTO || s.type === successType);
   
+      console.log(`Processing ${filtered.length} successes of type ${successType}`);
       const queue: TestSuccessParams[] = [];
       const seen = new Set<string>();
-  
+
       for (const success of filtered) {
         const key = `${success.event}-${spec.id}`;
         if (seen.has(key)) continue;
@@ -78,7 +81,7 @@ export class SuccessManager {
   
         queue.push(params);
       }
-  
+      console.log(`Queue length: ${queue.length}`);
       await this.executeSuccessQueue(queue);
   
       return spec;

@@ -12,7 +12,7 @@ import { SafeView } from "@/components/ui/SafeView";
 import { Colors } from "@/constants/Colors";
 import * as ImagePicker from 'expo-image-picker';
 import { useUserStore } from "@/context/zustand/store/useUserStore";
-
+import {SuccessCompletMapper} from "@/shared/mappers/SuccessCompletMapper";
 let ProfileImage: {};
 ProfileImage = require("../assets/images/ProfileImage.jpeg");
 const { width } = Dimensions.get('window');
@@ -32,7 +32,6 @@ export default function ProfilScreen() {
     const species = useAuthStore((state) => new Set(state.user?.captures.map(c => c.specie.id)).size);
     const family = useAuthStore((state) => new Set(state.user?.captures.map(c => c.specie.family)).size);
     const dataUser = useUserStore()
-
     const fetchSuccesses = async (currentPage: number) => {
         setIsLoading(true);
         try {
@@ -40,7 +39,7 @@ export default function ProfilScreen() {
                 index: currentPage-1,
                 count: 9
             }
-            const response = await successRepository?.getAll(PageRequest);
+            //const response = await successRepository?.getAll(PageRequest);
             const state = await successStateRepository?.getAll(PageRequest);
 
     if (state?.items) {
@@ -53,15 +52,12 @@ export default function ProfilScreen() {
        // }
     });
 
-    const mergedSuccesses = response!.items.map(success => {
-        const progress = stateMap.get(success.nom);
-        return {
-            ...success,
-            actualVal: progress,
-        };
-    });
+    const mapper = new SuccessCompletMapper();
 
-    setSuccesses(mergedSuccesses);
+    const successes = state.items.map((item) => mapper.toDomain(item));
+
+    setSuccesses(successes);
+
     setTotalPages(Math.ceil(state.total / 9));
     }
     } catch (error) {

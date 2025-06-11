@@ -21,9 +21,9 @@ export class SuccessCompletMapper implements IMapper<SuccessStateCompleteItem, S
             dto.success.nom,
             dto.success.image,
             dto.success.description,
-            dto.state.percentSucces, // actualVal = percentSucces
-            this.toEnum(dto.success.type),
+            dto.state.percentSucces,
             dto.success.objectif,
+            this.toEnum(dto.success.type),
             dto.success.evenement
         );
     }
