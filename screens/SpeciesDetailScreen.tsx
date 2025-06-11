@@ -38,8 +38,7 @@ const InfoRow = ({ icon, label, value, latin }: IconRowProps) => (
 
 
 const SpeciesDetailScreen = ({capture,specie}:SpeciesDetailScreenProps) => {
-    console.log("Specie :", specie);
-    console.log("Capture :", capture)
+
     const scrollRef = useAnimatedRef<Animated.ScrollView>();
     const scrollOffset = useSharedValue(0);
     const {t} = useTranslation();

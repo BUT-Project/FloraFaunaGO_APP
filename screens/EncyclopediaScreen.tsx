@@ -9,6 +9,10 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import Loading from "@/components/ui/Loading";
 
+
+export const LOADING_TEXT = "Chargement des espèces...";
+export const EMPTY_TEXT = "Aucune espèce trouvée";
+export const ERROR_TEXT = "Une erreur est survenue lors de la récupération des espèces...";
 export default function EncyclopediaScreen() {
     const background = useThemeColor({},"background");
     const tint = useThemeColor({},"tint");
@@ -30,11 +34,11 @@ export default function EncyclopediaScreen() {
                 <FilterModal baseSpecies={species} setFilteredSpecies={()=>{}}/>
             </ThemedView>
             {error ? 
-               <ErrorMessage message="Une erreur est survenue lors de la récupération des espèces..." refresh={refresh} />
+               <ErrorMessage message={ERROR_TEXT} refresh={refresh} />
                 :
                 <>
                 { isLoading ?
-                    <Loading disableTopInset disableBottomInset text="Chargement des espèces..." />
+                    <Loading disableTopInset disableBottomInset text={LOADING_TEXT} />
                     :
                     <FlatList
                         testID="Encyclopedia.Flatlist"
@@ -51,7 +55,7 @@ export default function EncyclopediaScreen() {
                         }
                         ListEmptyComponent={() => (
                             <View style={styles.empty}>
-                                <ThemedText type={"subtitle"}>Aucune espèce trouvée</ThemedText>
+                                <ThemedText testID="Empty.Text" type={"subtitle"}>{EMPTY_TEXT}</ThemedText>
                                 <Button testID="Refresh" title="Raffraîchir" color={tint} onPress={() => refresh()}/>
                             </View>
                         )}

@@ -29,7 +29,6 @@ export class ZodHttpClient extends HttpClient {
 
         // Make request
         const result = await this.request<TResponse>(requestConfig);
-        console.log('Request result:', result);
         if (!result.success) return result;
         if (responseSchema) {
             const validation = responseSchema.safeParse(result.data);

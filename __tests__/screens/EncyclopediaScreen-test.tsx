@@ -1,7 +1,7 @@
 import React from 'react';
 import { renderWithProviders as render } from '@/shared/utils/renderWithProviders';
 import { fireEvent, act } from '@testing-library/react-native';
-import EncyclopediaScreen from '@/screens/EncyclopediaScreen';
+import EncyclopediaScreen,{EMPTY_TEXT,ERROR_TEXT,LOADING_TEXT} from '@/screens/EncyclopediaScreen';
 import * as useSpeciesHook from '@/hooks/viewModels/useGetSpecies';
 import { Specie,Habitat,Diet,Family,Climate,Kingdom,Class } from '@/model/domain';
 import { useAuthStore } from  '@/context/zustand/store/useAuthStore';
@@ -10,6 +10,7 @@ const cat = new Specie(
     "1",
     "Chat",
     "Felis catus",
+    "",
     "Petit mammifère carnivore domestique.",
     new Habitat('maison', Climate.TEMPERATE),
     Diet.CARNIVORA,
@@ -17,7 +18,6 @@ const cat = new Specie(
     Class.MAMMALIA,
     Family.FELIDAE,
     [],
-    ""
 );
 
 jest.mock('@/context/zustand/store/useAuthStore', () => ({
@@ -49,7 +49,10 @@ describe('EncyclopediaScreen', () => {
     });
 
     const { getByTestId } = render(<EncyclopediaScreen />);
-    expect(getByTestId('Loading')).toBeTruthy();
+    expect(getByTestId('Loading.Indicator')).toBeTruthy();
+    expect(getByTestId('Loading.Text')).toBeTruthy();
+    expect(getByTestId('Loading.Text').children).toEqual([LOADING_TEXT])
+
   });
 
   it('affiche une erreur et permet de réessayer', async () => {
@@ -66,7 +69,7 @@ describe('EncyclopediaScreen', () => {
     });
 
     const { getByText } = render(<EncyclopediaScreen />);
-    expect(getByText(/Erreur de chargement/i)).toBeTruthy();
+    expect(getByText(ERROR_TEXT)).toBeTruthy();
     const button = getByText("Réessayer");
     fireEvent.press(button);
     expect(mockRefresh).toHaveBeenCalled();
@@ -80,6 +83,7 @@ describe('EncyclopediaScreen', () => {
         new Specie(
           "2",
           "Chien",
+          "",
           "Canis lupus familiaris",
           "Mammifère domestique, compagnon de l'homme.",
           new Habitat('maison', Climate.TEMPERATE),
@@ -88,7 +92,7 @@ describe('EncyclopediaScreen', () => {
           Class.MAMMALIA,
           Family.CANIDAE,
           [],
-          ""
+   
         )
       ],
       isLoading: false,
@@ -116,10 +120,12 @@ describe('EncyclopediaScreen', () => {
       fetchMoreData: jest.fn(),
     });
 
-    const { getByText, getByTestId } = render(<EncyclopediaScreen />);
+    const { getByTestId } = render(<EncyclopediaScreen />);
 
     
-    expect(getByText('Aucune espèce trouvée.')).toBeTruthy();
+    expect(getByTestId("Empty.Text")).toBeTruthy();
+    expect(getByTestId("Empty.Text").children).toEqual([EMPTY_TEXT]);
+
     const button = getByTestId("Refresh");
     fireEvent.press(button);
     expect(mockRefresh).toHaveBeenCalled();
