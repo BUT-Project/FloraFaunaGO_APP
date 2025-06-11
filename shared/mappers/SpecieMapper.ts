@@ -1,14 +1,18 @@
-import { Class, Climate, Diet, Family, Habitat, Kingdom, Specie} from "@/model/domain";
-import {SpecieDto} from "../scheme/SpecieDtoSchema";
-import {IMapper} from "@/shared/mappers/IMapper";
-import {getImageUri} from "@/shared/utils";
+import { Habitat, Specie} from "@/model/domain";
+import { SpecieDto, SpecieListDto } from "../scheme/SpecieDtoSchema";
+import { IMapper } from "@/shared/mappers/IMapper";
+import { getImageUri } from "@/shared/utils";
+import { LocationMapper } from "./LocationMapper";
 
-export class SpecieMapper implements IMapper<SpecieDto, Specie> {
+export class SpecieMapper implements IMapper<SpecieDto, Specie, SpecieListDto> {
+
+    private locationsMapper:  LocationMapper = new LocationMapper();
 
     toDomain(dto: SpecieDto): Specie {
         return new Specie(
             dto.id,
             dto.nom,
+            getImageUri(dto.image)!,
             dto.nom_scientifique,
             dto.description,
             new Habitat(dto.zone,dto.climat),
@@ -16,29 +20,43 @@ export class SpecieMapper implements IMapper<SpecieDto, Specie> {
             dto.kingdom, 
             dto.class,
             dto.famille,
-            [], // [YOAN] TODO: On ne gère pas les Locations pour pck ils y sont pas encore dans le DTO
-            getImageUri(dto.image)!
+            this.locationsMapper.toDomains(dto.localisations ?? []), // [YOAN] TODO: On ne gère pas les Locations pour pck ils y sont pas encore dans le DTO
         );
     }
 
     toDto(domain: Specie): SpecieDto {
-        return {
-            id:domain.id.toString(),
-            nom:domain.name,
-            nom_scientifique:domain.scientificName,
-            description:domain.description,
-            zone:domain.habitat.zone,
-            climat:domain.habitat.climate,
-            class:domain.class,
-            kingdom:domain.kingdom,
-            regime:domain.diet,
-            famille:domain.family,
-            image:domain.image,
-            image3D:""
-        }
+        // return {
+        //     id:domain.id.toString(),
+        //     nom:domain.name,
+        //     nom_scientifique:domain.scientificName,
+        //     description:domain.description,
+        //     zone:domain.habitat.zone,
+        //     climat:domain.habitat.climate,
+        //     class:domain.class,
+        //     kingdom:domain.kingdom,
+        //     regime:domain.diet,
+        //     famille:domain.family,
+        //     image:domain.image,
+        //     localisations:this.locationsMapper.toDtos(domain.locations),
+        //     image3D:""
+        // }
+        throw new Error("Method not implemented We should not update a specie in the database, only get it");
     }
 
     toUpdateDto(domain: Partial<Specie>): Partial<SpecieDto> {
         throw new Error("Method not implemented We should not update a specie in the database, only get it");
     }
+
+    private toDomainFromList(dto: SpecieListDto): Specie {
+        return new Specie(
+            dto.id,
+            dto.nom,
+            getImageUri(dto.image)!
+        );
+    }   
+
+    toDomains(dtos: SpecieListDto[]): Specie[] {
+        return dtos.map(dto => this.toDomainFromList(dto));
+    }
+    
 }

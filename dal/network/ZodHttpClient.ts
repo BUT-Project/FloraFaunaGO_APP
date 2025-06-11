@@ -30,9 +30,7 @@ export class ZodHttpClient extends HttpClient {
         // Make request
         const result = await this.request<TResponse>(requestConfig);
         if (!result.success) return result;
-        // Validate response
-        // [YOAN] TODO: EN gros le temps que leur DTO soit mis à jour pas de validation mais après faudra
-   /**     if (responseSchema) {
+        if (responseSchema) {
             const validation = responseSchema.safeParse(result.data);
             if (!validation.success) {
                 // If validation fails, return an error with the validation message
@@ -43,7 +41,7 @@ export class ZodHttpClient extends HttpClient {
             }
             return { success: true, data: validation.data };
         }
-        **/
+    
 
         return result;
     }

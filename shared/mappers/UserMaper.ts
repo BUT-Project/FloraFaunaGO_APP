@@ -45,4 +45,8 @@ export class UserMapper implements IMapper<UtilisateurNormalDto,User> {
             hash_mdp: undefined // Password updates handled separately [DAVE] [TODO] comment on modifier le password je pence que ya une requete dans le auth entity
         };
     }
+
+    toDomains(dtos: UtilisateurNormalDto[]): User[] {
+        return dtos.map(dto => this.toDomain(dto));
+    }
 }

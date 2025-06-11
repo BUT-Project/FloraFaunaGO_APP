@@ -3,7 +3,6 @@ import { ZodHttpClient } from "@/dal/network/ZodHttpClient";
 import { PagingResult } from "@/shared/PagingResult";
 import { PagedRequest, QueryParams } from "@/shared/PagedRequest";
 import { GenericRepository } from "@/dal/repository/IGenericRepository";
-import { FilterPredicate } from "@/shared/FilterPredicate";
 
 type RepositoryOperation = keyof GenericRepository<unknown>
 
@@ -57,6 +56,7 @@ export abstract class HttpZodResourceClient<T,TList=T, TCreate = Partial<T>, TUp
         protected readonly baseUrl: string,
         protected readonly config: HttpZodResourceConfig<T,TList, TCreate, TUpdate>
     ) {
+        
         // Create the default paged response schema to match PagingResult<T> interface exactly
         this.defaultPagedResponseSchema = z.object({
             count: z.number(),
@@ -133,8 +133,9 @@ export abstract class HttpZodResourceClient<T,TList=T, TCreate = Partial<T>, TUp
 
     async getAll(request: PagedRequest): Promise<PagingResult<TList | T>> {
         const url = this.getEndpoint('getAll');
+
+        console.log("pagedResponse", this.defaultPagedResponseSchema);
         const responseSchema = this.config.pagedResponseSchema ?? this.defaultPagedResponseSchema;
-        console.log("getAll URL", url);
         const result = await this.httpClient.getValidated(
             url,
             responseSchema,

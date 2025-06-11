@@ -8,28 +8,40 @@ import Location from "@/model/domain/Location";
 export default class Specie{
     id: string;
     name: string;
-    scientificName: string;
-    description: string;
-    habitat: Habitat;
-    diet: Diet;
-    kingdom:Kingdom;
-    class:Class;
-    family:Family;
-    locations:Location[];
+    scientificName?: string;
+    description?: string;
+    habitat?: Habitat;
+    diet?: Diet;
+    kingdom?:Kingdom;
+    class?:Class;
+    family?:Family;
+    locations?:Location[];
     image: string;
 
-    constructor(id: string, name: string, scientificName: string, description: string, habitat:Habitat, diet:Diet, kingdom:Kingdom, animalClass:Class, family:Family,locations:Location[], image: string) {
+     constructor(
+        id: string,
+        name: string,
+        image: string,
+        scientificName?: string,
+        description?: string,
+        habitat?: Habitat,
+        diet?: Diet,
+        kingdom?: Kingdom,
+        animalClass?: Class,
+        family?: Family,
+        locations?: Location[]
+    ) {
         this.id = id;
         this.name = name;
+        this.image = image;
         this.scientificName = scientificName;
         this.description = description;
-        this.habitat=habitat;
-        this.diet=diet;
-        this.kingdom=kingdom;
-        this.class=animalClass;
-        this.family=family;
-        this.locations=locations;
-        this.image = image;
+        this.habitat = habitat;
+        this.diet = diet;
+        this.kingdom = kingdom;
+        this.class = animalClass;
+        this.family = family;
+        this.locations = locations;
     }
 
 }

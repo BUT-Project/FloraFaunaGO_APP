@@ -1,31 +1,20 @@
 import React from "react";
-import {ThemedText,ThemedView} from "@/components/ui/themed";
 import SpeciesDetailScreen from "@/screens/SpeciesDetailScreen";
-import {useLocalSearchParams} from "expo-router";
+import {useLocalSearchParams, useRouter} from "expo-router";
 import {useGetById} from "@/hooks/viewModels/useGetById";
+import { ErrorMessage } from "@/components/ui/ErrorMessage";
 import StubData from "@/dal/StubLib/StubData";
-import Capture from "@/model/domain/Capture";
-import Specie from "@/model/domain/Specie";
+import {Capture,Specie} from "@/model/domain";
 import Loading from "@/components/ui/Loading";
-
-const CenteredMessage = ({ children }: { children: React.ReactNode }) => (
-    <ThemedView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        {children}
-    </ThemedView>
-);
-
-const ErrorView = ({ message }: { message: string }) => (
-    <CenteredMessage>
-        <ThemedText type={'subtitle'}>{message}</ThemedText>
-    </CenteredMessage>
-);
 
 export default function Details() {
 
     const {specieId, capturedId} = useLocalSearchParams();
     const captureId = typeof capturedId === 'string' ? capturedId : null;
     const specieId2 = typeof specieId === 'string' ? specieId : null;
+    const router = useRouter();
 
+    const onReturn = () => router.back();
     const stubData = StubData.getInstance();
     const repositories = {
         capture: stubData?.captureRepository ?? null,
@@ -45,21 +34,19 @@ export default function Details() {
     } = useGetById<Specie>(specieId2, repositories.species);
 
     if (!specieId2) {
-        return <ErrorView message="Paramètre `id` manquant ou invalide !" />;
+        return <ErrorMessage message="Paramètre `id` manquant ou invalide !" onReturn={onReturn} />;
     }
 
     if (!repositories.capture || !repositories.species) {
-        return <ErrorView message="Erreur de configuration des repositories" />;
+        return <ErrorMessage message="Erreur de configuration des repositories..." onReturn={onReturn}/>;
     }
 
     if (errorSpecie || errorCapture) {
         const errorMessage = [
-            errorSpecie?.message || (errorSpecie ? String(errorSpecie) : "Erreur lors de la récupération de l'espèce"),
-            errorCapture?.message || (errorCapture ? String(errorCapture) : "Erreur lors de la récupération de la capture")
+            errorCapture?.message || (errorCapture ? String(errorCapture) : "Erreur lors de la récupération de la capture :\n"),
+            errorSpecie?.message || (errorSpecie ? String(errorSpecie) : "Erreur lors de la récupération de l'espèce\n"),
         ].join(' ');
-
-
-        return <ErrorView message={errorMessage} />;
+        return <ErrorMessage message={errorMessage} onReturn={onReturn} />;
     }
 
     if (isSpecieLoading || isCaptureLoading) {
@@ -67,7 +54,7 @@ export default function Details() {
     }
 
     if (!specie) {
-        return <ErrorView message="Espèce introuvable..." />;
+        return <ErrorMessage message="Espèce introuvable..." />;
     }
 
     return (
