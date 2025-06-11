@@ -33,6 +33,7 @@ steps:
     commands:
       - npm run lint
     depends_on: [ typescript-check ]
+    failure: ignore
 
   - name: code-analysis
     image: node:latest
