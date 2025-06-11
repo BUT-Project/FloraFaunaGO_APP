@@ -14,7 +14,6 @@ interface FamilyListProps {
 const width = Dimensions.get('window').width;
 const itemSize = (width / 3) - 10;
 
-
 const FamilyList: React.FC<FamilyListProps> = ({family,specieId,userCaptures}) => {
     const {
             captures,
@@ -98,3 +97,4 @@ const styles = StyleSheet.create({
 });
 
 export default FamilyList;
+

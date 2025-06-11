@@ -1,4 +1,4 @@
-import {IKVStorage} from "@/service/IKVStorage";
+import {IKVStorage} from "@/services/IKVStorage";
 import {getStorageItemAsync, setStorageItemAsync} from "@/libs/secureStore";
 
 export class SecureLocalStorageAdapter implements IKVStorage {

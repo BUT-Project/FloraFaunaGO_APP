@@ -141,7 +141,7 @@ export abstract class HttpZodResourceClient<T,TList=T, TCreate = Partial<T>, TUp
             undefined,
             this.buildQueryParams(request)
         );
-
+        console.log("getall result",result)
         if (!result.success) {
             throw result.error;
         }

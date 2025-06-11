@@ -20,7 +20,7 @@ const {width} = Dimensions.get('window');
 interface SpeciesDetailScreenProps {
     capture: Capture | null;
     specie: Specie;
-};
+}
 
 type IconRowProps = {
     icon?: keyof typeof Ionicons.glyphMap;

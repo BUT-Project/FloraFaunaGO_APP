@@ -10,7 +10,7 @@ interface FilterEnumSelectorProps<T> {
     selectedColor:string;
     onFilterChange: (value: T[keyof T]) => void;
     renderLabel?: (item: T[keyof T]) => string;
-};
+}
 
 export function FilterEnumSelector<T extends Record<string,string>>({
     label,
