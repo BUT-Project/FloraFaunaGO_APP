@@ -21,7 +21,7 @@ const NotCaptured: React.FC<NotCapturedProps> = ({ specie }) => {
                 Capturez un(e) <ThemedText testID='SpecieName' style={[styles.species,{color:tint}]}>{specie.name}</ThemedText> pour en apprendre plus !
             </ThemedText>
             <ThemedText style={styles.mapLabel}>Où capturer cette espèce :</ThemedText>
-            <ExtendableMap locations={specie.locations} style={styles.mapContainer}/>
+            <ExtendableMap locations={specie.locations ?? []} style={styles.mapContainer}/>
         </ThemedView>
     );
 };

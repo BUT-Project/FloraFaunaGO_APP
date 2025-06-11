@@ -5,7 +5,7 @@ import { Class, Climate, Diet, Family, Kingdom } from '@/model/domain';
 export const SpecieDtoSchema = z.object({
   id: z.string(),
   nom: z.string(),
-  nom_scientifique: z.string(),
+  nom_Scientifique: z.string(),
   description: z.string(),
   image: z.string(),
   image3D: z.string(),

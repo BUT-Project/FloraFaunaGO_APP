@@ -37,7 +37,7 @@ export class SpeciesClient implements ISpeciesRepository {
     // TODO: [YOAN] DES que il on fait la route /espece/{id}/related, on peut l'utiliser pour les espèces liées par famille et adapte le code
     async getRelatedSpeciesByFamily(specieId: string, page: number, pageSize: number): Promise<PagingResult<Specie>> {
         const resultData = await this.httpClient.getValidated(
-            `${this.baseUrl}/${specieId}` + '/related',
+            `${this.baseUrl}/${specieId}/related`,
             PagingResultSpecieSchema,
             undefined,
             {index: page,count: pageSize}
@@ -50,7 +50,7 @@ export class SpeciesClient implements ISpeciesRepository {
         const mappedSpecies = this.specieMapper.toDomains(pagingResult.items);
 
         return {
-            items: [],
+            items: mappedSpecies,
             index: pagingResult.index,
             count: pagingResult.count,
             total: pagingResult.total
@@ -64,7 +64,6 @@ export class SpeciesClient implements ISpeciesRepository {
 
     async getAll(request: PagedRequest): Promise<PagingResult<Specie>> {
         const pagingResult = await this.speciesHttpClient.getAll(request);
-        console.log("getAll result", pagingResult);
         const mappedSpecies = this.specieMapper.toDomains(pagingResult.items);
         return {
             items: mappedSpecies,

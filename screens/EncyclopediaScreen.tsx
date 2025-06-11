@@ -1,6 +1,6 @@
 import {ActivityIndicator, Button, FlatList, StyleSheet, View} from "react-native";
 import {SpecieListItem,SearchBar,FilterModal} from "@/components/encyclopedia";
-import {useState} from "react";
+import { useState } from "react";
 import {ThemedText, ThemedView} from "@/components/ui/themed";
 import { ErrorMessage } from "@/components/ui/ErrorMessage";
 import {useGetSpecies} from "@/hooks/viewModels/useGetSpecies";
