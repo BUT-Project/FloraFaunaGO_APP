@@ -1,5 +1,5 @@
 import React from 'react';
-import {ActivityIndicator, StyleSheet, TouchableOpacity, Text, View} from 'react-native';
+import {ActivityIndicator, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {Ionicons} from '@expo/vector-icons';
 import {CameraType} from "expo-camera";
 import ZoomControl from './ZoomControl';

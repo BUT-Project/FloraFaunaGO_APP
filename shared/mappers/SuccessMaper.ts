@@ -13,7 +13,7 @@ export class SuccessMapper implements IMapper<SuccessNormalDto,Success> {
             default: throw new Error(`Invalid SuccessType string: ${type}`);
         }
     }
-    private toString(type: SuccessType): SuccessTypeNormal {
+    private successTypeToString(type: SuccessType): SuccessTypeNormal {
         return SuccessType[type] as SuccessTypeNormal;
     }
     
@@ -48,7 +48,7 @@ export class SuccessMapper implements IMapper<SuccessNormalDto,Success> {
             description: domain.description,
             actualVal: domain.actualVal,
             objectif: domain.objectif,
-            type: this.toString(domain.type),
+            type: this.successTypeToString(domain.type),
             event: domain.event
         };
     }
@@ -60,8 +60,13 @@ export class SuccessMapper implements IMapper<SuccessNormalDto,Success> {
             description: domain.description,
             actualVal: domain.actualVal,
             objectif: domain.objectif,
-            type: domain.type !== undefined ? this.toString(domain.type) : undefined,
+            type: domain.type !== undefined ? this.successTypeToString(domain.type) : undefined,
             event: domain.event
         };
+    }
+
+    toDomains(dtos:SuccessNormalDto[]):Success[]{
+        return dtos.map(dto=> this.toDomain(dto));
+
     }
 }

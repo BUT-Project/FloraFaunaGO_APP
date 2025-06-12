@@ -1,4 +1,4 @@
-import { Dimensions, StyleSheet, FlatList, useColorScheme } from "react-native";
+import { Dimensions, StyleSheet, FlatList } from "react-native";
 import React, { useMemo } from "react";
 import Animated, {
   useAnimatedRef,
@@ -6,7 +6,7 @@ import Animated, {
   useSharedValue,
 } from "react-native-reanimated";
 import { ThemedIcon, ThemedText, ThemedView } from "@/components/ui/themed";
-import { Capture ,Specie } from "@/model/domain";
+import { Capture ,Family,Specie } from "@/model/domain";
 import { useAuthStore } from "@/context/zustand/store/useAuthStore";
 import { CaptureDetails, ExtendableText, FamilyList, DetailsHeader, NotCaptured } from "@/components/encyclopedia";
 import { ExtendableMap } from "@/components/ui/ExtendableMap";
@@ -20,7 +20,7 @@ const {width} = Dimensions.get('window');
 interface SpeciesDetailScreenProps {
     capture: Capture | null;
     specie: Specie;
-};
+}
 
 type IconRowProps = {
     icon?: keyof typeof Ionicons.glyphMap;
@@ -28,6 +28,7 @@ type IconRowProps = {
     value: string;
     latin?: string;
 };
+
 const InfoRow = ({ icon, label, value, latin }: IconRowProps) => (
   <ThemedView style={styles.rowAligned}>
     {icon && <ThemedIcon name={icon} size={18}/>}
@@ -37,6 +38,7 @@ const InfoRow = ({ icon, label, value, latin }: IconRowProps) => (
 
 
 const SpeciesDetailScreen = ({capture,specie}:SpeciesDetailScreenProps) => {
+
     const scrollRef = useAnimatedRef<Animated.ScrollView>();
     const scrollOffset = useSharedValue(0);
     const {t} = useTranslation();
@@ -45,18 +47,19 @@ const SpeciesDetailScreen = ({capture,specie}:SpeciesDetailScreenProps) => {
     const capturedSpecie = user?.captures ?? [];
 
     const isCaptured = useMemo(() => capture != null, [capture]);
-
+    
     const oldestCapture = useMemo(() => {
         if (capture) {
             if (capture.capturesDetails?.length > 0) {
                 return capture.capturesDetails?.reduce((oldest, current) =>  current.date < oldest.date ? current : oldest)
             }
         } else return null;
-    }, [capture?.capturesDetails]);
-
+    }, [capture]);
+    
     const scrollHandler = useAnimatedScrollHandler((event) => {
         scrollOffset.value = event.contentOffset.y;
     });
+    
 
     return (
     <SafeView disableBottomInset>
@@ -83,27 +86,30 @@ const SpeciesDetailScreen = ({capture,specie}:SpeciesDetailScreenProps) => {
                 <ThemedView style={styles.infoBlock}>
                     <InfoRow icon="home" label="Habitat " value="" />
                     <ThemedView style={styles.infosContainer}>
-                        <InfoRow icon="thermometer" label="Climat" value={t(`climate.${specie.habitat.climate}`)} />
-                        <InfoRow icon="pin-outline" label="Zone" value={specie.habitat.zone} />
+                        <InfoRow icon="thermometer" label="Climat" value={t(`climate.${specie.habitat?.climate ?? "UNKNOWN"}`)} />
+                        <InfoRow icon="pin-outline" label="Zone" value={specie.habitat?.zone ?? "UNKNOWN"} />
                     </ThemedView>
                     <InfoRow icon="leaf" label="Régime" value={t(`diet.${specie.diet}`)} latin={specie.diet} />
                 </ThemedView>
             </ThemedView>
             <ThemedView style={styles.sectionRow}>
                 <ExtendableText
-                    text={specie.description}
+                    text={specie.description ?? ""}
                     style={[styles.descContainer,{backgroundColor:descBackgroundColor}]}
                     textStyle={styles.description}
                 />
                 <ExtendableMap
-                    locations={specie.locations}
+                    locations={specie.locations ?? []}
                     mapStyle={styles.map}
                     style={styles.mapContainer}
                     />
             </ThemedView>
+           
             <ThemedView style={styles.section}>
-                <FamilyList family={specie.family} specieId={specie?.id} userCaptures={capturedSpecie}/>
+                <FamilyList family={specie.family ?? Family.UNKNOWN} specieId={specie?.id} userCaptures={capturedSpecie}/>
             </ThemedView>
+                
+          
             {( capture && capture.capturesDetails.length > 0) ?
                 <>
                     <ThemedView style={styles.section}>

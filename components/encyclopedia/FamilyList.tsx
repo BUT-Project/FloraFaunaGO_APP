@@ -14,7 +14,6 @@ interface FamilyListProps {
 const width = Dimensions.get('window').width;
 const itemSize = (width / 3) - 10;
 
-
 const FamilyList: React.FC<FamilyListProps> = ({family,specieId,userCaptures}) => {
     const {
             captures,
@@ -28,45 +27,51 @@ const FamilyList: React.FC<FamilyListProps> = ({family,specieId,userCaptures}) =
     return(
     <>
         <ThemedText type={"infoTitle"}>Famille :</ThemedText>
-        {isLoading ? (
-            <ThemedView>
-                <ActivityIndicator size={'small'} />
-            </ThemedView>
-        ) : (
-            <FlatList
-                data={captures}
-                keyExtractor={(item) => `FamilyMember-${item.id}`}
-                renderItem={({ item }) => (
-                    <SpecieListItem
-                        specie={item}
-                        captureId={
-                            userCaptures?.find(captureIn => captureIn.specie.id === item.id)?.id ?? null
-                        }
-                    />
-                )}
-                ListEmptyComponent={() => (
-                    <ThemedView style={styles.emptyFam}>
-                        <ThemedText>Aucune espèce trouvée</ThemedText>
-                    </ThemedView>
-                )}
-                ListFooterComponent={() =>
-                    family.length > 0 && (
-                        <ThemedView style={styles.footerFam}>
-                            {isListEnd && (
-                                <ThemedText style={{ textAlign: "center" }}>
-                                    Pas plus de capture pour le moment.
-                                </ThemedText>
-                            )}
-                            {isLoadingMore && <ActivityIndicator size={"small"} />}
+        {error ? 
+            <ThemedText>Erreur lors la récupération de la famille de l&apos;espèce.</ThemedText>
+        :
+        <>
+            {isLoading ? (
+                <ThemedView>
+                    <ActivityIndicator size={'small'} />
+                </ThemedView>
+            ) : (
+                <FlatList
+                    data={captures}
+                    keyExtractor={(item) => `FamilyMember-${item.id}`}
+                    renderItem={({ item }) => (
+                        <SpecieListItem
+                            specie={item}
+                            captureId={
+                                userCaptures?.find(captureIn => captureIn.specie.id === item.id)?.id ?? null
+                            }
+                        />
+                    )}
+                    ListEmptyComponent={() => (
+                        <ThemedView style={styles.emptyFam}>
+                            <ThemedText>Aucune espèce trouvée</ThemedText>
                         </ThemedView>
-                    )
-                }
-                onEndReached={fetchMoreData}
-                onEndReachedThreshold={0.5}
-                showsHorizontalScrollIndicator={false}
-                horizontal={true}
-            />
-        )}
+                    )}
+                    ListFooterComponent={() =>
+                        family.length > 0 && (
+                            <ThemedView style={styles.footerFam}>
+                                {isListEnd && (
+                                    <ThemedText style={{ textAlign: "center" }}>
+                                        Pas plus de capture pour le moment.
+                                    </ThemedText>
+                                )}
+                                {isLoadingMore && <ActivityIndicator size={"small"} />}
+                            </ThemedView>
+                        )
+                    }
+                    onEndReached={fetchMoreData}
+                    onEndReachedThreshold={0.5}
+                    showsHorizontalScrollIndicator={false}
+                    horizontal={true}
+                />
+            )}
+            </>
+        }
     </>
     );
 };
@@ -92,3 +97,4 @@ const styles = StyleSheet.create({
 });
 
 export default FamilyList;
+

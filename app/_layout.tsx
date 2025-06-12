@@ -31,9 +31,11 @@ export default function RootLayout() {
     }
 
     return (
+    
         <GestureHandlerRootView style={{ flex: 1 }}>
             <SafeAreaProvider>
-                    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+              
+                     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
                         <QueryClientProvider client={queryClient}>
                             <Stack>
                                 <Stack.Screen name="(tabs)" options={{headerShown: false}}/>
@@ -43,6 +45,8 @@ export default function RootLayout() {
                             </Stack>
                         </QueryClientProvider>
                     </ThemeProvider>
+             
+                   
             </SafeAreaProvider>
         </GestureHandlerRootView>
     );

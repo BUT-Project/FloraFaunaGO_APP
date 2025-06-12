@@ -5,13 +5,13 @@ import { Class, Climate, Diet, Family, Kingdom } from '@/model/domain';
 export const SpecieDtoSchema = z.object({
   id: z.string(),
   nom: z.string(),
-  nom_scientifique: z.string(),
+  nom_Scientifique: z.string(),
   description: z.string(),
   image: z.string(),
-  image3D: z.string(),
+  image3D: z.string().nullable().optional(),
   class: z.nativeEnum(Class),
   kingdom: z.nativeEnum(Kingdom),
-  famille: z.nativeEnum(Family),
+  famille: z.nativeEnum(Family).default(Family.UNKNOWN),
   zone: z.string(),
   climat: z.nativeEnum(Climate),
   regime: z.nativeEnum(Diet),
@@ -22,7 +22,7 @@ export const SpecieListDtoSchema = z.object({
   id: z.string(),
   nom: z.string(),
   image: z.string(),
-  image3D: z.string(),
+  image3D: z.string().nullable().optional(),
 });
 
 export const PagingResultSpecieSchema = z.object({

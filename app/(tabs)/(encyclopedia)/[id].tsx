@@ -6,6 +6,7 @@ import { ErrorMessage } from "@/components/ui/ErrorMessage";
 import StubData from "@/dal/StubLib/StubData";
 import {Capture,Specie} from "@/model/domain";
 import Loading from "@/components/ui/Loading";
+import ErrorBoundary from "@/components/ErrorBoundary";
 
 export default function Details() {
 
@@ -42,11 +43,21 @@ export default function Details() {
     }
 
     if (errorSpecie || errorCapture) {
-        const errorMessage = [
-            errorCapture?.message || (errorCapture ? String(errorCapture) : "Erreur lors de la récupération de la capture :\n"),
-            errorSpecie?.message || (errorSpecie ? String(errorSpecie) : "Erreur lors de la récupération de l'espèce\n"),
-        ].join(' ');
-        return <ErrorMessage message={errorMessage} onReturn={onReturn} />;
+        const errorMessages: string[] = [];
+
+        if (errorCapture) {
+            const captureMessage = errorCapture.message ? `Erreur lors de la récupération de la capture :\n${errorCapture.message}` 
+                : `Erreur lors de la récupération de la capture :\n${String(errorCapture)}`;
+            errorMessages.push(captureMessage);
+        }
+
+        if (errorSpecie) {
+            const specieMessage = errorSpecie.message? `Erreur lors de la récupération de l'espèce :\n${errorSpecie.message}` 
+                : `Erreur lors de la récupération de l'espèce :\n${String(errorSpecie)}`;
+            errorMessages.push(specieMessage);
+        }
+
+        return <ErrorMessage message={errorMessages.join('\n\n')} onReturn={onReturn} />;
     }
 
     if (isSpecieLoading || isCaptureLoading) {
@@ -58,9 +69,8 @@ export default function Details() {
     }
 
     return (
-            <SpeciesDetailScreen
-                specie={specie}
-                capture={capture}
-            />
-    )
+        <ErrorBoundary page="Détail de l'espèce">
+            <SpeciesDetailScreen specie={specie} capture={capture}/>
+        </ErrorBoundary>
+    );
 }

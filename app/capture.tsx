@@ -8,7 +8,7 @@ export default function Capture() {
     const { resetState } = useSpeciesStore();
     const router = useRouter();
 
-    const onResult = (Success:Boolean) => {
+    const onResult = (Success:boolean) => {
         if (Success) {
             router.replace({pathname: '/(tabs)/(home)/reveal',})
         } else {

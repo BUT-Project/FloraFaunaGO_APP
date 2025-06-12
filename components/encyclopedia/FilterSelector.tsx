@@ -10,7 +10,7 @@ interface FilterEnumSelectorProps<T> {
     selectedColor:string;
     onFilterChange: (value: T[keyof T]) => void;
     renderLabel?: (item: T[keyof T]) => string;
-};
+}
 
 export function FilterEnumSelector<T extends Record<string,string>>({
     label,
@@ -27,7 +27,7 @@ export function FilterEnumSelector<T extends Record<string,string>>({
             <FlatList
                 data={Object.values(enumType)}
                 renderItem={({ item }) => (
-                    <FilterChips item={item} isSelected={item == value} selectedColor={selectedColor} onFilterChange={onFilterChange} renderLabel={renderLabel} />
+                    <FilterChips item={item} isSelected={item === value} selectedColor={selectedColor} onFilterChange={onFilterChange} renderLabel={renderLabel} />
                 )}
                 keyExtractor={(item) => String(item)}
                 horizontal

@@ -5,11 +5,12 @@ export  const buildSpecie = (id:string) => new Specie(
     `Specie ${id}`,
     `Scientific Name ${id}`,
     `Description of specie ${id}`,
+    `https://example.com/specie${id}.jpg`,
     new Habitat('forest',Climate.TEMPERATE),
     Diet.CARNIVORA,
     Kingdom.ANIMALIA,
     Class.MAMMALIA,
     Family.FELIDAE,
     [],
-    `https://example.com/specie${id}.jpg`
+ 
 );

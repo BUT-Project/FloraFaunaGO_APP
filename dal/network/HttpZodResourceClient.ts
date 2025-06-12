@@ -124,7 +124,7 @@ export abstract class HttpZodResourceClient<T,TList=T, TCreate = Partial<T>, TUp
             url,
             this.config.resourceSchema
         );
-
+        
         if (!result.success) {
             throw result.error;
         }
@@ -134,7 +134,6 @@ export abstract class HttpZodResourceClient<T,TList=T, TCreate = Partial<T>, TUp
     async getAll(request: PagedRequest): Promise<PagingResult<TList | T>> {
         const url = this.getEndpoint('getAll');
 
-        console.log("pagedResponse", this.defaultPagedResponseSchema);
         const responseSchema = this.config.pagedResponseSchema ?? this.defaultPagedResponseSchema;
         const result = await this.httpClient.getValidated(
             url,
@@ -142,8 +141,7 @@ export abstract class HttpZodResourceClient<T,TList=T, TCreate = Partial<T>, TUp
             undefined,
             this.buildQueryParams(request)
         );
-        console.log("getAll result", result);
-
+        console.log("getall result",result)
         if (!result.success) {
             throw result.error;
         }

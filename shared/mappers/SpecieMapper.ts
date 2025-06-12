@@ -13,14 +13,14 @@ export class SpecieMapper implements IMapper<SpecieDto, Specie, SpecieListDto> {
             dto.id,
             dto.nom,
             getImageUri(dto.image)!,
-            dto.nom_scientifique,
+            dto.nom_Scientifique,
             dto.description,
             new Habitat(dto.zone,dto.climat),
             dto.regime,
             dto.kingdom, 
             dto.class,
             dto.famille,
-            this.locationsMapper.toDomains(dto.localisations ?? []), // [YOAN] TODO: On ne gère pas les Locations pour pck ils y sont pas encore dans le DTO
+            this.locationsMapper.toDomains(dto.localisations ?? []), 
         );
     }
 

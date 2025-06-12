@@ -1,10 +1,10 @@
 import React, {useMemo, useState} from 'react';
 import {Dimensions, Modal, Pressable, StyleProp, StyleSheet, TouchableHighlight, ViewStyle} from 'react-native';
 import MapView, {Marker} from "react-native-maps";
-import {ThemedView} from '@/components/ui/themed/ThemedView';
+import {} from '@/components/ui/themed/ThemedView';
 import {Ionicons} from '@expo/vector-icons';
 import Location from "@/model/domain/Location";
-import { ViewProps } from 'react-native-svg/lib/typescript/fabric/utils';
+import { ThemedText,ThemedView } from './themed';
 
 const { width } = Dimensions.get('window');
 
@@ -16,13 +16,17 @@ export type ExtendableMapProps = {
 
 export function ExtendableMap({ locations, mapStyle, style }: ExtendableMapProps) {
     const [isExtended, setIsExtended] = useState(false);
+    const hasLocations = useMemo(()=>locations.length > 0,[locations]);
 
-    const initialRegion = useMemo(() => ({
-        longitude: locations[0]?.longitude,
-        latitude: locations[0]?.latitude,
-        latitudeDelta: 0.3,
-        longitudeDelta: 0.3,
-    }), [locations]);
+    const initialRegion = useMemo(() => {
+        if (!hasLocations) return undefined;
+        return {
+            longitude: locations[0].longitude,
+            latitude: locations[0].latitude,
+            latitudeDelta: 0.3,
+            longitudeDelta: 0.3,
+        };
+    }, [locations,hasLocations]);
 
     const markers = useMemo(() => locations.map((loc, index) => (
         <Marker
@@ -34,6 +38,14 @@ export function ExtendableMap({ locations, mapStyle, style }: ExtendableMapProps
         />
     )), [locations]);
 
+    if (!hasLocations) {
+        return (
+            <ThemedView style={[styles.container,styles.noLocContainer, style]}>
+                <Ionicons name="warning-sharp" color={"red"} size={50}/>
+                <ThemedText>Aucune location trouvée..</ThemedText>
+            </ThemedView>
+        );
+    }
     return (
         <>
                 <ThemedView style={[styles.container,style]}>
@@ -92,5 +104,12 @@ const styles = StyleSheet.create({
         alignSelf:"flex-end",
         padding: 5, 
         borderRadius: 5, 
+    },
+    noLocContainer:{
+        alignItems:"center",
+        justifyContent:"center",
+        gap:10,
+        borderWidth:1,
+        borderColor:"red",
     }
 });

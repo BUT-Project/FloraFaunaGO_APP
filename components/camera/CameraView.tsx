@@ -63,7 +63,7 @@ const CustomCameraView = ({setBase64Image, setCapturedImage, style}: CustomCamer
         return (
             <ThemedView style={[styles.container, style]}>
                 <ThemedText style={styles.message}>Nous avons besoin de votre permission pour utiliser la caméra de
-                    l'appareil.</ThemedText>
+                    l&apos;appareil.</ThemedText>
                 <TouchableOpacity testID="AllowPermission.Button" style={styles.permissionButton} onPress={requestPerm}>
                     <ThemedText style={styles.permissionButtonText}>Accorder la permission</ThemedText>
                 </TouchableOpacity>

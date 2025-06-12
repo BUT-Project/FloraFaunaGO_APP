@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {ActivityIndicator, Dimensions, Image, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {ActivityIndicator, Image, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {Ionicons} from "@expo/vector-icons";
 import Animated, {Easing, useAnimatedStyle, useSharedValue, withTiming} from "react-native-reanimated";
 import {Link} from "expo-router";
@@ -13,8 +13,6 @@ interface PreviewOverlayProps {
     closePreview: () => void;
 }
 
-const { width, height } = Dimensions.get('window');
-
 export default function PreviewOverlay({ capturedImage, identifiedSpecies, closePreview }: PreviewOverlayProps) {
     const [imageLoaded, setImageLoaded] = useState(false);
     const opacity = useSharedValue(0);
@@ -26,7 +24,7 @@ export default function PreviewOverlay({ capturedImage, identifiedSpecies, close
             opacity.value = withTiming(1, { duration: 300, easing: Easing.out(Easing.ease) });
             slideUp.value = withTiming(0, { duration: 300, easing: Easing.out(Easing.ease) });
         });
-    }, [capturedImage]);
+    }, [capturedImage,opacity,slideUp]);
 
     const animatedStyle = useAnimatedStyle(() => ({
         opacity: opacity.value,
@@ -37,7 +35,7 @@ export default function PreviewOverlay({ capturedImage, identifiedSpecies, close
         return (
             <View style={styles.loadingContainer}>
                 <ActivityIndicator size="large" color="#4CAF50" />
-                <ThemedText style={styles.loadingText}>Chargement de l'image...</ThemedText>
+                <ThemedText style={styles.loadingText}>Chargement de l&apos;image...</ThemedText>
             </View>
         );
     }

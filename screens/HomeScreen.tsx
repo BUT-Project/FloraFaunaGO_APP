@@ -13,6 +13,7 @@ import {Specie,SuccessType} from "@/model/domain";
 import {useSpeciesStore} from "@/context/zustand/store/useSpeciesStore";
 import { useFocusEffect } from '@react-navigation/native';
 import { SafeView } from "@/components/ui/SafeView";
+import { ErrorMessage } from "@/components/ui/ErrorMessage";
 import {  isImageBlurry } from "@/services/imageQuality";
 import { toast } from "@backpackapp-io/react-native-toast";
 import { SuccessManager } from "@/dal/manager/SuccessManager";
@@ -28,6 +29,10 @@ export default function HomeScreen() {
     const [capturedImage, setCapturedImage] = useState<string | null>(null);
     const [base64Image, setBase64Image] = useState<string | null>(null);
     const [activeView, setActiveView] = useState('camera');
+
+    if (!speciesRepository) {
+        return <ErrorMessage message="Erreur de configuration des repositories" />;
+    }
 
     useFocusEffect(
         useCallback(() => {
@@ -108,13 +113,13 @@ export default function HomeScreen() {
                         &&
                         <>
                             <CameraView  setBase64Image={setBase64Image} setCapturedImage={setCapturedImage}
-                                        style={styles.camera}/>
+                                         style={styles.camera}/>
                             {isFetching && (
                                 <View style={styles.progressOverlay}>
                                     <ARProgressIndicator width={SCREEN_WIDTH} height={SCREEN_WIDTH}/>
                                 </View>
                             )}
-                            <MainMapView style={styles.map}/>
+                            <MainMapView style={styles.map} repository={speciesRepository}/>
                         </>}
                 </Animated.View>
             </ThemedView>
@@ -155,17 +160,19 @@ const styles = StyleSheet.create({
         right: 0,
         zIndex: 10,
     },
-    viewContainer: {
-        flex: 1,
-        flexDirection: 'row',
-        width: '200%',
-    },
     camera: {
         flex: 1,
         width: '50%',
         height: '100%'
     },
     map: {
+        flex: 1,
         width: '50%',
+        height: '100%',
+    },
+    viewContainer: {
+        flex: 1,
+        flexDirection: 'row',
+        width: '200%',
     },
 });

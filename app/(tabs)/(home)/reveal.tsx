@@ -57,7 +57,7 @@ export default function Reveal() {
         return () => {
             isMounted = false;
         };
-    }, [specie, capturedImageUri]);
+    }, [specie, capturedImageUri,addSpecieToUser]);
 
     if (isLoading) {
         return (<Loading disableBottomInset text="Sauvegarde de votre photo..."/>);

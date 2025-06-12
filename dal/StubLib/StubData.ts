@@ -25,7 +25,7 @@ export default class StubData extends IDataManager{
                 headers:{
                     'Content-Type': 'application/json',
                     'Accept': 'application/json',
-                    "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlNjk2MjRiNi1lMTI2LTRmYWEtOTI4Yy1jNmE5YWY0NTg3NDkiLCJlbWFpbCI6InlveW9AZ21haWwuY29tIiwidWlkIjoiZTY5NjI0YjYtZTEyNi00ZmFhLTkyOGMtYzZhOWFmNDU4NzQ5IiwiZXhwIjoxNzQ5NzMzNTgzLCJpc3MiOiJGbG9yYUZhdW5hSXNzdWVyIiwiYXVkIjoiRmxvcmFGYXVuYUlzc3VlciJ9.ephgi65pn8_VtgXajeeUfrVRp9DMpanZRzpTI9VTHio"
+                    "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlNjk2MjRiNi1lMTI2LTRmYWEtOTI4Yy1jNmE5YWY0NTg3NDkiLCJlbWFpbCI6InlveW9AZ21haWwuY29tIiwidWlkIjoiZTY5NjI0YjYtZTEyNi00ZmFhLTkyOGMtYzZhOWFmNDU4NzQ5IiwiZXhwIjoxNzQ5NzM3Mjk0LCJpc3MiOiJGbG9yYUZhdW5hSXNzdWVyIiwiYXVkIjoiRmxvcmFGYXVuYUlzc3VlciJ9.zQUsPQPiLYdsZvhMVfPIvq3e4sDXt5f1JZE4c8S-AQ0"
                 },
                 baseUrl: process.env.EXPO_PUBLIC_API_URL || 'https://codefirst.iut.uca.fr/containers/FloraFauna_GO-api'}
             ), '/FloraFaunaGo_API/espece');

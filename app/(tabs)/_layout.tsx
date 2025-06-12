@@ -4,7 +4,6 @@ import {useAuthStore} from "@/context/zustand/store/useAuthStore";
 import {UploadContext} from "@/context/UploadContext";
 import RootNavigation from "@/navigation/RootNavigation";
 import Loading from '@/components/ui/Loading';
-import SuccessWrapper from '@/components/animation/sucess/SuccessWrapper';
 import { Toasts } from '@backpackapp-io/react-native-toast';
 
 export default function TabLayout() {

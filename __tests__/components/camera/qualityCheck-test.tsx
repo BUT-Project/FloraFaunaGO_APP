@@ -38,10 +38,13 @@ describe('isImageBlurry', () => {
   });
 
   it('retourne false si une erreur est levée', async () => {
+    const originalConsoleError = console.error;
+    console.error = jest.fn();
     mockedManipulateAsync.mockRejectedValue(new Error('Manipulation failed'));
 
     const result = await isImageBlurry('fake-uri');
     expect(result).toBe(false);
+    console.error = originalConsoleError;
   });
 
   it('gère les cas où base64 est undefined', async () => {

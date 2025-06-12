@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react-native';
+import { render } from '@testing-library/react-native';
 import SuccessDetailScreen from '@/screens/SuccessDetailScreen';
 import { Success } from '@/model/domain/Success';
 import { SuccessType } from '@/model/domain/SuccessType';

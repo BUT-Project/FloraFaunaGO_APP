@@ -28,6 +28,13 @@ steps:
       - NODE_ENV=test npm run test:ci --forceExit
     depends_on: [ typescript-check ]
 
+  - name: lint
+    image: node:latest
+    commands:
+      - npm run lint
+    depends_on: [ typescript-check ]
+    failure: ignore
+
   - name: code-analysis
     image: node:latest
     environment:
