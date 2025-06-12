@@ -1,5 +1,7 @@
 import { SuccessType } from "@/model/domain/SuccessType";
+import { ISuccessStateRepository } from "../repository/ISuccessStateRepository";
 import { ISuccessRepository } from "../repository/ISuccessRepository";
+
 import { SuccessStore } from "@/context/zustand/store/useSuccessStore";
 import { Kingdom } from "@/model/domain/Kingdom";
 import { Class } from "@/model/domain/Class";
@@ -16,10 +18,12 @@ interface TestSuccessParams {
 }
 
 export class SuccessManager {
-    constructor(private repo: ISuccessRepository) {}
+    constructor(private repo: ISuccessRepository, private repostate: ISuccessStateRepository) {}
   
     async testSuccess(params: TestSuccessParams): Promise<void> {
+      console.log(`Testing success for: ${params.name}`);
       const success = await this.repo.getById(params.name);
+      const state = await this.repostate.getAll(params.name)
       console.log(`Testing success: ${success}`);
       if (!success || !params.spec) return;
   
@@ -43,6 +47,7 @@ export class SuccessManager {
     async executeSuccessQueue(queue: TestSuccessParams[]): Promise<void> {
       queue.forEach((params, i) => {
         setTimeout(() => {
+          console.log(`Executing success test for: ${params.name}`);
           this.testSuccess(params);
         }, i * 5000);
       });
@@ -54,19 +59,14 @@ export class SuccessManager {
   
       console.log(`Processing ${filtered.length} successes of type ${successType}`);
       const queue: TestSuccessParams[] = [];
-      const seen = new Set<string>();
 
       for (const success of filtered) {
-        const key = `${success.event}-${spec.id}`;
-        if (seen.has(key)) continue;
-        seen.add(key);
-  
         const params: TestSuccessParams = { name: success.event, spec };
-  
+
         for (const value of Object.values(Kingdom)) {
           if (success.event.includes(value)) params.kg = value;
         }
-  
+
         for (const value of Object.values(Class)) {
           if (success.event.includes(value)) params.cl = value;
         }

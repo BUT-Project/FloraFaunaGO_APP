@@ -9,12 +9,7 @@ export default function Layout() {
         <Stack>
             <Stack.Screen name="profil" options={{
                 headerShown: false}}/>
-            <Stack.Screen name="[id]"
-                          options={{
-                              title: "",
-                              headerBackVisible: true}}
 
-            />
             <Stack.Screen name="settings"
             options={{
                 animation:'slide_from_bottom',

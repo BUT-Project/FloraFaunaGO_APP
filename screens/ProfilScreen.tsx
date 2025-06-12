@@ -43,7 +43,6 @@ export default function ProfilScreen() {
             const state = await successStateRepository?.getAll(PageRequest);
 
     if (state?.items) {
-        console.log("state", state.items);
     const stateMap = new Map<string, number>();
     state.items.forEach(item => {
         //a modifier quand le user sera connecté

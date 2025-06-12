@@ -65,7 +65,7 @@ export class SuccessStateClient implements ISuccessStateRepository {
   constructor(
     private httpClient: ZodHttpClient,
     private authService: IAuthService,
-    baseUrl: string = "/successState",
+    baseUrl: string = "/success/state",
     mapper: IMapper<SuccessStateCompleteItem, Success> = new SuccessCompletMapper()
   ) {
     this.mapper = mapper;
@@ -86,9 +86,19 @@ export class SuccessStateClient implements ISuccessStateRepository {
   }
 
   async update(id: string, success: SuccessStateCompleteItem): Promise<void> {
-    console.log("Updating success state with ID:", id);
-    await this.successStateRepository.update(id, success);
-
+   await this.successStateRepository.update(id, success);
+    const endpoint = `/FloraFaunaGo_API/success/state/${id}`
+     await this.httpClient.getValidated(
+      endpoint,
+      z.object({
+      count: z.number(),
+      index: z.number(),
+      total: z.number(),
+      items: z.array(SuccessStateCompleteItemSchema)
+      }),
+      undefined,
+      undefined
+    );
 
   }
 
@@ -97,10 +107,17 @@ export class SuccessStateClient implements ISuccessStateRepository {
   }
 
   async getById(id: string): Promise<SuccessStateCompleteItem> {
-    // const dto = await this.successStateRepository.getById(id);
-    // return this.mapper.toDomain(dto);
-        throw new Error("Méthode non implémentée.");
-
+    const dto = await this.successStateRepository.getById(id);
+    //return this.mapper.toDomain(dto);
+    return {
+      state: {
+        id: dto.state.id,
+        percentSucces: dto.state.percentSucces,
+        isSucces: dto.state.isSucces
+      },
+      success: dto.success,
+      user: dto.user
+    };
   }
 
   async getAll(request: PagedRequest): Promise<PagingResult<SuccessStateCompleteItem>> {

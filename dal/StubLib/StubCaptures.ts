@@ -8,7 +8,8 @@ import Specie from "@/model/domain/Specie";
 import CaptureDetail from "@/model/domain/CaptureDetail";
 import User from "@/model/domain/User";
 import Location from "@/model/domain/Location";
-
+import SuccessType from "@/model/domain/SuccessType"
+import processSuccessByType from "@/dal/manager/SuccessManager"
 export default class StubCaptures implements ICaptureRepository {
     constructor(public Captures: Capture[],
                 public Users: User[]
@@ -96,6 +97,7 @@ export default class StubCaptures implements ICaptureRepository {
     }
 
     addSpecieToUser(userId: number, specie: Specie, userLocation: Location, capturedImageUri: string): Promise<void> {
+        processSuccessByType(SuccessType.PHOTO ,specie)
         return new Promise((resolve, reject) => {
             const user = this.Users.find(user => user.id === userId);
 
