@@ -37,14 +37,20 @@ export default function HomeScreen() {
             };
         }, [])
     );
-    const {isLoading, isFetching, data: identifiedSpecie} = useQuery<Specie, Error>({
+    const {isLoading, isFetching, data: identifiedSpecie,error} = useQuery<Specie, Error>({
         queryKey: ['identifySpecie', base64Image, speciesRepository],
         queryFn: async (): Promise<Specie> => {
-            if (!speciesRepository) throw new Error('No Repository');
-            if (!base64Image) throw new Error('No base64 image data');
-            var spec = await speciesRepository.identifySpecies(base64Image);
-            setSpec(spec)
-            return spec;
+            try{
+                if (!speciesRepository) throw new Error('No Repository');
+                if (!base64Image) throw new Error('No base64 image data');
+                var spec = await speciesRepository.identifySpecies(base64Image);
+                setSpec(spec)
+                return spec;
+            }catch(error){
+                console.error(error)
+                throw error
+            }
+         
         },
         enabled: !!base64Image && !!speciesRepository
     });

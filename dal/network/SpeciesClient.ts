@@ -6,7 +6,7 @@ import {
     SpecieListDtoSchema
 } from "@/shared/scheme/SpecieDtoSchema";
 import { ISpeciesRepository } from "../repository/ISpeciesRepository";
-import { Specie } from "@/model/domain";
+import { Specie,SpecieType } from "@/model/domain";
 import { ZodHttpClient } from "./ZodHttpClient";
 import { IMapper } from "@/shared/mappers/IMapper";
 import { FilterPredicate } from "@/shared/FilterPredicate";
@@ -25,7 +25,9 @@ export class SpeciesClient implements ISpeciesRepository {
     ) {}
 
     async identifySpecies(imageBase64: string): Promise<Specie> {
-        const identifySpecieResult = await this.httpClient.postValidated(this.baseUrl+'/identify', { imageBase64 }, z.object({ imageBase64: z.string() }), SpecieDtoSchema);
+        
+        console.log("image laalalal", imageBase64.slice(0,100));
+        const identifySpecieResult = await this.httpClient.postValidated(`/FloraFaunaGo_API/identification?especeType=${SpecieType.Insect}`, { askedImage : imageBase64 }, z.object({ askedImage: z.string() }), SpecieDtoSchema);
 
         if (!identifySpecieResult.success) {
             throw identifySpecieResult.error;
@@ -50,7 +52,7 @@ export class SpeciesClient implements ISpeciesRepository {
         const mappedSpecies = this.specieMapper.toDomains(pagingResult.items);
 
         return {
-            items: [],
+            items: mappedSpecies,
             index: pagingResult.index,
             count: pagingResult.count,
             total: pagingResult.total

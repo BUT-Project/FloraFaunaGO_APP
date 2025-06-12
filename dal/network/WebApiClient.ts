@@ -25,7 +25,7 @@ export default class WebApiClient extends IDataManager{
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
-                "Authorization": `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlNjk2MjRiNi1lMTI2LTRmYWEtOTI4Yy1jNmE5YWY0NTg3NDkiLCJlbWFpbCI6InlveW9AZ21haWwuY29tIiwidWlkIjoiZTY5NjI0YjYtZTEyNi00ZmFhLTkyOGMtYzZhOWFmNDU4NzQ5IiwiZXhwIjoxNzQ5NTcwMDQxLCJpc3MiOiJGbG9yYUZhdW5hSXNzdWVyIiwiYXVkIjoiRmxvcmFGYXVuYUlzc3VlciJ9.iOEV7MRCyZ0-OQinPAR3ZfEeaI2fu1Y4HdMhH6aQNCA`
+                "Authorization": `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlNjk2MjRiNi1lMTI2LTRmYWEtOTI4Yy1jNmE5YWY0NTg3NDkiLCJlbWFpbCI6InlveW9AZ21haWwuY29tIiwidWlkIjoiZTY5NjI0YjYtZTEyNi00ZmFhLTkyOGMtYzZhOWFmNDU4NzQ5IiwiZXhwIjoxNzQ5NzMzNTgzLCJpc3MiOiJGbG9yYUZhdW5hSXNzdWVyIiwiYXVkIjoiRmxvcmFGYXVuYUlzc3VlciJ9.ephgi65pn8_VtgXajeeUfrVRp9DMpanZRzpTI9VTHio`
             },
             baseUrl: 'https://api.example.com'
         });

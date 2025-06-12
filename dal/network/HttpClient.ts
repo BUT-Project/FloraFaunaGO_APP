@@ -70,31 +70,21 @@ export class HttpClient {
     }
 
     async request<TResponse>(config: RequestConfig): Promise<Result<TResponse>> {
-        const { method, url, body, headers, timeout = this.defaultTimeout, params, signal } = config;
+        const { method, url, body, headers, timeout = this.defaultTimeout, params } = config;
 
         // Create abort signal with timeout fallback for environments that don't support AbortSignal.timeout
-        let abortSignal = signal;
         let timeoutId: ReturnType<typeof setTimeout> | undefined;
 
-        if (!signal) {
-            const controller = new AbortController();
-            abortSignal = controller.signal;
-
-            if (timeout > 0) {
-                timeoutId = setTimeout(() => controller.abort(), timeout);
-            }
-        }
-
         try {
-
+            console.log(this.buildUrl(url,params))
             const response = await fetch(this.buildUrl(url,params), {
                 method,
                 headers: this.buildHeaders(headers),
                 body: body != null ? JSON.stringify(body) : null,
-                signal: abortSignal
             });
             if (!response.ok) {
                 const errorData = await response.json().catch(() => ({}));
+                console.error(errorData)
                 return {
                     success: false,
                     error: new Error(errorData.message || `HTTP ${response.status}: ${response.statusText}`)
