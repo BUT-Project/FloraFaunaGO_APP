@@ -47,18 +47,18 @@ export default class StubSucess  implements ISuccessRepository {
 
 
 
-    getById(event?: string): Promise<Success> {
+    getById(id?: string): Promise<Success> {
         return new Promise((resolve, reject) => {
-            const suc = this.Sucesses.find(suc => suc.event == event)
+            const suc = this.Sucesses.find(suc => suc.id == id)
             if(suc !== undefined) {
                 resolve(suc)
             } else {
-                reject(new Error(`Success with event '${event}' not found`));
+                reject(new Error(`Success with event '${id}' not found`));
             }
         });
     }
     public async getAll(request: PagedRequest): Promise<PagingResult<Success>> {
-        const startIndex = (request.index - 1) * request.count;
+        const startIndex = request.index * request.count;
         const endIndex = startIndex + request.count;
 
         const items = this.Sucesses.slice(startIndex, endIndex);
@@ -71,7 +71,7 @@ export default class StubSucess  implements ISuccessRepository {
 
     update(id:string,updatedSuccess: Success): Promise<void> {
         return new Promise((resolve, reject) => {
-            const index = this.Sucesses.findIndex(sucess => sucess.event === id);
+            const index = this.Sucesses.findIndex(sucess => sucess.id === id);
 
             if (index === -1) {
                 reject(new Error(`Success with event '${id}' not found for update`));

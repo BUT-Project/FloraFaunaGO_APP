@@ -23,6 +23,7 @@ export class SuccessMapper implements IMapper<SuccessNormalDto,Success> {
             !dto.id ||
             !dto.nom ||
             !dto.image ||
+
             //dto.actualVal === undefined ||
             dto.objectif === undefined ||
             !dto.description ||
@@ -50,7 +51,7 @@ export class SuccessMapper implements IMapper<SuccessNormalDto,Success> {
             nom: domain.nom,
             image: domain.image,
             description: domain.description,
-           //actualVal: domain.actualVal,
+            //actualVal: domain.actualVal,
             objectif: domain.objectif,
             type: this.toString(domain.type),
             evenement: domain.event

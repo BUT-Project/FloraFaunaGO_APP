@@ -5,21 +5,19 @@ import {ThemedView,ThemedText,ThemedIcon} from "@/components/ui/themed";
 import {Link} from 'expo-router';
 import {AntDesign, FontAwesome5, FontAwesome6, Ionicons} from "@expo/vector-icons";
 import {Success} from "@/model/domain/Success";
-import StubData from "@/dal/StubLib/StubData";
 import {PagedRequest} from "@/shared/PagedRequest";
 import {useAuthStore} from "@/context/zustand/store/useAuthStore";
 import { SafeView } from "@/components/ui/SafeView";
 import { Colors } from "@/constants/Colors";
 import * as ImagePicker from 'expo-image-picker';
 import { useUserStore } from "@/context/zustand/store/useUserStore";
-import {SuccessCompletMapper} from "@/shared/mappers/SuccessCompletMapper";
+import { SuccessManager } from "@/dal/manager/SuccessManager";
+
 let ProfileImage: {};
 ProfileImage = require("../assets/images/ProfileImage.jpeg");
 const { width } = Dimensions.get('window');
 export default function ProfilScreen() {
     const [Successes, setSuccesses] = useState<Success[]>([]);
-    const {successRepository} = StubData.getInstance()
-    const {successStateRepository} = StubData.getInstance()
     const [page, setPage] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
     const [totalPages, setTotalPages] = useState(1);
@@ -32,33 +30,25 @@ export default function ProfilScreen() {
     const species = useAuthStore((state) => new Set(state.user?.captures.map(c => c.specie.id)).size);
     const family = useAuthStore((state) => new Set(state.user?.captures.map(c => c.specie.family)).size);
     const dataUser = useUserStore()
+    const sucessManager = SuccessManager.getInstance()
     const fetchSuccesses = async (currentPage: number) => {
         setIsLoading(true);
         try {
             const PageRequest : PagedRequest = {
-                index: currentPage-1,
+                index: currentPage,
                 count: 9
             }
-            //const response = await successRepository?.getAll(PageRequest);
-            const state = await successStateRepository?.getAll(PageRequest);
+    const successes = await sucessManager.getAllSuccessMapped(PageRequest)
 
-    if (state?.items) {
-    const stateMap = new Map<string, number>();
-    state.items.forEach(item => {
-        //a modifier quand le user sera connecté
-        //if (item.user?.mail === "test@test.fr") {
-            stateMap.set(item.success.nom, item.state.percentSucces);
-       // }
-    });
-
-    const mapper = new SuccessCompletMapper();
-
-    const successes = state.items.map((item) => mapper.toDomain(item));
-
+    console.log("Successes", successes);
     setSuccesses(successes);
+    let total = 0;
 
-    setTotalPages(Math.ceil(state.total / 9));
-    }
+    const response = await sucessManager.successRepository?.getAll(PageRequest);
+    total = response?.total ?? 0;
+
+    setTotalPages(Math.ceil(total / 9));
+    
     } catch (error) {
             console.error('Erreur lors de la récupération des succès :', error);
         } finally {
@@ -146,7 +136,7 @@ export default function ProfilScreen() {
             </ThemedView>
             <ThemedView style={styles.pagination}>
                 <TouchableOpacity
-                    onPress={() => setPage((prev) => Math.max(prev - 1, 1))}
+                    onPress={() => setPage((prev) => Math.max(prev - 1, 0))}
                     disabled={page === 1}
                 >
                     <ThemedIcon 
