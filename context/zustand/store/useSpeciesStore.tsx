@@ -26,7 +26,7 @@ const initialState = {
     isLoading: false,
     error: null,
 };
-const successManager = new SuccessManager(StubData.getInstance().successRepository!);
+const successManager = new SuccessManager(StubData.getInstance().successRepository!,StubData.getInstance().successStateRepository!);
 
 export const useSpeciesStore = create<SpeciesState>()(
     devtools(

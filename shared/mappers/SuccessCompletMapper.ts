@@ -18,6 +18,7 @@ export class SuccessCompletMapper implements IMapper<SuccessStateCompleteItem, S
         }
 
         return new Success(
+            dto.success.id,
             dto.success.nom,
             dto.success.image,
             dto.success.description,
@@ -33,9 +34,24 @@ export class SuccessCompletMapper implements IMapper<SuccessStateCompleteItem, S
      * Note: Retourne seulement les données essentielles pour l'état
      */
     toDto(domain: Success): SuccessStateCompleteItem {
-        // Cette méthode est complexe car elle doit créer une structure complète
-        // En pratique, vous pourriez ne pas avoir besoin de cette conversion
-        throw new Error("toDto not implemented for SuccessCompletMapper - use specialized methods");
+        return {
+            state: {
+                id: domain.id, // ou un vrai ID si disponible
+                percentSucces: domain.actualVal,
+                isSucces: domain.actualVal >= domain.objectif // Détermine si le succès est atteint
+            },
+            success: {
+                id: domain.id,
+                nom: domain.nom,
+                image: domain.image,
+                description: domain.description,
+                objectif: domain.objectif,
+                type: this.toString(domain.type),
+                evenement: domain.event
+            },
+            user: null // Placeholder pour l'utilisateur, à remplir si nécessaire
+        };
+
     }
 
     /**
@@ -71,6 +87,7 @@ export class SuccessCompletMapper implements IMapper<SuccessStateCompleteItem, S
      */
     fromSeparateDtos(successDto: SuccessNormalDto, percentSucces: number = 0): Success {
         return new Success(
+            successDto.id,
             successDto.nom,
             successDto.image,
             successDto.description,
@@ -96,6 +113,7 @@ export class SuccessCompletMapper implements IMapper<SuccessStateCompleteItem, S
      */
     toSuccessData(domain: Success): SuccessNormalDto {
         return {
+            id: domain.id,
             nom: domain.nom,
             image: domain.image,
             description: domain.description,
@@ -117,6 +135,7 @@ export class SuccessMapper implements IMapper<SuccessNormalDto, Success> {
         }
 
         return new Success(
+            dto.id,
             dto.nom,
             dto.image,
             dto.description,
@@ -129,6 +148,7 @@ export class SuccessMapper implements IMapper<SuccessNormalDto, Success> {
 
     toDto(domain: Success): SuccessNormalDto {
         return {
+            id: domain.id,
             nom: domain.nom,
             image: domain.image,
             description: domain.description,

@@ -8,14 +8,14 @@ import Specie from "@/model/domain/Specie";
 import CaptureDetail from "@/model/domain/CaptureDetail";
 import User from "@/model/domain/User";
 import Location from "@/model/domain/Location";
-import SuccessType from "@/model/domain/SuccessType"
-import processSuccessByType from "@/dal/manager/SuccessManager"
+import {SuccessType} from "@/model/domain/SuccessType"
+import {SuccessManager} from "@/dal/manager/SuccessManager"
+import StubData from "./StubData";
 export default class StubCaptures implements ICaptureRepository {
     constructor(public Captures: Capture[],
                 public Users: User[]
     ) {
     }
-
     count(filter: FilterPredicate<Capture>): Promise<number> {
         return new Promise((resolve, reject) => {
             try {
@@ -97,7 +97,9 @@ export default class StubCaptures implements ICaptureRepository {
     }
 
     addSpecieToUser(userId: number, specie: Specie, userLocation: Location, capturedImageUri: string): Promise<void> {
-        processSuccessByType(SuccessType.PHOTO ,specie)
+        const manager = new SuccessManager(StubData.getInstance().successRepository!,StubData.getInstance().successStateRepository!);
+         // Assuming SuccessManager is a data
+        manager.processSuccessByType(SuccessType.PHOTO ,specie)
         return new Promise((resolve, reject) => {
             const user = this.Users.find(user => user.id === userId);
 

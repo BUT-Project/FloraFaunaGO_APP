@@ -20,6 +20,7 @@ export class SuccessMapper implements IMapper<SuccessNormalDto,Success> {
     
     toDomain(dto: SuccessNormalDto): Success {
         if (
+            !dto.id ||
             !dto.nom ||
             !dto.image ||
             //dto.actualVal === undefined ||
@@ -32,10 +33,11 @@ export class SuccessMapper implements IMapper<SuccessNormalDto,Success> {
         }
 
         return new Success(
+            dto.id,
             dto.nom,
             dto.image,
             dto.description,
-            dto.objectif,  
+            0,  
             dto.objectif,          // objectif
             this.toEnum(dto.type), // type
             dto.evenement          // event
@@ -44,6 +46,7 @@ export class SuccessMapper implements IMapper<SuccessNormalDto,Success> {
 
     toDto(domain: Success): SuccessNormalDto {
         return {
+            id: domain.id,
             nom: domain.nom,
             image: domain.image,
             description: domain.description,
@@ -56,6 +59,7 @@ export class SuccessMapper implements IMapper<SuccessNormalDto,Success> {
 
     toUpdateDto(domain: Partial<Success>): Partial<SuccessNormalDto> {
         return {
+            id: domain.id,
             nom: domain.nom,
             image: domain.image,
             description: domain.description,

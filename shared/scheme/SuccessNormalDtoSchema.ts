@@ -14,6 +14,7 @@ export type SuccessTypeNormal = z.infer<typeof SuccessTypeEnum>;
  * Utilisé pour représenter un succès d'utilisateur
  */
 export const SuccessNormalDtoSchema = z.object({
+  id: z.string().uuid("L'ID doit être un UUID valide"),
   nom: z.string()
     .min(1, "Le nom est obligatoire")
     .max(100, "Le nom ne peut pas dépasser 100 caractères"),

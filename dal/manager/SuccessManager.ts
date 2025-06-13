@@ -1,7 +1,7 @@
 import { SuccessType } from "@/model/domain/SuccessType";
 import { ISuccessStateRepository } from "../repository/ISuccessStateRepository";
 import { ISuccessRepository } from "../repository/ISuccessRepository";
-
+import { IDataManager } from "../IDataManager";
 import { SuccessStore } from "@/context/zustand/store/useSuccessStore";
 import { Kingdom } from "@/model/domain/Kingdom";
 import { Class } from "@/model/domain/Class";
@@ -17,16 +17,22 @@ interface TestSuccessParams {
     fm?: string;
 }
 
-export class SuccessManager {
-    constructor(private repo: ISuccessRepository, private repostate: ISuccessStateRepository) {}
-  
+export class SuccessManager extends IDataManager {
+    constructor(private repo: ISuccessRepository, private repostate: ISuccessStateRepository) {
+      super();
+        this.successRepository = repo;
+        this.successStateRepository = repostate;
+    }
+
+
     async testSuccess(params: TestSuccessParams): Promise<void> {
-      console.log(`Testing success for: ${params.name}`);
-      const success = await this.repo.getById(params.name);
-      const state = await this.repostate.getAll(params.name)
-      console.log(`Testing success: ${success}`);
+     const allsuccess = await this.repo.getAll({ index: 0, count: 100 });
+      const success = allsuccess.items.find(s => s.event == params.name);
+      //const success = await this.repo.getById(params.name);
+      //const state = await this.repostate.getById(params.name)
+      //console.log(`Success state: ${state}`);
       if (!success || !params.spec) return;
-  
+      
       const { cl, kg, dt, fm, spec } = params;
   
       if (
@@ -37,11 +43,15 @@ export class SuccessManager {
       ) {
         return;
       }
+
   
       if (success.objectif <= success.actualVal) {
         console.log(`Success already completed: ${success.event}`);
-        await SuccessStore.getState().updateSuccess(params.name);
+        return
       }
+
+      await SuccessStore.getState().updateSuccess(params.name);
+
     }
   
     async executeSuccessQueue(queue: TestSuccessParams[]): Promise<void> {
@@ -53,7 +63,7 @@ export class SuccessManager {
       });
     }
   
-    async processSuccessByType(successType: SuccessType, spec: any): Promise<any> {
+      async processSuccessByType(successType: SuccessType, spec: any): Promise<any> {
       const all = await this.repo.getAll({ index: 0, count: 100 });
       const filtered = all.items.filter(s => s.type === SuccessType.PHOTO || s.type === successType);
   

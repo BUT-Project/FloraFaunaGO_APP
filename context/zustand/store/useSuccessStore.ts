@@ -11,7 +11,7 @@ export interface SuccessState {
     message: string
     setisVisible: (isVisible: boolean) => void
     setMessage: (message: string) => void   
-    successToDisplay : Set<any> 
+    //successToDisplay : Set<any> 
 }
 
 const initialState = {
@@ -35,29 +35,32 @@ export const SuccessStore = create<SuccessState>()(
                     set({ message: message });
     },
     
-    updateSuccess: async (successId: string) => {
+    updateSuccess: async (successEvent: string) => {
         try {
             var sucessRepo = StubData.getInstance().successRepository;
             var sucessStateRepo = StubData.getInstance().successStateRepository;
             var userRepository = StubData.getInstance().userRepository;
             var sucessCompletMapper = new SuccessCompletMapper();
-            var sucess = await sucessRepo?.getById(successId);
-            console.log("success", sucess);
+            var allSuccess = await sucessRepo?.getAll({index: 0, count: 100});
+            var sucess = allSuccess?.items.find(s => s.event === successEvent);
+            var states = await sucessStateRepo?.getAll({index: 0, count: 100});
+            var state = states?.items.find(s => s.success.evenement == successEvent);
             if(sucess !== undefined) {
                 sucess.actualVal += 1
             // je vérifie les résultat du update si c'est completed alors 
-            sucessRepo?.update(successId,sucess);
+            //sucessRepo?.update(successId,sucess);
             if (sucessStateRepo !== undefined) {
                 const successStateCompleteItem: SuccessStateCompleteItem = {
                     state: {
-                        id: "rezrzeezrzer",
-                        percentSucces: sucess.actualVal,
-                        isSucces: sucess.actualVal >= sucess.objectif
+                        id: state!.state.id,
+                        percentSucces: state!.state.percentSucces+1,
+                        isSucces: false
                     },
                     success: sucessCompletMapper.toDto(sucess).success,
                     user: null
                 };
-                sucessStateRepo.update(successId, successStateCompleteItem);
+                console.log("Success state data:", successStateCompleteItem);
+                await sucessStateRepo.update(state!.state.id, successStateCompleteItem);
             }
             if(sucess.actualVal >= sucess.objectif) {
             toast.success(sucess.nom+ " completed ! 🏆");    

@@ -86,21 +86,16 @@ export class SuccessStateClient implements ISuccessStateRepository {
   }
 
   async update(id: string, success: SuccessStateCompleteItem): Promise<void> {
-   await this.successStateRepository.update(id, success);
-    const endpoint = `/FloraFaunaGo_API/success/state/${id}`
-     await this.httpClient.getValidated(
-      endpoint,
-      z.object({
-      count: z.number(),
-      index: z.number(),
-      total: z.number(),
-      items: z.array(SuccessStateCompleteItemSchema)
-      }),
-      undefined,
-      undefined
-    );
+   //await this.successStateRepository.update(id, success);
+  const endpoint = `/FloraFaunaGo_API/success/state/${id}`;
+    const body = {
+      id,
+      percentSucces: success.state.percentSucces,
+    };
 
-  }
+    await this.httpClient.put(endpoint, body);
+
+    }
 
   async delete(id: string): Promise<void> {
     throw new Error("Méthode non implémentée.");
