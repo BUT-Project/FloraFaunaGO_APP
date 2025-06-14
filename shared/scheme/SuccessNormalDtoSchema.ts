@@ -1,4 +1,5 @@
 import { z } from "zod";
+import {SuccessType} from "@/model/domain";
 
 /**
  * Enumération des types de succès (SuccessType)
@@ -35,8 +36,9 @@ export const SuccessNormalDtoSchema = z.object({
     .min(1, "La description est obligatoire")
     .max(500, "La description ne peut pas dépasser 500 caractères"),
 
-  //type: SuccessTypeEnum,
-  type: z.string(),
+  type: z.string().refine((val) => {
+    return Object.keys(SuccessType).includes(val.toUpperCase());
+  }).catch("PHOTO"),
   evenement: z.string()
     .min(1, "L'événement est obligatoire")
     .max(100, "L'événement ne peut pas dépasser 100 caractères")

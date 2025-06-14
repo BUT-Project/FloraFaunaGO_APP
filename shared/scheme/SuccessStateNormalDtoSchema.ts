@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { SuccessType } from "@/model/domain/SuccessType";
 
 // Schéma pour l'objet 'user' (inchangé)
 const UserSchema = z.object({
@@ -21,7 +22,9 @@ const StateSchema = z.object({
 const SuccessInStateSchema = z.object({
   id: z.string().uuid(),
   nom: z.string(),
-  type: z.string(),
+  type: z.string().refine((val) => {
+    return Object.keys(SuccessType).includes(val.toUpperCase());
+  }).catch("PHOTO"),
   image: z.string(),
   description: z.string(),
   objectif: z.number().int().nonnegative(),
