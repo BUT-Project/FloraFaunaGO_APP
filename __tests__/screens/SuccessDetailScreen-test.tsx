@@ -44,6 +44,7 @@ jest.mock('@/constants/Colors', () => ({
 }));
 
 const mockSuccess: Success = {
+  "id": '1',
   nom: 'Premier animal',
   description: 'Capturez votre premier animal pour débloquer ce succès !',
   actualVal: 3,
@@ -236,6 +237,7 @@ describe('SuccessDetailScreen', () => {
 describe('SuccessDetailScreen - Tests d\'intégration', () => {
   const realSuccessData: Success[] = [
     {
+        id: '2',
       nom: 'Explorateur débutant',
       description: 'Visitez 5 lieux différents',
       actualVal: 2,
@@ -245,6 +247,7 @@ describe('SuccessDetailScreen - Tests d\'intégration', () => {
       event: 'visit_locations'
     },
     {
+        id: '3',
       nom: 'Collectionneur',
       description: 'Capturez 50 créatures différentes',
       actualVal: 23,

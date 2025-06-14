@@ -1,6 +1,7 @@
 import { SuccessType } from "./SuccessType"
 
 export class Success {
+    id:string
     nom: string
     image: string
     actualVal:number
@@ -9,7 +10,8 @@ export class Success {
     type: SuccessType
     event : string
 
-    public constructor(nom: string, image: string, description: string, actualVal: number,objectif:number,type:SuccessType,event:string) {
+    public constructor(id:string,nom: string, image: string, description: string, actualVal: number,objectif:number,type:SuccessType,event:string) {
+        this.id = id
         this.nom = nom
         this.image = image
         this.description = description

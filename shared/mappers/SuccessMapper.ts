@@ -4,64 +4,71 @@ import { IMapper } from "./IMapper";
 import { SuccessType } from "@/model/domain/SuccessType";
 
 export class SuccessMapper implements IMapper<SuccessNormalDto,Success> {
-    private toEnum(type: SuccessTypeNormal): SuccessType {
+    private toEnum(type: String): SuccessType {
         switch (type) {
             case "CAPTURE": return SuccessType.CAPTURE;
             case "DISTANCE": return SuccessType.DISTANCE;
             case "LIEUX": return SuccessType.LIEUX;
             case "PHOTO": return SuccessType.PHOTO;
-            default: throw new Error(`Invalid SuccessType string: ${type}`);
+            default: return SuccessType.PHOTO;
+            // #TODO Since the api might return an invalid type, we default to PHOTO otherwise it will throw an error throw new Error(`Invalid SuccessType string: ${type}`)
         }
     }
-    private successTypeToString(type: SuccessType): SuccessTypeNormal {
+
+    private toString(type: SuccessType): SuccessTypeNormal {
         return SuccessType[type] as SuccessTypeNormal;
     }
     
     toDomain(dto: SuccessNormalDto): Success {
         if (
+            !dto.id ||
             !dto.nom ||
             !dto.image ||
-            dto.actualVal === undefined ||
+
+            //dto.actualVal === undefined ||
             dto.objectif === undefined ||
             !dto.description ||
             dto.type === undefined ||
-            !dto.event
+            !dto.evenement
         ) {
             throw new Error("Invalid DTO: missing required fields for Success domain model");
         }
 
         return new Success(
+            dto.id,
             dto.nom,
             dto.image,
             dto.description,
-            dto.actualVal,
-            dto.objectif,
-            this.toEnum(dto.type),
-            dto.event
+            0,
+            dto.objectif,          // objectif
+            this.toEnum(dto.type), // type
+            dto.evenement          // event
         );
     }
 
     toDto(domain: Success): SuccessNormalDto {
         return {
+            id: domain.id,
             nom: domain.nom,
             image: domain.image,
             description: domain.description,
-            actualVal: domain.actualVal,
+            //actualVal: domain.actualVal,
             objectif: domain.objectif,
-            type: this.successTypeToString(domain.type),
-            event: domain.event
+            type: this.toString(domain.type),
+            evenement: domain.event
         };
     }
 
     toUpdateDto(domain: Partial<Success>): Partial<SuccessNormalDto> {
         return {
+            id: domain.id,
             nom: domain.nom,
             image: domain.image,
             description: domain.description,
-            actualVal: domain.actualVal,
+            //actualVal: domain.actualVal,
             objectif: domain.objectif,
-            type: domain.type !== undefined ? this.successTypeToString(domain.type) : undefined,
-            event: domain.event
+            type: domain.type !== undefined ? this.toString(domain.type) : undefined,
+            evenement: domain.event
         };
     }
 

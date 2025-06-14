@@ -23,7 +23,6 @@ export default function HomeScreen() {
     const {speciesRepository} = StubData.getInstance();
     const [isCameraActive, setIsCameraActive] = useState(false);
     const [spec,setSpec] = useState<Specie>()
-    const successManager = new SuccessManager(StubData.getInstance().successRepository!);
     const router = useRouter();
     const slideAnim = useSharedValue(0);
     const [capturedImage, setCapturedImage] = useState<string | null>(null);
@@ -55,7 +54,7 @@ export default function HomeScreen() {
                 console.error(error)
                 throw error
             }
-         
+
         },
         enabled: !!base64Image && !!speciesRepository
     });
@@ -90,7 +89,6 @@ export default function HomeScreen() {
               );
               return;
             }
-            await successManager!.processSuccessByType(SuccessType.PHOTO, spec!);
             setCurrentImageUri(capturedImage);
             setCurrentIdentifiedSpecies(identifiedSpecie);
             router.push('/capture');

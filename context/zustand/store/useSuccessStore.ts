@@ -2,22 +2,21 @@ import {create} from 'zustand';
 import StubData from "@/dal/StubLib/StubData";
 import { devtools } from 'zustand/middleware';
 import { toast } from '@backpackapp-io/react-native-toast';
-
+import { SuccessStateCompleteItem } from '@/shared/scheme/SuccessStateNormalDtoSchema';
+import { Success } from '@/model/domain/Success';
+import { SuccessCompletMapper } from '@/shared/mappers/SuccessCompletMapper';
+import { SuccessManager } from '@/dal/manager/SuccessManager';
 export interface SuccessState {
-    updateSuccess(successId: string): void
     isVisibile: boolean
     message: string
     setisVisible: (isVisible: boolean) => void
-    setMessage: (message: string) => void   
-    successToDisplay : Set<any> 
+    setMessage: (message: string) => void
 }
 
 const initialState = {
     isVisibile: false,
     message: "",
 };
-
-
 
 export const SuccessStore = create<SuccessState>()(
     devtools(
@@ -30,24 +29,10 @@ export const SuccessStore = create<SuccessState>()(
             },
 
             setMessage: (message: string) => {
-                    set({ message: message });
-    },
-    
-    updateSuccess: async (successId: string) => {
-        try {
-            var sucessRepo = StubData.getInstance().successRepository;
-            var sucess = await sucessRepo?.getById(successId);
-            if(sucess !== undefined && sucess !== null && sucess.actualVal < sucess.objectif) {
-                sucess.actualVal += 1
-            sucessRepo?.update(successId,sucess);
-            if(sucess.actualVal >= sucess.objectif) {
-            toast.success(sucess.nom+ " completed ! 🏆");  
-            }          
-        } 
-        }
-        catch (error) {
-            console.error(error)
-        }
- }
-    
-})));
+                set({ message: message });
+            }
+        })));
+
+
+
+

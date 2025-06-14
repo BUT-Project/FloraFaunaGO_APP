@@ -14,7 +14,6 @@ export default class StubCaptures implements ICaptureRepository {
                 public Users: User[]
     ) {
     }
-
     count(filter: FilterPredicate<Capture>): Promise<number> {
         return new Promise((resolve, reject) => {
             try {
@@ -96,6 +95,7 @@ export default class StubCaptures implements ICaptureRepository {
     }
 
     addSpecieToUser(userId: string, specie: Specie, userLocation: Location, capturedImageUri: string): Promise<void> {
+        // Assuming SuccessManager is a data
         return new Promise((resolve, reject) => {
             const user = this.Users.find(user => user.id === userId);
 

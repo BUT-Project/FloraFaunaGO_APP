@@ -101,24 +101,24 @@ const capture35 = new Capture("35", null, specie35, []);
 const capture36 = new Capture("36", null, specie36, []);
 
 
-const Success1: Success = new Success("Succès A", "checkmark-circle-outline", "Description du succès A", 25,50,SuccessType.CAPTURE,"sucA")
-const Success2: Success = new Success("Succès B", "checkmark-circle-outline", "Description du succès B", 50,50,SuccessType.DISTANCE,"sucB")
+const Success1: Success = new Success("aaa","Succès A", "checkmark-circle-outline", "Description du succès A", 25,50,SuccessType.CAPTURE,"sucA")
+const Success2: Success = new Success("bbb","Succès B", "checkmark-circle-outline", "Description du succès B", 50,50,SuccessType.DISTANCE,"sucB")
 
 
 export const SpecieList = [specie1,specie2,specie3,specie4,specie5,specie6];
 
 export const SuccessList = [
-    new Success("Photographe Amateur", "camera", "Capturez votre première photo.", 0,10,SuccessType.PHOTO, "PhotographeAmateur"),
-    new Success("Maître des Animaux", "paw", "Débloqué en interagissant avec 50 animaux différents.", 0,50,SuccessType.PHOTO, "Animal"),
-    new Success("Pêcheur Expert", "fish", "Attrapez 30 poissons lors de vos aventures.", 0,30,SuccessType.CAPTURE, "Fish"),
-    new Success("Chasseur d'insect", "bug", "Trouvez et collectionnez 20 insectes.", 0,20,SuccessType.CAPTURE, "Insect"),
-    new Success("Explorateur des Bois", "leaf", "Visitez 10 forêts ou réserves naturelles.", 0,10,SuccessType.LIEUX, "ExplorateurDesBois"),
-    new Success("Dompteur d'Oiseaux", "paw", "Interagissez avec 15 espèces d'oiseaux sauvages.", 0,15,SuccessType.PHOTO, "dompBirds"),
-    new Success("Voyageur Aventurier", "airplane", "Voyagez dans 5 régions différentes.", 0,5,SuccessType.LIEUX, "unlockVoyageurAventurier"),
-    new Success("Guide des Montagnes", "leaf", "Randonnez jusqu'au sommet de 3 montagnes.", 0,3,SuccessType.LIEUX, "unlockGuideDesMontagnes"),
-    new Success("Maitre de l'air", "airplane", "Capturez 5 espèces d'oiseaux.", 0,5,SuccessType.CAPTURE, "AVES"),
-    new Success("Maitre de l'eau", "water", "Capturez 5 espèces marines.", 0,5,SuccessType.CAPTURE, "FishAmhibians"),
-    new Success("Voyageur", "walk", "Parcourez 10km.", 0,10,SuccessType.DISTANCE, "unlockVoyageur"),
+    new Success("1","Photographe Amateur", "camera", "Capturez votre première photo.", 1,10,SuccessType.PHOTO, "PhotographeAmateur"),
+    new Success("2","Maître des Animaux", "paw", "Débloqué en interagissant avec 50 animaux différents.", 20,50,SuccessType.PHOTO, "Animal"),
+    new Success("3","Pêcheur Expert", "fish", "Attrapez 30 poissons lors de vos aventures.", 15,30,SuccessType.CAPTURE, "Fish"),
+    new Success("4","Chasseur d'insect", "bug", "Trouvez et collectionnez 20 insectes.", 15,20,SuccessType.CAPTURE, "Insect"),
+    new Success("5","Explorateur des Bois", "leaf", "Visitez 10 forêts ou réserves naturelles.", 9,10,SuccessType.LIEUX, "ExplorateurDesBois"),
+    new Success("6","Dompteur d'Oiseaux", "paw", "Interagissez avec 15 espèces d'oiseaux sauvages.", 10,15,SuccessType.PHOTO, "dompBirds"),
+    new Success("7","Voyageur Aventurier", "airplane", "Voyagez dans 5 régions différentes.", 4,5,SuccessType.LIEUX, "unlockVoyageurAventurier"),
+    new Success("8","Guide des Montagnes", "leaf", "Randonnez jusqu'au sommet de 3 montagnes.", 3,3,SuccessType.LIEUX, "unlockGuideDesMontagnes"),
+    new Success("9","Maitre de l'air", "airplane", "Capturez 5 espèces d'oiseaux.", 4,5,SuccessType.CAPTURE, "AVES"),
+    new Success("10","Maitre de l'eau", "water", "Capturez 5 espèces marines.", 3,5,SuccessType.CAPTURE, "FishAmhibians"),
+    new Success("11","Voyageur", "walk", "Parcourez 10km.", 7,10,SuccessType.DISTANCE, "unlockVoyageur"),
 ];
 
 export const UserList = [

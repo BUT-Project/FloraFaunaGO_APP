@@ -1,4 +1,5 @@
 import { z } from "zod";
+import {SuccessType} from "@/model/domain";
 
 /**
  * Enumération des types de succès (SuccessType)
@@ -14,17 +15,18 @@ export type SuccessTypeNormal = z.infer<typeof SuccessTypeEnum>;
  * Utilisé pour représenter un succès d'utilisateur
  */
 export const SuccessNormalDtoSchema = z.object({
+  id: z.string().uuid("L'ID doit être un UUID valide"),
   nom: z.string()
     .min(1, "Le nom est obligatoire")
     .max(100, "Le nom ne peut pas dépasser 100 caractères"),
 
   image: z.string()
-    .url("L'image doit être une URL valide")
     .min(1, "L'image est obligatoire"),
 
-  actualVal: z.number()
-    .int("La valeur actuelle doit être un entier")
-    .nonnegative("La valeur actuelle ne peut pas être négative"),
+   //actualVal: z.number(),
+  //   .int("La valeur actuelle doit être un entier")
+  //   .nonnegative("La valeur actuelle ne peut pas être négative")
+  //   .optional(),
 
   objectif: z.number()
     .int("L'objectif doit être un entier")
@@ -34,9 +36,8 @@ export const SuccessNormalDtoSchema = z.object({
     .min(1, "La description est obligatoire")
     .max(500, "La description ne peut pas dépasser 500 caractères"),
 
-  type: SuccessTypeEnum,
-
-  event: z.string()
+  type: z.string(),
+  evenement: z.string()
     .min(1, "L'événement est obligatoire")
     .max(100, "L'événement ne peut pas dépasser 100 caractères")
 });

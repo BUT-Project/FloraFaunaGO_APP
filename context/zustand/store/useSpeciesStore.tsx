@@ -26,8 +26,6 @@ const initialState = {
     isLoading: false,
     error: null,
 };
-const successManager = new SuccessManager(StubData.getInstance().successRepository!);
-
 export const useSpeciesStore = create<SpeciesState>()(
     devtools(
         (set, get) => ({
@@ -60,6 +58,7 @@ export const useSpeciesStore = create<SpeciesState>()(
             },
             addSpecieToUser: async (specie: Specie, currentLocation : Location) => {
                 try {
+                    const successManager = new SuccessManager(StubData.getInstance().successRepository!, StubData.getInstance().successStateRepository);
                     await successManager.processSuccessByType(SuccessType.CAPTURE, specie);
                     const { currentImageUri } = get();
                     if (!currentImageUri) {

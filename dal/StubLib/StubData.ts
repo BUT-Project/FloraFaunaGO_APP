@@ -4,6 +4,9 @@ import StubUsers from "@/dal/StubLib/StubUsers";
 import StubSucess from "@/dal/StubLib/StubSucess";
 import StubAuth from "@/dal/StubLib/StubAuth";
 import {IDataManager} from "@/dal/IDataManager";
+import { SuccessClient } from "../network/SuccessClient";
+import { ZodHttpClient } from "../network/ZodHttpClient";
+import { SuccessStateClient } from "../network/SuccessStateClient";
 import { SpeciesClient } from "../network/SpeciesClient";
 import { ZodHttpClient } from "../network/ZodHttpClient";
 
@@ -17,7 +20,29 @@ export default class StubData extends IDataManager{
 
     public constructor() {
         super();
-        this.successRepository = new StubSucess(this.ListSucess);
+        //this.successRepository = new StubSucess(this.ListSucess);
+        this.successRepository = new SuccessClient(
+            new ZodHttpClient({
+                baseUrl: 'https://codefirst.iut.uca.fr/containers/FloraFauna_GO-api',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiMTQ4YjIyNi1mMDQ2LTQ3ZDYtYmNiOS1lNjY1YjY1YzQyNDYiLCJlbWFpbCI6ImRhdmlkQHBvcG8uZnIiLCJ1aWQiOiJiMTQ4YjIyNi1mMDQ2LTQ3ZDYtYmNiOS1lNjY1YjY1YzQyNDYiLCJleHAiOjE3NDk5MzE5ODUsImlzcyI6IkZsb3JhRmF1bmFJc3N1ZXIiLCJhdWQiOiJGbG9yYUZhdW5hSXNzdWVyIn0.K_MzjpUxZmumgxNwopfyWA8WkRQ3I-koqJ3fm84rYiM"
+                }
+            }),
+            new StubAuth(this.ListUser),
+            '/FloraFaunaGo_API/success/')
+            this.successStateRepository = new SuccessStateClient(
+            new ZodHttpClient({
+                baseUrl: 'https://codefirst.iut.uca.fr/containers/FloraFauna_GO-api',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiMTQ4YjIyNi1mMDQ2LTQ3ZDYtYmNiOS1lNjY1YjY1YzQyNDYiLCJlbWFpbCI6ImRhdmlkQHBvcG8uZnIiLCJ1aWQiOiJiMTQ4YjIyNi1mMDQ2LTQ3ZDYtYmNiOS1lNjY1YjY1YzQyNDYiLCJleHAiOjE3NDk5MzE5ODUsImlzcyI6IkZsb3JhRmF1bmFJc3N1ZXIiLCJhdWQiOiJGbG9yYUZhdW5hSXNzdWVyIn0.K_MzjpUxZmumgxNwopfyWA8WkRQ3I-koqJ3fm84rYiM"
+                }
+            }),
+            new StubAuth(this.ListUser),
+            '/FloraFaunaGo_API/success/state/')
         this.userRepository = new StubUsers(this.ListUser);
         this.captureRepository = new StubCaptures(this.ListCapture,this.ListUser);
         this.speciesRepository = new SpeciesClient(
