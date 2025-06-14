@@ -11,10 +11,7 @@ interface UserStoreState {
     loading: boolean;
     fetchUsers: (request: PagedRequest) => Promise<void>;
     getUserById: (id: string) => Promise<User | null>;
-    addUser: (newUser: User) => Promise<void>;
     updateUser: (id: string, updatedUser: User) => Promise<void>;
-    deleteUser: (id: string) => Promise<void>;
-    countUsers: (filter: FilterPredicate<User>) => Promise<number>;
 }
 
 export const useUserStore = create<UserStoreState>((set, get) => ({
@@ -47,16 +44,6 @@ export const useUserStore = create<UserStoreState>((set, get) => ({
         }
     },
 
-    addUser: async (newUser: User): Promise<void> => {
-        try {
-            const { userRepository } = StubData.getInstance();
-            if (!userRepository) throw new Error("UserRepository is not available");
-            await userRepository.create(newUser);
-        } catch (error) {
-            console.error("Erreur lors de l'ajout de l'utilisateur:", error);
-        }
-    },
-
     updateUser: async (id: string, updatedUser: User): Promise<void> => {
         try {
             const { userRepository } = StubData.getInstance();
@@ -65,26 +52,5 @@ export const useUserStore = create<UserStoreState>((set, get) => ({
         } catch (error) {
             console.error("Erreur lors de la mise à jour de l'utilisateur:", error);
         }
-    },
-
-    deleteUser: async (id: string): Promise<void> => {
-        try {
-            const { userRepository } = StubData.getInstance();
-            if (!userRepository) throw new Error("UserRepository is not available");
-            await userRepository.delete(id);
-        } catch (error) {
-            console.error("Erreur lors de la suppression de l'utilisateur:", error);
-        }
-    },
-
-    countUsers: async (filter: FilterPredicate<User>): Promise<number> => {
-        try {
-            const { userRepository } = StubData.getInstance();
-            if (!userRepository) throw new Error("UserRepository is not available");
-            return await userRepository.count(filter);
-        } catch (error) {
-            console.error("Erreur lors du comptage des utilisateurs:", error);
-            return 0;
-        }
-    },
+    }
 }));

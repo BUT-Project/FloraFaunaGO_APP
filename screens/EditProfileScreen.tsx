@@ -10,7 +10,7 @@ import StubData from "@/dal/StubLib/StubData";
 import { ScrollView } from "react-native-gesture-handler";
 export default function UserEditScreen() {
     const user = useAuthStore((state) => state.user);
-    const userStore = useUserStore();
+    const updateUser = useUserStore((state) => state.updateUser)
     const colorScheme =  useColorScheme() ?? 'light';
     const [newPassword, setNewPassword] = useState('');
     const [showPasswordFields, setShowPasswordFields] = useState(false);
@@ -31,10 +31,10 @@ export default function UserEditScreen() {
   },[user])
     const theme = Colors[colorScheme];
 
-    function handleSave() {
+    async function handleSave() {
         user!.username = username;
         user!.email = email
-        userStore.updateUser(user!.id,user!)
+        await updateUser(user!.id,user!)
     }
 
     async function handlePasswordChange() {
