@@ -7,7 +7,6 @@ import { Success } from '@/model/domain/Success';
 import { SuccessCompletMapper } from '@/shared/mappers/SuccessCompletMapper';
 import { SuccessManager } from '@/dal/manager/SuccessManager';
 export interface SuccessState {
-    updateSuccess(successId: string): void
     isVisibile: boolean
     message: string
     setisVisible: (isVisible: boolean) => void
@@ -31,26 +30,6 @@ export const SuccessStore = create<SuccessState>()(
 
             setMessage: (message: string) => {
                 set({ message: message });
-            },
-
-            updateSuccess: async (successEvent: string) => {
-                try {
-                    const manager = SuccessManager.getInstance()
-
-                    const sucess = await manager.updateSuccess(successEvent)
-
-                    if (!sucess) {
-                        console.warn("Aucun succès trouvé pour l'événement", successEvent);
-                        return;
-                    }
-
-                    if(sucess.actualVal >= sucess.objectif) {
-                        toast.success(sucess.nom+ " completed ! 🏆");
-                    }
-                }
-                catch (error) {
-                    console.error(error)
-                }
             }
         })));
 

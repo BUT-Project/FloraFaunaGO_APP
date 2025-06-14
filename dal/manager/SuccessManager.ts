@@ -13,6 +13,8 @@ import {Success} from "@/model/domain/Success";
 import StubData from "../StubLib/StubData";
 import {SuccessCompletMapper} from "@/shared/mappers/SuccessCompletMapper";
 import {PagedRequest} from "@/shared/PagedRequest";
+import { FilterPredicate } from "@/shared/FilterPredicate";
+import { PagingResult } from "@/shared/PagingResult";
 
 interface TestSuccessParams {
     name: string;
@@ -23,14 +25,8 @@ interface TestSuccessParams {
     fm?: string;
 }
 
-export class SuccessManager extends IDataManager {
-    private static instance: SuccessManager;
-
-    constructor(private repo: ISuccessRepository, private repostate?: ISuccessStateRepository, private readonly useStub = false) {
-        super();
-        this.successRepository = repo;
-        this.successStateRepository = repostate;
-
+export class SuccessManager implements ISuccessRepository {
+    constructor(private successRepository: ISuccessRepository, private successStateRepository?: ISuccessStateRepository, private readonly useStub = false) {
         if (this.successStateRepository) {
             this.useStub = false
         } else {
@@ -38,63 +34,87 @@ export class SuccessManager extends IDataManager {
         }
     }
 
-    static getInstance(): SuccessManager {
-        if (!SuccessManager.instance) {
-
-            SuccessManager.instance = new SuccessManager(StubData.getInstance().successRepository!, StubData.getInstance().successStateRepository);
-        }
-        return SuccessManager.instance;
+    isCompleted(suc: Success): Promise<Boolean> {
+        throw new Error("Method not implemented.");
     }
-
-
-    async getAllSuccessMapped(pageRequest: PagedRequest): Promise<Success[]> {
+    create(item: Success): Promise<void> {
+        throw new Error("Method not implemented.");
+    }
+    update(id: any, item: Success): Promise<void> {
+        throw new Error("Method not implemented.");
+    }
+    delete(id: any): Promise<void> {
+        throw new Error("Method not implemented.");
+    }
+    getById(id: any): Promise<Success> {
+        throw new Error("Method not implemented.");
+    }
+    async getAll(request: PagedRequest): Promise<PagingResult<Success>> {
         if (this.useStub) {
-            console.log("test")
-            const allSuccess = await this.repo.getAll(pageRequest);
-            return allSuccess?.items ?? [];
+            console.log("test : useStub is true, using stub data in SuccessManager");
+            return await this.getAll(request);
         } else {
             // En mode API, utiliser successStateRepository
-            if (!this.repostate) {
+            if (!this.successStateRepository) {
                 console.warn("successStateRepository (aka repostate) non défini en mode API");
-                return [];
+                return {
+                    count: 0,
+                    index: request.index,
+                    total: 0,
+                    items: []
+                };
             }
-            const stateResult = await this.repostate.getAll(pageRequest);
-            if (!stateResult?.items) return [];
+            const stateResult = await this.successStateRepository.getAll(request);
+            if (!stateResult?.items)
+                return {
+                    count: 0,
+                    index: request.index,
+                    total: 0,
+                    items: []
+                };
 
             const mapper = new SuccessCompletMapper();
-            return stateResult.items.map(item => {
+            const mappedSucces = stateResult.items.map(item => {
                 return mapper.fromSeparateDtos(item.success, item.state.percentSucces);
-
             })
+
+            return {
+                count: stateResult.count,
+                index: stateResult.index,
+                total: stateResult.total,
+                items: mappedSucces
+            };
         }
     }
-
+    count(filter: FilterPredicate<Success>): Promise<number> {
+        throw new Error("Method not implemented.");
+    }
 
     // ok quelle est l'utilité de cette méthode ? car elle dit prendre un event en string alors que c'est un id
     // [DAVE] : Cette méthode est utilisée pour mettre à jour le succès en fonction de l'événement passé en paramètre.
     // on devrait peut-être renommer le paramètre pour plus de clarté.
-    async updateSuccess(successEvent: string): Promise<Success | undefined> {
-        const all = await this.repo.getAll({index: 0, count: 100});
-        const success = all.items.find(s => s.id === successEvent);
+    private async updateSuccess(successId: string): Promise<Success | undefined> {
+        const all = await this.successRepository.getAll({index: 0, count: 100});
+        const success = all.items.find(s => s.id === successId);
         if (!success) return;
 
         success.actualVal += 1;
 
         if (this.useStub) {
             // Juste mise à jour en mémoire
-            await this.repo.update(success.id, success);
+            await this.successRepository.update(success.id, success);
             return success;
         } else {
             // Met à jour dans l’API + dans le state
-            const states = await this.repostate?.getAll({index: 0, count: 100});
+            const states = await this.successStateRepository?.getAll({index: 0, count: 100});
             if (!states) {
-                console.warn("Aucun état trouvé pour", successEvent);
+                console.warn("Aucun état trouvé pour", successId);
                 return success;
             }
             console.log("dave staets",states.items);
-            const state = states.items.find(s => s.success.id === successEvent);
+            const state = states.items.find(s => s.success.id === successId);
             if (!state) {
-                console.warn("État non trouvé pour", successEvent);
+                console.warn("État non trouvé pour", successId);
                 return success;
             }
 
@@ -109,15 +129,15 @@ export class SuccessManager extends IDataManager {
                 }
             };
 
-            await this.repostate?.update(state.state.id, newItem);
+            await this.successStateRepository?.update(state.state.id, newItem);
 
             return success
         }
     }
 
 
-    async testSuccess(params: TestSuccessParams): Promise<void> {
-        const allsuccess = await this.repo.getAll({index: 0, count: 100});
+    private async testSuccess(params: TestSuccessParams): Promise<void> {
+        const allsuccess = await this.successRepository.getAll({index: 0, count: 100});
         const success = allsuccess.items.find(s => s.id == params.name);
         //const success = await this.repo.getById(params.name);
         //const state = await this.repostate.getById(params.name)
@@ -145,7 +165,7 @@ export class SuccessManager extends IDataManager {
 
     }
 
-    async executeSuccessQueue(queue: TestSuccessParams[]): Promise<void> {
+    private async executeSuccessQueue(queue: TestSuccessParams[]): Promise<void> {
         queue.forEach((params, i) => {
             setTimeout(() => {
                 console.log(`Executing success test for: ${params.name}`);
@@ -155,7 +175,7 @@ export class SuccessManager extends IDataManager {
     }
 
     async processSuccessByType(successType: SuccessType, specie: Specie): Promise<void> {
-        const all = await this.repo.getAll({index: 0, count: 100});
+        const all = await this.successRepository.getAll({index: 0, count: 100});
         const filtered = all.items.filter(s => s.type === SuccessType.PHOTO || s.type === successType);
 
         console.log(`Processing ${filtered.length} successes of type ${successType.toString()}`);

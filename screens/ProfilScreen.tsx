@@ -12,6 +12,7 @@ import { Colors } from "@/constants/Colors";
 import * as ImagePicker from 'expo-image-picker';
 import { useUserStore } from "@/context/zustand/store/useUserStore";
 import { SuccessManager } from "@/dal/manager/SuccessManager";
+import StubData from "@/dal/StubLib/StubData";
 
 let ProfileImage: {};
 ProfileImage = require("../assets/images/ProfileImage.jpeg");
@@ -29,8 +30,9 @@ export default function ProfilScreen() {
     //modifier car les captures plus dans le modele (david)
     const species = useAuthStore((state) => new Set(state.user?.captures.map(c => c.specie.id)).size);
     const family = useAuthStore((state) => new Set(state.user?.captures.map(c => c.specie.family)).size);
-    const dataUser = useUserStore()
-    const sucessManager = SuccessManager.getInstance()
+    const dataUser = useUserStore();
+    const sucessManager =  new SuccessManager(StubData.getInstance().successRepository!, StubData.getInstance().successStateRepository);
+
     const fetchSuccesses = async (currentPage: number) => {
         setIsLoading(true);
         try {
@@ -38,14 +40,12 @@ export default function ProfilScreen() {
                 index: currentPage,
                 count: 9
             }
-    const successes = await sucessManager.getAllSuccessMapped(PageRequest)
-
+    const pagedSuccesses = await sucessManager.getAll(PageRequest);
+    const successes = pagedSuccesses.items
     console.log("Successes", successes);
     setSuccesses(successes);
-    let total = 0;
 
-    const response = await sucessManager.successRepository?.getAll(PageRequest);
-    total = response?.total ?? 0;
+    const total = pagedSuccesses?.total ?? 0;
 
     setTotalPages(Math.ceil(total / 9));
     
