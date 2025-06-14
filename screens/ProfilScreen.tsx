@@ -95,7 +95,7 @@ export default function ProfilScreen() {
       </TouchableOpacity>
             <ThemedView style={styles.userInfoContainer}>
                 <ThemedText style={styles.username}>{user?.username || 'Username not available'}
-                <Link href={"/(profil)/editprofile"} asChild>
+                <Link href={"/(profil)/edit_profile"} asChild>
             <TouchableOpacity>
             <Ionicons name="pencil" color={theme.text} size={20} />
             </TouchableOpacity>

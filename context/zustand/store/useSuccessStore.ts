@@ -11,7 +11,7 @@ export interface SuccessState {
     isVisibile: boolean
     message: string
     setisVisible: (isVisible: boolean) => void
-    setMessage: (message: string) => void   
+    setMessage: (message: string) => void
 }
 
 const initialState = {
@@ -30,29 +30,29 @@ export const SuccessStore = create<SuccessState>()(
             },
 
             setMessage: (message: string) => {
-                    set({ message: message });
-    },
-    
-    updateSuccess: async (successEvent: string) => {
-        try {
-            const manager = SuccessManager.getInstance()
-            
-            const sucess = await manager.updateSuccess(successEvent)
+                set({ message: message });
+            },
 
-            if (!sucess) {
-                console.warn("Aucun succès trouvé pour l'événement", successEvent);
-                return;
+            updateSuccess: async (successEvent: string) => {
+                try {
+                    const manager = SuccessManager.getInstance()
+
+                    const sucess = await manager.updateSuccess(successEvent)
+
+                    if (!sucess) {
+                        console.warn("Aucun succès trouvé pour l'événement", successEvent);
+                        return;
+                    }
+
+                    if(sucess.actualVal >= sucess.objectif) {
+                        toast.success(sucess.nom+ " completed ! 🏆");
+                    }
+                }
+                catch (error) {
+                    console.error(error)
+                }
             }
-
-            if(sucess.actualVal >= sucess.objectif) {
-            toast.success(sucess.nom+ " completed ! 🏆");    
-            }        
-        }
-        catch (error) {
-            console.error(error)
-        }
- }
-})));
+        })));
 
 
 
