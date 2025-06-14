@@ -23,7 +23,7 @@ export class SuccessManager {
       if (!success || !params.spec) return;
   
       const { cl, kg, dt, fm, spec } = params;
-  
+
       if (
         (cl && cl !== spec.class) ||
         (kg && kg !== spec.kingdom) ||
@@ -48,8 +48,10 @@ export class SuccessManager {
   
     async processSuccessByType(successType: SuccessType, spec: any): Promise<any> {
       const all = await this.repo.getAll({ index: 1, count: 100 });
-      const filtered = all.items.filter(s => s.type === successType);
-  
+      const filtered1 = all.items.filter(s => s.type === successType);
+      const filtered = filtered1.filter(s => s.event.includes(spec.kingdom));
+      filtered.push(...filtered1.filter(s => s.type === SuccessType.PHOTO));
+      if (filtered.length === 0) return ;
       const queue: TestSuccessParams[] = [];
       const seen = new Set<string>();
   
@@ -59,7 +61,9 @@ export class SuccessManager {
         seen.add(key);
   
         const params: TestSuccessParams = { name: success.event, spec };
-  
+        console.log("spec",spec)
+
+        console.log("event",success.event)
         for (const value of Object.values(Kingdom)) {
           if (success.event.includes(value)) params.kg = value;
         }
