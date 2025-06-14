@@ -2,11 +2,12 @@ import {SuccessType} from "@/model/domain/SuccessType";
 import {ISuccessStateRepository} from "../repository/ISuccessStateRepository";
 import {ISuccessRepository} from "../repository/ISuccessRepository";
 import {IDataManager} from "../IDataManager";
-import {SuccessStore} from "@/context/zustand/store/useSuccessStore";
 import {Kingdom} from "@/model/domain/Kingdom";
 import {Class} from "@/model/domain/Class";
 import {Diet} from "@/model/domain/Diet";
 import {Family} from "@/model/domain/Family";
+import Specie from "@/model/domain/Specie";
+
 import {SuccessStateCompleteItem} from "@/shared/scheme/SuccessStateNormalDtoSchema";
 import {Success} from "@/model/domain/Success";
 import StubData from "../StubLib/StubData";
@@ -49,15 +50,15 @@ export class SuccessManager extends IDataManager {
     async getAllSuccessMapped(pageRequest: PagedRequest): Promise<Success[]> {
         if (this.useStub) {
             console.log("test")
-            const allSuccess = await this.successRepository?.getAll(pageRequest);
+            const allSuccess = await this.repo.getAll(pageRequest);
             return allSuccess?.items ?? [];
         } else {
             // En mode API, utiliser successStateRepository
-            if (!this.successStateRepository) {
-                console.warn("successStateRepository non défini en mode API");
+            if (!this.repostate) {
+                console.warn("successStateRepository (aka repostate) non défini en mode API");
                 return [];
             }
-            const stateResult = await this.successStateRepository.getAll(pageRequest);
+            const stateResult = await this.repostate.getAll(pageRequest);
             if (!stateResult?.items) return [];
 
             const mapper = new SuccessCompletMapper();
@@ -69,6 +70,9 @@ export class SuccessManager extends IDataManager {
     }
 
 
+    // ok quelle est l'utilité de cette méthode ? car elle dit prendre un event en string alors que c'est un id
+    // [DAVE] : Cette méthode est utilisée pour mettre à jour le succès en fonction de l'événement passé en paramètre.
+    // on devrait peut-être renommer le paramètre pour plus de clarté.
     async updateSuccess(successEvent: string): Promise<Success | undefined> {
         const all = await this.repo.getAll({index: 0, count: 100});
         const success = all.items.find(s => s.id === successEvent);
@@ -87,7 +91,8 @@ export class SuccessManager extends IDataManager {
                 console.warn("Aucun état trouvé pour", successEvent);
                 return success;
             }
-            const state = states.items.find(s => s.success.evenement === successEvent);
+            console.log("dave staets",states.items);
+            const state = states.items.find(s => s.success.id === successEvent);
             if (!state) {
                 console.warn("État non trouvé pour", successEvent);
                 return success;
@@ -136,7 +141,7 @@ export class SuccessManager extends IDataManager {
             return
         }
 
-        await SuccessStore.getState().updateSuccess(params.name);
+        await this.updateSuccess(params.name);
 
     }
 
@@ -149,15 +154,15 @@ export class SuccessManager extends IDataManager {
         });
     }
 
-    async processSuccessByType(successType: SuccessType, spec: any): Promise<any> {
+    async processSuccessByType(successType: SuccessType, specie: Specie): Promise<void> {
         const all = await this.repo.getAll({index: 0, count: 100});
         const filtered = all.items.filter(s => s.type === SuccessType.PHOTO || s.type === successType);
 
-        console.log(`Processing ${filtered.length} successes of type ${successType}`);
+        console.log(`Processing ${filtered.length} successes of type ${successType.toString()}`);
         const queue: TestSuccessParams[] = [];
 
         for (const success of filtered) {
-            const params: TestSuccessParams = {name: success.id, spec};
+            const params: TestSuccessParams = {name: success.id, spec: specie};
 
             for (const value of Object.values(Kingdom)) {
                 if (success.event.includes(value)) params.kg = value;
@@ -180,6 +185,6 @@ export class SuccessManager extends IDataManager {
         console.log(`Queue length: ${queue.length}`);
         await this.executeSuccessQueue(queue);
 
-        return spec;
+        return;
     }
 }

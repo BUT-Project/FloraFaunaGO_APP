@@ -10,7 +10,8 @@ export class SuccessMapper implements IMapper<SuccessNormalDto,Success> {
             case "DISTANCE": return SuccessType.DISTANCE;
             case "LIEUX": return SuccessType.LIEUX;
             case "PHOTO": return SuccessType.PHOTO;
-            default: throw new Error(`Invalid SuccessType string: ${type}`);
+            default: return SuccessType.PHOTO;
+            // #TODO Since the api might return an invalid type, we default to PHOTO otherwise it will throw an error throw new Error(`Invalid SuccessType string: ${type}`)
         }
     }
 

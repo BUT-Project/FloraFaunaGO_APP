@@ -118,7 +118,7 @@ export class SuccessStateClient implements ISuccessStateRepository {
   async getAll(request: PagedRequest): Promise<PagingResult<SuccessStateCompleteItem>> {
 
     //a modifier [Patrick]
-    const endpoint = `/FloraFaunaGo_API/success/state/idUser=219ea108-8af8-414b-a4c7-f12cf44f5247`
+    const endpoint = `/FloraFaunaGo_API/success/state/idUser=219ea108-8af8-414b-a4c7-f12cf44f5247` // #TODO REmove hardcoded user ID
     const dtoResult = await this.httpClient.getValidated(
       endpoint,
       z.object({

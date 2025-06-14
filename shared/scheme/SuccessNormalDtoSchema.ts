@@ -36,9 +36,7 @@ export const SuccessNormalDtoSchema = z.object({
     .min(1, "La description est obligatoire")
     .max(500, "La description ne peut pas dépasser 500 caractères"),
 
-  type: z.string().refine((val) => {
-    return Object.keys(SuccessType).includes(val.toUpperCase());
-  }).catch("PHOTO"),
+  type: z.string(),
   evenement: z.string()
     .min(1, "L'événement est obligatoire")
     .max(100, "L'événement ne peut pas dépasser 100 caractères")

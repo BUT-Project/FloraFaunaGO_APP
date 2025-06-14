@@ -22,9 +22,7 @@ const StateSchema = z.object({
 const SuccessInStateSchema = z.object({
   id: z.string().uuid(),
   nom: z.string(),
-  type: z.string().refine((val) => {
-    return Object.keys(SuccessType).includes(val.toUpperCase());
-  }).catch("PHOTO"),
+  type: z.string(),
   image: z.string(),
   description: z.string(),
   objectif: z.number().int().nonnegative(),

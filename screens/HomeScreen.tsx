@@ -15,7 +15,6 @@ import { useFocusEffect } from '@react-navigation/native';
 import { SafeView } from "@/components/ui/SafeView";
 import {  isImageBlurry } from "@/services/imageQuality";
 import { toast } from "@backpackapp-io/react-native-toast";
-import { SuccessManager } from "@/dal/manager/SuccessManager";
 import {ErrorView} from "@/app/(tabs)/(encyclopedia)/[id]";
 
 const {width: SCREEN_WIDTH} = Dimensions.get('window');

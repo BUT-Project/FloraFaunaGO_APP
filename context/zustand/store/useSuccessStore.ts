@@ -12,15 +12,12 @@ export interface SuccessState {
     message: string
     setisVisible: (isVisible: boolean) => void
     setMessage: (message: string) => void   
-    //successToDisplay : Set<any> 
 }
 
 const initialState = {
     isVisibile: false,
     message: "",
 };
-
-
 
 export const SuccessStore = create<SuccessState>()(
     devtools(
