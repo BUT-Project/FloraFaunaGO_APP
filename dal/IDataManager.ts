@@ -8,7 +8,7 @@ import { ISuccessStateRepository } from "./repository/ISuccessStateRepository";
 export abstract class IDataManager {
     public speciesRepository?: ISpeciesRepository;
     public successStateRepository?: ISuccessStateRepository;
-    public successRepository?: ISuccessRepository;;
+    public successRepository?: ISuccessRepository;
     public userRepository?: IUserRepository;
     public captureRepository?: ICaptureRepository;
     public authService?: IAuthService;
