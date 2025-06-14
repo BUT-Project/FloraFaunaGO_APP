@@ -15,7 +15,7 @@ export class SuccessMapper implements IMapper<SuccessNormalDto,Success> {
         }
     }
 
-    private toString(type: SuccessType): SuccessTypeNormal {
+    private typeToString(type: SuccessType): SuccessTypeNormal {
         return SuccessType[type] as SuccessTypeNormal;
     }
     
@@ -39,7 +39,7 @@ export class SuccessMapper implements IMapper<SuccessNormalDto,Success> {
             dto.nom,
             dto.image,
             dto.description,
-            0,
+            0,// actualVal par défaut #TODO : check if this is correct
             dto.objectif,          // objectif
             this.toEnum(dto.type), // type
             dto.evenement          // event
@@ -54,22 +54,22 @@ export class SuccessMapper implements IMapper<SuccessNormalDto,Success> {
             description: domain.description,
             //actualVal: domain.actualVal,
             objectif: domain.objectif,
-            type: this.toString(domain.type),
+            type: this.typeToString(domain.type),
             evenement: domain.event
         };
     }
 
     toUpdateDto(domain: Partial<Success>): Partial<SuccessNormalDto> {
-        return {
-            id: domain.id,
-            nom: domain.nom,
-            image: domain.image,
-            description: domain.description,
-            //actualVal: domain.actualVal,
-            objectif: domain.objectif,
-            type: domain.type !== undefined ? this.toString(domain.type) : undefined,
-            evenement: domain.event
-        };
+        const result: Partial<SuccessNormalDto> = {};
+
+        if (domain.nom !== undefined) result.nom = domain.nom;
+        if (domain.image !== undefined) result.image = domain.image;
+        if (domain.description !== undefined) result.description = domain.description;
+        if (domain.objectif !== undefined) result.objectif = domain.objectif;
+        if (domain.type !== undefined) result.type = this.typeToString(domain.type);
+        if (domain.event !== undefined) result.evenement = domain.event;
+
+        return result;
     }
 
     toDomains(dtos:SuccessNormalDto[]):Success[]{
