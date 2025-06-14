@@ -26,7 +26,7 @@ export default class StubData extends IDataManager{
                 headers: {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json',
-                    "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMTllYTEwOC04YWY4LTQxNGItYTRjNy1mMTJjZjQ0ZjUyNDciLCJlbWFpbCI6InRlc3RAdGVzdC5mciIsInVpZCI6IjIxOWVhMTA4LThhZjgtNDE0Yi1hNGM3LWYxMmNmNDRmNTI0NyIsImV4cCI6MTc0OTg1MTIxOCwiaXNzIjoiRmxvcmFGYXVuYUlzc3VlciIsImF1ZCI6IkZsb3JhRmF1bmFJc3N1ZXIifQ.RXDXavrsIqJ39XYlpWPwyYcUkPIi2RYV7VtpWc90KAY"
+                    "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiMTQ4YjIyNi1mMDQ2LTQ3ZDYtYmNiOS1lNjY1YjY1YzQyNDYiLCJlbWFpbCI6ImRhdmlkQHBvcG8uZnIiLCJ1aWQiOiJiMTQ4YjIyNi1mMDQ2LTQ3ZDYtYmNiOS1lNjY1YjY1YzQyNDYiLCJleHAiOjE3NDk5MjM5MDYsImlzcyI6IkZsb3JhRmF1bmFJc3N1ZXIiLCJhdWQiOiJGbG9yYUZhdW5hSXNzdWVyIn0.U-EIKEJtY0WHb05nDwBYETOCHuA8gVHWrZ4TyTENgLY"
                 }
             }),
             new StubAuth(this.ListUser),
@@ -37,7 +37,7 @@ export default class StubData extends IDataManager{
                 headers: {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json',
-                    "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMTllYTEwOC04YWY4LTQxNGItYTRjNy1mMTJjZjQ0ZjUyNDciLCJlbWFpbCI6InRlc3RAdGVzdC5mciIsInVpZCI6IjIxOWVhMTA4LThhZjgtNDE0Yi1hNGM3LWYxMmNmNDRmNTI0NyIsImV4cCI6MTc0OTg1MTIxOCwiaXNzIjoiRmxvcmFGYXVuYUlzc3VlciIsImF1ZCI6IkZsb3JhRmF1bmFJc3N1ZXIifQ.RXDXavrsIqJ39XYlpWPwyYcUkPIi2RYV7VtpWc90KAY"
+                    "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiMTQ4YjIyNi1mMDQ2LTQ3ZDYtYmNiOS1lNjY1YjY1YzQyNDYiLCJlbWFpbCI6ImRhdmlkQHBvcG8uZnIiLCJ1aWQiOiJiMTQ4YjIyNi1mMDQ2LTQ3ZDYtYmNiOS1lNjY1YjY1YzQyNDYiLCJleHAiOjE3NDk5MjM5MDYsImlzcyI6IkZsb3JhRmF1bmFJc3N1ZXIiLCJhdWQiOiJGbG9yYUZhdW5hSXNzdWVyIn0.U-EIKEJtY0WHb05nDwBYETOCHuA8gVHWrZ4TyTENgLY"
                 }
             }),            
             new StubAuth(this.ListUser),

@@ -86,6 +86,7 @@ export class SuccessCompletMapper implements IMapper<SuccessStateCompleteItem, S
      * (si vous avez besoin de combiner des données de différentes sources)
      */
     fromSeparateDtos(successDto: SuccessNormalDto, percentSucces: number = 0): Success {
+        console.log("dave",successDto)
         return new Success(
             successDto.id,
             successDto.nom,
@@ -133,6 +134,8 @@ export class SuccessMapper implements IMapper<SuccessNormalDto, Success> {
         if (!dto.nom || !dto.image || dto.objectif === undefined || !dto.description || !dto.type || !dto.evenement) {
             throw new Error("Invalid DTO: missing required fields for Success domain model");
         }
+
+        console.log("dave",dto)
 
         return new Success(
             dto.id,
