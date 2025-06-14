@@ -8,6 +8,12 @@ import { IMapper } from "./IMapper";
  * Mapper pour les données complètes de SuccessState (avec state, success, user)
  */
 export class SuccessCompletMapper implements IMapper<SuccessStateCompleteItem, Success> {
+    toDomains(dtos: SuccessStateCompleteItem[]): Success[] {
+        if (!Array.isArray(dtos)) {
+            throw new Error("Invalid input: expected an array of SuccessStateCompleteItem");
+        }
+        return dtos.map(dto => this.toDomain(dto));
+    }
     
     /**
      * Convertit un objet SuccessStateCompleteItem (de l'API) vers le domaine Success
@@ -157,7 +163,7 @@ export class SuccessMapper implements IMapper<SuccessNormalDto, Success> {
             image: domain.image,
             description: domain.description,
             objectif: domain.objectif,
-            type: this.toString(domain.type),
+            type: this.typeToString(domain.type),
             evenement: domain.event
         };
     }
@@ -169,7 +175,7 @@ export class SuccessMapper implements IMapper<SuccessNormalDto, Success> {
         if (domain.image !== undefined) result.image = domain.image;
         if (domain.description !== undefined) result.description = domain.description;
         if (domain.objectif !== undefined) result.objectif = domain.objectif;
-        if (domain.type !== undefined) result.type = this.toString(domain.type);
+        if (domain.type !== undefined) result.type = this.typeToString(domain.type);
         if (domain.event !== undefined) result.evenement = domain.event;
         
         return result;
@@ -186,7 +192,7 @@ export class SuccessMapper implements IMapper<SuccessNormalDto, Success> {
         }
     }
 
-    private toString(type: SuccessType): string {
+    private typeToString(type: SuccessType): string {
         return SuccessType[type] as string;
     }
 }

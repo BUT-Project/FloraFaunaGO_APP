@@ -1,6 +1,7 @@
 import { z } from 'zod'
 import { LocationDtoSchema } from './LocationDtoSchema';
 import { Class, Climate, Diet, Family, Kingdom } from '@/model/domain';
+import {tryParseEnum} from "@/shared/utils";
 
 export const SpecieDtoSchema = z.object({
   id: z.string(),
@@ -11,7 +12,7 @@ export const SpecieDtoSchema = z.object({
   image3D: z.string().nullable().optional(),
   class: z.nativeEnum(Class),
   kingdom: z.nativeEnum(Kingdom),
-  famille: z.nativeEnum(Family).default(Family.UNKNOWN),
+  famille: z.nativeEnum(Family).transform(val => tryParseEnum(Family, val) || Family.UNKNOWN),
   zone: z.string(),
   climat: z.nativeEnum(Climate),
   regime: z.nativeEnum(Diet),

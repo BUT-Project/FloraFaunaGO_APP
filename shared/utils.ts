@@ -25,3 +25,14 @@ export function getImageUri(image?: string | null): string | undefined {
         return trimmed; // regular URL
     }
 }
+
+export function tryParseEnum<T extends Record<string, string | number>>(
+    enumObj: T,
+    value: string | number
+): T[keyof T] | undefined {
+    const values = Object.values(enumObj);
+    if (values.includes(value as T[keyof T])) {
+        return value as T[keyof T];
+    }
+    return undefined;
+}

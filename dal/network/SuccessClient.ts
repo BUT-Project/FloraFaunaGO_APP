@@ -1,15 +1,9 @@
 import { ISuccessRepository } from "@/dal/repository/ISuccessRepository";
 import { ZodHttpClient } from "@/dal/network/ZodHttpClient";
 import {
-  HttpZodRepository,
-  HttpZodRepositoryConfig
-} from "@/dal/network/NetworkGenericClient";
-import {
   SuccessNormalDto,
   SuccessNormalDtoSchema,
-  SuccessApiResponseSchema
 } from "@/shared/scheme/SuccessNormalDtoSchema";
-import { z } from "zod";
 import { SuccessMapper } from "@/shared/mappers/SuccessMapper";
 import { Success } from "@/model/domain/Success";
 import { PagedRequest } from "@/shared/PagedRequest";
@@ -17,21 +11,7 @@ import { PagingResult } from "@/shared/PagingResult";
 import { FilterPredicate } from "@/shared/FilterPredicate";
 import { IMapper } from "@/shared/mappers/IMapper";
 import IAuthService from "@/model/service/IAuthService";
-
-/**
- * Configuration du repository réseau pour les succès
- */
-const createSuccessRepositoryConfig = (): HttpZodRepositoryConfig<SuccessNormalDto> => ({
-  responceSchema: SuccessNormalDtoSchema,
-  createSchema: SuccessNormalDtoSchema,
-  responseSchemas: {
-    create: SuccessApiResponseSchema,
-    update: SuccessApiResponseSchema,
-    delete: z.object({ success: z.boolean() })
-
-  }
-});
-
+import {HttpZodResourceClient} from "@/dal/network/HttpZodResourceClient";
 
 /**
  * Client réseau pour la ressource "Succès"
@@ -43,11 +23,11 @@ export class SuccessClient implements ISuccessRepository {
     private authService: IAuthService,
     baseUrl: string = "/success",
     private mapper: IMapper<SuccessNormalDto, Success> = new SuccessMapper(),
-    private successRepository = new HttpZodRepository<SuccessNormalDto>(
-      httpClient,
-      baseUrl,
-      createSuccessRepositoryConfig()
-    ),
+    private successRepository =HttpZodResourceClient.create<SuccessNormalDto>(
+        httpClient,
+        baseUrl,
+        SuccessNormalDtoSchema
+    )
   ) {
   }
   isCompleted(suc: Success): Promise<Boolean> {
@@ -59,16 +39,16 @@ export class SuccessClient implements ISuccessRepository {
     await this.successRepository.create(dto);
   }
 
-  async update(id: number, success: Success): Promise<void> {
+  async update(id: string, success: Success): Promise<void> {
     const dto = this.mapper.toUpdateDto(success);
     await this.successRepository.update(id, dto);
   }
 
-  async delete(id: number): Promise<void> {
+  async delete(id: string): Promise<void> {
     await this.successRepository.delete(id);
   }
 
-  async getById(id: number): Promise<Success> {
+  async getById(id: string): Promise<Success> {
     const dto = await this.successRepository.getById(id);
     return this.mapper.toDomain(dto);
   }

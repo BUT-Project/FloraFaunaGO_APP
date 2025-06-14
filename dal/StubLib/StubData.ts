@@ -1,14 +1,12 @@
 import {CaptureList, SpecieList, SuccessList, UserList} from "./Data"
 import StubCaptures from "@/dal/StubLib/StubCaptures";
 import StubUsers from "@/dal/StubLib/StubUsers";
-import StubSucess from "@/dal/StubLib/StubSucess";
 import StubAuth from "@/dal/StubLib/StubAuth";
 import {IDataManager} from "@/dal/IDataManager";
 import { SuccessClient } from "../network/SuccessClient";
 import { ZodHttpClient } from "../network/ZodHttpClient";
 import { SuccessStateClient } from "../network/SuccessStateClient";
 import { SpeciesClient } from "../network/SpeciesClient";
-import { ZodHttpClient } from "../network/ZodHttpClient";
 
 export default class StubData extends IDataManager{
     private static instance: StubData;
@@ -27,7 +25,7 @@ export default class StubData extends IDataManager{
                 headers: {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json',
-                    "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiMTQ4YjIyNi1mMDQ2LTQ3ZDYtYmNiOS1lNjY1YjY1YzQyNDYiLCJlbWFpbCI6ImRhdmlkQHBvcG8uZnIiLCJ1aWQiOiJiMTQ4YjIyNi1mMDQ2LTQ3ZDYtYmNiOS1lNjY1YjY1YzQyNDYiLCJleHAiOjE3NDk5MzE5ODUsImlzcyI6IkZsb3JhRmF1bmFJc3N1ZXIiLCJhdWQiOiJGbG9yYUZhdW5hSXNzdWVyIn0.K_MzjpUxZmumgxNwopfyWA8WkRQ3I-koqJ3fm84rYiM"
+                    "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiMTQ4YjIyNi1mMDQ2LTQ3ZDYtYmNiOS1lNjY1YjY1YzQyNDYiLCJlbWFpbCI6ImRhdmlkQHBvcG8uZnIiLCJ1aWQiOiJiMTQ4YjIyNi1mMDQ2LTQ3ZDYtYmNiOS1lNjY1YjY1YzQyNDYiLCJleHAiOjE3NDk5MzcxODUsImlzcyI6IkZsb3JhRmF1bmFJc3N1ZXIiLCJhdWQiOiJGbG9yYUZhdW5hSXNzdWVyIn0.uVvtMkDFeO76kntRZQBOGVa4zehvSqJMTk1Eai12haA"
                 }
             }),
             new StubAuth(this.ListUser),
@@ -38,7 +36,7 @@ export default class StubData extends IDataManager{
                 headers: {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json',
-                    "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiMTQ4YjIyNi1mMDQ2LTQ3ZDYtYmNiOS1lNjY1YjY1YzQyNDYiLCJlbWFpbCI6ImRhdmlkQHBvcG8uZnIiLCJ1aWQiOiJiMTQ4YjIyNi1mMDQ2LTQ3ZDYtYmNiOS1lNjY1YjY1YzQyNDYiLCJleHAiOjE3NDk5MzE5ODUsImlzcyI6IkZsb3JhRmF1bmFJc3N1ZXIiLCJhdWQiOiJGbG9yYUZhdW5hSXNzdWVyIn0.K_MzjpUxZmumgxNwopfyWA8WkRQ3I-koqJ3fm84rYiM"
+                    "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiMTQ4YjIyNi1mMDQ2LTQ3ZDYtYmNiOS1lNjY1YjY1YzQyNDYiLCJlbWFpbCI6ImRhdmlkQHBvcG8uZnIiLCJ1aWQiOiJiMTQ4YjIyNi1mMDQ2LTQ3ZDYtYmNiOS1lNjY1YjY1YzQyNDYiLCJleHAiOjE3NDk5MzcxODUsImlzcyI6IkZsb3JhRmF1bmFJc3N1ZXIiLCJhdWQiOiJGbG9yYUZhdW5hSXNzdWVyIn0.uVvtMkDFeO76kntRZQBOGVa4zehvSqJMTk1Eai12haA"
                 }
             }),
             new StubAuth(this.ListUser),
@@ -50,7 +48,7 @@ export default class StubData extends IDataManager{
                 headers:{
                     'Content-Type': 'application/json',
                     'Accept': 'application/json',
-                    "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlNjk2MjRiNi1lMTI2LTRmYWEtOTI4Yy1jNmE5YWY0NTg3NDkiLCJlbWFpbCI6InlveW9AZ21haWwuY29tIiwidWlkIjoiZTY5NjI0YjYtZTEyNi00ZmFhLTkyOGMtYzZhOWFmNDU4NzQ5IiwiZXhwIjoxNzQ5NzM3Mjk0LCJpc3MiOiJGbG9yYUZhdW5hSXNzdWVyIiwiYXVkIjoiRmxvcmFGYXVuYUlzc3VlciJ9.zQUsPQPiLYdsZvhMVfPIvq3e4sDXt5f1JZE4c8S-AQ0"
+                    "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiMTQ4YjIyNi1mMDQ2LTQ3ZDYtYmNiOS1lNjY1YjY1YzQyNDYiLCJlbWFpbCI6ImRhdmlkQHBvcG8uZnIiLCJ1aWQiOiJiMTQ4YjIyNi1mMDQ2LTQ3ZDYtYmNiOS1lNjY1YjY1YzQyNDYiLCJleHAiOjE3NDk5MzcxODUsImlzcyI6IkZsb3JhRmF1bmFJc3N1ZXIiLCJhdWQiOiJGbG9yYUZhdW5hSXNzdWVyIn0.uVvtMkDFeO76kntRZQBOGVa4zehvSqJMTk1Eai12haA"
                 },
                 baseUrl: process.env.EXPO_PUBLIC_API_URL || 'https://codefirst.iut.uca.fr/containers/FloraFauna_GO-api'}
             ), '/FloraFaunaGo_API/espece');
