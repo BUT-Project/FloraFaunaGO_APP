@@ -1,33 +1,34 @@
 import {IDataManager} from "@/dal/IDataManager";
 import NetworkAuthService from "@/dal/network/NetworkAuthService";
-import {ZodHttpClient} from "@/dal/network/ZodHttpClient";
+import {AuthenticatedZodHttpClient} from "@/dal/network/AuthenticatedZodHttpClient";
 import {UserClient} from "@/dal/network/UserClient";
 import {SpeciesClient} from "@/dal/network/SpeciesClient";
+import TokenManager from "@/services/keyManager/TokenManager";
+import {SecureLocalStorageAdapter} from "@/libs/LocalStorageAdapter";
+import {ZodHttpClient} from "@/dal/network/ZodHttpClient";
+import {ITokenManager} from "@/services/keyManager/ITokenManager";
+import {AccessTokenResponseDto} from "@/shared/scheme/AccessTokenResponseSchema";
 
 export default class WebApiClient extends IDataManager{
 
-    private client : ZodHttpClient | undefined;
+    private client: ZodHttpClient;
+    private tokenManager: ITokenManager<AccessTokenResponseDto> = new TokenManager(new SecureLocalStorageAdapter());
 
     public constructor() {
         super();
-        this.client = this.buildClient();
+        this.client = this.buildAuthenticatedClient();
         this.userRepository = new UserClient(this.client, '/api/utilisateur');
         this.speciesRepository = new SpeciesClient(this.client, '/api/espece');
-        this.authService = new NetworkAuthService(this.client,this.userRepository);
+        this.authService = new NetworkAuthService(this.client,this.userRepository, this.tokenManager);
     }
 
-    private buildClient(): ZodHttpClient {
-        if (this.client) {
-            return this.client;
-        }
-        // Use ZodHttpClient for schema validation
-        return new ZodHttpClient({
+    private buildAuthenticatedClient(): AuthenticatedZodHttpClient {
+        return new AuthenticatedZodHttpClient({
             headers: {
                 'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                "Authorization": `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlNjk2MjRiNi1lMTI2LTRmYWEtOTI4Yy1jNmE5YWY0NTg3NDkiLCJlbWFpbCI6InlveW9AZ21haWwuY29tIiwidWlkIjoiZTY5NjI0YjYtZTEyNi00ZmFhLTkyOGMtYzZhOWFmNDU4NzQ5IiwiZXhwIjoxNzQ5NzMzNTgzLCJpc3MiOiJGbG9yYUZhdW5hSXNzdWVyIiwiYXVkIjoiRmxvcmFGYXVuYUlzc3VlciJ9.ephgi65pn8_VtgXajeeUfrVRp9DMpanZRzpTI9VTHio`
+                'Accept': 'application/json'
             },
-            baseUrl: 'https://api.example.com'
-        });
+            baseUrl: process.env.EXPO_PUBLIC_API_URL || 'https://codefirst.iut.uca.fr/containers/FloraFauna_GO-api'
+        }, this.tokenManager);
     }
 }

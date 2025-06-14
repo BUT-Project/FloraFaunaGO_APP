@@ -8,17 +8,17 @@ type ErrorBoundaryProps = {
 };
 
 export default class ErrorBoundary extends React.Component<ErrorBoundaryProps> {
-  state = { hasError: false, error: null };
+  override state = { hasError: false, error: null };
 
   static getDerivedStateFromError(error: any) {
     return { hasError: true, error };
   }
 
-  componentDidCatch(error: any, info: any) {
+  override componentDidCatch(error: any, info: any) {
     console.log("Caught by ErrorBoundary:", error, info);
   }
 
-  render() {
+  override render() {
     if (this.state.hasError) {
       return <ErrorMessage 
                 message={`Une erreur est survenue ${this.props.page? `dans la page "${this.props.page}" ` : ""}: \n${String(this.state.error)}`}
