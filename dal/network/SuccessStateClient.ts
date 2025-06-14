@@ -35,11 +35,11 @@ const SuccessStateCreateDtoSchema = z.object({
   success: z.object({
     id: z.string().uuid(),
     nom: z.string(),
-    type: z.string(),
+    type: z.string(), // should be an enum or specific type
     image: z.string(),
     description: z.string(),
     objectif: z.number().int().nonnegative(),
-    evenement: z.string()
+    evenement: z.string() // should be an enum or specific type
   })
 });
 
