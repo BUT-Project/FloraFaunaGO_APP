@@ -8,52 +8,50 @@ import {Capture,Specie} from "@/model/domain";
 import Loading from "@/components/ui/Loading";
 import ErrorBoundary from "@/components/ErrorBoundary";
 
-export default function Details() {
+export default function SpeciesDetailsPage() {
 
     const {specieId, capturedId} = useLocalSearchParams();
     const captureId = typeof capturedId === 'string' ? capturedId : null;
-    const specieId2 = typeof specieId === 'string' ? specieId : null;
+    const validSpecieId = typeof specieId === 'string' ? specieId : null;
     const router = useRouter();
 
     const onReturn = () => router.back();
-    const stubData = StubData.getInstance();
-    const repositories = {
-        capture: stubData?.captureRepository ?? null,
-        species: stubData?.speciesRepository ?? null
-    };
+    const dataManager = StubData.getInstance();
+    const captureRepository = dataManager?.captureRepository ?? null;
+    const speciesRepository = dataManager?.speciesRepository ?? null;
 
     const {
         item: capture,
         isLoading: isCaptureLoading,
-        error: errorCapture
-    } = useGetById<Capture>(captureId, repositories.capture);
+        error: captureError
+    } = useGetById<Capture>(captureId, captureRepository);
 
     const {
         item: specie,
         isLoading: isSpecieLoading,
-        error: errorSpecie
-    } = useGetById<Specie>(specieId2, repositories.species);
+        error: specieError
+    } = useGetById<Specie>(validSpecieId, speciesRepository);
 
-    if (!specieId2) {
+    if (!validSpecieId) {
         return <ErrorMessage message="Paramètre `id` manquant ou invalide !" onReturn={onReturn} />;
     }
 
-    if (!repositories.capture || !repositories.species) {
+    if (!captureRepository || !speciesRepository) {
         return <ErrorMessage message="Erreur de configuration des repositories..." onReturn={onReturn}/>;
     }
 
-    if (errorSpecie || errorCapture) {
+    if (specieError || captureError) {
         const errorMessages: string[] = [];
 
-        if (errorCapture) {
-            const captureMessage = errorCapture.message ? `Erreur lors de la récupération de la capture :\n${errorCapture.message}` 
-                : `Erreur lors de la récupération de la capture :\n${String(errorCapture)}`;
+        if (captureError) {
+            const captureMessage = captureError.message ? `Erreur lors de la récupération de la capture :\n${captureError.message}` 
+                : `Erreur lors de la récupération de la capture :\n${String(captureError)}`;
             errorMessages.push(captureMessage);
         }
 
-        if (errorSpecie) {
-            const specieMessage = errorSpecie.message? `Erreur lors de la récupération de l'espèce :\n${errorSpecie.message}` 
-                : `Erreur lors de la récupération de l'espèce :\n${String(errorSpecie)}`;
+        if (specieError) {
+            const specieMessage = specieError.message? `Erreur lors de la récupération de l'espèce :\n${specieError.message}` 
+                : `Erreur lors de la récupération de l'espèce :\n${String(specieError)}`;
             errorMessages.push(specieMessage);
         }
 
