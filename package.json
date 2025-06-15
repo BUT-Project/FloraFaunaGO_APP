@@ -10,8 +10,8 @@
     "web": "expo start --web",
     "test": "jest --watch --coverage=false",
     "test:ci": "jest --coverageDirectory=./__tests__/coverage --forceExit",
-    "test:e2e": "maestro test e2e/login",
-    "test:e2e:debug": "maestro test e2e/login --debug-output",
+    "test:e2e": "maestro test __tests__/e2e/login",
+    "test:e2e:debug": "maestro test __tests__/e2e/login --debug-output",
     "lint": "expo lint"
   },
   "jest": {
