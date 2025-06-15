@@ -2,6 +2,7 @@
   <img src="https://codefirst.iut.uca.fr/git/FloraFauna_GO/FloraFauna_GO_App/raw/branch/master/assets/images/logo_FFGO.png"/>
 </p>
 
+
 # 🌿 Flora Fauna GO
 
 > Une application mobile d’exploration de la biodiversité inspirée de Pokémon GO.
