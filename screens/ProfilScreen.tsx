@@ -17,12 +17,21 @@ import {AppFacadeService} from "@/services/AppFacadeService";
 const {width} = Dimensions.get('window');
 export default function ProfilScreen() {
     const [Successes, setSuccesses] = useState<Success[]>([]);
-    const [page, setPage] = useState(0);
+    const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const colorScheme = useColorScheme() ?? 'light';
     const theme = Colors[colorScheme];
     const [imageUri, setImageUri] = useState<string | null | undefined>(null);
     const user = useAuthStore((state) => state.user);
+
+    useEffect(() => {
+    if(user?.image){
+    const base64Image = user.image;
+    const fullBase64Image = `data:image/png;base64,${base64Image}`;
+    setImageUri(fullBase64Image);
+}
+}
+        , []);
     // Optimized: Get captures once and compute stats
     const userCaptures = useAuthStore((state) => state.user?.captures);
     
@@ -52,18 +61,19 @@ export default function ProfilScreen() {
         if (!userCaptures) return 0;
         return new Set(userCaptures.map(c => c.specie.family)).size;
     }, [userCaptures]);
-    const dataUser = useUserStore();
+    const updateUser = useUserStore().updateUser
+
     const sucessManager = new SuccessManager(AppFacadeService.getInstance().dataManager.successRepository!, AppFacadeService.getInstance().dataManager.successStateRepository);
 
     const fetchSuccesses = async (currentPage: number) => {
         try {
             const PageRequest: PagedRequest = {
-                index: currentPage,
+                index: currentPage-1,
                 count: 9
             }
             const pagedSuccesses = await sucessManager.getAll(PageRequest);
             const successes = pagedSuccesses.items
-            console.log("Successes", successes);
+            console.log("Successes", JSON.stringify(successes, null, 2));
             setSuccesses(successes);
 
             const total = pagedSuccesses?.total ?? 0;
@@ -92,7 +102,7 @@ export default function ProfilScreen() {
             setImageUri(result.assets[0].uri);
             if (user && result.assets[0].base64) {
                 user.image = result.assets[0].base64
-                dataUser.updateUser(user.id, user)
+                updateUser(user.id, user)
             }
         }
     };
@@ -115,7 +125,7 @@ export default function ProfilScreen() {
             </TouchableOpacity>
             <ThemedView style={styles.userInfoContainer}>
                 <ThemedText style={styles.username}>{user?.username || 'Username not available'}
-                    <Link href={"/(profil)/edit_profile"} asChild>
+                    <Link href={"/(profil)/editprofile"} asChild>
                         <TouchableOpacity>
                             <Ionicons name="pencil" color={theme.text} size={20}/>
                         </TouchableOpacity>
@@ -152,7 +162,7 @@ export default function ProfilScreen() {
             </ThemedView>
             <ThemedView style={styles.pagination}>
                 <TouchableOpacity
-                    onPress={() => setPage((prev) => Math.max(prev - 1, 0))}
+                    onPress={() => setPage((prev) => Math.max(prev - 1, 1))}
                     disabled={page === 1}
                 >
                     <ThemedIcon

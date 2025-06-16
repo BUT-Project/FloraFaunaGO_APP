@@ -59,6 +59,15 @@ export class AppFacadeService implements IAppFacadeService {
             throw error;
         }
     }
+    async resetPassword(email: string, oldPassword: string, newPassword: string): Promise<void> {
+        const { authService } = this.dataManager;
+    
+        if (!authService) {
+            throw new Error("Authentication service not available");    
+        }
+        await authService.resetPassword(email, oldPassword, newPassword);
+        console.log('🔑 Password reset successful for email:', email);
+    }
 
     async register(email: string, password: string, username?: string): Promise<User> {
         const { authService } = this.dataManager;
@@ -111,8 +120,10 @@ export class AppFacadeService implements IAppFacadeService {
     async updateUser(id: string, updatedUser: User): Promise<void> {
         const { userRepository } = this.dataManager;
         if (!userRepository) {
+            console.error("❌ User repository not available in dataManager");
             throw new Error("User repository not available");
         }
+        console.log("pass Facade")
         await userRepository.update(id, updatedUser);
     }
 

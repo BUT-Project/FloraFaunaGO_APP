@@ -27,6 +27,7 @@ export class UserMapper implements IMapper<UtilisateurCompleteResponse, User> {
             dtoData.id,
             dtoData.pseudo,
             dtoData.mail,
+            //dtoData.hash_mdp,
             "fakePasswordHash",// should be remove [DAVE] [TODO] password not included in domain model for security
             inscriptionDate,
             // Skip captures for now - they will be fetched separately to avoid incomplete data
@@ -60,7 +61,7 @@ export class UserMapper implements IMapper<UtilisateurCompleteResponse, User> {
                 mail: domain.email,
                 dateInscription: null, // Date is not updated, handled separately
                 image: domain.image || null,
-                hash_mdp: null // Password updates handled separately [DAVE] [TODO] comment on modifier le password je pence que ya une requete dans le auth entity
+                hash_mdp: domain.passwordHash ||null // Password updates handled separately [DAVE] [TODO] comment on modifier le password je pence que ya une requete dans le auth entity
             }
         }
     }

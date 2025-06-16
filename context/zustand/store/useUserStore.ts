@@ -14,6 +14,7 @@ export const useUserStore = create<UserStoreState>((set, get) => ({
         try {
             set({ loading: true });
             const appFacade = AppFacadeService.getInstance();
+            console.log("pass UserStore")
             await appFacade.updateUser(id, updatedUser);
 
             const authState = useAuthStore.getState();
