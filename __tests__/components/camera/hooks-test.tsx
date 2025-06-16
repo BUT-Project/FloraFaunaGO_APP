@@ -33,7 +33,7 @@ describe('useCamera (via component)', () => {
   });
 
   it('should toggle camera facing', async() => {
-    const { getByTestId, getByText } = render(<TestComponent />);
+    const { getByTestId } = render(<TestComponent />);
     expect(getByTestId('facing').props.children).toBe('back');
 
     await act(async() => {
