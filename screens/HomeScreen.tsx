@@ -8,7 +8,6 @@ import MainMapView from "@/components/MainMapView";
 import BlurSegmented from "@/components/BluredSegmented";
 import {useQuery} from "@tanstack/react-query";
 import {useRouter} from "expo-router";
-import StubData from "@/dal/StubLib/StubData";
 import {Specie} from "@/model/domain";
 import {useSpeciesStore} from "@/context/zustand/store/useSpeciesStore";
 import { useFocusEffect } from '@react-navigation/native';
@@ -16,13 +15,14 @@ import { SafeView } from "@/components/ui/SafeView";
 import { ErrorMessage } from "@/components/ui/ErrorMessage";
 import {  isImageBlurry } from "@/services/imageQuality";
 import { toast } from "@backpackapp-io/react-native-toast";
+import {AppFacadeService} from "@/services/AppFacadeService";
 
 const {width: SCREEN_WIDTH} = Dimensions.get('window');
 export default function HomeScreen() {
     console.log('🏠 HomeScreen render triggered:', {
         timestamp: new Date().toISOString()
     });
-    const {speciesRepository} = StubData.getInstance();
+    const {speciesRepository} = AppFacadeService.getInstance().dataManager;
     const [isCameraActive, setIsCameraActive] = useState(false);
     const router = useRouter();
     const slideAnim = useSharedValue(0);

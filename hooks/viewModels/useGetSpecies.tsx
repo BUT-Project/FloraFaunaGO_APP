@@ -1,7 +1,7 @@
 import {useInfiniteQuery} from '@tanstack/react-query';
-import StubData from "@/dal/StubLib/StubData";
 import Specie from "@/model/domain/Specie";
 import {PagedRequest} from "@/shared/PagedRequest";
+import {AppFacadeService} from "@/services/AppFacadeService";
 
 export function useGetSpecies(
     name: string,
@@ -19,7 +19,7 @@ export function useGetSpecies(
     queryKey: ['species2', name, pageSize],
     queryFn: async ({ pageParam = 0 }) => {
       try{
-        const { speciesRepository } = StubData.getInstance();
+        const { speciesRepository } =AppFacadeService.getInstance().dataManager;
         const pageRequest: PagedRequest = {
           index: pageParam,
           count: pageSize,
