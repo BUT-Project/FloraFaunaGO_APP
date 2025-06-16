@@ -9,20 +9,21 @@ import BlurSegmented from "@/components/BluredSegmented";
 import {useQuery} from "@tanstack/react-query";
 import {useRouter} from "expo-router";
 import StubData from "@/dal/StubLib/StubData";
-import {Specie,SuccessType} from "@/model/domain";
+import {Specie} from "@/model/domain";
 import {useSpeciesStore} from "@/context/zustand/store/useSpeciesStore";
 import { useFocusEffect } from '@react-navigation/native';
 import { SafeView } from "@/components/ui/SafeView";
 import { ErrorMessage } from "@/components/ui/ErrorMessage";
 import {  isImageBlurry } from "@/services/imageQuality";
 import { toast } from "@backpackapp-io/react-native-toast";
-import { SuccessManager } from "@/dal/manager/SuccessManager";
 
 const {width: SCREEN_WIDTH} = Dimensions.get('window');
 export default function HomeScreen() {
+    console.log('🏠 HomeScreen render triggered:', {
+        timestamp: new Date().toISOString()
+    });
     const {speciesRepository} = StubData.getInstance();
     const [isCameraActive, setIsCameraActive] = useState(false);
-    const [spec,setSpec] = useState<Specie>()
     const router = useRouter();
     const slideAnim = useSharedValue(0);
     const [capturedImage, setCapturedImage] = useState<string | null>(null);
@@ -35,8 +36,10 @@ export default function HomeScreen() {
 
     useFocusEffect(
         useCallback(() => {
+            console.log('🏠 useFocusEffect: Setting camera active');
             setIsCameraActive(true);
             return () => {
+                console.log('🏠 useFocusEffect: Setting camera inactive');
                 setIsCameraActive(false);
             };
         }, [])
@@ -44,20 +47,42 @@ export default function HomeScreen() {
     const {isLoading, isFetching, data: identifiedSpecie,error} = useQuery<Specie, Error>({
         queryKey: ['identifySpecie', base64Image, speciesRepository],
         queryFn: async (): Promise<Specie> => {
+            console.log('🔍 HomeScreen: identifySpecie query triggered');
             try{
                 if (!speciesRepository) throw new Error('No Repository');
                 if (!base64Image) throw new Error('No base64 image data');
                 var spec = await speciesRepository.identifySpecies(base64Image);
-                setSpec(spec)
                 return spec;
             }catch(error){
                 console.error(error)
                 throw error
             }
-
         },
         enabled: !!base64Image && !!speciesRepository
     });
+    // Handle errors from useQuery #TODO [DAVE] c'est gpt qui la fait j'ai la flemme should be handle in the the stor to have a global error handler
+    useEffect(() => {
+        if (error) {
+            console.error('Species identification error:', error);
+
+            // Show user-friendly error message
+            let errorMessage = "Erreur lors de l'identification de l'espèce";
+
+            if (error.message.includes('network') || error.message.includes('fetch')) {
+                errorMessage = "Problème de connexion. Vérifiez votre connexion Internet.";
+            } else if (error.message.includes('No base64 image data')) {
+                errorMessage = "Image non valide. Veuillez reprendre une photo.";
+            } else if (error.message.includes('No Repository')) {
+                errorMessage = "Erreur de configuration. Redémarrez l'application.";
+            }
+
+            toast.error(errorMessage);
+
+            // Reset the base64Image to allow user to try again
+            setBase64Image(null);
+            setCapturedImage(null);
+        }
+    }, [error]);
 
     const switchView = (tabName: string) => {
         const view = tabName.toLowerCase();

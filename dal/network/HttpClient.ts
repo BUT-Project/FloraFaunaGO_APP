@@ -8,21 +8,17 @@ export interface RequestConfig {
     readonly url: string;
     body?: unknown;
     readonly headers?: Readonly<Record<string, string>>;
-    readonly timeout?: number;
     readonly params?: QueryParams;
-    readonly signal?: AbortSignal;
 }
 
 export interface HttpClientConfig {
     readonly baseUrl?: string;
     readonly headers?: Readonly<Record<string, string>>;
-    readonly timeout?: number;
 }
 
 export class HttpClient {
     protected readonly baseUrl: string;
     protected readonly defaultHeaders: Readonly<Record<string, string>>;
-    protected readonly defaultTimeout: number;
 
     constructor(protected readonly config: HttpClientConfig = {}) {
         this.baseUrl = config.baseUrl ?? '';
@@ -30,7 +26,6 @@ export class HttpClient {
             'Content-Type': 'application/json',
             ...config.headers,
         });
-        this.defaultTimeout = config.timeout ?? 10000; // Default timeout of 5 seconds
     }
 
     protected getConfig(): HttpClientConfig {
@@ -70,10 +65,7 @@ export class HttpClient {
     }
 
     async request<TResponse>(config: RequestConfig): Promise<Result<TResponse>> {
-        const { method, url, body, headers, timeout = this.defaultTimeout, params } = config;
-
-        // Create abort signal with timeout fallback for environments that don't support AbortSignal.timeout
-        let timeoutId: ReturnType<typeof setTimeout> | undefined;
+        const { method, url, body, headers, params } = config;
 
         try {
             console.log(this.buildUrl(url,params))
@@ -100,12 +92,6 @@ export class HttpClient {
         } catch (error) {
             // Handle different types of errors with specific messages
             if (error instanceof Error) {
-                if (error.name === 'AbortError') {
-                    return {
-                        success: false,
-                        error: new Error('Request was cancelled or timed out')
-                    };
-                }
                 if (error.name === 'TypeError' && error.message.includes('fetch')) {
                     return {
                         success: false,
@@ -121,11 +107,6 @@ export class HttpClient {
                 success: false,
                 error: new Error('Unknown request error')
             };
-        } finally {
-            // Clear timeout to prevent memory leaks
-            if (timeoutId) {
-                clearTimeout(timeoutId);
-            }
         }
     }
 

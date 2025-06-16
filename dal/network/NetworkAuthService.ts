@@ -17,7 +17,8 @@ export default class NetworkAuthService implements IAuthService {
     constructor(
        private readonly authClient: ZodHttpClient,
        private readonly userRepository: IUserRepository,
-       private keyManager: ITokenManager<AccessTokenResponseDto> = new TokenManager(new SecureLocalStorageAdapter())
+       private keyManager: ITokenManager<AccessTokenResponseDto> = new TokenManager(new SecureLocalStorageAdapter()),
+       private readonly baseUrl: string = '/api/Auth'
 ) {}
     resetPassword(email: string, oldPassword: string, newPassword: string): Promise<void> {
         throw new Error("Method not implemented.");
@@ -25,27 +26,58 @@ export default class NetworkAuthService implements IAuthService {
 
     async login(email: string, password: string, twoFactorCode?: string, twoFactorRecoveryCode?: string): Promise<User> {
         try {
+            console.log('🌐 NetworkAuthService.login called with mail:', email);
+            
             const credentials : LoginRequestDto = {
-                email: email.toLowerCase().trim(),
+                Mail: email.toLowerCase().trim(),
                 password,
                 twoFactorCode: twoFactorCode || null,
                 twoFactorRecoveryCode: twoFactorRecoveryCode || null
             }
-            const tokenResponse = await this.authClient.postValidated('/login', credentials, LoginRequestSchema, AccessTokenResponseSchema);
+            
+            console.log('📡 Making login request to /login endpoint...');
+            console.log('📋 Credentials:', { ...credentials, password: password });
+            
+            const tokenResponse = await this.authClient.postValidated(`${this.baseUrl}/login`, credentials, LoginRequestSchema, AccessTokenResponseSchema);
+
+            if (tokenResponse.success) {
+                console.log('📥 Token response received:', {
+                    success: tokenResponse.success,
+                    hasData: !!tokenResponse.data,
+                });
+            }
+            else {
+                console.error('❌ Token response recieved with error:', { success: tokenResponse.success, error: tokenResponse.error });
+            }
+            
             // Store tokens
             if (tokenResponse.success) {
+                console.log('✅ Login successful, storing token...');
                 await this.keyManager.putToken(tokenResponse.data);
 
                 // Extract user ID from token and fetch user from repository
+                console.log('🔍 Extracting user ID from token...');
                 const userId = AuthJWTMapper.getUserIdFromToken(tokenResponse.data.accessToken);
+                console.log('👤 User ID extracted:', userId);
+                
+                console.log('📖 Fetching user details from repository...');
                 this.currentUser = await this.userRepository.getById(userId);
+                console.log('✅ User fetched successfully:', { id: this.currentUser.id, username: this.currentUser.username });
 
                 return this.currentUser;
             }else {
+                console.error('❌ Login failed - token response error:', tokenResponse.error);
                 throw new Error(tokenResponse.error?.message || "Échec de la connexion");
             }
 
         } catch (error) {
+            console.error('❌ NetworkAuthService.login caught error:', error);
+            console.error('❌ Error details:', {
+                type: typeof error,
+                constructor: error?.constructor?.name,
+                message: error instanceof Error ? error.message : 'Unknown error',
+                stack: error instanceof Error ? error.stack : 'No stack'
+            });
             throw new Error(error instanceof Error ? error.message : "Échec de la connexion");
         }
     }
@@ -57,7 +89,7 @@ export default class NetworkAuthService implements IAuthService {
                 password
             }
 
-            const tokenResponse = await this.authClient.postValidated('/auth/register', registerRequest, RegisterRequestSchema, AccessTokenResponseSchema);
+            const tokenResponse = await this.authClient.postValidated(`${this.baseUrl}/register`, registerRequest, RegisterRequestSchema, AccessTokenResponseSchema);
             if (tokenResponse.success) {
                 // Store tokens
                 await this.keyManager.putToken(tokenResponse.data);
@@ -78,7 +110,7 @@ export default class NetworkAuthService implements IAuthService {
 
     async logout(): Promise<void> {
         try {
-            await this.authClient.post('/logout', {});
+            await this.authClient.post(`${this.baseUrl}/logout`, {});
         } catch (error) {
             console.warn('Server logout failed, proceeding with local cleanup:', error);
         } finally {
@@ -130,7 +162,7 @@ export default class NetworkAuthService implements IAuthService {
             const refreshRequest: RefreshRequestDto = {
                 refreshToken
             }
-            const tokenResponse = await this.authClient.postValidated('/auth/refresh', refreshRequest, RefreshRequestSchema, AccessTokenResponseSchema);
+            const tokenResponse = await this.authClient.postValidated(`${this.baseUrl}/refresh`, refreshRequest, RefreshRequestSchema, AccessTokenResponseSchema);
 
             if (tokenResponse.success) {
                 // Store new tokens

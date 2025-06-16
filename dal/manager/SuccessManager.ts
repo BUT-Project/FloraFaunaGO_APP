@@ -1,7 +1,6 @@
 import {SuccessType} from "@/model/domain/SuccessType";
 import {ISuccessStateRepository} from "../repository/ISuccessStateRepository";
 import {ISuccessRepository} from "../repository/ISuccessRepository";
-import {IDataManager} from "../IDataManager";
 import {Kingdom} from "@/model/domain/Kingdom";
 import {Class} from "@/model/domain/Class";
 import {Diet} from "@/model/domain/Diet";
@@ -10,11 +9,11 @@ import Specie from "@/model/domain/Specie";
 
 import {SuccessStateCompleteItem} from "@/shared/scheme/SuccessStateNormalDtoSchema";
 import {Success} from "@/model/domain/Success";
-import StubData from "../StubLib/StubData";
 import {SuccessCompletMapper} from "@/shared/mappers/SuccessCompletMapper";
 import {PagedRequest} from "@/shared/PagedRequest";
 import { FilterPredicate } from "@/shared/FilterPredicate";
 import { PagingResult } from "@/shared/PagingResult";
+import {toast} from "@backpackapp-io/react-native-toast";
 
 interface TestSuccessParams {
     name: string;
@@ -130,7 +129,9 @@ export class SuccessManager implements ISuccessRepository {
             };
 
             await this.successStateRepository?.update(state.state.id, newItem);
-
+            if(success.actualVal >= success.objectif) {
+                toast.success(success.nom+ " completed ! 🏆");
+            }
             return success
         }
     }

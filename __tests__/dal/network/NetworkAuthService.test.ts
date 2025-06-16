@@ -86,7 +86,7 @@ describe('NetworkAuthService', () => {
 
     describe('login', () => {
         const loginCredentials: LoginRequestDto = {
-            email: MOCK_EMAIL.toLowerCase().trim(),
+            Mail: MOCK_EMAIL.toLowerCase().trim(),
             password: MOCK_PASSWORD,
             twoFactorCode: null,
             twoFactorRecoveryCode: null

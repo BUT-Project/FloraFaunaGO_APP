@@ -19,7 +19,7 @@ import {HttpZodResourceClient} from "@/dal/network/HttpZodResourceClient";
 export class SuccessClient implements ISuccessRepository {
 
   constructor(
-    private readonly httpClient: ZodHttpClient,
+      readonly httpClient: ZodHttpClient,
     private authService: IAuthService,
     baseUrl: string = "/success",
     private mapper: IMapper<SuccessNormalDto, Success> = new SuccessMapper(),
@@ -59,7 +59,6 @@ export class SuccessClient implements ISuccessRepository {
       throw new Error("Utilisateur non authentifié");
     }
     const dtoResult = await this.successRepository.getAll(request)
-    user
     return {
       count: dtoResult.count,
       index: dtoResult.index,

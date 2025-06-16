@@ -3,7 +3,6 @@ import {PagingResult} from "@/shared/PagingResult";
 import {ICaptureRepository} from "@/dal/repository/ICaptureRepository";
 import Capture from "@/model/domain/Capture";
 import {PagedRequest} from "@/shared/PagedRequest";
-import {Family} from "@/model/domain/Family";
 import Specie from "@/model/domain/Specie";
 import CaptureDetail from "@/model/domain/CaptureDetail";
 import User from "@/model/domain/User";
@@ -49,21 +48,6 @@ export default class StubCaptures implements ICaptureRepository {
             const items = this.Captures.slice(startIndex, endIndex);
             const total = this.Captures.length;
             const pagingResult = new PagingResult<Capture>(request.index, items.length, total, items);
-            resolve(pagingResult);
-        });
-    }
-
-    getByFamily(family: Family, page: number = 1, pageSize: number = 10, selfId?: string): Promise<PagingResult<Capture>> {
-        return new Promise((resolve) => {
-            const startIndex = (page - 1) * pageSize;
-            const endIndex = startIndex + pageSize;
-            const items = this.Captures.filter((capture) =>
-                capture.specie.family === family &&
-                (selfId === undefined || capture.id !== selfId)
-            );
-            const pageItems = items.slice(startIndex, endIndex);
-            const total = items.length;
-            const pagingResult = new PagingResult<Capture>(page, pageItems.length, total, pageItems);
             resolve(pagingResult);
         });
     }

@@ -1,10 +1,9 @@
-import {z} from "zod";
 import {IUserRepository} from "@/dal/repository/IUserRepository";
 import {ZodHttpClient} from "@/dal/network/ZodHttpClient";
 import {HttpZodResourceClient} from "@/dal/network/HttpZodResourceClient";
 import {
-    UtilisateurNormalDto,
-    UtilisateurNormalDtoSchema
+    UtilisateurCompleteResponseSchema,
+    UtilisateurCompleteResponse
 } from "@/shared/scheme/UtilisateurNormalDtoSchema";
 import {UserMapper} from "@/shared/mappers/UserMaper";
 import User from "@/model/domain/User";
@@ -12,18 +11,20 @@ import {PagedRequest} from "@/shared/PagedRequest";
 import {PagingResult} from "@/shared/PagingResult";
 import { FilterPredicate } from "@/shared/FilterPredicate";
 import {IMapper} from "@/shared/mappers/IMapper";
+import { ISpeciesRepository } from "@/dal/repository/ISpeciesRepository";
 
 /**
  * Handles only network operations for Users
  */
 export class UserClient implements IUserRepository {
-    private readonly mapper: IMapper<UtilisateurNormalDto, User>;
+    private readonly mapper: IMapper<UtilisateurCompleteResponse, User>;
 
     constructor(
         httpClient: ZodHttpClient,
-        baseUrl: string = '/utilisateur',
-        mapper: IMapper<UtilisateurNormalDto, User> = new UserMapper(),
-        private userRepository : HttpZodResourceClient<UtilisateurNormalDto> = HttpZodResourceClient.create<UtilisateurNormalDto>(httpClient, baseUrl,UtilisateurNormalDtoSchema)
+        baseUrl: string = '/FloraFaunaGo_API/utilisateur',
+        mapper: IMapper<UtilisateurCompleteResponse, User> = new UserMapper(),
+        private userRepository : HttpZodResourceClient<UtilisateurCompleteResponse> = HttpZodResourceClient.create<UtilisateurCompleteResponse>(httpClient, baseUrl,UtilisateurCompleteResponseSchema),
+        private speciesRepository?: ISpeciesRepository
     ) {
         this.mapper = mapper;
     }
@@ -32,23 +33,21 @@ export class UserClient implements IUserRepository {
      * Create a new user
      */
     async create(user: User): Promise<void> {
-        const dto = this.mapper.toDto(user);
-        await this.userRepository.create(dto);
+        throw new Error("Method not implemented. In UserClient create");
     }
 
     /**
      * Update an existing user
      */
     async update(id: string, user: User): Promise<void> {
-        const updateDto = this.mapper.toUpdateDto(user);
-        await this.userRepository.update(id, updateDto);
+throw new Error("Method not implemented. In UserClient update");
     }
 
     /**
      * Delete a user by ID
      */
     async delete(id: string): Promise<void> {
-        await this.userRepository.delete(id);
+        throw new Error("Method not implemented. In UserClient delete");
     }
 
     /**
@@ -56,7 +55,15 @@ export class UserClient implements IUserRepository {
      */
     async getById(id: string): Promise<User> {
         const dto = await this.userRepository.getById(id);
-        return this.mapper.toDomain(dto);
+        const user = this.mapper.toDomain(dto);
+        
+        // If we have a species repository and there are captures, populate them
+        if (this.speciesRepository && dto.capture && dto.capture.length > 0 && this.mapper instanceof UserMapper) {
+            // #TODO: [Dave] ask cheval how to handle this shitttt. capture is not in the dto but the domain model need it
+            return await this.mapper.populateUserCaptures(user, dto.capture);
+        }
+        
+        return user;
     }
 
     /**

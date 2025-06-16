@@ -6,7 +6,7 @@
 - **Objectif Métier**: Gestion des comptes utilisateurs et personnalisation
 - **Personas Utilisateurs**: Tous les utilisateurs de l'app (passionnés de nature, étudiants, chercheurs, explorateurs occasionnels)
 - **Workflows Clés**:
-  - Inscription utilisateur avec email/nom d'utilisateur
+  - Inscription utilisateur avec mail/nom d'utilisateur
   - Connexion avec fonctionnalité "se souvenir de moi"
   - Édition du profil et upload de photo
   - Récupération de mot de passe
@@ -14,7 +14,7 @@
 - **Valeur Métier**: Personnalisation de l'expérience, fidélisation utilisateur
 
 ### Particularités Domain
-- Si je mets un mot de passe incorrect et un mail correct, je dois voir écrit "Mot de passe ou email incorrect" pour la sécurité.
+- Si je mets un mot de passe incorrect et un mail correct, je dois voir écrit "Mot de passe ou mail incorrect" pour la sécurité.
 - 
 ## Test Files
 
@@ -28,7 +28,7 @@
 ### Test Cases
 
 ### 1. Successful Login Flow
-- Fill in valid email and password
+- Fill in valid mail and password
 - Toggle "remember me" option
 - Submit form
 - Verify navigation to main app
@@ -40,7 +40,7 @@
 - Verify user stays on login screen
 
 ### 3. Email Validation Flow
-- Fill in invalid email format
+- Fill in invalid mail format
 - Submit form
 - Verify validation error
 - Verify form doesn't submit

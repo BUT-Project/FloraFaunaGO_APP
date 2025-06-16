@@ -16,7 +16,7 @@ const itemSize = (width / 3) - 10;
 
 const FamilyList: React.FC<FamilyListProps> = ({family,specieId,userCaptures}) => {
     const {
-            captures,
+            species,
             isLoading,
             fetchMoreData,
             error,
@@ -37,7 +37,7 @@ const FamilyList: React.FC<FamilyListProps> = ({family,specieId,userCaptures}) =
                 </ThemedView>
             ) : (
                 <FlatList
-                    data={captures}
+                    data={species}
                     keyExtractor={(item) => `FamilyMember-${item.id}`}
                     renderItem={({ item }) => (
                         <SpecieListItem

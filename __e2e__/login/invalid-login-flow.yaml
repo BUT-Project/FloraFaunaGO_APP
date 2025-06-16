@@ -25,7 +25,7 @@ appId: host.exp.exponent
 
 # Wait and verify error message appears
 - assertVisible:
-    text: "Mot de passe ou email incorrect"
+    text: "Mot de passe ou mail incorrect"
 
 # Verify we're still on login screen
 - assertVisible: "SE CONNECTER"

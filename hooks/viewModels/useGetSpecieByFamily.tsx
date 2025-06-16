@@ -1,6 +1,5 @@
 import {useEffect, useState} from "react";
 import StubData from "@/dal/StubLib/StubData";
-import {Family} from "@/model/domain/Family";
 import Specie from "@/model/domain/Specie";
 
 export function useGetSpecieByFamily(
@@ -12,7 +11,7 @@ export function useGetSpecieByFamily(
     const [isLoading, setIsLoading] = useState(false);
     const [isLoadingMore,setIsLoadingMore] = useState(false)
     const [page,setPage] = useState(1)
-    const [captures, setCaptures] = useState<Specie[]>([]);
+    const [species, setSpecies] = useState<Specie[]>([]);
     const [error, setError] = useState<unknown>(null);
 
     const fetchMoreData = () => {
@@ -26,14 +25,17 @@ export function useGetSpecieByFamily(
         const fetchCaptures = async () => {
             if(!selfId) return;
             if (isLoading || isListEnd) return;
-            if(captures.length == 0) setIsLoading(true);
+            if(species.length == 0) setIsLoading(true);
             setError(null);
             try {
                 const { speciesRepository } = StubData.getInstance();
-                const result = await speciesRepository?.getRelatedSpeciesByFamily(selfId, page, pageSize);
+                const result = await speciesRepository?.getRelatedSpeciesByFamily(selfId, {
+                    index : page,
+                    count : pageSize
+                });
                 if(!result) throw new Error("result undefined")
-                setIsListEnd(captures.length >= result.total);
-                setCaptures((prev) => [...prev, ...result.items]);
+                setIsListEnd(species.length >= result.total);
+                setSpecies((prev) => [...prev, ...result.items]);
             } catch (err) {
                 setError(err);
             } finally {
@@ -45,7 +47,7 @@ export function useGetSpecieByFamily(
     }, [page, pageSize]);
 
     return {
-        captures,
+        species,
         isLoading,
         isLoadingMore,
         error,

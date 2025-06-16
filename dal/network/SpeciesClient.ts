@@ -37,12 +37,12 @@ export class SpeciesClient implements ISpeciesRepository {
     }
 
     // TODO: [YOAN] DES que il on fait la route /espece/{id}/related, on peut l'utiliser pour les espèces liées par famille et adapte le code
-    async getRelatedSpeciesByFamily(specieId: string, page: number, pageSize: number): Promise<PagingResult<Specie>> {
+    async getRelatedSpeciesByFamily(specieId: string, request : PagedRequest): Promise<PagingResult<Specie>> {
         const resultData = await this.httpClient.getValidated(
             `${this.baseUrl}/${specieId}/related`,
             PagingResultSpecieSchema,
             undefined,
-            {index: page,count: pageSize}
+            {index: request.index,count: request.count}
         );
 
         if (!resultData.success) {

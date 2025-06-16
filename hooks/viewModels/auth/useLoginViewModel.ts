@@ -13,6 +13,8 @@ export function useLoginViewModel() {
     const [failedLogin, setFailedLogin] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+
 
     const login = useAuthStore((state) => state.login);
 
@@ -25,13 +27,15 @@ export function useLoginViewModel() {
 
     const validateForm = useCallback(() => {
         setFailedLogin(false);
-
         const result = loginSchema.safeParse({
-            email: username.toLowerCase().trim(),
+            Mail: username.toLowerCase().trim(),
             password: password
         });
 
+
         if (!result.success) {
+            console.log("dijqs")
+
             setFailedLogin(true);
             const firstError = result.error.errors[0];
             setErrorMessage(firstError.message);
@@ -43,13 +47,13 @@ export function useLoginViewModel() {
     const submitForm = useCallback(async () => {
         if (validateForm()) {
             const credentials: LoginCredentials = {
-                email: username.toLowerCase().trim(),
+                mail: username.toLowerCase().trim(),
                 password: password
             };
 
             setIsLoading(true);
             try {
-                await login(credentials.email, credentials.password, rememberMe);
+                await login(credentials.mail, credentials.password, rememberMe);
                 setFailedLogin(false);
                 await playSound();
 
@@ -71,6 +75,9 @@ export function useLoginViewModel() {
     const toggleRememberMe = useCallback(() => {
         setRememberMe(prev => !prev);
     }, []);
+    const togglePasswordVisibility = () => {
+        setShowPassword(!showPassword);
+    };
 
     const clearForm = useCallback(() => {
         setUsername('');
@@ -90,6 +97,8 @@ export function useLoginViewModel() {
         isLoading,
         submitForm,
         toggleRememberMe,
-        clearForm
+        clearForm,
+        showPassword,
+        togglePasswordVisibility,
     };
 }

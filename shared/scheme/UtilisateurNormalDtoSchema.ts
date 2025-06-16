@@ -1,5 +1,6 @@
-
-import { z } from 'zod';
+import {z} from 'zod';
+import {CaptureDtoSchema} from './CaptureDtoSchema';
+import {StateSchema} from './SuccessStateNormalDtoSchema';
 
 // ===== SCHÉMAS POUR UtilisateurControlleur =====
 
@@ -21,9 +22,9 @@ export const UtilisateurNormalDtoSchema = z.object({
         .nullable(),
 
     mail: z.string()
-        .email("L'adresse email n'est pas valide")
-        .min(1, "L'adresse email est obligatoire")
-        .max(254, "L'adresse email ne peut pas dépasser 254 caractères")
+        .email("L'adresse mail n'est pas valide")
+        .min(1, "L'adresse mail est obligatoire")
+        .max(254, "L'adresse mail ne peut pas dépasser 254 caractères")
         .optional()
         .nullable(),
 
@@ -74,59 +75,6 @@ export const UtilisateurListQuerySchema = z.object({
  * Schéma pour la modification d'un utilisateur (PUT) est un partial de UtilisateurNormalDto
  */
 
-
-/**
- * Schéma pour les détails de problème (erreurs 400/404)
- */
-export const ProblemDetailsSchema = z.object({
-    type: z.string()
-        .optional()
-        .nullable()
-        .describe("Type du problème"),
-
-    title: z.string()
-        .optional()
-        .nullable()
-        .describe("Titre du problème"),
-
-    status: z.number()
-        .int("Le statut doit être un nombre entier")
-        .optional()
-        .nullable()
-        .describe("Code de statut HTTP"),
-
-    detail: z.string()
-        .optional()
-        .nullable()
-        .describe("Description détaillée du problème"),
-
-    instance: z.string()
-        .optional()
-        .nullable()
-        .describe("Instance du problème")
-});
-
-/**
- * Réponse d'API standardisée pour un utilisateur
- */
-export const UtilisateurApiResponseSchema = z.object({
-    success: z.boolean()
-        .describe("Indique si la requête a réussi"),
-
-    data: UtilisateurNormalDtoSchema
-        .optional()
-        .nullable()
-        .describe("Données de l'utilisateur"),
-
-    message: z.string()
-        .optional()
-        .describe("Message de réponse"),
-
-    errors: z.array(z.string())
-        .optional()
-        .describe("Liste des erreurs")
-});
-
 /**
  * Réponse d'API standardisée pour une liste d'utilisateurs
  */
@@ -171,6 +119,34 @@ export const UtilisateurListApiResponseSchema = z.object({
 export type UtilisateurNormalDto = z.infer<typeof UtilisateurNormalDtoSchema>;
 export type UserOrderingCriteria = z.infer<typeof UserOrderingCriteriaSchema>;
 export type UtilisateurListQuery = z.infer<typeof UtilisateurListQuerySchema>;
-export type ProblemDetails = z.infer<typeof ProblemDetailsSchema>;
-export type UtilisateurApiResponse = z.infer<typeof UtilisateurApiResponseSchema>;
+/**
+ * Schema for the user data as returned by the API (more flexible)
+ */
+export const UtilisateurApiDtoSchema = z.object({
+    id: z.string().nullable(),
+    pseudo: z.string().nullable(),
+    image: z.string().nullable(),
+    mail: z.string().nullable(),
+    hash_mdp: z.string().nullable(),
+    dateInscription: z.string().nullable()
+});
+
+/**
+ * Schema for the actual API response structure
+ */
+export const UtilisateurCompleteResponseSchema = z.object({
+    utilisateur: UtilisateurApiDtoSchema,
+    capture: z.array(CaptureDtoSchema).optional(),
+    successState: z.array(StateSchema).optional()
+});
+
+export const UtilisateurListResponseSchema = z.object({
+    total: z.number(),
+    index: z.number(),
+    count: z.number(),
+    items: z.array(UtilisateurCompleteResponseSchema)
+});
+
 export type UtilisateurListApiResponse = z.infer<typeof UtilisateurListApiResponseSchema>;
+export type UtilisateurApiDto = z.infer<typeof UtilisateurApiDtoSchema>;
+export type UtilisateurCompleteResponse = z.infer<typeof UtilisateurCompleteResponseSchema>;

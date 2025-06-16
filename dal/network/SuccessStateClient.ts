@@ -10,19 +10,17 @@ import {FilterPredicate} from "@/shared/FilterPredicate";
 import {IMapper} from "@/shared/mappers/IMapper";
 import {ISuccessStateRepository} from "../repository/ISuccessStateRepository";
 import IAuthService from "@/model/service/IAuthService";
-import {HttpZodResourceClient, HttpZodResourceConfig} from "@/dal/network/HttpZodResourceClient";
+import {HttpZodResourceClient} from "@/dal/network/HttpZodResourceClient";
 
 export class SuccessStateClient implements ISuccessStateRepository {
-    private readonly mapper: IMapper<SuccessStateCompleteItem, Success>;
     private readonly successStateRepository: HttpZodResourceClient<SuccessStateCompleteItem>;
 
     constructor(
         private httpClient: ZodHttpClient,
         private authService: IAuthService,
         baseUrl: string = "/success/state",
-        mapper: IMapper<SuccessStateCompleteItem, Success> = new SuccessCompletMapper()
+        private mapper: IMapper<SuccessStateCompleteItem, Success> = new SuccessCompletMapper()
     ) {
-        this.mapper = mapper;
         this.successStateRepository = HttpZodResourceClient.create<SuccessStateCompleteItem>(
             httpClient,
             baseUrl,
@@ -67,7 +65,11 @@ export class SuccessStateClient implements ISuccessStateRepository {
     async getAll(request: PagedRequest): Promise<PagingResult<SuccessStateCompleteItem>> {
 
         //a modifier [Patrick]
-        const endpoint = `/FloraFaunaGo_API/success/state/idUser=219ea108-8af8-414b-a4c7-f12cf44f5247` // #TODO REmove hardcoded user ID
+         const user = await this.authService.getUser();
+         if (!user) {
+            throw new Error("User not authenticated while fetching success states.");
+         }
+         const endpoint = `/FloraFaunaGo_API/success/state/idUser=${user.id}` // #TODO REmove hardcoded user ID and use authService to get current user ID
         const dtoResult = await this.httpClient.getValidated(
             endpoint,
             z.object({
@@ -80,7 +82,7 @@ export class SuccessStateClient implements ISuccessStateRepository {
             {index: request.index, count: request.count}
         );
         if (!dtoResult.success) {
-            throw dtoResult.error; // ou autre gestion d’erreur
+            throw dtoResult.error;
         }
 
         return {

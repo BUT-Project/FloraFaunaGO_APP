@@ -1,4 +1,4 @@
-import {Appearance, Pressable, SafeAreaView, StyleSheet, Switch, TouchableOpacity} from "react-native";
+import {Appearance, Pressable, StyleSheet, Switch, TouchableOpacity} from "react-native";
 import {ThemedText, ThemedView} from "@/components/ui/themed";
 import React, {useEffect, useState} from "react";
 import {LinearGradient} from 'expo-linear-gradient';

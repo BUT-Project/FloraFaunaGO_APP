@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { SuccessType } from "@/model/domain/SuccessType";
 
 // Schéma pour l'objet 'user' (inchangé)
 const UserSchema = z.object({
@@ -12,7 +11,7 @@ const UserSchema = z.object({
 }).nullable();
 
 // Schéma pour l'objet 'state' dans la réponse API
-const StateSchema = z.object({
+export const StateSchema = z.object({
   id: z.string().uuid(),
   percentSucces: z.number().int().nonnegative(),
   isSucces: z.boolean()

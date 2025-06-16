@@ -1,5 +1,5 @@
 import {Dimensions, FlatList, Image, StyleSheet, TouchableOpacity, useColorScheme} from "react-native";
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, useMemo} from "react";
 import SucessListItemVertical from "@/components/SucessListItemVertical";
 import {ThemedIcon, ThemedText, ThemedView} from "@/components/ui/themed";
 import {Link} from 'expo-router';
@@ -27,9 +27,35 @@ export default function ProfilScreen() {
     const [stepCount, setStepCount] = useState(1)
     const [imageUri, setImageUri] = useState<string | null | undefined>(null);
     const user = useAuthStore((state) => state.user);
-    //modifier car les captures plus dans le modele (david)
-    const species = useAuthStore((state) => new Set(state.user?.captures.map(c => c.specie.id)).size);
-    const family = useAuthStore((state) => new Set(state.user?.captures.map(c => c.specie.family)).size);
+    // Optimized: Get captures once and compute stats
+    const userCaptures = useAuthStore((state) => state.user?.captures);
+    
+    // Memoized computations to avoid running on every render
+    const species = useMemo(() => {
+        console.log('🔍 ProfilScreen - Computing species count, captures length:', userCaptures?.length || 0);
+        
+        if (!userCaptures || userCaptures.length === 0) {
+            console.log('⚠️ ProfilScreen - No captures found');
+            return 0;
+        }
+        
+        // Only log first time or when captures change
+        if (userCaptures.length > 0) {
+            console.log('🔍 ProfilScreen - First capture sample:', {
+                id: userCaptures[0].id,
+                specieId: userCaptures[0].specie?.id,
+                specieName: userCaptures[0].specie?.name
+            });
+        }
+        
+        return new Set(userCaptures.map(c => c.specie.id)).size;
+    }, [userCaptures]);
+    
+    const family = useMemo(() => {
+        console.log('🔍 ProfilScreen - Computing family count');
+        if (!userCaptures) return 0;
+        return new Set(userCaptures.map(c => c.specie.family)).size;
+    }, [userCaptures]);
     const dataUser = useUserStore();
     const sucessManager = new SuccessManager(StubData.getInstance().successRepository!, StubData.getInstance().successStateRepository);
 

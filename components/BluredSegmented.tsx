@@ -206,7 +206,7 @@ interface BlurSegmentedProps {
 export default function BlurSegmented({tabsName, onTabChange}: BlurSegmentedProps) {
 const offsetX = useSharedValue(0);
 
-    const [zoomLevel, setZoomLevel] = useState(1.4);
+    const [zoomLevel] = useState(1.4);
 
     const [dims, setDims] = useState<LayoutRectangle>({
         width: 0,

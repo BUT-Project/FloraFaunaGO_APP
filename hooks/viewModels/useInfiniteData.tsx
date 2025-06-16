@@ -97,7 +97,21 @@ export function useInfiniteData<T>(
                     filter: filter || undefined
                 };
 
-                return await repository.getAll(request);
+                // Log API call details
+                console.log(`[API Call] Fetching data - Page: ${pageParam}, PageSize: ${pageSize}, OrderBy: ${orderingProperty || 'default'}, Descending: ${isDescending}`, {
+                    filter: filter || 'none',
+                    queryKey: completeQueryKey,
+                    timestamp: new Date().toISOString()
+                });
+
+                const result = await repository.getAll(request);
+                
+                // Log successful API response
+                console.log(`[API Success] Received ${result.items.length} items, Total: ${result.total}, Page: ${result.index}`, {
+                    timestamp: new Date().toISOString()
+                });
+
+                return result;
             } catch (err) {
                 console.error("Error during infinite query :", err);
                 throw err;
@@ -114,7 +128,10 @@ export function useInfiniteData<T>(
         },
    
         enabled,
-        staleTime
+        staleTime,
+        refetchOnWindowFocus: false,
+        refetchOnMount: false,
+        refetchOnReconnect: false
     });
 
     // Derived data

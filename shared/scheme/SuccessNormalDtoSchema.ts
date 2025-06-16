@@ -1,5 +1,4 @@
 import { z } from "zod";
-import {SuccessType} from "@/model/domain";
 
 /**
  * Enumération des types de succès (SuccessType)

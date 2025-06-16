@@ -31,7 +31,9 @@ type UseInfiniteSpeciesResult = BaseInfiniteResult<Specie> &
     sortByScientificName: (descending?: boolean) => void;
 };
 
-type UseInfiniteSpeciesOptions = BaseInfiniteOptions<Specie>;
+type UseInfiniteSpeciesOptions = BaseInfiniteOptions<Specie> & {
+    queryKey?: string[];
+};
 
 export function useInfiniteSpecies(
     repository?: ISpeciesRepository,
@@ -44,8 +46,20 @@ export function useInfiniteSpecies(
         pageSize = 20,
         orderBy = 'name',
         descending = false,
-        enabled = true
+        enabled = true,
+        queryKey = ['species']
     } = options;
+
+    // Log hook initialization with stack trace
+    console.log('[Species Hook] useInfiniteSpecies initialized with options:', {
+        pageSize,
+        orderBy,
+        descending,
+        enabled,
+        queryKey,
+        timestamp: new Date().toISOString(),
+        stackTrace: new Error().stack?.split('\n')[2]?.trim() // Show caller location
+    });
 
     // Filter state management
     const [nameFilter, setNameFilter] = useState<string | null>(null);
@@ -71,29 +85,42 @@ export function useInfiniteSpecies(
 
     // Core query setup
     const queryResult = useInfiniteData<Specie>(repository, {
-        queryKey: ['species', orderBy, descending],
+        queryKey,
         pageSize,
         orderingProperty: orderBy as string,
         isDescending: descending,
         enabled,
-        initialFilter: currentFilters, // 🔧 FIX: Pass current filters directly
+        initialFilter: currentFilters,
         staleTime: 5 * 60 * 1000 // 5 minutes
     });
 
-    // 🔧 FIX: Use useEffect with proper dependencies to auto-apply filters
+    // Apply filters when they change
     useEffect(() => {
+        console.log('[Species Filter] Filters changed, applying new filters:', {
+            filters: currentFilters,
+            timestamp: new Date().toISOString()
+        });
         queryResult.setFilter(currentFilters);
-    }, [currentFilters]); // Only depend on the memoized filters
+    }, [JSON.stringify(currentFilters)]); // Use JSON.stringify to avoid excessive re-runs
 
     // Apply current filters to the query (manual trigger)
     const applyFilters = useCallback(() => {
+        console.log('[Species Filter] Manual filter application triggered:', {
+            filters: currentFilters,
+            timestamp: new Date().toISOString()
+        });
         queryResult.setFilter(currentFilters);
     }, [currentFilters, queryResult.setFilter]);
 
     // Toggle filter handlers
     const search = useCallback((name: string) => {
+        console.log('[Species Search] Name filter changed:', {
+            previousName: nameFilter,
+            newName: name,
+            timestamp: new Date().toISOString()
+        });
         setNameFilter(name);
-    }, []);
+    }, [nameFilter]);
 
     const toggleScientificNameFilter = useCallback((scientificName: string) => {
         setScientificNameFilter(current => current === scientificName ? null : scientificName);
@@ -116,20 +143,32 @@ export function useInfiniteSpecies(
     }, []);
 
     const clearFilters = useCallback(() => {
+        console.log('[Species Filter] Clearing all filters:', {
+            previousFilters: currentFilters,
+            timestamp: new Date().toISOString()
+        });
         setNameFilter(null);
         setScientificNameFilter(null);
         setDietFilter(null);
         setKingdomFilter(null);
         setClassFilter(null);
         setFamilyFilter(null);
-    }, []);
+    }, [currentFilters]);
 
     // Sort handlers
     const sortByName = useCallback((descending: boolean = false) => {
+        console.log('[Species Sort] Sorting by name:', {
+            descending,
+            timestamp: new Date().toISOString()
+        });
         queryResult.setOrdering('name', descending);
     }, [queryResult.setOrdering]);
 
     const sortByScientificName = useCallback((descending: boolean = false) => {
+        console.log('[Species Sort] Sorting by scientific name:', {
+            descending,
+            timestamp: new Date().toISOString()
+        });
         queryResult.setOrdering('scientificName', descending);
     }, [queryResult.setOrdering]);
 

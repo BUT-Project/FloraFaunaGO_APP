@@ -1,7 +1,7 @@
 import {create} from 'zustand';
-import StubData from "@/dal/StubLib/StubData";
 import User from "@/model/domain/User";
 import {getStorageItemAsync, setStorageItemAsync} from "@/libs/secureStore";
+import { AppFacadeService } from "@/services/AppFacadeService";
 
 interface AuthState {
     user: User | null;
@@ -13,6 +13,8 @@ interface AuthState {
     checkAuth: () => Promise<void>;
     setRememberMe: (value: boolean) => void;
     isAuthCheckCompleted: boolean;
+
+    syncCurrentUser: () => Promise<void>; // Synchronize the current user data with the server that ugly but works #TODO [Dave] : refactor this
 }
 
 const AUTH_TOKEN_KEY = 'auth_token';
@@ -25,75 +27,131 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     isAuthCheckCompleted:false,
 
     login: async (email: string, password: string, remember: boolean = false) => {
-        const {authService} = StubData.getInstance();
-        const user = await authService?.login(email, password);
-        if (remember && user) {
-            // await setStorageItemAsync(AUTH_TOKEN_KEY, JSON.stringify({
-            //    user: user?.id,
-            //    timestamp: new Date().getTime()
-            //})
-            //);
-            await setStorageItemAsync(REMEMBER_ME_KEY, 'true');
+        try {
+            console.log(`🔐 Attempting login for email: ${email}`);
+            const appFacade = AppFacadeService.getInstance();
+            console.log('📞 Calling appFacade.login...');
+            const user = await appFacade.login(email, password);
+            console.log('✅ Login successful, user:', { id: user.id, username: user.username, email: user.email });
+            
+            if (remember) {
+                console.log('💾 Saving remember me preference');
+                await setStorageItemAsync(REMEMBER_ME_KEY, 'true');
+            }
+            
+            set({user, isAuthenticated: true, rememberMe: remember});
+            console.log('🎉 Auth state updated successfully');
+        } catch (error) {
+            console.error('❌ Login failed:', error);
+            console.error('❌ Error type:', typeof error);
+            console.error('❌ Error constructor:', error?.constructor?.name);
+            console.error('❌ Error message:', error instanceof Error ? error.message : 'Unknown error');
+            console.error('❌ Error stack:', error instanceof Error ? error.stack : 'No stack trace');
+            
+            if (error instanceof Error && error.message.includes('404')) {
+                console.error('🚫 HTTP 404 - Login endpoint not found or user not found');
+            } else if (error instanceof Error && error.message.includes('401')) {
+                console.error('🔒 HTTP 401 - Invalid credentials');
+            } else if (error instanceof Error && error.message.includes('500')) {
+                console.error('💥 HTTP 500 - Server error during login');
+            }
+            
+            throw error;
         }
-        // [TODO] [Dave] add error handling since it can failed (like return true or use throw error from inner)
-        set({user, isAuthenticated: true, rememberMe: remember});
     },
 
     register: async (email: string, password: string,username?: string) => {
-        const {authService} = StubData.getInstance();
-        
-        // [TODO] [Dave] add error handling since it can failed (like return true)
-        const user = await authService?.register(email, password,username ?? email);
-        set({user, isAuthenticated: true});
+        try {
+            const appFacade = AppFacadeService.getInstance();
+            const user = await appFacade.register(email, password, username);
+            set({user, isAuthenticated: true});
+        } catch (error) {
+            console.error('Registration failed:', error);
+            throw error;
+        }
     },
-
 
     logout: async () => {
-        const {authService} = StubData.getInstance();
-        await authService?.logout();
-//        Clear stored authentication state
-//        await setStorageItemAsync(AUTH_TOKEN_KEY, null);
-//        await setStorageItemAsync(REMEMBER_ME_KEY, null);
-        set({user: null, isAuthenticated: false, rememberMe: false});
+        try {
+            const appFacade = AppFacadeService.getInstance();
+            await appFacade.logout();
+            
+            // Clear stored authentication state
+            await setStorageItemAsync(AUTH_TOKEN_KEY, null);
+            await setStorageItemAsync(REMEMBER_ME_KEY, null);
+            
+            set({user: null, isAuthenticated: false, rememberMe: false});
+        } catch (error) {
+            console.error('Logout failed:', error);
+            throw error;
+        }
     },
     checkAuth: async () => {
-        const {authService, userRepository} = StubData.getInstance();
-        const isAuthenticated = await authService?.isAuthenticated();
-        if (isAuthenticated) {
-            const user = await authService?.getUser();
-            set({user, isAuthenticated,isAuthCheckCompleted:true});
-        } else {
+        try {
+            const appFacade = AppFacadeService.getInstance();
+            
+            const isAuthenticated = await appFacade.isAuthenticated();
+            if (isAuthenticated) {
+                const user = await appFacade.getCurrentUser();
+                set({user, isAuthenticated, isAuthCheckCompleted:true});
+            } else {
+                const storedAuth = await getStorageItemAsync(AUTH_TOKEN_KEY);
+                const rememberedLogin = await getStorageItemAsync(REMEMBER_ME_KEY);
 
-            const storedAuth = await getStorageItemAsync(AUTH_TOKEN_KEY);
-            const rememberedLogin = await getStorageItemAsync(REMEMBER_ME_KEY);
+                if (rememberedLogin === 'true' && storedAuth !== null) {
+                    try {
+                        const parsedAuth = JSON.parse(storedAuth);
+                        const timestamp = parsedAuth.timestamp;
+                        const isValid = (new Date().getTime() - timestamp) < (30 * 24 * 60 * 60 * 1000);
 
-            if (rememberedLogin === 'true' && storedAuth !== null) {
-                try {
-                    const parsedAuth = JSON.parse(storedAuth);
-                    const timestamp = parsedAuth.timestamp;
-
-                    // Check if stored auth is not expired (e.g., 30 days)
-                    const isValid = (new Date().getTime() - timestamp) < (30 * 24 * 60 * 60 * 1000);
-
-                    const user = await userRepository?.getById(parsedAuth.user);
-                    if (isValid && user) {
-                        set({
-                            user: user,
-                            isAuthenticated: true,
-                            rememberMe: true,
-                            isAuthCheckCompleted:true,
-                        });
-                        return;
+                        if (isValid) {
+                            const storedUser = await appFacade.getUserById(parsedAuth.user);
+                            if (storedUser) {
+                                set({
+                                    user: storedUser,
+                                    isAuthenticated: true,
+                                    rememberMe: true,
+                                    isAuthCheckCompleted:true,
+                                });
+                                return;
+                            }
+                        }
+                    } catch (e) {
+                        console.error('Error parsing stored auth :', e);
+                        // If user not found (404), clear stored auth
+                        if (e instanceof Error && e.message.includes('404')) {
+                            console.warn('User not found, clearing stored auth');
+                            await setStorageItemAsync(AUTH_TOKEN_KEY, null);
+                            await setStorageItemAsync(REMEMBER_ME_KEY, null);
+                        }
                     }
-                } catch (e) {
-                    console.error('Error parsing stored auth:', e);
                 }
+                set({user: null, isAuthenticated: false, isAuthCheckCompleted:true});
             }
-            // If not authenticated or no valid stored auth, set user to null
-            set({user: null, isAuthenticated: false,isAuthCheckCompleted:true});
+        } catch (error) {
+            console.error('Auth check failed:', error);
+            set({user: null, isAuthenticated: false, isAuthCheckCompleted:true});
         }
     },
     setRememberMe: async (value: boolean) => {
         set({rememberMe: value});
+    },
+    syncCurrentUser: async () => {
+        const currentUser = get().user;
+        if (currentUser) {
+            try {
+                const appFacade = AppFacadeService.getInstance();
+                const refreshedUser = await appFacade.getUserById(currentUser.id);
+                if (refreshedUser) {
+                    set({ user: refreshedUser });
+                }
+            } catch (error : unknown) {
+                console.error('Failed to sync user data:', error);
+                // Si erreur 401, déconnecter
+                if (typeof error === "object" && error !== null && "status" in error && (error as any).status === 401) {
+                    set({ user: null, isAuthenticated: false });
+                }
+            }
+        }
     },
 }));

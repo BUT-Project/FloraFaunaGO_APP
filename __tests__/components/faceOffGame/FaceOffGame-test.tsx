@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, fireEvent, act } from '@testing-library/react-native';
-import FaceOffGame,{NB_LIVES,NB_STEPS,MAX_RESPONSE_TIME} from '@/components/faceOffGame/FaceOffGame';
+import FaceOffGame,{MAX_RESPONSE_TIME} from '@/components/faceOffGame/FaceOffGame';
 import * as actionsModule from "@/components/faceOffGame/game/actions";
 
 jest.mock('@/components/faceOffGame/Tutorial', () => {

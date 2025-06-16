@@ -1,4 +1,4 @@
-import {useState} from "react";
+import React, {useState} from "react";
 import {ActivityIndicator, Button, FlatList, StyleSheet, View} from "react-native";
 import {ThemedText, ThemedView} from "@/components/ui/themed";
 import {useInfiniteSpecies} from "@/hooks/viewModels/useInfiniteSpecies";
@@ -21,6 +21,10 @@ interface EncyclopediaScreenProps {
 }
 
 export default function EncyclopediaScreen({speciesRepository}: EncyclopediaScreenProps) {
+    console.log('📚 EncyclopediaScreen render triggered:', {
+        timestamp: new Date().toISOString(),
+        repositoryId: speciesRepository?.constructor.name || 'unknown'
+    });
     const background = useThemeColor({}, "background");
     const tint = useThemeColor({}, "tint");
 
@@ -48,10 +52,10 @@ export default function EncyclopediaScreen({speciesRepository}: EncyclopediaScre
         refresh,
         clearFilters,
     } = useInfiniteSpecies(speciesRepository, {
-        pageSize: 30, // 3 columns × 10 rows
+        pageSize: 6, // Same as map for shared caching
         orderBy: 'name',
         descending: false,
-        enabled: true
+        enabled: true,
     });
 
     const handleSearchChange = (text: string) => {
@@ -66,7 +70,13 @@ export default function EncyclopediaScreen({speciesRepository}: EncyclopediaScre
 
     // Handle load more data
     const handleLoadMore = () => {
-        if (hasNextPage && !isFetching) {
+        console.log('[Encyclopedia] handleLoadMore triggered:', {
+            hasNextPage,
+            isFetching,
+            speciesLength: species.length,
+            timestamp: new Date().toISOString()
+        });
+        if (hasNextPage && !isFetching && species.length > 0) {
             fetchNextPage();
         }
     };
@@ -122,7 +132,6 @@ export default function EncyclopediaScreen({speciesRepository}: EncyclopediaScre
                         testID="Encyclopedia.Flatlist"
                         style={styles.capturesList}
                         showsVerticalScrollIndicator={false}
-                        columnWrapperStyle={styles.columnWrapper}
                         contentContainerStyle={styles.listContent}
                         data={species}
                         onRefresh={handleRefresh}
@@ -147,7 +156,7 @@ export default function EncyclopediaScreen({speciesRepository}: EncyclopediaScre
                         )}
                         onEndReachedThreshold={0.2}
                         onEndReached={handleLoadMore}
-                        numColumns={3}
+                        numColumns={1}
                     />
                 }
             </LinearGradient>

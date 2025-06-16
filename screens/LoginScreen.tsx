@@ -9,7 +9,7 @@ import {ThemedText, ThemedView} from "@/components/ui/themed";
 import {useThemeColor} from "@/hooks/useThemeColor";
 
 export interface LoginCredentials {
-    email: string;
+    mail: string;
     password: string;
 }
 
@@ -27,7 +27,9 @@ export default function LoginScreen() {
         rememberMe,
         failedLogin,
         submitForm,
-        toggleRememberMe
+        toggleRememberMe,
+        showPassword,
+        togglePasswordVisibility
     } = useLoginViewModel();
 
     return (
@@ -52,9 +54,12 @@ export default function LoginScreen() {
                 placeholder="Mot de passe"
                 value={password}
                 onChangeText={setPassword}
-                secureTextEntry
+                secureTextEntry={!showPassword}
                 autoCapitalize="none"
                 autoCorrect={false}
+                showToggle={true}
+                onToggle={togglePasswordVisibility}
+                isVisible={showPassword}
             />
             <ThemedView style={styles.rememberMeContainer}>
                 <TouchableOpacity

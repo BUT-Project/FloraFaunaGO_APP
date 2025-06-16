@@ -1,11 +1,12 @@
 import { jwtDecode } from "jwt-decode";
 
 export interface JwtPayload {
-    nameid: string;
+    sub: string;
     email: string;
-    username?: string;
+    uid: string;
     exp: number;
-    iat: number;
+    iss: string;
+    aud: string;
 }
 
 export class AuthJWTMapper {
@@ -26,6 +27,6 @@ export class AuthJWTMapper {
      */
     static getUserIdFromToken(token: string): string {
         const payload = this.decodeJwtPayload(token);
-        return payload.nameid;
+        return payload.uid;
     }
 }

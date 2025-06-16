@@ -74,6 +74,10 @@ interface MapInterfaceProps {
 }
 
 export default function MapInterface({style, repository}: MapInterfaceProps) {
+    console.log('[MapInterface] Component render triggered:', {
+        timestamp: new Date().toISOString(),
+        repositoryId: repository?.constructor.name || 'unknown'
+    });
     const [selectedCategory, setSelectedCategory] = useState<FilterCategory>('All');
     const [searchQuery, setSearchQuery] = useState('');
     const [isSearchActive, setIsSearchActive] = useState(false);
@@ -101,7 +105,7 @@ export default function MapInterface({style, repository}: MapInterfaceProps) {
         hasNextPage,
         fetchNextPage,
     } = useInfiniteSpecies(repository, {
-        pageSize: 100, // Load more species for map display
+        pageSize: 6, // Same as encyclopedia for shared caching
         orderBy: 'name',
         enabled: true,
     });

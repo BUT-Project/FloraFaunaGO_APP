@@ -9,6 +9,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import {useColorScheme} from '@/hooks/useColorScheme';
 import {GestureHandlerRootView} from "react-native-gesture-handler";
 import {useAuthStore} from "@/context/zustand/store/useAuthStore";
+import { getStorageItemAsync } from "@/libs/secureStore";
 import '../i18n'
 // Prevent the splash screens from auto-hiding before asset loading is complete or authentication is done
 SplashScreen.preventAutoHideAsync();
@@ -25,6 +26,40 @@ export default function RootLayout() {
             SplashScreen.hideAsync();
         }
     }, [loaded, isAuthCheckCompleted]);
+
+    // Debug: Log all secure store contents
+    useEffect(() => {
+        const logSecureStoreContents = async () => {
+            try {
+                console.log('🔒 === SECURE STORE DEBUG ===');
+                
+                // Try to get all known keys
+                const knownKeys = [
+                    'auth_token',
+                    'remember_me',
+                    'access_token',
+                    'refresh_token',
+                    'user_data'
+                ];
+                
+                for (const key of knownKeys) {
+                    try {
+                        const value = await getStorageItemAsync(key);
+                        console.log(`🔑 ${key}:`, value ? (typeof value === 'string' ? value.substring(0, 100) + '...' : value) : 'null');
+                    } catch (error) {
+                        console.log(`🔑 ${key}: Error reading - ${error}`);
+                    }
+                }
+
+                console.log('🔒 === END SECURE STORE DEBUG ===');
+            } catch (error) {
+                console.error('❌ Error debugging secure store:', error);
+            }
+        };
+        
+        // Log on app start
+        logSecureStoreContents();
+    }, []);
 
     if (!loaded) {
         return null;

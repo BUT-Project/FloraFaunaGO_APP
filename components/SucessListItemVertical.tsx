@@ -33,14 +33,26 @@ export default function SucessListItemVertical(props:SucessListItemsProps){
                         tintColor={theme.card}
                         backgroundColor={theme.successBackground}
                     >
-                        {()=>
-                            <TabBarIcon
-                                size={35}
-                                name={props.items.image as  keyof typeof Ionicons.glyphMap}
-                                color={theme.text}
-                                style={styles.image}
-                            />
-                        }
+                        {()=> {
+                            // Icon validation logic to prevent "string is not a valid icon name" warnings
+                            // 1. Check if image field exists and is not null/undefined
+                            // 2. Check if image is not the literal string "string" (common API placeholder)
+                            // 3. Check if the icon name exists in Ionicons.glyphMap (valid Ionicons name)
+                            const iconName = props.items.image && 
+                                            props.items.image !== 'string' && 
+                                            props.items.image in Ionicons.glyphMap 
+                                            ? props.items.image as keyof typeof Ionicons.glyphMap  // Use valid icon
+                                            : 'trophy' as keyof typeof Ionicons.glyphMap;          // Fallback to trophy icon
+                            
+                            return (
+                                <TabBarIcon
+                                    size={35}
+                                    name={iconName}
+                                    color={theme.text}
+                                    style={styles.image}
+                                />
+                            );
+                        }}
                     </AnimatedCircularProgress>
                     <ThemedText style={styles.text}>{props.items.nom}</ThemedText>
                 </ThemedView>

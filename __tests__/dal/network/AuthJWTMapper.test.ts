@@ -8,29 +8,17 @@ const createTestToken = (payload: object): string => {
 describe('AuthJWTMapper', () => {
     describe('decodeJwtPayload', () => {
         it('test_decodeJwtPayload_withValidToken_returnsPayload', () => {
-            const payload: Omit<JwtPayload, 'username'> = { // Omit username as it's optional for this test
-                nameid: '123',
+            const payload: Omit<JwtPayload, 'username'> = {
+                uid: '123',
                 email: 'test@example.com',
                 exp: Math.floor(Date.now() / 1000) + 3600,
-                iat: Math.floor(Date.now() / 1000),
+                sub: '123',
+                iss: 'test-issuer',
+                aud: 'test-aud',
             };
             const token = createTestToken(payload);
             const decoded = AuthJWTMapper.decodeJwtPayload(token);
             expect(decoded).toEqual(payload);
-        });
-
-        it('test_decodeJwtPayload_withOptionalUsername_includesUsernameInPayload', () => {
-            const payload: JwtPayload = {
-                nameid: '456',
-                email: 'user@example.com',
-                username: 'testuser',
-                exp: Math.floor(Date.now() / 1000) + 3600,
-                iat: Math.floor(Date.now() / 1000),
-            };
-            const token = createTestToken(payload);
-            const decoded = AuthJWTMapper.decodeJwtPayload(token);
-            expect(decoded).toEqual(payload);
-            expect(decoded.username).toBe('testuser');
         });
 
         it('test_decodeJwtPayload_withInvalidTokenStructure_throwsError', () => {

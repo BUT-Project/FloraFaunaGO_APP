@@ -1,7 +1,7 @@
 import React from 'react';
 import { renderWithProviders as render } from '@/shared/utils/renderWithProviders';
 import { fireEvent, act } from '@testing-library/react-native';
-import EncyclopediaScreen ,{EMPTY_TEXT,ERROR_TEXT,LOADING_TEXT} from '@/screens/EncyclopediaScreen';
+import EncyclopediaScreen ,{EMPTY_TEXT,ERROR_TEXT} from '@/screens/EncyclopediaScreen';
 import * as useInfiniteSpeciesHook from '@/hooks/viewModels/useInfiniteSpecies';
 import { Specie, Habitat, Diet, Family, Climate, Kingdom, Class } from '@/model/domain';
 import { useAuthStore } from '@/context/zustand/store/useAuthStore';

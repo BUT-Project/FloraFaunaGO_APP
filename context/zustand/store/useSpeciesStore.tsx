@@ -2,10 +2,8 @@ import Specie from "@/model/domain/Specie";
 import {create} from 'zustand';
 import {devtools} from 'zustand/middleware';
 import {useAuthStore} from "@/context/zustand/store/useAuthStore";
-import StubData from "@/dal/StubLib/StubData";
 import Location from "@/model/domain/Location";
-import { SuccessType } from "@/model/domain/SuccessType";
-import { SuccessManager } from "@/dal/manager/SuccessManager";
+import { AppFacadeService } from "@/services/AppFacadeService";
 export interface SpeciesState {
     currentImageUri: string | null;
     identifiedSpecies: Specie | null;
@@ -58,8 +56,6 @@ export const useSpeciesStore = create<SpeciesState>()(
             },
             addSpecieToUser: async (specie: Specie, currentLocation : Location) => {
                 try {
-                    const successManager = new SuccessManager(StubData.getInstance().successRepository!, StubData.getInstance().successStateRepository);
-                    await successManager.processSuccessByType(SuccessType.CAPTURE, specie);
                     const { currentImageUri } = get();
                     if (!currentImageUri) {
                         console.log("Aucune image sélectionnée pour l\"ajout à utilisateur Current image uri: " + currentImageUri);
@@ -82,9 +78,12 @@ export const useSpeciesStore = create<SpeciesState>()(
 
                     set((state) => ({ ...state, isLoading: true }));
 
-                    const { captureRepository } = StubData.getInstance();
-                    await captureRepository?.addSpecieToUser(authStore.user.id, specie, currentLocation, currentImageUri);
-
+                    const appFacade = AppFacadeService.getInstance();
+                    await appFacade.addSpecieToUser(authStore.user.id, specie, currentLocation, currentImageUri);
+                    if (authStore.user) {
+                        console.log("Ajout de l'espèce à l'utilisateur:", authStore.user.id);
+                        await authStore.syncCurrentUser();
+                    }
                     set((state) => ({
                         ...state,
                         isLoading: false,

@@ -9,5 +9,6 @@ export { Family } from "./Family";
 export { default as CaptureDetail } from "./CaptureDetail";
 export { default as Location } from "./Location";
 export { SuccessType} from './SuccessType'
+export { Success } from './Success'
 export {default as User} from './User'
 export { SpecieType } from './SpecieType'

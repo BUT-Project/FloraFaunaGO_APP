@@ -28,7 +28,7 @@ export default class StubAuth implements IAuthService{
                     resolve(user);
                 }
             else {
-                    reject(new Error("Mot de passe ou email incorrect"));
+                    reject(new Error("Mot de passe ou mail incorrect"));
                 }
         });
     }
@@ -38,7 +38,7 @@ export default class StubAuth implements IAuthService{
             const existingUser = this.Users.find(user => user.email === email);
 
             if (existingUser) {
-                reject(new Error("Cet email est déjà utilisé"));
+                reject(new Error("Cet mail est déjà utilisé"));
                 return;
             }
             const newUser: User = {

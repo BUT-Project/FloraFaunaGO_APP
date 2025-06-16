@@ -4,7 +4,7 @@ import { renderWithProviders as render } from '@/shared/utils/renderWithProvider
 import HomeScreen from '@/screens/HomeScreen';
 import * as imageService from '@/services/imageQuality';
 import { useRouter } from 'expo-router';
-import { mockedBase64,mockedImageUri } from '@/__mocks__/components/camera/CameraView';
+import { mockedImageUri } from '@/__mocks__/components/camera/CameraView';
 
 jest.mock('../../components/camera', () => require('../../__mocks__/components/camera'));
 jest.mock('@/components/MainMapView',()=> require("@/__mocks__/components/MainMapView") );

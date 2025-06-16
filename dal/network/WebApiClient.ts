@@ -17,7 +17,7 @@ export default class WebApiClient extends IDataManager{
     public constructor() {
         super();
         this.client = this.buildAuthenticatedClient();
-        this.userRepository = new UserClient(this.client, '/api/utilisateur');
+        this.userRepository = new UserClient(this.client, '/FloraFaunaGo_API/utilisateur');
         this.speciesRepository = new SpeciesClient(this.client, '/api/espece');
         this.authService = new NetworkAuthService(this.client,this.userRepository, this.tokenManager);
     }
