@@ -3,10 +3,10 @@ import SpeciesDetailScreen from "@/screens/SpeciesDetailScreen";
 import {useLocalSearchParams, useRouter} from "expo-router";
 import {useGetById} from "@/hooks/viewModels/useGetById";
 import { ErrorMessage } from "@/components/ui/ErrorMessage";
-import StubData from "@/dal/StubLib/StubData";
 import {Capture,Specie} from "@/model/domain";
 import Loading from "@/components/ui/Loading";
 import ErrorBoundary from "@/components/ErrorBoundary";
+import {AppFacadeService} from "@/services/AppFacadeService";
 
 export default function SpeciesDetailsPage() {
 
@@ -16,7 +16,7 @@ export default function SpeciesDetailsPage() {
     const router = useRouter();
 
     const onReturn = () => router.back();
-    const dataManager = StubData.getInstance();
+    const dataManager = AppFacadeService.getInstance().dataManager;
     const captureRepository = dataManager?.captureRepository ?? null;
     const speciesRepository = dataManager?.speciesRepository ?? null;
 

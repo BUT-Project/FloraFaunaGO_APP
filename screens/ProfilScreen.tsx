@@ -12,7 +12,7 @@ import {Colors} from "@/constants/Colors";
 import * as ImagePicker from 'expo-image-picker';
 import {useUserStore} from "@/context/zustand/store/useUserStore";
 import {SuccessManager} from "@/dal/manager/SuccessManager";
-import StubData from "@/dal/StubLib/StubData";
+import {AppFacadeService} from "@/services/AppFacadeService";
 
 const {width} = Dimensions.get('window');
 export default function ProfilScreen() {
@@ -53,7 +53,7 @@ export default function ProfilScreen() {
         return new Set(userCaptures.map(c => c.specie.family)).size;
     }, [userCaptures]);
     const dataUser = useUserStore();
-    const sucessManager = new SuccessManager(StubData.getInstance().successRepository!, StubData.getInstance().successStateRepository);
+    const sucessManager = new SuccessManager(AppFacadeService.getInstance().dataManager.successRepository!, AppFacadeService.getInstance().dataManager.successStateRepository);
 
     const fetchSuccesses = async (currentPage: number) => {
         try {

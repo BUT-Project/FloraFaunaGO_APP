@@ -8,15 +8,15 @@ import { PagingResult } from "@/shared/PagingResult";
 import { Success } from "@/model/domain/Success";
 import { SuccessType } from "@/model/domain/SuccessType";
 import { SuccessManager } from "@/dal/manager/SuccessManager";
+import StubData from "@/dal/StubLib/StubData";
 
 export class AppFacadeService implements IAppFacadeService {
     private static instance: AppFacadeService | null = null;
-    private dataManager: IDataManager;
+    public readonly dataManager: IDataManager;
 
     private constructor() {
         // Import here to avoid circular dependencies
-        const StubData = require("@/dal/StubLib/StubData").default;
-        this.dataManager = StubData.getInstance();
+        this.dataManager = new StubData();
     }
 
     static getInstance(): AppFacadeService {

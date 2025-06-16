@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
-import StubData from "@/dal/StubLib/StubData";
 import Specie from "@/model/domain/Specie";
+import {AppFacadeService} from "@/services/AppFacadeService";
 
 export function useGetSpecieByFamily(
     selfId?: string,
@@ -28,7 +28,7 @@ export function useGetSpecieByFamily(
             if(species.length == 0) setIsLoading(true);
             setError(null);
             try {
-                const { speciesRepository } = StubData.getInstance();
+                const { speciesRepository } = AppFacadeService.getInstance().dataManager;
                 const result = await speciesRepository?.getRelatedSpeciesByFamily(selfId, {
                     index : page,
                     count : pageSize
