@@ -1,3 +1,4 @@
+import z from "zod";
 import {
     PagingResultSpecieSchema,
     SpecieDto,
@@ -14,7 +15,6 @@ import { PagedRequest } from "@/shared/PagedRequest";
 import { PagingResult } from "@/shared/PagingResult";
 import { SpecieMapper} from "@/shared/mappers/SpecieMapper";
 import {HttpZodResourceClient} from "@/dal/network/HttpZodResourceClient";
-import z from "zod";
 
 export class SpeciesClient implements ISpeciesRepository {
     constructor(

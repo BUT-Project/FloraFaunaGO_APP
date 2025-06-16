@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Button, ViewStyle, StyleProp } from 'react-native';
+import { StyleSheet, Button, ViewStyle, StyleProp ,ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { ThemedView,ThemedText } from '../ui/themed';
 
@@ -19,7 +19,9 @@ export const ErrorMessage: React.FC<ErrorMessageProps> = ({
     <ThemedView style={[styles.errorContainer, style]}>
         <ThemedView style={styles.errorContent}>
             <Ionicons name="warning-outline" size={64} color="red" />
-            <ThemedText style={styles.errorText}>{message}</ThemedText>
+            <ScrollView style={styles.scroll}>
+                <ThemedText style={styles.errorText}>{message}</ThemedText>
+            </ScrollView>
             <ThemedView style={styles.buttonContainer}>
                 {refresh && (
                     <Button title="Réessayer" onPress={refresh} color="red"/>
@@ -54,6 +56,9 @@ const styles = StyleSheet.create({
         color: 'red',
         fontSize: 18,
         textAlign: 'center',
+    },
+    scroll:{
+        flexGrow:0,
     },
     buttonContainer: {
         flexDirection: 'row',

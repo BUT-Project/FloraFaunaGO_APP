@@ -1,28 +1,27 @@
 import { z } from 'zod'
 import { LocationDtoSchema } from './LocationDtoSchema';
-import { Class, Climate, Diet, Family, Kingdom } from '@/model/domain';
-import {tryParseEnum} from "@/shared/utils";
+import { ClassSchema, ClimateSchema, DietSchema, FamilySchema, KingdomSchema } from './EnumsDtoSchema';
 
 export const SpecieDtoSchema = z.object({
   id: z.string(),
   nom: z.string(),
   nom_Scientifique: z.string(),
   description: z.string(),
-  image: z.string(),
+  image: z.string().nullable(),
   image3D: z.string().nullable().optional(),
-  class: z.nativeEnum(Class),
-  kingdom: z.nativeEnum(Kingdom),
-  famille: z.nativeEnum(Family).transform(val => tryParseEnum(Family, val) || Family.UNKNOWN),
+  class: ClassSchema,
+  kingdom: KingdomSchema,
+  famille: FamilySchema,
   zone: z.string(),
-  climat: z.nativeEnum(Climate),
-  regime: z.nativeEnum(Diet),
+  climat: ClimateSchema,
+  regime: DietSchema,
   localisations: z.array(LocationDtoSchema).optional(),
 });
 
 export const SpecieListDtoSchema = z.object({
   id: z.string(),
   nom: z.string(),
-  image: z.string(),
+  image: z.string().nullable(),
   image3D: z.string().nullable().optional(),
 });
 

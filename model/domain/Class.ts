@@ -33,3 +33,23 @@ export enum Class {
 
     UNKNOWN = "UNKNOWN"
 }
+
+
+// export const Class = {
+//     MAMMALIA: "MAMMALIA",
+//     INSECTA : "INSECTA",
+//     AVES : "AVES",                   
+//     REPTILIA : "REPTILIA",           
+//     AMPHIBIA :"AMPHIBIA",
+//     LAMIACEAE: "LAMIACEAE",
+//     MALVACEAE: "MALVACEAE",
+//     FAGACEAE : "FAGACEAE",
+//     ASTERACEAE : "ASTERACEAE",
+//     SAPINDACEAE : "SAPINDACEAE",
+//     MAGNOLIOPSIDA : "MAGNOLIOPSIDA",
+//     ACTINOPTERYGII : "ACTINOPTERYGII",
+//     UNKNOWN: "UNKNOWN",
+//     unknown :"unknown"
+// } as const;
+
+// export type Class = (typeof Class)[keyof typeof Class];

@@ -3,7 +3,6 @@ import {ActivityIndicator, Button, FlatList, StyleSheet, View} from "react-nativ
 import {ThemedText, ThemedView} from "@/components/ui/themed";
 import {useInfiniteSpecies} from "@/hooks/viewModels/useInfiniteSpecies";
 import {useAuthStore} from "@/context/zustand/store/useAuthStore";
-import {SafeView} from "@/components/ui/SafeView";
 import {LinearGradient} from "expo-linear-gradient";
 import {useThemeColor} from "@/hooks/useThemeColor";
 import {ISpeciesRepository} from "@/dal/repository/ISpeciesRepository";
@@ -93,9 +92,9 @@ export default function EncyclopediaScreen({speciesRepository}: EncyclopediaScre
     }
    
     return (
-        <SafeView disableBottomInset>
+        <ThemedView style={styles.flex1}>
             <LinearGradient
-                style={{flex: 1}}
+                style={styles.flex1}
                 start={{x: 0, y: 0.75}}
                 end={{x: 1, y: 1.3}}
                 colors={[background, tint]}
@@ -162,11 +161,14 @@ export default function EncyclopediaScreen({speciesRepository}: EncyclopediaScre
                     />
                 }
             </LinearGradient>
-        </SafeView>
+        </ThemedView>
     );
 }
 
 const styles = StyleSheet.create({
+    flex1:{
+        flex:1,
+    },
     capturesList: {
         flex: 1,
         marginTop: 5,

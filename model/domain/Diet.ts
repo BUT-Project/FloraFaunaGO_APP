@@ -1,4 +1,5 @@
 export enum Diet {
+    UNKNOWN = "UNKNOWN",
     CARNIVORA = "CARNIVORA",         
     HERBIVORA = "HERBIVORA",          
     OMNIVORA = "OMNIVORA",           
@@ -10,5 +11,5 @@ export enum Diet {
     FOLIVORA = "FOLIVORA",           
     GRANIVORA = "GRANIVORA",          
     PLANKTIVORA = "PLANKTIVORA",      
-    PARASITICA = "PARASITICA"         
+    PARASITICA = "PARASITICA",      
 }

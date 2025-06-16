@@ -7,6 +7,7 @@ import {Capture,Specie} from "@/model/domain";
 import Loading from "@/components/ui/Loading";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import {AppFacadeService} from "@/services/AppFacadeService";
+import { SafeView } from "@/components/ui/SafeView";
 
 export default function SpeciesDetailsPage() {
 
@@ -33,7 +34,10 @@ export default function SpeciesDetailsPage() {
     } = useGetById<Specie>(validSpecieId, speciesRepository);
 
     if (!validSpecieId) {
-        return <ErrorMessage message="Paramètre `id` manquant ou invalide !" onReturn={onReturn} />;
+        return (
+        <SafeView disableBottomInset>
+            <ErrorMessage message="Paramètre `id` manquant ou invalide !" onReturn={onReturn} />;
+        </SafeView>);
     }
 
     if (!captureRepository || !speciesRepository) {
@@ -55,11 +59,15 @@ export default function SpeciesDetailsPage() {
             errorMessages.push(specieMessage);
         }
 
-        return <ErrorMessage message={errorMessages.join('\n\n')} onReturn={onReturn} />;
+        return (
+            <SafeView disableBottomInset>
+                <ErrorMessage message={errorMessages.join('\n\n')} onReturn={onReturn} />
+            </SafeView>
+        );
     }
 
     if (isSpecieLoading || isCaptureLoading) {
-        return <Loading text="Chargement des données..." />;
+        return <Loading disableBottomInset text="Chargement des données..." />;
     }
 
     if (!specie) {
