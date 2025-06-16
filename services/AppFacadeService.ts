@@ -120,8 +120,10 @@ export class AppFacadeService implements IAppFacadeService {
     async updateUser(id: string, updatedUser: User): Promise<void> {
         const { userRepository } = this.dataManager;
         if (!userRepository) {
+            console.error("❌ User repository not available in dataManager");
             throw new Error("User repository not available");
         }
+        console.log("pass Facade")
         await userRepository.update(id, updatedUser);
     }
 

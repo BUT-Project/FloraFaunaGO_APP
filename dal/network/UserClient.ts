@@ -20,7 +20,7 @@ export class UserClient implements IUserRepository {
     private readonly mapper: IMapper<UtilisateurCompleteResponse, User>;
 
     constructor(
-        httpClient: ZodHttpClient,
+        private httpClient: ZodHttpClient,
         baseUrl: string = '/FloraFaunaGo_API/utilisateur',
         mapper: IMapper<UtilisateurCompleteResponse, User> = new UserMapper(),
         private userRepository : HttpZodResourceClient<UtilisateurCompleteResponse> = HttpZodResourceClient.create<UtilisateurCompleteResponse>(httpClient, baseUrl,UtilisateurCompleteResponseSchema),
@@ -40,7 +40,16 @@ export class UserClient implements IUserRepository {
      * Update an existing user
      */
     async update(id: string, user: User): Promise<void> {
-throw new Error("Method not implemented. In UserClient update");
+        const endpoint = `/api/Auth/edit-user`;
+
+        const body = {
+            pseudo: user.username,
+            mail: user.email,
+            image: user.image,
+        };
+
+        const dto = await this.httpClient.post(endpoint, body);
+        console.log("User updated successfully", dto);
     }
 
     /**

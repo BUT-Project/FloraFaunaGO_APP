@@ -25,9 +25,12 @@ export default function ProfilScreen() {
     const user = useAuthStore((state) => state.user);
 
     useEffect(() => {
-    setImageUri(user?.image);
-    
-    }
+    if(user?.image){
+    const base64Image = user.image;
+    const fullBase64Image = `data:image/png;base64,${base64Image}`;
+    setImageUri(fullBase64Image);
+}
+}
         , []);
     // Optimized: Get captures once and compute stats
     const userCaptures = useAuthStore((state) => state.user?.captures);
@@ -58,7 +61,8 @@ export default function ProfilScreen() {
         if (!userCaptures) return 0;
         return new Set(userCaptures.map(c => c.specie.family)).size;
     }, [userCaptures]);
-    const dataUser = useUserStore();
+    const updateUser = useUserStore().updateUser
+
     const sucessManager = new SuccessManager(AppFacadeService.getInstance().dataManager.successRepository!, AppFacadeService.getInstance().dataManager.successStateRepository);
 
     const fetchSuccesses = async (currentPage: number) => {
@@ -98,8 +102,7 @@ export default function ProfilScreen() {
             setImageUri(result.assets[0].uri);
             if (user && result.assets[0].base64) {
                 user.image = result.assets[0].base64
-                console.log(user.id)
-                dataUser.updateUser(user.id, user)
+                updateUser(user.id, user)
             }
         }
     };
