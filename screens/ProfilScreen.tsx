@@ -14,17 +14,13 @@ import {useUserStore} from "@/context/zustand/store/useUserStore";
 import {SuccessManager} from "@/dal/manager/SuccessManager";
 import StubData from "@/dal/StubLib/StubData";
 
-let ProfileImage: {};
-ProfileImage = require("../assets/images/ProfileImage.jpeg");
 const {width} = Dimensions.get('window');
 export default function ProfilScreen() {
     const [Successes, setSuccesses] = useState<Success[]>([]);
     const [page, setPage] = useState(0);
-    const [isLoading, setIsLoading] = useState(false);
     const [totalPages, setTotalPages] = useState(1);
     const colorScheme = useColorScheme() ?? 'light';
     const theme = Colors[colorScheme];
-    const [stepCount, setStepCount] = useState(1)
     const [imageUri, setImageUri] = useState<string | null | undefined>(null);
     const user = useAuthStore((state) => state.user);
     // Optimized: Get captures once and compute stats
@@ -60,7 +56,6 @@ export default function ProfilScreen() {
     const sucessManager = new SuccessManager(StubData.getInstance().successRepository!, StubData.getInstance().successStateRepository);
 
     const fetchSuccesses = async (currentPage: number) => {
-        setIsLoading(true);
         try {
             const PageRequest: PagedRequest = {
                 index: currentPage,
@@ -78,7 +73,6 @@ export default function ProfilScreen() {
         } catch (error) {
             console.error('Erreur lors de la récupération des succès :', error);
         } finally {
-            setIsLoading(false);
         }
     };
 
@@ -134,11 +128,6 @@ export default function ProfilScreen() {
                 <ThemedView style={styles.line}/>
                 <ThemedText type={"title"} style={styles.title}>Statistiques</ThemedText><ThemedView
                 style={styles.line}/>
-            </ThemedView>
-
-            <ThemedView style={styles.container}>
-                <FontAwesome5 size={32} name="walking" style={[styles.settings, {color: theme.text}]}/>
-                <ThemedText style={styles.text}> Distance marchées {stepCount} </ThemedText>
             </ThemedView>
             <ThemedView style={styles.container}>
                 <FontAwesome6 size={30} name="circle-question" style={[styles.settings, {color: theme.text}]}/>
