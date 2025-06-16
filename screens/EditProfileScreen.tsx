@@ -17,6 +17,8 @@ export default function UserEditScreen() {
     const [message, setMessage] = useState<string | null>(null);
     const [username,setUsername] = useState("")
     const {authService} = StubData.getInstance();
+    //const dataUser = useUserStore();
+    
     const {
       email,
       setEmail,

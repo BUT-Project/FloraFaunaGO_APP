@@ -100,8 +100,8 @@ export class SuccessCompletMapper implements IMapper<SuccessStateCompleteItem, S
             successDto.image,
             successDto.description,
             percentSucces, // actualVal
-            this.toEnum(successDto.type),
             successDto.objectif,
+            this.toEnum(successDto.type),
             successDto.evenement
         );
     }
