@@ -33,6 +33,7 @@ import {Class, Diet, Family, Kingdom, Specie} from "@/model/domain";
 import {useInfiniteSpecies} from "@/hooks/viewModels/useInfiniteSpecies";
 import {ISpeciesRepository} from "@/dal/repository/ISpeciesRepository";
 import { PROVIDER_GOOGLE } from "react-native-maps";
+import Loading from './ui/Loading';
 const {width, height} = Dimensions.get('window');
 const SEARCH_HANDLE_DIMENSION = 50;
 const BOTTOM_OFFSET = 20;
@@ -354,12 +355,7 @@ export default function MapInterface({style, repository}: MapInterfaceProps) {
 
     // Show loading state for initial load
     if (isLoading && allSpecies.length === 0) {
-        return (
-            <View style={[styles.container, styles.centerContent, style]}>
-                <ActivityIndicator size="large" color="#007AFF"/>
-                <Text style={styles.loadingText}>Loading species...</Text>
-            </View>
-        );
+        return (<Loading style={[styles.container,style]} text='CHargement des espèces ....'/>);
     }
 
     // Show error state
