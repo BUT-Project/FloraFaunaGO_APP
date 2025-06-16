@@ -11,7 +11,8 @@ import TokenManager from "@/services/keyManager/TokenManager";
 import {SecureLocalStorageAdapter} from "@/libs/LocalStorageAdapter";
 import NetworkAuthService from "@/dal/network/NetworkAuthService";
 import {UserMapper} from "@/shared/mappers/UserMaper";
-const ACCESS_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiMTQ4YjIyNi1mMDQ2LTQ3ZDYtYmNiOS1lNjY1YjY1YzQyNDYiLCJlbWFpbCI6ImRhdmlkQHBvcG8uZnIiLCJ1aWQiOiJiMTQ4YjIyNi1mMDQ2LTQ3ZDYtYmNiOS1lNjY1YjY1YzQyNDYiLCJleHAiOjE3NTAwMjM0NzAsImlzcyI6IkZsb3JhRmF1bmFJc3N1ZXIiLCJhdWQiOiJGbG9yYUZhdW5hSXNzdWVyIn0.a6ApnX-BGkdkAjulN1qLDQSZQez7MztuaEWtbbmyYzU';
+
+const ACCESS_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlNjk2MjRiNi1lMTI2LTRmYWEtOTI4Yy1jNmE5YWY0NTg3NDkiLCJlbWFpbCI6InlveW9AZ21haWwuY29tIiwidWlkIjoiZTY5NjI0YjYtZTEyNi00ZmFhLTkyOGMtYzZhOWFmNDU4NzQ5IiwiZXhwIjoxNzUwMDU5ODI5LCJpc3MiOiJGbG9yYUZhdW5hSXNzdWVyIiwiYXVkIjoiRmxvcmFGYXVuYUlzc3VlciJ9.T3RS3ZSA3AI6nALeZkGnXH9M2XKWtRzsbfn0tOQriDo';
 
 export default class StubData extends IDataManager {
     private static instance: StubData;

@@ -16,9 +16,11 @@ export const LOADING_TEXT = "Chargement des espèces...";
 export const EMPTY_TEXT = "Aucune espèce trouvée";
 export const ERROR_TEXT = "Une erreur est survenue lors de la récupération des espèces...";
 
+const NUMBER_OF_COLUMNS = 1;
+
 interface EncyclopediaScreenProps {
     speciesRepository: ISpeciesRepository; // You'll need to inject this
-}
+};
 
 export default function EncyclopediaScreen({speciesRepository}: EncyclopediaScreenProps) {
     console.log('📚 EncyclopediaScreen render triggered:', {
@@ -138,7 +140,7 @@ export default function EncyclopediaScreen({speciesRepository}: EncyclopediaScre
                         refreshing={isFetching}
                         keyExtractor={capture => capture.id?.toString()}
                         renderItem={({item}) =>
-                            <SpecieListItem specie={item} captureId={(userCaptures?.find((capture)=> capture.specie == item)?.id) ?? null}/>
+                            <SpecieListItem specie={item} captureId={(userCaptures?.find((capture)=> capture.specie == item)?.id) ?? null} numColumns={NUMBER_OF_COLUMNS}/>
                         }
                         ListEmptyComponent={() => (
                             <View style={styles.empty}>
@@ -156,7 +158,7 @@ export default function EncyclopediaScreen({speciesRepository}: EncyclopediaScre
                         )}
                         onEndReachedThreshold={0.2}
                         onEndReached={handleLoadMore}
-                        numColumns={1}
+                        numColumns={NUMBER_OF_COLUMNS}
                     />
                 }
             </LinearGradient>
