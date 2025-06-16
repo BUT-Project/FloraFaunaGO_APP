@@ -13,7 +13,7 @@ export const CaptureDetailWithLocationDtoSchema = z.object({
     localisationNormalDtos: LocationDtoSchema,
 });
 
-const CaptureDtoSchema = z.object({
+export const CaptureDtoSchema = z.object({
     id: z.string(),
     idEspece: z.string(),
     photo: z.string(),

@@ -119,12 +119,15 @@ describe('SuccessDetailScreen', () => {
 
   it('appelle onClose quand on presse sur le overlay', () => {
     const onCloseMock = jest.fn();
+    
     const { getByTestId } = render(
       <SuccessDetailScreen 
         {...defaultProps} 
         onClose={onCloseMock} 
       />
     );
+    
+
     const modal = render(<SuccessDetailScreen {...defaultProps} onClose={onCloseMock} />);
     expect(onCloseMock).not.toHaveBeenCalled();
   });

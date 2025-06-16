@@ -19,7 +19,7 @@ export class SuccessStateClient implements ISuccessStateRepository {
         private httpClient: ZodHttpClient,
         private authService: IAuthService,
         baseUrl: string = "/success/state",
-        private mapper: IMapper<SuccessStateCompleteItem, Success> = new SuccessCompletMapper()
+        mapper: IMapper<SuccessStateCompleteItem, Success> = new SuccessCompletMapper()
     ) {
         this.successStateRepository = HttpZodResourceClient.create<SuccessStateCompleteItem>(
             httpClient,
