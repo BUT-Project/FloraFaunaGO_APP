@@ -4,13 +4,13 @@ import {Link} from "expo-router";
 import normalize from "@/components/ui/responsive/Normalize";
 import {InputWithIcon} from "@/components/ui/InputWithIcon";
 import {useRegisterViewModel} from "@/hooks/viewModels/auth/useRegisterViewModel";
-import StubData from "@/dal/StubLib/StubData";
 import {Entypo} from "@expo/vector-icons";
 import {ThemedText, ThemedView} from "@/components/ui/themed";
 import {useThemeColor} from "@/hooks/useThemeColor";
+import {AppFacadeService} from "@/services/AppFacadeService";
 
 export default function RegisterScreen() {
-    const {authService} = StubData.getInstance();
+    const {authService} = AppFacadeService.getInstance().dataManager;
 
     const textColor = useThemeColor({}, 'text');
     const tintColor = useThemeColor({}, 'tint');

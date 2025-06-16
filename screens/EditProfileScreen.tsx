@@ -6,8 +6,8 @@ import { Colors } from "@/constants/Colors";
 import { useEffect, useState } from "react";
 import { InputWithIcon } from "@/components/ui/InputWithIcon";
 import { useRegisterViewModel } from "@/hooks/viewModels/auth/useRegisterViewModel";
-import StubData from "@/dal/StubLib/StubData";
 import { ScrollView } from "react-native-gesture-handler";
+import {AppFacadeService} from "@/services/AppFacadeService";
 export default function UserEditScreen() {
     const user = useAuthStore((state) => state.user);
     const updateUser = useUserStore((state) => state.updateUser)
@@ -16,9 +16,7 @@ export default function UserEditScreen() {
     const [showPasswordFields, setShowPasswordFields] = useState(false);
     const [message, setMessage] = useState<string | null>(null);
     const [username,setUsername] = useState("")
-    const {authService} = StubData.getInstance();
-    //const dataUser = useUserStore();
-    
+    const {authService} = AppFacadeService.getInstance().dataManager;
     const {
       email,
       setEmail,

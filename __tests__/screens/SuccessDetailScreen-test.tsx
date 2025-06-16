@@ -120,6 +120,7 @@ describe('SuccessDetailScreen', () => {
   it('appelle onClose quand on presse sur le overlay', () => {
     const onCloseMock = jest.fn();
     
+
     
 
     expect(onCloseMock).not.toHaveBeenCalled();

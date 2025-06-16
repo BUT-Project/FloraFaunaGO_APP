@@ -10,6 +10,7 @@ import {ZodHttpClient} from "@/dal/network/ZodHttpClient";
 import TokenManager from "@/services/keyManager/TokenManager";
 import {SecureLocalStorageAdapter} from "@/libs/LocalStorageAdapter";
 import {ITokenManager} from "@/services/keyManager/ITokenManager";
+import { ResetPasswordSchema } from "@/shared/scheme/ResetPasswordSchema";
 
 export default class NetworkAuthService implements IAuthService {
     private currentUser: User | null = null;
@@ -20,8 +21,27 @@ export default class NetworkAuthService implements IAuthService {
        private keyManager: ITokenManager<AccessTokenResponseDto> = new TokenManager(new SecureLocalStorageAdapter()),
        private readonly baseUrl: string = '/api/Auth'
 ) {}
-    resetPassword(email: string, oldPassword: string, newPassword: string): Promise<void> {
-        throw new Error("Method not implemented.");
+    async resetPassword(email: string, oldPassword: string, newPassword: string): Promise<void> {
+        try {
+            console.log('🌐 NetworkAuthService.resetPassword called with oldPasswd:', oldPassword);
+            console.log('🌐 NetworkAuthService.resetPassword called with newPass',newPassword)
+            const credentials : ResetPasswordSchema = {
+                currentPassword: oldPassword,
+                newPassword: newPassword
+            }
+            await this.authClient.postValidated(`${this.baseUrl}/change-password`, credentials, ResetPasswordSchema, AccessTokenResponseSchema);
+
+        }
+        catch (error) {
+            console.error('❌ NetworkAuthService.resetPassword caught error:', error);
+            console.error('❌ Error details:', {
+                type: typeof error,
+                constructor: error?.constructor?.name,
+                message: error instanceof Error ? error.message : 'Unknown error',
+                stack: error instanceof Error ? error.stack : 'No stack'
+            });
+            throw new Error(error instanceof Error ? error.message : "Échec de la réinitialisation du mot de passe");
+        }
     }
 
     async login(email: string, password: string, twoFactorCode?: string, twoFactorRecoveryCode?: string): Promise<User> {

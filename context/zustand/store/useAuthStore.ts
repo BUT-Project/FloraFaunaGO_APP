@@ -13,7 +13,7 @@ interface AuthState {
     checkAuth: () => Promise<void>;
     setRememberMe: (value: boolean) => void;
     isAuthCheckCompleted: boolean;
-
+    resetPassword(email:string,oldPassword:string,newPassword:string) : Promise<void>;
     syncCurrentUser: () => Promise<void>; // Synchronize the current user data with the server that ugly but works #TODO [Dave] : refactor this
 }
 
@@ -56,6 +56,17 @@ export const useAuthStore = create<AuthState>((set, get) => ({
                 console.error('💥 HTTP 500 - Server error during login');
             }
             
+            throw error;
+        }
+    },
+
+    resetPassword: async (email: string, oldPassword: string, newPassword: string) => {
+        try {
+            const appFacade = AppFacadeService.getInstance();
+            await appFacade.resetPassword(email, oldPassword, newPassword);
+            console.log('✅ Password reset successful');
+        } catch (error) {
+            console.error('❌ Password reset failed:', error);
             throw error;
         }
     },

@@ -8,15 +8,15 @@ import { PagingResult } from "@/shared/PagingResult";
 import { Success } from "@/model/domain/Success";
 import { SuccessType } from "@/model/domain/SuccessType";
 import { SuccessManager } from "@/dal/manager/SuccessManager";
+import StubData from "@/dal/StubLib/StubData";
 
 export class AppFacadeService implements IAppFacadeService {
     private static instance: AppFacadeService | null = null;
-    private dataManager: IDataManager;
+    public readonly dataManager: IDataManager;
 
     private constructor() {
         // Import here to avoid circular dependencies
-        const StubData = require("@/dal/StubLib/StubData").default;
-        this.dataManager = StubData.getInstance();
+        this.dataManager = new StubData();
     }
 
     static getInstance(): AppFacadeService {
@@ -58,6 +58,15 @@ export class AppFacadeService implements IAppFacadeService {
             });
             throw error;
         }
+    }
+    async resetPassword(email: string, oldPassword: string, newPassword: string): Promise<void> {
+        const { authService } = this.dataManager;
+    
+        if (!authService) {
+            throw new Error("Authentication service not available");    
+        }
+        await authService.resetPassword(email, oldPassword, newPassword);
+        console.log('🔑 Password reset successful for email:', email);
     }
 
     async register(email: string, password: string, username?: string): Promise<User> {
