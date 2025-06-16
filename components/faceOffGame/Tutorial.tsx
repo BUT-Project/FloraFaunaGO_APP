@@ -13,7 +13,8 @@ interface Props {
 
 const TutorialModal = ({ onClose, nbStepsToWin=1 }: Props) => {
   const [visible, setVisible] = useState(false);
-
+  console.log(visible)
+  
   useEffect(() => {
     (async () => {
       const skip = await getStorageItemAsync('skipTutorial');
@@ -35,11 +36,9 @@ const TutorialModal = ({ onClose, nbStepsToWin=1 }: Props) => {
     setVisible(false);
     onClose?.();
   };
-
-  if (!visible) return null;
-
+  
   return (
-    <Modal transparent animationType="slide" visible={visible}>
+    <Modal visible={visible} transparent animationType="slide"  >
       <View style={styles.modalOverlay}>
         <ThemedView style={styles.modalContent}>
           <ThemedText style={styles.title}>Comment capturer l&apos;animal ?</ThemedText>

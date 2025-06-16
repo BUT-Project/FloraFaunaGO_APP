@@ -26,7 +26,7 @@ export const DELAY_BETWEEN_ROUNDS = 2500;
 const FaceOffGame = ({ animalPhoto, onResult, onCancel }: Props) => {
   const [step, setStep] = useState(0);
   const [lives, setLives] = useState(NB_LIVES);
-  const [animalAction, setAnimalAction] = useState<AnimalActionData | null>();
+  const [animalAction, setAnimalAction] = useState<AnimalActionData | null>(null);
   const [timeLeft, setTimeLeft] = useState(MAX_RESPONSE_TIME);
   const [feedbackMessage, setFeedbackMessage] = useState<FeedbackMessage | null>(null);
     
@@ -99,32 +99,29 @@ const FaceOffGame = ({ animalPhoto, onResult, onCancel }: Props) => {
 
     setAnimalAction(null);
     setFeedbackMessage({text, type});
-    
+  
     if (isCorrect) {
         setStep((prev) => prev + 1);
-        startNextRoundDelay();
     } else {
         setLives((prev) => prev - 1);
-        startNextRoundDelay();
     }
+    startNextRoundDelay();
 
   };
   
-  const onClose = () => setAnimalAction(getRandomAnimalAction());
+  const onClose = useCallback(() => {setAnimalAction(getRandomAnimalAction());}, []);
 
-
-
-    // Permet de reprendre le round suivant immédiatement
-    const handleResumeTimeBetweenRound = () => {
-        if (!isWaitingForNextRound) return;
-        if (nextRoundTimeoutRef.current) {
-            clearTimeout(nextRoundTimeoutRef.current);
-            nextRoundTimeoutRef.current = null;
-        }
-        setFeedbackMessage(null);
-        setAnimalAction(getRandomAnimalAction());
-        setIsWaitingForNextRound(false); 
-    };
+  // Permet de reprendre le round suivant immédiatement
+  const handleResumeTimeBetweenRound = () => {
+      if (!isWaitingForNextRound) return;
+      if (nextRoundTimeoutRef.current) {
+          clearTimeout(nextRoundTimeoutRef.current);
+          nextRoundTimeoutRef.current = null;
+      }
+      setFeedbackMessage(null);
+      setAnimalAction(getRandomAnimalAction());
+      setIsWaitingForNextRound(false); 
+  };
 
   useEffect(() => {
     return () => {
@@ -136,8 +133,7 @@ const FaceOffGame = ({ animalPhoto, onResult, onCancel }: Props) => {
 
   return (
     <>
-        <GameOverModal visible={lives <= 0} onClose={() => onResult(false)} />
-        <TutorialModal nbStepsToWin={NB_STEPS} onClose={() => onClose()}/>
+  
         <ImageBackground source={{ uri: animalPhoto }} style={styles.container}>
             <TouchableWithoutFeedback onPress={handleResumeTimeBetweenRound}>
                 <ThemedView style={styles.overlay}>
@@ -171,7 +167,9 @@ const FaceOffGame = ({ animalPhoto, onResult, onCancel }: Props) => {
                 </TouchableOpacity>
                 ))}
         </ThemedView>
-      </>  
+        <GameOverModal visible={lives <= 0} onClose={() => onResult(false)} />
+        <TutorialModal nbStepsToWin={NB_STEPS} onClose={onClose}/>
+      </> 
     );
 }
   

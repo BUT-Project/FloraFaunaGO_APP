@@ -19,7 +19,7 @@ export const ERROR_TEXT = "Une erreur est survenue lors de la récupération des
 const NUMBER_OF_COLUMNS = 1;
 
 interface EncyclopediaScreenProps {
-    speciesRepository: ISpeciesRepository; // You'll need to inject this
+    speciesRepository: ISpeciesRepository; 
 };
 
 export default function EncyclopediaScreen({speciesRepository}: EncyclopediaScreenProps) {
@@ -153,7 +153,7 @@ export default function EncyclopediaScreen({speciesRepository}: EncyclopediaScre
                                 {!hasNextPage && species.length > 0 && (
                                     <ThemedText>Pas d'espèces en plus pour le moment.</ThemedText>
                                 )}
-                                {isFetching && <ActivityIndicator size={"small"}/>}
+                                {isFetching && <ActivityIndicator size={"small"} color={tint}/>}
                             </View>
                         )}
                         onEndReachedThreshold={0.2}

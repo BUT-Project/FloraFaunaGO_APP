@@ -27,7 +27,7 @@ export class SpeciesClient implements ISpeciesRepository {
     async identifySpecies(imageBase64: string): Promise<Specie> {
         
         console.log("image laalalal", imageBase64.slice(0,100));
-        const identifySpecieResult = await this.httpClient.postValidated(`/FloraFaunaGo_API/identification?especeType=${SpecieType.Insect}`, { askedImage : imageBase64 }, z.object({ askedImage: z.string() }), SpecieDtoSchema);
+        const identifySpecieResult = await this.httpClient.postValidated(`/FloraFaunaGo_API/identification?especeType=${SpecieType.Animal}`, { askedImage : imageBase64 }, z.object({ askedImage: z.string() }), SpecieDtoSchema);
 
         if (!identifySpecieResult.success) {
             throw identifySpecieResult.error;
