@@ -16,7 +16,7 @@ export function ExtendableText({ text, textStyle, style }: ExtendableTextProps) 
     return (
         <>
             <TouchableOpacity style={[styles.baseContainer,style]} onPress={() => setIsExtended(true)}>
-               <ThemedText style={textStyle}>{text}</ThemedText>
+               <ThemedText style={[textStyle]}>{text}</ThemedText>
                <ThemedView style={styles.icon}>
                     <Ionicons name={'chevron-forward'} size={30} color={'#fff'}/>
                </ThemedView>
@@ -51,16 +51,17 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: 'rgba(0, 0, 0, 0.5)', // Ajoute une teinte semi-transparente
-        paddingHorizontal:20,
+        paddingHorizontal:15,
     },
     modalContent: {
         width: width - 40, 
         maxHeight:"60%",
         borderRadius: 15,
         overflow: 'hidden',
+
     },
     scrollView:{
-        padding:5,
+        padding:15,
         gap:10,
     },
     modalText:{

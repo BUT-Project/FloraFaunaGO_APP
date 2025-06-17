@@ -7,7 +7,7 @@ import { Capture, Family } from '@/model/domain';
 
 interface FamilyListProps {
     family:Family
-    specieId?:string,
+    specieId:string,
     userCaptures:Capture[]
 }
 
@@ -22,13 +22,13 @@ const FamilyList: React.FC<FamilyListProps> = ({family,specieId,userCaptures}) =
             error,
             isListEnd,
             isLoadingMore
-    } = useGetSpecieByFamily(specieId);
+    } = useGetSpecieByFamily(specieId,family);
         
     return(
     <>
         <ThemedText type={"infoTitle"}>Famille :</ThemedText>
         {error ? 
-            <ThemedText>Erreur lors la récupération de la famille de l&apos;espèce.</ThemedText>
+            <ThemedText style={styles.error}>Erreur lors la récupération de la famille de l&apos;espèce.</ThemedText>
         :
         <>
             {isLoading ? (
@@ -53,7 +53,7 @@ const FamilyList: React.FC<FamilyListProps> = ({family,specieId,userCaptures}) =
                         </ThemedView>
                     )}
                     ListFooterComponent={() =>
-                        family.length > 0 && (
+                        species.length > 0 && (
                             <ThemedView style={styles.footerFam}>
                                 {isListEnd && (
                                     <ThemedText style={{ textAlign: "center" }}>
@@ -77,8 +77,12 @@ const FamilyList: React.FC<FamilyListProps> = ({family,specieId,userCaptures}) =
 };
 
 const styles = StyleSheet.create({
-    section: {
-        // your styles here
+    error:{
+        color:"red",
+        paddingHorizontal:15,
+        width: width,
+        justifyContent: "center",
+        alignItems: "center"
     },
     emptyFam: {
         width: width,

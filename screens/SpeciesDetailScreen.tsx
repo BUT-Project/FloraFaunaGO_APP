@@ -1,5 +1,5 @@
-import { Dimensions, StyleSheet, FlatList } from "react-native";
 import React, { useMemo } from "react";
+import { Dimensions, StyleSheet, FlatList } from "react-native";
 import Animated, {
   useAnimatedRef,
   useAnimatedScrollHandler,
@@ -22,14 +22,14 @@ interface SpeciesDetailScreenProps {
     specie: Specie;
 }
 
-type IconRowProps = {
+type InfoRowProps = {
     icon?: keyof typeof Ionicons.glyphMap;
     label: string;
     value: string;
     latin?: string;
 };
 
-const InfoRow = ({ icon, label, value, latin }: IconRowProps) => (
+const InfoRow = ({ icon, label, value, latin }: InfoRowProps) => (
   <ThemedView style={styles.rowAligned}>
     {icon && <ThemedIcon name={icon} size={18}/>}
     <ThemedText>{label} : <ThemedText style={styles.bold}>{value}</ThemedText>{latin && <ThemedText style={styles.italic}> ({latin})</ThemedText>}</ThemedText>
@@ -45,6 +45,7 @@ const SpeciesDetailScreen = ({capture,specie}:SpeciesDetailScreenProps) => {
     const descBackgroundColor = useThemeColor({},"card");
     const user = useAuthStore((state) => state.user);
     const capturedSpecie = user?.captures ?? [];
+    const family = useMemo(() => specie.family ?? Family.UNKNOWN, [specie.family]);
 
     const isCaptured = useMemo(() => capture != null, [capture]);
     
@@ -78,7 +79,7 @@ const SpeciesDetailScreen = ({capture,specie}:SpeciesDetailScreenProps) => {
                 <ThemedView style={styles.infoBlock}>
                     <InfoRow label="Règne" value={t(`kingdom.${specie.kingdom}`)} latin={specie.kingdom} />
                     <InfoRow label="Classe" value={t(`class.${specie.class}`)} latin={specie.class} />
-                    <InfoRow label="Famille" value={t(`family.${specie.family}`)} latin={specie.family} />
+                    <InfoRow label="Famille" value={t(`family.${family}`)} latin={family} />
                 </ThemedView>
             </ThemedView>
             <ThemedView style={styles.section}>
@@ -104,12 +105,9 @@ const SpeciesDetailScreen = ({capture,specie}:SpeciesDetailScreenProps) => {
                     style={styles.mapContainer}
                     />
             </ThemedView>
-           
             <ThemedView style={styles.section}>
-                <FamilyList family={specie.family ?? Family.UNKNOWN} specieId={specie?.id} userCaptures={capturedSpecie}/>
+                <FamilyList family={family} specieId={specie.id} userCaptures={capturedSpecie}/>
             </ThemedView>
-                
-          
             {( capture && capture.capturesDetails.length > 0) ?
                 <>
                     <ThemedView style={styles.section}>
@@ -126,7 +124,7 @@ const SpeciesDetailScreen = ({capture,specie}:SpeciesDetailScreenProps) => {
                     </ThemedView>
                     {oldestCapture &&
                         <ThemedText style={styles.captureDate}>Date de capture
-                            : {oldestCapture.date.toLocaleDateString()}</ThemedText>
+                            : {oldestCapture.date.toLocaleDateString("fr")}</ThemedText>
                     }
                 </>
                 :

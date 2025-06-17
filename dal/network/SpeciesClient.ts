@@ -6,7 +6,7 @@ import {
     SpecieListDtoSchema
 } from "@/shared/scheme/SpecieDtoSchema";
 import { ISpeciesRepository } from "../repository/ISpeciesRepository";
-import { Specie,SpecieType } from "@/model/domain";
+import { Family, Specie, SpecieType, SpecieFilteringCriterium } from "@/model/domain";
 import { ZodHttpClient } from "./ZodHttpClient";
 import { IMapper } from "@/shared/mappers/IMapper";
 import { FilterPredicate } from "@/shared/FilterPredicate";
@@ -47,9 +47,10 @@ export class SpeciesClient implements ISpeciesRepository {
     }
 
     // TODO: [YOAN] DES que il on fait la route /espece/{id}/related, on peut l'utiliser pour les espèces liées par famille et adapte le code
-    async getRelatedSpeciesByFamily(specieId: string, request : PagedRequest): Promise<PagingResult<Specie>> {
+    async getRelatedSpeciesByFamily(specieId: string,family:Family, request : PagedRequest): Promise<PagingResult<Specie>> {
+        console.log(family)
         const resultData = await this.httpClient.getValidated(
-            `${this.baseUrl}/${specieId}/related`,
+            `${this.baseUrl}/${specieId}/filtered=${SpecieFilteringCriterium.ByFamille}&value=${family}`,
             PagingResultSpecieSchema,
             undefined,
             {index: request.index,count: request.count}

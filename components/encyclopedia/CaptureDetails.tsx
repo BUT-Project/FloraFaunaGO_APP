@@ -16,9 +16,9 @@ export default function CaptureDetails({captureDetail}: CaptureDetailsProps){
                 <ThemedText type={"defaultSemiBold"}>Informations :</ThemedText>
                 <ThemedText>Longitude : {captureDetail.location.longitude}</ThemedText>
                 <ThemedText>Latitude : {captureDetail.location.latitude}</ThemedText>
-                <ThemedText>Altitude : {captureDetail.location.altitude} mètres</ThemedText>
+                <ThemedText>Altitude : {captureDetail.location.altitude.toFixed(1)} mètres</ThemedText>
                 <ThemedText>Shiny : {captureDetail.shiny ? "Oui" : "Non"}</ThemedText>
-                <ThemedText>Date : {captureDetail.date.toLocaleDateString()}</ThemedText>
+                <ThemedText>Date : {captureDetail.date.toLocaleDateString("fr")}</ThemedText>
             </ThemedView>
             <ThemedView style={styles.locationContainer}>
                 <ThemedText type={"defaultSemiBold"}>Localisation:</ThemedText>

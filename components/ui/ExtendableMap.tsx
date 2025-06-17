@@ -49,7 +49,7 @@ export function ExtendableMap({ locations, mapStyle, style }: ExtendableMapProps
     return (
         <>
                 <ThemedView style={[styles.container,style]}>
-                    <TouchableHighlight onLongPress={() => setIsExtended(true)} style={{flex:1}}>
+                    <TouchableHighlight onPress={() => setIsExtended(true)} style={{flex:1}}>
                         <MapView
                             style={[styles.map,mapStyle]}
                             initialRegion={initialRegion}
