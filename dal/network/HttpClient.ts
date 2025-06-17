@@ -69,35 +69,51 @@ export class HttpClient {
 
         try {
             const requestDate = new Date().toISOString();
-            console.log('Request Date:', requestDate, this.buildUrl(url, params));
-            console.log("LOLOALOALAO");
-            console.log('Request Body:', this.buildHeaders(headers));
-            const response = await fetch(this.buildUrl(url, params), {
+            const fullUrl = this.buildUrl(url, params);
+            const requestHeaders = this.buildHeaders(headers);
+            
+            console.log('🌐 === HTTP REQUEST ===');
+            console.log('📅 Request Date:', requestDate);
+            console.log('🔗 Method & URL:', method, fullUrl);
+            console.log('📋 Request Headers:', requestHeaders);
+            if (body) {
+                console.log('📦 Request Body:', body);
+            }
+            console.log('🌐 === END REQUEST ===');
+
+            const response = await fetch(fullUrl, {
                 method,
-                headers: this.buildHeaders(headers),
+                headers: requestHeaders,
                 body: body != null ? JSON.stringify(body) : null,
             });
-
+            
             const responseDate = new Date().toISOString();
+            const responseHeaders = Object.fromEntries(response.headers.entries());
+
+            console.log('🔄 === HTTP RESPONSE ===');
+            console.log('📅 Response Date:', responseDate);
+            console.log('🔢 Status:', response.status, response.statusText);
+            console.log('📋 Response Headers:', responseHeaders);
+            console.log('🔗 Final URL:', response.url);
+            console.log('✅ Response OK:', response.ok);
 
             if (!response.ok) {
                 const errorText = await response.text().catch(() => '');
+                console.log('📄 Error Body Length:', errorText.length);
+                console.log('📄 Error Body:', errorText || '[EMPTY RESPONSE]');
+                
                 let errorData = {};
                 try {
-                    errorData = JSON.parse(errorText);
+                    if (errorText) {
+                        errorData = JSON.parse(errorText);
+                        console.log('📝 Parsed Error Data:', errorData);
+                    }
                 } catch (parseErr) {
-                    console.error('Error parsing JSON from API response:', parseErr);
+                    console.error('❌ JSON Parse Error:', parseErr);
+                    console.log('📄 Raw Error Text:', errorText);
                 }
 
-                console.error('API Error Details:', {
-                    requestDate,
-                    responseDate,
-                    status: response.status,
-                    statusText: response.statusText,
-                    url: this.buildUrl(url, params),
-                    errorBody: errorText,
-                    parsedError: errorData
-                });
+                console.log('🔄 === END RESPONSE ===');
 
                 return {
                     success: false,
@@ -105,12 +121,29 @@ export class HttpClient {
                 };
             }
 
-
             const contentType = response.headers.get('content-type');
-            const data = contentType?.includes('application/json')
-                ? await response.json()
-                : undefined;
-
+            console.log('📄 Content-Type:', contentType);
+            
+            let data: TResponse | undefined;
+            if (contentType?.includes('application/json')) {
+                const responseText = await response.text();
+                console.log('📄 Response Body Length:', responseText.length);
+                console.log('📄 Response Body Preview:', responseText.substring(0, 200) + (responseText.length > 200 ? '...' : ''));
+                
+                try {
+                    data = responseText ? JSON.parse(responseText) : undefined;
+                    console.log('✅ Successfully parsed JSON');
+                } catch (parseErr) {
+                    console.error('❌ JSON Parse Error:', parseErr);
+                    console.log('📄 Full Response Text:', responseText);
+                    throw new Error(`Failed to parse JSON response: ${parseErr}`);
+                }
+            } else {
+                console.log('📄 Non-JSON response, skipping parse');
+                data = undefined;
+            }
+            
+            console.log('🔄 === END RESPONSE ===');
             return { success: true, data };
         } catch (error) {
             // Handle different types of errors with specific messages

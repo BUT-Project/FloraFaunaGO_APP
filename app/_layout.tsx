@@ -44,14 +44,13 @@ export default function RootLayout() {
                     'auth_token',
                     'remember_me',
                     'access_token',
-                    'refresh_token',
-                    'user_data'
+                    'refresh_token'
                 ];
                 
                 for (const key of knownKeys) {
                     try {
                         const value = await getStorageItemAsync(key);
-                        console.log(`🔑 ${key}:`, value ? (typeof value === 'string' ? value.substring(0, 100) + '...' : value) : 'null');
+                        console.log(`🔑 ${key}:`, value ? (value) : 'null');
                     } catch (error) {
                         console.log(`🔑 ${key}: Error reading - ${error}`);
                     }

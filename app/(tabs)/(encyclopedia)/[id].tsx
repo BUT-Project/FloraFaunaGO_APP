@@ -31,7 +31,9 @@ export default function SpeciesDetailsPage() {
         item: specie,
         isLoading: isSpecieLoading,
         error: specieError
-    } = useGetById<Specie>(validSpecieId, speciesRepository);
+    } = useGetById<Specie>(validSpecieId, speciesRepository, {
+        enabled: !isCaptureLoading
+    });
 
     if (!validSpecieId) {
         return (
@@ -74,7 +76,6 @@ export default function SpeciesDetailsPage() {
         return <ErrorMessage message="Espèce introuvable..." />;
     }
 
-    console.log("capture",capture)
     return (
         <ErrorBoundary page="Détail de l'espèce">
             <SpeciesDetailScreen specie={specie} capture={capture}/>

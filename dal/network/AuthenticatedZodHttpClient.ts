@@ -33,8 +33,6 @@ export class AuthenticatedZodHttpClient extends ZodHttpClient {
                 ...authHeaders
             }
         };
-        console.warn("In AuthenticatedZodHttpClient, configWithAuth:", configWithAuth);
-        
         const result = await super.request<TResponse>(configWithAuth);
         
         // If we get a 401 error, try to refresh token and retry once

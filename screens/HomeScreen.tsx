@@ -19,9 +19,6 @@ import {AppFacadeService} from "@/services/AppFacadeService";
 
 const {width: SCREEN_WIDTH} = Dimensions.get('window');
 export default function HomeScreen() {
-    console.log('🏠 HomeScreen render triggered:', {
-        timestamp: new Date().toISOString()
-    });
     const {speciesRepository} = AppFacadeService.getInstance().dataManager;
     const [isCameraActive, setIsCameraActive] = useState(false);
     const router = useRouter();
@@ -36,10 +33,8 @@ export default function HomeScreen() {
 
     useFocusEffect(
         useCallback(() => {
-            console.log('🏠 useFocusEffect: Setting camera active');
             setIsCameraActive(true);
             return () => {
-                console.log('🏠 useFocusEffect: Setting camera inactive');
                 setIsCameraActive(false);
             };
         }, [])
