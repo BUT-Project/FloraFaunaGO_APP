@@ -1,4 +1,4 @@
-import {Dimensions, FlatList, Image, StyleSheet, TouchableOpacity, useColorScheme} from "react-native";
+import { Dimensions, FlatList, Image, ScrollView, StyleSheet, TouchableOpacity, useColorScheme} from "react-native";
 import React, {useEffect, useState, useMemo} from "react";
 import SucessListItemVertical from "@/components/SucessListItemVertical";
 import {ThemedIcon, ThemedText, ThemedView} from "@/components/ui/themed";
@@ -13,6 +13,7 @@ import * as ImagePicker from 'expo-image-picker';
 import {useUserStore} from "@/context/zustand/store/useUserStore";
 import {SuccessManager} from "@/dal/manager/SuccessManager";
 import {AppFacadeService} from "@/services/AppFacadeService";
+import Loading from '@/components/ui/Loading';
 
 const {width} = Dimensions.get('window');
 export default function ProfilScreen() {
@@ -189,6 +190,12 @@ export default function ProfilScreen() {
 
     return (
         <SafeView disableBottomInset>
+        {Successes.length === 0 ? (
+            <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+                {renderHeader()}
+                <Loading text="Chargement des succès..." />
+            </ScrollView>
+        ) : (
             <FlatList
                 style={styles.list}
                 data={Successes ?? []}
@@ -198,11 +205,18 @@ export default function ProfilScreen() {
                 ListHeaderComponent={renderHeader}
                 columnWrapperStyle={styles.listWrapper}
             />
+        )}
         </SafeView>
     );
 }
 
 const styles = StyleSheet.create({
+    loadingText: {
+        color: '#fff',
+        fontSize: 18,
+        marginTop: 10,
+        textAlign: 'center',
+    },
     imageContainer: {
         alignItems: 'center',
         marginTop: 50,
