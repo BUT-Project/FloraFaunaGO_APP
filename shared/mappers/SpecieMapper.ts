@@ -1,4 +1,4 @@
-import { Habitat, Specie} from "@/model/domain";
+import { Class, Habitat, Specie, Diet, Kingdom, Family, Climate} from "@/model/domain";
 import { SpecieDto, SpecieListDto } from "../scheme/SpecieDtoSchema";
 import { IMapper } from "@/shared/mappers/IMapper";
 import { getImageUri } from "@/shared/utils";
@@ -15,11 +15,11 @@ export class SpecieMapper implements IMapper<SpecieDto, Specie, SpecieListDto> {
             getImageUri(dto.image)!,
             dto.nom_Scientifique,
             dto.description,
-            new Habitat(dto.zone,dto.climat),
-            dto.regime,
-            dto.kingdom, 
-            dto.class,
-            dto.famille,
+            new Habitat(dto.zone,Climate[dto.climat as keyof typeof Climate]),
+            Diet[dto.regime as keyof typeof Diet],
+            Kingdom[dto.kingdom as keyof typeof Kingdom], 
+            Class[dto.class as keyof typeof Class],
+            Family[dto.famille as keyof typeof Family],
             this.locationsMapper.toDomains(dto.localisations ?? []), 
         );
     }

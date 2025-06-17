@@ -1,24 +1,21 @@
 import { z } from "zod";
 import { Class, Climate, Diet, Family, Kingdom } from "@/model/domain";
-//import { tryParseEnum } from "../utils";
 
-// export function safeEnum<T extends Record<string, string>>(
-//   enumObj: T,
-//   defaultValue: T[keyof T]
-// ) {
-//   return z
-//     .string()
-//     .transform((val) => tryParseEnum(enumObj,val) ?? defaultValue)
-//     .pipe(z.nativeEnum(enumObj))
-//     .default(defaultValue);
-// }
+// Helper pour extraire les valeurs d'un enum string
+function getEnumValues<T extends Record<string, string>>(enumObj: T) {
+  return Object.values(enumObj) as [string, ...string[]];
+}
 
+// Fonction générique pour créer un schéma zod basé sur les valeurs de l'enum, avec fallback
+export function safeEnum<T extends Record<string, string>>(enumObj: T, fallback: string) {
+  const values = getEnumValues(enumObj);
+  return z.string().pipe(
+    z.enum(values).catch(fallback)
+  );
+}
 
-// export function getValues<T extends Record<string, any>>(obj: T) {
-//     return Object.values(obj) as [(typeof obj)[keyof T]]
-// }
-export const ClimateSchema = z.nativeEnum(Climate);
-export const KingdomSchema = z.nativeEnum(Kingdom)
-export const ClassSchema =  z.nativeEnum(Class)
-export const FamilySchema = z.nativeEnum(Family)
-export const DietSchema = z.nativeEnum(Diet);
+export const ClimateSchema = safeEnum(Climate, "UNKNOWN");
+export const KingdomSchema = safeEnum(Kingdom, Kingdom.ANIMALIA);
+export const ClassSchema = safeEnum(Class, "UNKNOWN");
+export const FamilySchema = safeEnum(Family, "UNKNOWN");
+export const DietSchema = safeEnum(Diet, Diet.CARNIVORA);

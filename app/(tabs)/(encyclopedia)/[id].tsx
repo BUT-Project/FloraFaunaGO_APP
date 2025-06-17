@@ -74,6 +74,7 @@ export default function SpeciesDetailsPage() {
         return <ErrorMessage message="Espèce introuvable..." />;
     }
 
+    console.log("capture",capture)
     return (
         <ErrorBoundary page="Détail de l'espèce">
             <SpeciesDetailScreen specie={specie} capture={capture}/>

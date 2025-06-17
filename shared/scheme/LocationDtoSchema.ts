@@ -5,7 +5,7 @@ export const LocationDtoSchema = z.object({
     latitude : z.number(),
     longitude: z.number(),
     altitude: z.number(),
-    exactitude: z.number().positive("L'exactitude doit être un entier positif."),
+    exactitude: z.number().min(0,"L'exactitude doit être un entier positif."),
     rayon: z.number().min(0, "Le rayon doit être un entier positif ou nul."),
 });
 

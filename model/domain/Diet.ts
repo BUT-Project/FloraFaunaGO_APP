@@ -1,15 +1,17 @@
-export enum Diet {
-    UNKNOWN = "UNKNOWN",
-    CARNIVORA = "CARNIVORA",         
-    HERBIVORA = "HERBIVORA",          
-    OMNIVORA = "OMNIVORA",           
-    INSECTIVORA = "INSECTIVORA",     
-    NECTARIVORA = "NECTARIVORA",      
-    AUTOTROPHA = "AUTOTROPHA",        
-    DETRITIVORA = "DETRITIVORA",      
-    FRUGIVORA = "FRUGIVORA",        
-    FOLIVORA = "FOLIVORA",           
-    GRANIVORA = "GRANIVORA",          
-    PLANKTIVORA = "PLANKTIVORA",      
-    PARASITICA = "PARASITICA",      
-}
+export const Diet = {
+    UNKNOWN: "UNKNOWN",
+    CARNIVORA: "CARNIVORA",
+    HERBIVORA: "HERBIVORA",
+    OMNIVORA: "OMNIVORA",
+    INSECTIVORA: "INSECTIVORA",
+    NECTARIVORA: "NECTARIVORA",
+    AUTOTROPHA: "AUTOTROPHA",
+    DETRITIVORA: "DETRITIVORA",
+    FRUGIVORA: "FRUGIVORA",
+    FOLIVORA: "FOLIVORA",
+    GRANIVORA: "GRANIVORA",
+    PLANKTIVORA: "PLANKTIVORA",
+    PARASITICA: "PARASITICA",
+} as const;
+
+export type Diet = (typeof Diet)[keyof typeof Diet];
