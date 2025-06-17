@@ -48,8 +48,7 @@ export class UserClient implements IUserRepository {
             image: user.image,
         };
 
-        const dto = await this.httpClient.post(endpoint, body);
-        console.log("User updated successfully", dto);
+        await this.httpClient.post(endpoint, body);
     }
 
     /**
