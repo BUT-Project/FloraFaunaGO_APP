@@ -94,7 +94,7 @@ export default function ProfilScreen() {
     const pickImage = async () => {
         const result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            quality: 1,
+            quality: 0.2,
             base64: true,
             allowsEditing: true,
         });
