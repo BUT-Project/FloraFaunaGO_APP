@@ -138,7 +138,8 @@ export class HttpClient {
                     console.log('📄 Full Response Text:', responseText);
                     throw new Error(`Failed to parse JSON response: ${parseErr}`);
                 }
-            } else {
+            } else{ console.error('❌ Unsupported Content-Type:', contentType);
+                
                 console.log('📄 Non-JSON response, skipping parse');
                 data = undefined;
             }
