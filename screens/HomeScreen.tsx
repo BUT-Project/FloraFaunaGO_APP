@@ -3,12 +3,9 @@ import Animated, {useAnimatedStyle, useSharedValue, withSpring} from "react-nati
 import {ThemedView} from "@/components/ui/themed";
 import { Dimensions, StyleSheet, View} from "react-native";
 import { CameraView } from "@/components/camera";
-import ARProgressIndicator from "@/components/ARProgressIndicator";
 import MainMapView from "@/components/MainMapView";
 import BlurSegmented from "@/components/BluredSegmented";
-import {useQuery} from "@tanstack/react-query";
 import {useRouter} from "expo-router";
-import {Specie} from "@/model/domain";
 import {useSpeciesStore} from "@/context/zustand/store/useSpeciesStore";
 import { useFocusEffect } from '@react-navigation/native';
 import { SafeView } from "@/components/ui/SafeView";
@@ -24,7 +21,7 @@ export default function HomeScreen() {
     const router = useRouter();
     const slideAnim = useSharedValue(0);
     const [capturedImage, setCapturedImage] = useState<string | null>(null);
-    const [base64Image, setBase64Image] = useState<string | null>(null);
+    //const [base64Image, setBase64Image] = useState<string | null>(null);
     const [activeView, setActiveView] = useState('camera');
 
     if (!speciesRepository) {
@@ -39,48 +36,48 @@ export default function HomeScreen() {
             };
         }, [])
     );
-    const [captureTimestamp, setCaptureTimestamp] = useState<number | null>(null);
+    //const [ setCaptureTimestamp] = useState<number | null>(null);
 
-    const {isLoading, isFetching, data: identifiedSpecie,error} = useQuery<Specie, Error>({
-        queryKey: ['identifySpecie', captureTimestamp],
-        queryFn: async (): Promise<Specie> => {
-            console.log('🔍 HomeScreen: identifySpecie query triggered');
-            try{
-                if (!speciesRepository) throw new Error('No Repository');
-                if (!base64Image) throw new Error('No base64 image data');
-                const spec = await speciesRepository.identifySpecies(base64Image);
-                return spec;
-            }catch(error){
-                console.error(error)
-                throw error
-            }
-        },
-        enabled: !!base64Image && !!speciesRepository && !!captureTimestamp,
-    });
+    // const {isLoading, isFetching, data: identifiedSpecie,error} = useQuery<Specie, Error>({
+    //     queryKey: ['identifySpecie', captureTimestamp],
+    //     queryFn: async (): Promise<Specie> => {
+    //         console.log('🔍 HomeScreen: identifySpecie query triggered');
+    //         try{
+    //             if (!speciesRepository) throw new Error('No Repository');
+    //             if (!base64Image) throw new Error('No base64 image data');
+    //             const spec = await speciesRepository.identifySpecies(base64Image);
+    //             return spec;
+    //         }catch(error){
+    //             console.error(error)
+    //             throw error
+    //         }
+    //     },
+    //     enabled: !!base64Image && !!speciesRepository && !!captureTimestamp,
+    // });
     // Handle errors from useQuery #TODO [DAVE] c'est gpt qui la fait j'ai la flemme should be handle in the the stor to have a global error handler
-    useEffect(() => {
-        if (error) {
-            console.error('Species identification error:', error);
+    // useEffect(() => {
+    //     if (error) {
+    //         console.error('Species identification error:', error);
 
-            // Show user-friendly error message
-            let errorMessage = "Erreur lors de l'identification de l'espèce";
+    //         // Show user-friendly error message
+    //         let errorMessage = "Erreur lors de l'identification de l'espèce";
 
-            if (error.message.includes('network') || error.message.includes('fetch')) {
-                errorMessage = "Problème de connexion. Vérifiez votre connexion Internet.";
-            } else if (error.message.includes('No base64 image data')) {
-                errorMessage = "Image non valide. Veuillez reprendre une photo.";
-            } else if (error.message.includes('No Repository')) {
-                errorMessage = "Erreur de configuration. Redémarrez l'application.";
-            }
+    //         if (error.message.includes('network') || error.message.includes('fetch')) {
+    //             errorMessage = "Problème de connexion. Vérifiez votre connexion Internet.";
+    //         } else if (error.message.includes('No base64 image data')) {
+    //             errorMessage = "Image non valide. Veuillez reprendre une photo.";
+    //         } else if (error.message.includes('No Repository')) {
+    //             errorMessage = "Erreur de configuration. Redémarrez l'application.";
+    //         }
 
-            toast.error(errorMessage);
+    //         toast.error(errorMessage);
 
-            // Reset the base64Image to allow user to try again
-            setBase64Image(null);
-            setCapturedImage(null);
-            setCaptureTimestamp(null);
-        }
-    }, [error]);
+    //         // Reset the base64Image to allow user to try again
+    //         setBase64Image(null);
+    //         setCapturedImage(null);
+    //         setCaptureTimestamp(null);
+    //     }
+    // }, [error]);
 
     const switchView = (tabName: string) => {
         const view = tabName.toLowerCase();
@@ -100,9 +97,18 @@ export default function HomeScreen() {
     const {setCurrentImageUri, setCurrentIdentifiedSpecies} = useSpeciesStore();
 
     const handleSetBase64Image = (base64: string | null) => {
-        setBase64Image(base64);
+        //setBase64Image(base64);
         if (base64) {
-            setCaptureTimestamp(Date.now());
+            //setCaptureTimestamp(Date.now());
+                speciesRepository.identifySpecies(base64)
+      .then((specie) => {
+        console.log("✅ Espèce identifiée :", specie.name);
+        setCurrentIdentifiedSpecies(specie); // Zustand store
+      })
+      .catch((err) => {
+        console.error("❌ Erreur d’identification :", err);
+        toast.error("Échec de l'identification de l'espèce.");
+      });
         }
     };
 
@@ -112,7 +118,7 @@ export default function HomeScreen() {
 
     useEffect(() => {
         const verifyAndContinue = async () => {
-          if (!capturedImage || isFetching || isLoading || !identifiedSpecie) return;
+          if (!capturedImage ) return;
       
           try {
             const isBlurry = await isImageBlurry(capturedImage);
@@ -124,7 +130,6 @@ export default function HomeScreen() {
               return;
             }
             setCurrentImageUri(capturedImage);
-            setCurrentIdentifiedSpecies(identifiedSpecie);
             router.push('/capture');
           } catch (error) {
             console.error("Erreur lors de la vérification de la netteté :", error);
@@ -133,7 +138,11 @@ export default function HomeScreen() {
         };
       
         verifyAndContinue();
-      }, [capturedImage, isFetching, isLoading, identifiedSpecie, router]);
+      }, [capturedImage, router]);
+
+      useEffect(() => {
+
+}, []);
     return (
         <SafeView style={styles.container} disableBottomInset>
             <ThemedView style={styles.content}>
@@ -146,11 +155,10 @@ export default function HomeScreen() {
                         <>
                             <CameraView  setBase64Image={handleSetBase64Image} setCapturedImage={handleSetCapturedImage}
                                          style={styles.camera}/>
-                            {isFetching && (
+
                                 <View style={styles.progressOverlay}>
-                                    <ARProgressIndicator width={SCREEN_WIDTH} height={SCREEN_WIDTH}/>
+                                    {/* <ARProgressIndicator width={SCREEN_WIDTH} height={SCREEN_WIDTH}/> */}
                                 </View>
-                            )}
                             <MainMapView style={styles.map} repository={speciesRepository}/>
                         </>}
                 </Animated.View>
