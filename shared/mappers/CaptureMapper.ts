@@ -19,7 +19,7 @@ export class CaptureMapper implements IMapper<CaptureCompleteDto, Capture> {
                 nom_Scientifique: "",
                 description: "",
                 image: "",
-                image3D: null,
+                image3D: "",
                 class: null as any,
                 kingdom: null as any,
                 famille: null as any,
