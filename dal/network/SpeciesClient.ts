@@ -15,6 +15,7 @@ import { PagingResult } from "@/shared/PagingResult";
 import { SpecieMapper} from "@/shared/mappers/SpecieMapper";
 import {HttpZodResourceClient} from "@/dal/network/HttpZodResourceClient";
 import { z } from "zod";
+import * as ImageManipulator from 'expo-image-manipulator';
 
 export class SpeciesClient implements ISpeciesRepository {
     constructor(
@@ -25,9 +26,18 @@ export class SpeciesClient implements ISpeciesRepository {
     ) {}
 
     async identifySpecies(imageBase64: string): Promise<Specie> {
-        
         console.log("image laalalal", imageBase64.slice(0,100));
-        const identifySpecieResult = await this.httpClient.postValidated(`/FloraFaunaGo_API/identification?especeType=${SpecieType.Animal}`, { askedImage : imageBase64 }, z.object({ askedImage: z.string() }), SpecieDtoSchema);
+        const imageUri = `data:image/jpeg;base64,${imageBase64}`;
+
+        const compressedImage = await ImageManipulator.manipulateAsync(
+            imageUri,
+            [{ resize: { width: 300, height: 300 } }],
+            { compress: 0.1, format: ImageManipulator.SaveFormat.JPEG, base64: true }
+        );
+
+        const img64 = compressedImage.base64;
+        console.log("compressedImage ===========================", img64?.slice(0,100));
+        const identifySpecieResult = await this.httpClient.postValidated(`/FloraFaunaGo_API/identification?especeType=${SpecieType.Animal}`, { askedImage : img64! }, z.object({ askedImage: z.string() }), SpecieDtoSchema);
 
         if (!identifySpecieResult.success) {
             throw identifySpecieResult.error;

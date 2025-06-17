@@ -70,12 +70,11 @@ export class CapturesClient implements ICaptureRepository {
 
     async addSpecieToUser(userId: string, specie: Specie, userLocation: Location, capturedImageUri: string): Promise<void> {
         const endpoint = `${this.baseUrl}/idUser=${userId}&idEspece=${specie.id}`;
-        
         // Remove data:image prefix if present (API expects clean base64)
         const cleanBase64 = capturedImageUri.startsWith('data:') 
             ? capturedImageUri.split(',')[1] 
             : capturedImageUri;
-        
+        console.log("Captured image URI:", specie.name);
         const body = {
             photo: cleanBase64, // Clean base64 without data URL prefix
             localisationNormalDto: {
@@ -89,6 +88,7 @@ export class CapturesClient implements ICaptureRepository {
 
         const result = await this.httpClient.post(endpoint, body);
         
+
         if (!result.success) {
             throw new Error(`Failed to add specie to user: HTTP ${result.error}: ${result.error.message}`);
         }

@@ -110,7 +110,6 @@ export class SuccessManager implements ISuccessRepository {
                 console.warn("Aucun état trouvé pour", successId);
                 return success;
             }
-            console.log("dave staets",states.items);
             const state = states.items.find(s => s.success.id === successId);
             if (!state) {
                 console.warn("État non trouvé pour", successId);
