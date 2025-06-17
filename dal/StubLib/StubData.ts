@@ -15,7 +15,6 @@ import {UserMapper} from "@/shared/mappers/UserMaper";
 const ACCESS_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlNjk2MjRiNi1lMTI2LTRmYWEtOTI4Yy1jNmE5YWY0NTg3NDkiLCJlbWFpbCI6InlveW9AZ21haWwuY29tIiwidWlkIjoiZTY5NjI0YjYtZTEyNi00ZmFhLTkyOGMtYzZhOWFmNDU4NzQ5IiwiZXhwIjoxNzUwMTU0NTE1LCJpc3MiOiJGbG9yYUZhdW5hSXNzdWVyIiwiYXVkIjoiRmxvcmFGYXVuYUlzc3VlciJ9.g1nRYvMjg3dLUovBNOoQSvExHKM1v22MxIs_MJ8Y0Qc';
 
 export default class StubData extends IDataManager {
-    private static instance: StubData;
     private tokenManager: ITokenManager<AccessTokenResponseDto> = new TokenManager(new SecureLocalStorageAdapter());
 
     public constructor() {
@@ -31,7 +30,15 @@ export default class StubData extends IDataManager {
                     baseUrl: process.env.EXPO_PUBLIC_API_URL || 'https://codefirst.iut.uca.fr/containers/FloraFauna_GO-api'
                 }
             ), '/FloraFaunaGo_API/espece');
-        
+
+        this.captureRepository = new CapturesClient(new ZodHttpClient({
+            headers: {
+                'Accept': 'application/json',
+                "Authorization": `Bearer ${ACCESS_TOKEN}`
+            },
+            baseUrl: process.env.EXPO_PUBLIC_API_URL || 'https://codefirst.iut.uca.fr/containers/FloraFauna_GO-api'
+        }), '/FloraFaunaGo_API/capture');
+
         // Initialize user repository with species repository for capturing data
         this.userRepository = new UserClient( 
             new ZodHttpClient({
@@ -41,10 +48,10 @@ export default class StubData extends IDataManager {
                 },
                 baseUrl: process.env.EXPO_PUBLIC_API_URL || 'https://codefirst.iut.uca.fr/containers/FloraFauna_GO-api'
             }),
+            this.captureRepository,
             '/FloraFaunaGo_API/utilisateur',
-            new UserMapper(this.speciesRepository),
+            new UserMapper(),
             undefined,
-            this.speciesRepository
         );
         //this.successRepository = new StubSucess(this.ListSucess);
         this.authService = new NetworkAuthService(new ZodHttpClient({
@@ -87,21 +94,6 @@ export default class StubData extends IDataManager {
                 }
             ), '/FloraFaunaGo_API/espece');
 
-        this.captureRepository = new CapturesClient(new ZodHttpClient({
-            headers: {
-                'Accept': 'application/json',
-                "Authorization": `Bearer ${ACCESS_TOKEN}`
-            },
-            baseUrl: process.env.EXPO_PUBLIC_API_URL || 'https://codefirst.iut.uca.fr/containers/FloraFauna_GO-api'
-        }), '/FloraFaunaGo_API/capture');
 
-
-    }
-
-    static getInstance(): StubData {
-        if (!StubData.instance) {
-            StubData.instance = new StubData();
-        }
-        return StubData.instance;
     }
 }

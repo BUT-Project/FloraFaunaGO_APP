@@ -94,6 +94,28 @@ export class CapturesClient implements ICaptureRepository {
         }
     }
 
+    async getCaptureByUserId(userId: string): Promise<PagingResult<Capture>> {
+        const endpoint = `${this.baseUrl}/idUser=${userId}`;
+        
+        const result = await this.httpClient.getValidated(
+            endpoint,
+            PagingResultCaptureSchema
+        );
+
+        if (!result.success) {
+            throw result.error;
+        }
+
+        const mappedCaptures = this.mapper.toDomains(result.data.items);
+
+        return {
+            items: mappedCaptures,
+            index: result.data.index,
+            count: result.data.count,
+            total: result.data.total
+        };
+    }
+
     async count(filter: FilterPredicate<Capture>): Promise<number> {
         throw new Error("Method not implemented");
     }

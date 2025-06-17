@@ -14,7 +14,13 @@ import '../i18n'
 // Prevent the splash screens from auto-hiding before asset loading is complete or authentication is done
 SplashScreen.preventAutoHideAsync();
 export default function RootLayout() {
-    const queryClient = new QueryClient();
+    const queryClient = new QueryClient({
+        defaultOptions: {
+            queries: {
+                staleTime: 2 * 60 * 1000,  // 2 minutes
+            },
+        },
+    });
     const colorScheme = useColorScheme();
     const isAuthCheckCompleted = useAuthStore((state) => state.isAuthCheckCompleted);
 
@@ -55,8 +61,7 @@ export default function RootLayout() {
             } catch (error) {
                 console.error('❌ Error debugging secure store:', error);
             }
-        };
-        
+        }
         // Log on app start
         logSecureStoreContents();
     }, []);

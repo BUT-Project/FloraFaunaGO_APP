@@ -11,7 +11,7 @@ import {PagedRequest} from "@/shared/PagedRequest";
 import {PagingResult} from "@/shared/PagingResult";
 import { FilterPredicate } from "@/shared/FilterPredicate";
 import {IMapper} from "@/shared/mappers/IMapper";
-import { ISpeciesRepository } from "@/dal/repository/ISpeciesRepository";
+import {ICaptureRepository} from "@/dal/repository/ICaptureRepository";
 
 /**
  * Handles only network operations for Users
@@ -21,10 +21,10 @@ export class UserClient implements IUserRepository {
 
     constructor(
         private httpClient: ZodHttpClient,
+        private capturesRepository: ICaptureRepository,
         baseUrl: string = '/FloraFaunaGo_API/utilisateur',
         mapper: IMapper<UtilisateurCompleteResponse, User> = new UserMapper(),
         private userRepository : HttpZodResourceClient<UtilisateurCompleteResponse> = HttpZodResourceClient.create<UtilisateurCompleteResponse>(httpClient, baseUrl,UtilisateurCompleteResponseSchema),
-        private speciesRepository?: ISpeciesRepository
     ) {
         this.mapper = mapper;
     }
@@ -62,13 +62,14 @@ export class UserClient implements IUserRepository {
      * Get a user by ID
      */
     async getById(id: string): Promise<User> {
+        console.log("UserClient getById called with id:", id);
         const dto = await this.userRepository.getById(id);
         const user = this.mapper.toDomain(dto);
         
         // If we have a species repository and there are captures, populate them
-        if (this.speciesRepository && dto.capture && dto.capture.length > 0 && this.mapper instanceof UserMapper) {
-            // #TODO: [Dave] ask cheval how to handle this shitttt. capture is not in the dto but the domain model need it
-            return await this.mapper.populateUserCaptures(user, dto.capture);
+        if (this.capturesRepository && dto.capture && dto.capture.length > 0 && this.mapper instanceof UserMapper) {
+            const userCaptures = await this.capturesRepository.getCaptureByUserId(user.id);
+            user.captures = userCaptures.items;
         }
         
         return user;

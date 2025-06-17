@@ -170,6 +170,13 @@ export default class NetworkAuthService implements IAuthService {
     }
 
     /**
+     * Public method to refresh the access token
+     */
+    async refreshAuthToken(): Promise<boolean> {
+        return this.refreshToken();
+    }
+
+    /**
      * Refresh the access token using the refresh token
      */
     private async refreshToken(): Promise<boolean> {

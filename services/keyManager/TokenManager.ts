@@ -28,7 +28,7 @@ export default class TokenManager<T extends AccessTokenResponseDto>
     async getToken(): Promise<string | null> {
         const token = await this.storage.getItem(this.ACCESS_TOKEN_KEY);
 
-        if (!token || !this.isTokenValid()) {
+        if (!token || !(await this.isTokenValid())) {
             return null;
         }
 

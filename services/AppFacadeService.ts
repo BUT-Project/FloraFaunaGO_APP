@@ -8,15 +8,14 @@ import { PagingResult } from "@/shared/PagingResult";
 import { Success } from "@/model/domain/Success";
 import { SuccessType } from "@/model/domain/SuccessType";
 import { SuccessManager } from "@/dal/manager/SuccessManager";
-import StubData from "@/dal/StubLib/StubData";
+import WebApiClient from "@/dal/network/WebApiClient";
 
 export class AppFacadeService implements IAppFacadeService {
     private static instance: AppFacadeService | null = null;
     public readonly dataManager: IDataManager;
 
     private constructor() {
-        // Import here to avoid circular dependencies
-        this.dataManager = new StubData();
+        this.dataManager = new WebApiClient();
     }
 
     static getInstance(): AppFacadeService {

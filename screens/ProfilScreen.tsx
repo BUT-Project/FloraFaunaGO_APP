@@ -58,7 +58,7 @@ export default function ProfilScreen() {
     }, [userCaptures]);
     
     const family = useMemo(() => {
-        console.log('🔍 ProfilScreen - Computing family count');
+        console.log('🔍 ProfilScreen - Computing family count', userCaptures?.length || 0);
         if (!userCaptures) return 0;
         return new Set(userCaptures.map(c => c.specie.family)).size;
     }, [userCaptures]);

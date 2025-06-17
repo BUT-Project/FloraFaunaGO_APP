@@ -68,20 +68,43 @@ export class HttpClient {
         const { method, url, body, headers, params } = config;
 
         try {
-            console.log(this.buildUrl(url,params))
-            const response = await fetch(this.buildUrl(url,params), {
+            const requestDate = new Date().toISOString();
+            console.log('Request Date:', requestDate, this.buildUrl(url, params));
+            console.log("LOLOALOALAO");
+            console.log('Request Body:', this.buildHeaders(headers));
+            const response = await fetch(this.buildUrl(url, params), {
                 method,
                 headers: this.buildHeaders(headers),
                 body: body != null ? JSON.stringify(body) : null,
             });
+
+            const responseDate = new Date().toISOString();
+
             if (!response.ok) {
-                const errorData = await response.json().catch(() => ({}));
-                console.error(errorData)
+                const errorText = await response.text().catch(() => '');
+                let errorData = {};
+                try {
+                    errorData = JSON.parse(errorText);
+                } catch (parseErr) {
+                    console.error('Error parsing JSON from API response:', parseErr);
+                }
+
+                console.error('API Error Details:', {
+                    requestDate,
+                    responseDate,
+                    status: response.status,
+                    statusText: response.statusText,
+                    url: this.buildUrl(url, params),
+                    errorBody: errorText,
+                    parsedError: errorData
+                });
+
                 return {
                     success: false,
                     error: new Error(errorData.message || `HTTP ${response.status}: ${response.statusText}`)
                 };
             }
+
 
             const contentType = response.headers.get('content-type');
             const data = contentType?.includes('application/json')

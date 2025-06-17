@@ -100,7 +100,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     checkAuth: async () => {
         try {
             const appFacade = AppFacadeService.getInstance();
-            
+            console.log("🔍 Checking authentication status...");
             const isAuthenticated = await appFacade.isAuthenticated();
             if (isAuthenticated) {
                 const user = await appFacade.getCurrentUser();

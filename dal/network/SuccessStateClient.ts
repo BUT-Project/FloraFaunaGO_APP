@@ -40,7 +40,10 @@ export class SuccessStateClient implements ISuccessStateRepository {
             percentSucces: success.state.percentSucces,
         };
 
-        await this.httpClient.put(endpoint, body);
+        await this.httpClient.putValidated(endpoint, body, z.object({
+            id: z.string(),
+            percentSucces: z.number(),
+        }),  z.object({ success: z.boolean() }));
 
     }
 

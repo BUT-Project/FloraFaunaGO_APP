@@ -13,6 +13,28 @@ export default class StubCaptures implements ICaptureRepository {
                 public Users: User[]
     ) {
     }
+
+    getCaptureByUserId(userId: string): Promise<PagingResult<Capture>> {
+        return new Promise((resolve, reject) => {
+            try {
+                const user = this.Users.find(user => user.id === userId);
+                if (!user || !user.captures) {
+                    resolve(new PagingResult<Capture>(1, 0, 0, []));
+                    return;
+                }
+
+                const pagingResult = new PagingResult<Capture>(
+                    1,
+                    user.captures.length,
+                    user.captures.length,
+                    user.captures
+                );
+                resolve(pagingResult);
+            } catch (error) {
+                reject(new Error('An error occurred while fetching captures for the user'));
+            }
+        });
+    }
     count(filter: FilterPredicate<Capture>): Promise<number> {
         return new Promise((resolve, reject) => {
             try {

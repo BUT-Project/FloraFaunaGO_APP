@@ -44,21 +44,23 @@ export default function HomeScreen() {
             };
         }, [])
     );
+    const [captureTimestamp, setCaptureTimestamp] = useState<number | null>(null);
+
     const {isLoading, isFetching, data: identifiedSpecie,error} = useQuery<Specie, Error>({
-        queryKey: ['identifySpecie', base64Image, speciesRepository],
+        queryKey: ['identifySpecie', captureTimestamp],
         queryFn: async (): Promise<Specie> => {
             console.log('🔍 HomeScreen: identifySpecie query triggered');
             try{
                 if (!speciesRepository) throw new Error('No Repository');
                 if (!base64Image) throw new Error('No base64 image data');
-                var spec = await speciesRepository.identifySpecies(base64Image);
+                const spec = await speciesRepository.identifySpecies(base64Image);
                 return spec;
             }catch(error){
                 console.error(error)
                 throw error
             }
         },
-        enabled: !!base64Image && !!speciesRepository
+        enabled: !!base64Image && !!speciesRepository && !!captureTimestamp,
     });
     // Handle errors from useQuery #TODO [DAVE] c'est gpt qui la fait j'ai la flemme should be handle in the the stor to have a global error handler
     useEffect(() => {
@@ -81,6 +83,7 @@ export default function HomeScreen() {
             // Reset the base64Image to allow user to try again
             setBase64Image(null);
             setCapturedImage(null);
+            setCaptureTimestamp(null);
         }
     }, [error]);
 
@@ -100,6 +103,17 @@ export default function HomeScreen() {
     }));
 
     const {setCurrentImageUri, setCurrentIdentifiedSpecies} = useSpeciesStore();
+
+    const handleSetBase64Image = (base64: string | null) => {
+        setBase64Image(base64);
+        if (base64) {
+            setCaptureTimestamp(Date.now());
+        }
+    };
+
+    const handleSetCapturedImage = (image: string | null) => {
+        setCapturedImage(image);
+    };
 
     useEffect(() => {
         const verifyAndContinue = async () => {
@@ -135,7 +149,7 @@ export default function HomeScreen() {
                     {isCameraActive
                         &&
                         <>
-                            <CameraView  setBase64Image={setBase64Image} setCapturedImage={setCapturedImage}
+                            <CameraView  setBase64Image={handleSetBase64Image} setCapturedImage={handleSetCapturedImage}
                                          style={styles.camera}/>
                             {isFetching && (
                                 <View style={styles.progressOverlay}>

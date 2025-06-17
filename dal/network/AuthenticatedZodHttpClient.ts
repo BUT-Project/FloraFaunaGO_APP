@@ -1,13 +1,15 @@
-import { ZodHttpClient } from './ZodHttpClient';
-import { HttpClientConfig, RequestConfig } from './HttpClient';
-import { ITokenManager } from '@/services/keyManager/ITokenManager';
-import { z } from 'zod';
-import { Result } from '@/shared/Result';
+import {ZodHttpClient} from './ZodHttpClient';
+import {HttpClientConfig, RequestConfig} from './HttpClient';
+import {ITokenManager} from '@/services/keyManager/ITokenManager';
+import {Result} from '@/shared/Result';
 
 export class AuthenticatedZodHttpClient extends ZodHttpClient {
+    private isRefreshing = false;
+    
     constructor(
         config: HttpClientConfig,
-        private readonly tokenManager: ITokenManager<any>
+        private readonly tokenManager: ITokenManager<any>,
+        private readonly refreshTokenCallback?: () => Promise<boolean>
     ) {
         super(config);
     }
@@ -22,15 +24,7 @@ export class AuthenticatedZodHttpClient extends ZodHttpClient {
         }
     }
 
-    override async requestWithValidation<
-        TRequest extends z.ZodSchema,
-        TResponse extends z.ZodSchema
-    >(
-        config: RequestConfig & {
-            readonly requestSchema?: TRequest;
-            readonly responseSchema?: TResponse;
-        }
-    ): Promise<Result<z.infer<TResponse>>> {
+    override async request<TResponse>(config: RequestConfig): Promise<Result<TResponse>> {
         const authHeaders = await this.getAuthHeaders();
         const configWithAuth = {
             ...config,
@@ -39,7 +33,45 @@ export class AuthenticatedZodHttpClient extends ZodHttpClient {
                 ...authHeaders
             }
         };
+        console.warn("In AuthenticatedZodHttpClient, configWithAuth:", configWithAuth);
         
-        return super.requestWithValidation(configWithAuth);
+        const result = await super.request<TResponse>(configWithAuth);
+        
+        // If we get a 401 error, try to refresh token and retry once
+        if (!result.success && (result.error.message?.includes('401') )) {
+            console.warn('Token expired, attempting refresh');
+            
+            // Prevent multiple simultaneous refresh attempts
+            if (this.isRefreshing) {
+                console.warn('Refresh already in progress, skipping');
+                return result;
+            }
+            
+            if (this.refreshTokenCallback) {
+                this.isRefreshing = true;
+                try {
+                    const refreshed = await this.refreshTokenCallback();
+                    if (refreshed) {
+                        const newAuthHeaders = await this.getAuthHeaders();
+                        const retryConfig = {
+                            ...config,
+                            headers: {
+                                ...config.headers,
+                                ...newAuthHeaders
+                            }
+                        };
+                        return await super.request<TResponse>(retryConfig);
+                    }
+                } catch (error) {
+                    console.warn('Token refresh failed:', error);
+                } finally {
+                    this.isRefreshing = false;
+                }
+            }
+            this.tokenManager.clearTokens();
+        }
+        
+        return result;
     }
+
 }
