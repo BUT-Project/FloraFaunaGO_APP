@@ -9,6 +9,8 @@ import { FilterPredicate } from "@/shared/FilterPredicate";
 import { IMapper } from "@/shared/mappers/IMapper";
 import Specie from "@/model/domain/Specie";
 import Location from "@/model/domain/Location";
+import * as FileSystem from 'expo-file-system';
+import * as ImageManipulator from 'expo-image-manipulator';
 
 export class CapturesClient implements ICaptureRepository {
     private readonly mapper: IMapper<CaptureCompleteDto, Capture>;
@@ -70,13 +72,27 @@ export class CapturesClient implements ICaptureRepository {
 
     async addSpecieToUser(userId: string, specie: Specie, userLocation: Location, capturedImageUri: string): Promise<void> {
         const endpoint = `${this.baseUrl}/idUser=${userId}&idEspece=${specie.id}`;
-        // Remove data:image prefix if present (API expects clean base64)
-        const cleanBase64 = capturedImageUri.startsWith('data:') 
-            ? capturedImageUri.split(',')[1] 
-            : capturedImageUri;
+         // Remove data:image prefix if present (API expects clean base64)
+        // const cleanBase64 = capturedImageUri.startsWith('data:') 
+        //     ? capturedImageUri.split(',')[1] 
+        //     : capturedImageUri;
+
+
+            const cleanBase64 = await FileSystem.readAsStringAsync(capturedImageUri, {
+                encoding: FileSystem.EncodingType.Base64,
+            });
+            const imageUri = `data:image/jpeg;base64,${cleanBase64}`;
+
+            const compressedImage = await ImageManipulator.manipulateAsync(
+                imageUri,
+                [{ resize: { width: 300, height: 300 } }],
+                { compress: 0.1, format: ImageManipulator.SaveFormat.JPEG, base64: true }
+            );
+
         console.log("Captured image URI:", specie.name);
+        console.log("Clean base64 image:", cleanBase64.slice(0, 100));
         const body = {
-            photo: cleanBase64, // Clean base64 without data URL prefix
+            photo: compressedImage.base64, // Use compressed image base64
             localisationNormalDto: {
                 latitude: userLocation.latitude,
                 longitude: userLocation.longitude,

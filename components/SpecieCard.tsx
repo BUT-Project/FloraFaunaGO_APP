@@ -65,7 +65,7 @@ const SpecieCard = forwardRef<Animated.View, SpecieCardProps>(({specie, ...props
             <ThemedView style={styles.cardContent}>
                 <ThemedView style={[styles.imageContainer]}>
                     <Image
-                        source={{uri: image || 'https://via.placeholder.com/200'}}
+                        source={{uri:'https://via.placeholder.com/200'}}
                         style={styles.image}
                         resizeMode="cover"
                     />
