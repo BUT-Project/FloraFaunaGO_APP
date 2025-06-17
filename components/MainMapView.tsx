@@ -12,7 +12,7 @@ import {
     View,
     ViewStyle
 } from 'react-native';
-import MapView, {Marker} from 'react-native-maps';
+import MapView, {Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import Animated, {
     Easing,
     Extrapolate,
@@ -32,7 +32,6 @@ import {ThemedView} from "@/components/ui/themed/ThemedView";
 import {Class, Diet, Family, Kingdom, Specie} from "@/model/domain";
 import {useInfiniteSpecies} from "@/hooks/viewModels/useInfiniteSpecies";
 import {ISpeciesRepository} from "@/dal/repository/ISpeciesRepository";
-import { PROVIDER_GOOGLE } from "react-native-maps";
 import Loading from './ui/Loading';
 const {width, height} = Dimensions.get('window');
 const SEARCH_HANDLE_DIMENSION = 50;
@@ -75,10 +74,6 @@ interface MapInterfaceProps {
 }
 
 export default function MapInterface({style, repository}: MapInterfaceProps) {
-    console.log('[MapInterface] Component render triggered:', {
-        timestamp: new Date().toISOString(),
-        repositoryId: repository?.constructor.name || 'unknown'
-    });
     const [selectedCategory, setSelectedCategory] = useState<FilterCategory>('All');
     const [searchQuery, setSearchQuery] = useState('');
     const [isSearchActive, setIsSearchActive] = useState(false);

@@ -50,16 +50,6 @@ export function useInfiniteSpecies(
         queryKey = ['species']
     } = options;
 
-    // Log hook initialization with stack trace
-    console.log('[Species Hook] useInfiniteSpecies initialized with options:', {
-        pageSize,
-        orderBy,
-        descending,
-        enabled,
-        queryKey,
-        timestamp: new Date().toISOString(),
-        stackTrace: new Error().stack?.split('\n')[2]?.trim() // Show caller location
-    });
 
     // Filter state management
     const [nameFilter, setNameFilter] = useState<string | null>(null);
@@ -96,10 +86,6 @@ export function useInfiniteSpecies(
 
     // Apply filters when they change
     useEffect(() => {
-        console.log('[Species Filter] Filters changed, applying new filters:', {
-            filters: currentFilters,
-            timestamp: new Date().toISOString()
-        });
         queryResult.setFilter(currentFilters);
     }, [JSON.stringify(currentFilters)]); // Use JSON.stringify to avoid excessive re-runs
 

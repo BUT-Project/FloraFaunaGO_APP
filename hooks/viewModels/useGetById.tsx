@@ -1,49 +1,24 @@
-import {useEffect, useState} from "react";
+import { useQuery, UseQueryOptions } from "@tanstack/react-query";
 import {GenericRepository} from "@/dal/repository/IGenericRepository";
 
 export function useGetById<T>(
     id: string | null,
-    repository: GenericRepository<T> | null
+    repository: GenericRepository<T> | null,
+    options?: Omit<UseQueryOptions<T, Error>, 'queryKey' | 'queryFn'>
 ) {
-    const [isLoading, setIsLoading] = useState(false);
-    const [item, setItem] = useState<T | null>(null);
-    const [error, setError] = useState<Error|null>(null);
-
-    useEffect(() => {
-        // Reset state if ID is invalid or repository is null
-        if (!id || !repository) {
-            setItem(null);
-            setError(null);
-            setIsLoading(false);
-            return;
-        }
-
-        const fetchItem = async () => {
-            // Prevent concurrent fetches
-            if (isLoading) return;
-
-            setIsLoading(true);
-            setError(null);
-
-            try {
-                const result = await repository?.getById(id);
-                // Using nullish coalescing for explicit null check
-                setItem(result || null);
-            } catch (err) {
-                // @ts-ignore
-                setError(err);
-                setItem(null);
-            } finally {
-                setIsLoading(false);
-            }
-        };
-
-        fetchItem();
-    }, [id, repository]);
+    const result = useQuery<T, Error>({
+        queryKey: [repository?.constructor.name || 'unknown', 'getById', id],
+        queryFn: async () => {
+            if (!repository || !id) throw new Error('No repository or ID provided');
+            return await repository.getById(id);
+        },
+        enabled: !!id && !!repository && (options?.enabled !== false),
+        retry: false,
+        ...options
+    });
 
     return {
-        item,
-        isLoading,
-        error,
+        item: result.data || null,
+        ...result
     };
 }
