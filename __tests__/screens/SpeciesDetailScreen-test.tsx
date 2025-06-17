@@ -38,7 +38,7 @@ describe('<SpeciesDetailScreen />', () => {
 
     test('renders capture details when captures are available', async () => {
          (useGetSpecieByFamily as jest.Mock).mockReturnValue({
-            captures: [],
+            species: [],
             isLoading: false,
             fetchMoreData: jest.fn(),
             error: null,
@@ -52,7 +52,7 @@ describe('<SpeciesDetailScreen />', () => {
 
     test('renders "Aucune espèce trouvée" when no family captures are available', async () => {
          (useGetSpecieByFamily as jest.Mock).mockReturnValue({
-            captures: [],
+            species: [],
             isLoading: false,
             fetchMoreData: jest.fn(),
             error: null,
@@ -65,7 +65,7 @@ describe('<SpeciesDetailScreen />', () => {
 
     test('renders the "Pas plus de capture pour le moment" message in family section when no more captures are available', async () => {
         (useGetSpecieByFamily as jest.Mock).mockReturnValue({
-            captures: [mockCapture],
+            species: [mockCapture],
             isLoading: false,
             fetchMoreData: jest.fn(),
             error: null,

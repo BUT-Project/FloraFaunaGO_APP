@@ -1,8 +1,8 @@
 import {FilterPredicate} from "@/shared/FilterPredicate";
 import {PagingResult} from "@/shared/PagingResult";
-import Specie from "@/model/domain/Specie";
 import {ISpeciesRepository} from "@/dal/repository/ISpeciesRepository";
 import {PagedRequest} from "@/shared/PagedRequest";
+import { Family,Specie } from "@/model/domain";
 
 export default class StubSpecies implements ISpeciesRepository {
     constructor(public Species: Specie[]) {
@@ -168,13 +168,13 @@ export default class StubSpecies implements ISpeciesRepository {
         });
     }
 
-    getRelatedSpeciesByFamily(specieId: string, request : PagedRequest): Promise<PagingResult<any>> {
+    getRelatedSpeciesByFamily(specieId: string,family:Family, request : PagedRequest): Promise<PagingResult<any>> {
         const { count : pageSize, index : page } = request;
         return new Promise((resolve) => {
             const startIndex = (page - 1) * pageSize;
             const endIndex = startIndex + pageSize;
             const items = this.Species.filter((capture) =>
-                capture.family === specieId &&
+                capture.family === family &&
                 (specieId === undefined || capture.id !== specieId)
             );
             const pageItems = items.slice(startIndex, endIndex);

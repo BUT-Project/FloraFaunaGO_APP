@@ -9,6 +9,7 @@ import { Success } from "@/model/domain/Success";
 import { SuccessType } from "@/model/domain/SuccessType";
 import { SuccessManager } from "@/dal/manager/SuccessManager";
 import WebApiClient from "@/dal/network/WebApiClient";
+import { Family } from "@/model/domain";
 
 export class AppFacadeService implements IAppFacadeService {
     private static instance: AppFacadeService | null = null;
@@ -145,12 +146,12 @@ export class AppFacadeService implements IAppFacadeService {
         await captureRepository.addSpecieToUser(userId, specie, location, imageUri);
     }
 
-    async getSpeciesByFamily(familyId: string, request: PagedRequest): Promise<PagingResult<Specie>> {
+    async getSpeciesByFamily(specieId:string, family: Family, request: PagedRequest): Promise<PagingResult<Specie>> {
         const { speciesRepository } = this.dataManager;
         if (!speciesRepository) {
             throw new Error("Species repository not available");
         }
-        return await speciesRepository.getRelatedSpeciesByFamily(familyId, request);
+        return await speciesRepository.getRelatedSpeciesByFamily(specieId, family, request);
     }
 
     async getAllSpecies(request: PagedRequest): Promise<PagingResult<Specie>> {

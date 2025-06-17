@@ -1,9 +1,7 @@
-import User from "@/model/domain/User";
-import Specie from "@/model/domain/Specie";
 import Location from "@/model/domain/Location";
 import { PagedRequest } from "@/shared/PagedRequest";
 import { PagingResult } from "@/shared/PagingResult";
-import { Success } from "@/model/domain/Success";
+import { Success,Family,Specie,User } from "@/model/domain";
 
 export interface IAppFacadeService {
     // Authentication operations
@@ -19,7 +17,7 @@ export interface IAppFacadeService {
 
     // Species operations
     addSpecieToUser(userId: string, specie: Specie, location: Location, imageUri: string): Promise<void>;
-    getSpeciesByFamily(familyId: string, request: PagedRequest): Promise<PagingResult<Specie>>;
+    getSpeciesByFamily(specieId:string, family: Family, request: PagedRequest): Promise<PagingResult<Specie>>;
     getAllSpecies(request: PagedRequest): Promise<PagingResult<Specie>>;
 
     // Success operations

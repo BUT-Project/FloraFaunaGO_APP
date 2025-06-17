@@ -139,7 +139,7 @@ export default function EncyclopediaScreen({speciesRepository}: EncyclopediaScre
                         refreshing={isFetching}
                         keyExtractor={capture => capture.id?.toString()}
                         renderItem={({item}) =>
-                            <SpecieListItem specie={item} captureId={(userCaptures?.find((capture)=> capture.specie.id == item.id)?.id) ?? null} numColumns={NUMBER_OF_COLUMNS}/>
+                            <SpecieListItem specie={item} captureId={(userCaptures?.find((capture)=> capture.specie?.id == item.id)?.id) ?? null} numColumns={NUMBER_OF_COLUMNS}/>
                         }
                         ListEmptyComponent={() => (
                             <View style={styles.empty}>

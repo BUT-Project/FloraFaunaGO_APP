@@ -102,7 +102,7 @@ export class HttpClient {
                 console.log('📄 Error Body Length:', errorText.length);
                 console.log('📄 Error Body:', errorText || '[EMPTY RESPONSE]');
                 
-                let errorData = {};
+                let errorData:{message?:string} = {};
                 try {
                     if (errorText) {
                         errorData = JSON.parse(errorText);

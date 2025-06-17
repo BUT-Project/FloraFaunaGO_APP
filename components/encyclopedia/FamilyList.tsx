@@ -16,7 +16,7 @@ const itemSize = (width / 3) - 10;
 
 const FamilyList: React.FC<FamilyListProps> = ({family,specieId,userCaptures}) => {
     const {
-            species,
+            species=[],
             isLoading,
             fetchMoreData,
             error,
