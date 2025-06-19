@@ -124,26 +124,27 @@ export class HttpClient {
             const contentType = response.headers.get('content-type');
             console.log('📄 Content-Type:', contentType);
             
-            let data: TResponse | undefined;
+            let data: TResponse;
             if (contentType?.includes('application/json')) {
                 const responseText = await response.text();
                 console.log('📄 Response Body Length:', responseText.length);
                 console.log('📄 Response Body Preview:', responseText.substring(0, 200) + (responseText.length > 200 ? '...' : ''));
                 
                 try {
-                    data = responseText ? JSON.parse(responseText) : undefined;
+                    data = JSON.parse(responseText);
                     console.log('✅ Successfully parsed JSON');
                 } catch (parseErr) {
                     console.error('❌ JSON Parse Error:', parseErr);
                     console.log('📄 Full Response Text:', responseText);
                     throw new Error(`Failed to parse JSON response: ${parseErr}`);
                 }
-            } else{ console.error('❌ Unsupported Content-Type:', contentType);
-                
-                console.log('📄 Non-JSON response, skipping parse');
-                data = undefined;
             }
-            
+            else {
+                console.error('❌ Unsupported Content-Type:', contentType);
+
+                console.log('📄 Non-JSON response, skipping parse');
+                data = undefined as unknown as TResponse; // Explicitly set to undefined for non-JSON responses
+            }
             console.log('🔄 === END RESPONSE ===');
             return { success: true, data };
         } catch (error) {
