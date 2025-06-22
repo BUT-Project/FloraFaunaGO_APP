@@ -11,6 +11,7 @@ import TokenManager from "@/services/keyManager/TokenManager";
 import {SecureLocalStorageAdapter} from "@/libs/LocalStorageAdapter";
 import {ITokenManager} from "@/services/keyManager/ITokenManager";
 import { ResetPasswordSchema } from "@/shared/scheme/ResetPasswordSchema";
+import {z} from "zod";
 
 export default class NetworkAuthService implements IAuthService {
     private currentUser: User | null = null;
@@ -106,22 +107,17 @@ export default class NetworkAuthService implements IAuthService {
         try {
             const registerRequest : RegisterRequestDto = {
                 email: email.toLowerCase().trim(),
-                password
+                password,
+                pseudo: username?.trim() || undefined,
+                confirmPassword : password
             }
 
-            const tokenResponse = await this.authClient.postValidated(`${this.baseUrl}/register`, registerRequest, RegisterRequestSchema, AccessTokenResponseSchema);
-            if (tokenResponse.success) {
-                // Store tokens
-                await this.keyManager.putToken(tokenResponse.data);
-
-                // Extract user ID from token and fetch user from repository
-                const userId = AuthJWTMapper.getUserIdFromToken(tokenResponse.data.accessToken);
-                this.currentUser = await this.userRepository.getById(userId);
-
-                return this.currentUser;
+            const registerSuccess = await this.authClient.postValidated(`${this.baseUrl}/register`, registerRequest, RegisterRequestSchema, z.string());
+            if (registerSuccess.success) {
+                return await this.login(email, password);
             }
             else {
-                throw new Error(tokenResponse.error?.message || "Échec de l'inscription INTERNAL ERROR");
+                throw new Error(registerSuccess.error?.message || "Échec de l'inscription");
             }
         } catch (error) {
             throw new Error(error instanceof Error ? error.message : "Échec de l'inscription");
