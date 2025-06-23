@@ -76,9 +76,6 @@ export class HttpClient {
             console.log('📅 Request Date:', requestDate);
             console.log('🔗 Method & URL:', method, fullUrl);
             console.log('📋 Request Headers:', requestHeaders);
-            if (body) {
-                console.log('📦 Request Body:', body);
-            }
             console.log('🌐 === END REQUEST ===');
 
             const response = await fetch(fullUrl, {
