@@ -16,7 +16,7 @@ const EXPANDED_HEIGHT = 550;
 const MAX_COLLAPSED_LINES = 2;
 
 const SpecieCard = forwardRef<Animated.View, SpecieCardProps>(({specie, ...props}, ref) => {
-    const { id, name, description, family } = specie;
+    const { id, name, description, image, family } = specie;
     const formattedId = `#${id.toString().padStart(3, '0')}`;
     
     // State for tracking if description is expanded
@@ -65,7 +65,7 @@ const SpecieCard = forwardRef<Animated.View, SpecieCardProps>(({specie, ...props
             <ThemedView style={styles.cardContent}>
                 <ThemedView style={[styles.imageContainer]}>
                     <Image
-                        source={{uri:'https://via.placeholder.com/200'}}
+                        source={{uri: image}}
                         style={styles.image}
                         resizeMode="cover"
                     />
