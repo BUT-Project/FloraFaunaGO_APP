@@ -88,12 +88,10 @@ export class HttpClient {
             });
             
             const responseDate = new Date().toISOString();
-            const responseHeaders = Object.fromEntries(response.headers.entries());
 
             console.log('🔄 === HTTP RESPONSE ===');
             console.log('📅 Response Date:', responseDate);
             console.log('🔢 Status:', response.status, response.statusText);
-            console.log('📋 Response Headers:', responseHeaders);
             console.log('🔗 Final URL:', response.url);
             console.log('✅ Response OK:', response.ok);
 

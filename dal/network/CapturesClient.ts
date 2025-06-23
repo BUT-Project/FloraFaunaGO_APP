@@ -44,8 +44,14 @@ export class CapturesClient implements ICaptureRepository {
         if (!result.success) {
             throw result.error;
         }
-
-        return this.mapper.toDomain(result.data);
+        const photoString = `data:image/jpeg;base64,${result.data.capture.photo}`
+        return this.mapper.toDomain({
+            ...result.data,
+            capture:{
+                ...result.data.capture,
+                photo:photoString,
+            }
+        });
     }
 
     async getAll(request: PagedRequest): Promise<PagingResult<Capture>> {

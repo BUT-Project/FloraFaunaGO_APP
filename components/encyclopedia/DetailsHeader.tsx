@@ -47,7 +47,6 @@ const { width } = Dimensions.get("window");
 export default function DetailsHeader({ capture ,specie}: SpeciesImageCarouselProps) {
 
     const router = useRouter();
-
     const colorSheme = useColorScheme();
     const [activeSlide, setActiveSlide] = useState(0);
     const carouselRef = useRef<Carousel<any>>(null);
