@@ -1,99 +1,23 @@
+import {CaptureList, SpecieList, SuccessList, UserList} from "./Data"
+import StubSpecies from "@/dal/StubLib/StubSpecies";
+import StubCaptures from "@/dal/StubLib/StubCaptures";
+import StubUsers from "@/dal/StubLib/StubUsers";
+import StubSucess from "@/dal/StubLib/StubSucess";
+import StubAuth from "@/dal/StubLib/StubAuth";
 import {IDataManager} from "@/dal/IDataManager";
-import {SuccessClient} from "../network/SuccessClient";
-import {ZodHttpClient} from "../network/ZodHttpClient";
-import {SuccessStateClient} from "../network/SuccessStateClient";
-import {SpeciesClient} from "../network/SpeciesClient";
-import {UserClient} from "@/dal/network/UserClient";
-import {CapturesClient} from "@/dal/network/CapturesClient";
-import {ITokenManager} from "@/services/keyManager/ITokenManager";
-import {AccessTokenResponseDto} from "@/shared/scheme/AccessTokenResponseSchema";
-import TokenManager from "@/services/keyManager/TokenManager";
-import {SecureLocalStorageAdapter} from "@/libs/LocalStorageAdapter";
-import NetworkAuthService from "@/dal/network/NetworkAuthService";
-import {UserMapper} from "@/shared/mappers/UserMaper";
 
-const ACCESS_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlNjk2MjRiNi1lMTI2LTRmYWEtOTI4Yy1jNmE5YWY0NTg3NDkiLCJlbWFpbCI6InlveW9AZ21haWwuY29tIiwidWlkIjoiZTY5NjI0YjYtZTEyNi00ZmFhLTkyOGMtYzZhOWFmNDU4NzQ5IiwiZXhwIjoxNzUwMTU0NTE1LCJpc3MiOiJGbG9yYUZhdW5hSXNzdWVyIiwiYXVkIjoiRmxvcmFGYXVuYUlzc3VlciJ9.g1nRYvMjg3dLUovBNOoQSvExHKM1v22MxIs_MJ8Y0Qc';
-
-export default class StubData extends IDataManager {
-    private tokenManager: ITokenManager<AccessTokenResponseDto> = new TokenManager(new SecureLocalStorageAdapter());
+export default class StubData extends IDataManager{
+    private ListUser = UserList
+    private ListCapture = CaptureList
+    private ListSpecie = SpecieList
+    private ListSucess = SuccessList
 
     public constructor() {
         super();
-        
-        // Initialize species repository first
-        this.speciesRepository = new SpeciesClient(
-            new ZodHttpClient({
-                    headers: {
-                        'Accept': 'application/json',
-                        "Authorization": `Bearer ${ACCESS_TOKEN}`
-                    },
-                    baseUrl: process.env.EXPO_PUBLIC_API_URL || 'https://codefirst.iut.uca.fr/containers/FloraFauna_GO-api'
-                }
-            ), '/FloraFaunaGo_API/espece');
-
-        this.captureRepository = new CapturesClient(new ZodHttpClient({
-            headers: {
-                'Accept': 'application/json',
-                "Authorization": `Bearer ${ACCESS_TOKEN}`
-            },
-            baseUrl: process.env.EXPO_PUBLIC_API_URL || 'https://codefirst.iut.uca.fr/containers/FloraFauna_GO-api'
-        }), '/FloraFaunaGo_API/capture');
-
-        // Initialize user repository with species repository for capturing data
-        this.userRepository = new UserClient( 
-            new ZodHttpClient({
-                headers: {
-                    'Accept': 'application/json',
-                    "Authorization": `Bearer ${ACCESS_TOKEN}`
-                },
-                baseUrl: process.env.EXPO_PUBLIC_API_URL || 'https://codefirst.iut.uca.fr/containers/FloraFauna_GO-api'
-            }),
-            this.captureRepository,
-            '/FloraFaunaGo_API/utilisateur',
-            new UserMapper(),
-            undefined,
-        );
-        //this.successRepository = new StubSucess(this.ListSucess);
-        this.authService = new NetworkAuthService(new ZodHttpClient({
-            headers: {
-                'Accept': 'application/json',
-                "Authorization": `Bearer ${ACCESS_TOKEN}`
-            },
-            baseUrl: process.env.EXPO_PUBLIC_API_URL || 'https://codefirst.iut.uca.fr/containers/FloraFauna_GO-api',
-        })
-            ,this.userRepository, this.tokenManager, '/api/Auth');
-
-        this.successRepository = new SuccessClient(
-            new ZodHttpClient({
-                baseUrl: 'https://codefirst.iut.uca.fr/containers/FloraFauna_GO-api',
-                headers: {
-                    'Accept': 'application/json',
-                    "Authorization": `Bearer ${ACCESS_TOKEN}`
-                }
-            }),
-            this.authService,
-            '/FloraFaunaGo_API/success/');
-
-        this.successStateRepository = new SuccessStateClient(
-            new ZodHttpClient({
-                baseUrl: 'https://codefirst.iut.uca.fr/containers/FloraFauna_GO-api',
-                headers: {
-                    'Accept': 'application/json',
-                    "Authorization": `Bearer ${ACCESS_TOKEN}`
-                }
-            }), this.authService,
-            '/FloraFaunaGo_API/success/state/')
-
-        this.speciesRepository = new SpeciesClient(
-            new ZodHttpClient({
-                    headers: {
-                        'Accept': 'application/json',
-                        "Authorization": `Bearer ${ACCESS_TOKEN}`
-                    },
-                    baseUrl: process.env.EXPO_PUBLIC_API_URL || 'https://codefirst.iut.uca.fr/containers/FloraFauna_GO-api'
-                }
-            ), '/FloraFaunaGo_API/espece');
-
-
+        this.successRepository = new StubSucess(this.ListSucess);
+        this.userRepository = new StubUsers(this.ListUser);
+        this.captureRepository = new StubCaptures(this.ListCapture,this.ListUser);
+        this.speciesRepository = new StubSpecies(this.ListSpecie);
+        this.authService = new StubAuth(this.ListUser);
     }
 }
