@@ -50,7 +50,7 @@ export default class NetworkAuthService implements IAuthService {
             console.log('🌐 NetworkAuthService.login called with mail:', email);
             
             const credentials : LoginRequestDto = {
-                Mail: email.toLowerCase().trim(),
+                mail: email.toLowerCase().trim(),
                 password,
                 twoFactorCode: twoFactorCode || null,
                 twoFactorRecoveryCode: twoFactorRecoveryCode || null

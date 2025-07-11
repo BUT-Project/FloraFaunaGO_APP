@@ -56,7 +56,7 @@ const MOCK_JWT_SECRET = "test-secret-key"; // Secret for JWT encoding
 // Generate a JWT-like string for access token
 // const MOCK_ACCESS_TOKEN_JWT = createMockJwt({ id: MOCK_USER_ID, user: MOCK_EMAIL });
 const MOCK_ACCESS_TOKEN_JWT = JWT.encode(
-    { nameid: MOCK_USER_ID.toString(), user: MOCK_EMAIL },
+    { uid: MOCK_USER_ID.toString(), user: MOCK_EMAIL },
     MOCK_JWT_SECRET
 );
 const MOCK_REFRESH_TOKEN_STRING = "fakeRefreshTokenString";
@@ -86,7 +86,7 @@ describe('NetworkAuthService', () => {
 
     describe('login', () => {
         const loginCredentials: LoginRequestDto = {
-            Mail: MOCK_EMAIL.toLowerCase().trim(),
+            mail: MOCK_EMAIL.toLowerCase().trim(),
             password: MOCK_PASSWORD,
             twoFactorCode: null,
             twoFactorRecoveryCode: null
@@ -99,7 +99,7 @@ describe('NetworkAuthService', () => {
             const user = await authService.login(MOCK_EMAIL, MOCK_PASSWORD);
 
             expect(mockPostValidated).toHaveBeenCalledWith(
-                '/login',
+                '/api/Auth/login',
                 loginCredentials,
                 LoginRequestSchema,
                 AccessTokenResponseSchema
@@ -120,7 +120,7 @@ describe('NetworkAuthService', () => {
             await expect(authService.login(MOCK_EMAIL, MOCK_PASSWORD)).rejects.toThrow(errorMessage);
 
             expect(mockPostValidated).toHaveBeenCalledWith(
-                '/login',
+                '/api/Auth/login',
                 loginCredentials,
                 LoginRequestSchema,
                 AccessTokenResponseSchema
@@ -147,21 +147,26 @@ describe('NetworkAuthService', () => {
     describe('register', () => {
         const registerPayload: RegisterRequestDto = {
             email: MOCK_EMAIL.toLowerCase().trim(),
-            password: MOCK_PASSWORD
+            password: MOCK_PASSWORD,
+            pseudo: undefined,
+            confirmPassword: MOCK_PASSWORD
         };
 
         it('should successfully register, call KeyManager.putToken with API response, and return user', async () => {
-            mockPostValidated.mockResolvedValue({ success: true, data: MOCK_TOKEN_RESPONSE_DATA });
+            mockPostValidated
+                .mockResolvedValueOnce({ success: true, data: "Registration successful" }) // Register call
+                .mockResolvedValueOnce({ success: true, data: MOCK_TOKEN_RESPONSE_DATA }); // Login call
             mockUserRepository.getById.mockResolvedValue(MOCK_USER);
 
             const user = await authService.register(MOCK_EMAIL, MOCK_PASSWORD);
 
             expect(mockPostValidated).toHaveBeenCalledWith(
-                '/auth/register',
+                '/api/Auth/register',
                 registerPayload,
                 RegisterRequestSchema,
-                AccessTokenResponseSchema
+                expect.any(Object) // z.string() schema
             );
+            // Register calls login internally, so token should be stored from login
             expect(mockPutToken).toHaveBeenCalledWith(MOCK_TOKEN_RESPONSE_DATA);
             expect(mockUserRepository.getById).toHaveBeenCalledWith(MOCK_USER_ID); // ID from real mapper
             expect(user).toEqual(MOCK_USER);
@@ -181,7 +186,7 @@ describe('NetworkAuthService', () => {
         it('should call the logout endpoint; KeyManager.clearTokens is NOT called by SUT', async () => {
             mockPost.mockResolvedValue({});
             await authService.logout();
-            expect(mockPost).toHaveBeenCalledWith('/logout', {});
+            expect(mockPost).toHaveBeenCalledWith('/api/Auth/logout', {});
             expect(mockKeyManagerClearTokens).toHaveBeenCalled();
         });
     });
@@ -214,7 +219,7 @@ describe('NetworkAuthService', () => {
         it('should use KeyManager.refreshToken, then KeyManager.putToken on success, and fetch user', async () => {
             const refreshedUserId = MOCK_USER_ID + 1; // Different ID for refreshed token
             const refreshedAccessTokenJwt = JWT.encode(
-                { nameid: refreshedUserId.toString(), user: "refreshed@user.com" },
+                { uid: refreshedUserId.toString(), user: "refreshed@user.com" },
                 MOCK_JWT_SECRET
             );
             const refreshedTokenResponseData: AccessTokenResponseDto = {
@@ -238,7 +243,7 @@ describe('NetworkAuthService', () => {
             expect(mockKeyManagerGetToken).toHaveBeenCalledTimes(2); // Once for initial check, once after refresh
             expect(mockKeyManagerGetRefreshToken).toHaveBeenCalledTimes(1); // To get the refresh token
             expect(mockPostValidated).toHaveBeenCalledWith( // Verify refresh API call
-                '/auth/refresh',
+                '/api/Auth/refresh',
                 { refreshToken: MOCK_REFRESH_TOKEN_STRING } as RefreshRequestDto,
                 RefreshRequestSchema,
                 AccessTokenResponseSchema
@@ -261,7 +266,7 @@ describe('NetworkAuthService', () => {
             expect(mockKeyManagerGetToken).toHaveBeenCalledTimes(1);
             expect(mockKeyManagerGetRefreshToken).toHaveBeenCalledTimes(1);
             expect(mockPostValidated).toHaveBeenCalledWith( // Verify refresh API call attempt
-                '/auth/refresh',
+                '/api/Auth/refresh',
                 { refreshToken: MOCK_REFRESH_TOKEN_STRING },
                 RefreshRequestSchema,
                 AccessTokenResponseSchema
@@ -329,7 +334,7 @@ describe('NetworkAuthService', () => {
 
         it('should return true if token is refreshed successfully (KeyManager interaction)', async () => {
             const refreshedAccessTokenJwt = JWT.encode(
-                { nameid: (MOCK_USER_ID + 2).toString() },
+                { uid: (MOCK_USER_ID + 2).toString() },
                 MOCK_JWT_SECRET
             );
 

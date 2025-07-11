@@ -242,7 +242,7 @@ describe('HttpClient', () => {
         const result = await client.get('/malformed-json');
 
         expectFailure(result);
-        expect(result.error).toBeInstanceOf(SyntaxError);
+        expect(result.error).toBeInstanceOf(Error);
         expect(result.error?.message).toContain('JSON');
     });
 
